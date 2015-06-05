@@ -11,26 +11,26 @@ plain user:
  
     `cd basedirectory`
  
-    `git clone https://github.com/ChristophKirst/StemCellTracker`
+    `git clone https://github.com/ChristophKirst/iDisco`
 
 
 developer / programmer:
 
   * create account at [http://github.com](http://github.com)
 
-  * got to [https://github.com/ChristophKirst/StemCellTracker](https://github.com/ChristophKirst/StemCellTracker) and press fork button 
+  * got to [https://github.com/ChristophKirst/iDisco](https://github.com/ChristophKirst/iDisco) and press fork button 
 
   * in terminal execute:
 	
 	`cd basedirectory`
 
-	`git clone https://github.com/username/StemCellTracker.git`
+	`git clone https://github.com/username/iDisco.git`
 	
   * configure remotes (named upstream)
         
-	`cd StemCellTracker`
+	`cd iDisco`
 
-	`git remote add upstream https://github.com/ChristophKirst/StemCellTracker`
+	`git remote add upstream https://github.com/ChristophKirst/iDisco`
 
 	`git fetch upstream`
 
@@ -40,7 +40,7 @@ Backup
 
 to backup your version in case you followed the developer / proogrammer route:
 
-  * in termianl in the StemCellTracker directory execute:
+  * in terminal in the iDisco directory execute:
 
       `git add -A`
 
@@ -54,7 +54,7 @@ Update
 
 plain user:
 
-  * in terminal in the StemCellTracker directory execute
+  * in terminal in the iDisco directory execute
      
       `git pull`
 
@@ -93,9 +93,9 @@ in case you have something to contribute to the code:
 Refs
 ----
 
-stem cell tracker home:
+iDisco home:
 
-  * [https://github.com/ChristophKirst/StemCellTracker](https://github.com/ChristophKirst/StemCellTracker)
+  * [https://github.com/ChristophKirst/iDisco](https://github.com/ChristophKirst/iDisco)
 
 A good source to get questions answered: 
 
