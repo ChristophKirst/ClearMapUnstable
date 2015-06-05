@@ -1,15 +1,3 @@
-# Test Suite
-# Test/
-
-# Code under development
-Develop/
-
-# Images
-Images/
-
-# Data
-Test/Data
-
 # Temporary Files
 *~
 
@@ -24,5 +12,5 @@ Thumbs.db
 .asv
 *rtf
 
-# Special files
-./Interface/Imageformats/loci_tools.jar
+# pyc files
+.pyc
