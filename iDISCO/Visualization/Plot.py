@@ -30,9 +30,8 @@ def plotTiling(image, tiling = "automatic"):
             ntiles = image.shape[2];
             cmap = plt.cm.gray;
             image = image.reshape(image.shape + (1,));
-            image = image.swapaxes(2,3);
     else:
-        ntiles = image.shape[2]; # 3d color
+        ntiles = image.shape[2]; # 3d color = 4d
         cmap = None;
 
     if tiling == "automatic":
@@ -41,15 +40,23 @@ def plotTiling(image, tiling = "automatic"):
         nx = int(nx);
     else:
         nx = int(tiling[0]);
-        ny = int(tiling[1]);
-
+        ny = int(tiling[1]);     
+        
+    #print image.shape
         
     fig, axarr = plt.subplots(nx, ny, sharex = True, sharey = True);
     axarr = numpy.array(axarr);
     axarr = axarr.flatten();
+    
+    imin = image.min();
+    imax = image.max();    
+    
     for i in range(0, ntiles): 
         a = axarr[i];
-        a.imshow(image[:,:,i,:], interpolation='none', cmap = cmap);
+        imgpl = image[:,:,i,:];
+        if imgpl.shape[2] == 1:
+            imgpl = imgpl.reshape((imgpl.shape[0], imgpl.shape[1]));       
+        a.imshow(imgpl, interpolation='none', cmap = cmap, vmin = imin, vmax = imax);
 
     fig.canvas.manager.window.activateWindow()
     fig.canvas.manager.window.raise_()
@@ -59,10 +66,16 @@ def plotTiling(image, tiling = "automatic"):
 def overlayLabel(image, label, alpha = False, lcmap = 'jet'):
     """Overlay a gray scale image with colored labeled image"""
     
-    cm = mpl.cm.get_cmap(lcmap);
-    cNorm  = mpl.colors.Normalize(vmin=1, vmax = int(label.max()));
-    carray = mpl.cm.ScalarMappable(norm=cNorm, cmap=cm);
-    carray = carray.to_rgba(numpy.arange(1, int(label.max() + 1)));
+    
+    lmax = label.max();    
+    
+    if lmax == 1:
+        carray = numpy.array([[1,0,0,1]]);
+    else:
+        cm = mpl.cm.get_cmap(lcmap);
+        cNorm  = mpl.colors.Normalize(vmin=1, vmax = int(lmax));
+        carray = mpl.cm.ScalarMappable(norm=cNorm, cmap=cm);
+        carray = carray.to_rgba(numpy.arange(1, int(lmax + 1)));
 
     if alpha == False:
         carray = numpy.concatenate(([[0,0,0,1]], carray), axis = 0);
