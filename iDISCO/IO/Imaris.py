@@ -33,33 +33,33 @@ def writePoints(h5file, points, mode = "a", radius = 0.5):
     s8 = "/Scene8";
     if h5file.get(s8) != None:
         del h5file[s8];
-        
+    
     #get number of point sets
-    ct = "/Scence/Content";
+    ct = "Scene/Content";
     ca = h5file.get(ct).attrs
     np = ca.get("NumberOfPoints");
     if np == None:
         ca.create("NumberOfPoints", 1, dtype = "uint64")
         np = 0;
         mode = "a";
-
+    
     #write points
     if mode == "a":  # add points
-
+        
         #update number of points
         np = np + 1;
         ca["NumberOfPoints"] = np;
-
+        
         # Create Pointset and attributes
-        pn = ct + "/Points" + str(np-1);
-
+        pn = ct + "/Points" + str(int(np-1));
+        
         histlog = numpy.array([''], dtype='|S1');        
-        name = numpy.array(['Spots ' + str(np)], dtype='|S' + str(6 + len(str(np))));
+        name = numpy.array(['Spots ' + str(int(np))], dtype='|S' + str(6 + len(str(int(np)))));
         material = numpy.array([ '<bpMaterial mDiffusion="0.8 0.8 0.8" mSpecular="0.2 0.2 0.2" mEmission="0 0 0" mAmbient="0 0 0" mTransparency="0" mShinyness="0.1"/>\n'], dtype='|S133');       
         iid = 200000 + np # int64
         unit = numpy.array(['um'], dtype='|S2');
         descrp = numpy.array([''], dtype='|S1');
-        
+                
         pg = h5file.create_group(pn);
         pa = pg.attrs;
         pa.create("HistoryLog", histlog);
@@ -70,45 +70,41 @@ def writePoints(h5file, points, mode = "a", radius = 0.5):
         pa.create("Description", descrp);     
         
         #add TimeInfos
-
-        tb = h5file.get('DataSetTimes/TimeBegin');
-        tb = tb["ObjectTimeBegin"][0][1];
         
-        h5file.create_dataset("TimeInfos", data = numpy.array([tb[0:23]], dtype='|S23'))
+        tb = h5file.get('DataSetTimes/TimeBegin');
+        tb = tb[0][1];
+        
+        #del h5file[pn + "/TimeInfos"]
+        h5file.create_dataset(pn + "/TimeInfos", data = numpy.array([tb[0:23]], dtype='|S23'))
         
     else:
-        pn = ct + "/Points" + str(np-1);     
+        pn = ct + "/Points" + str(int(np-1));
         
+    
     #  make points
     npts = points.shape[0];
     
     if points.shape[1] != 3:
         raise StandardError("Points shape is not (n,3)!");
-        
+    
     pts = numpy.c_[points, radius * numpy.ones(npts)];
-    ts = np.zeros(npts);
-
-
+    ts =  numpy.zeros(npts);
+    
+    
     # write points
     pnt = pn + '/Time';
     pnc = pn + '/CoordsXYZR';
-
+    
     if h5file.get(pnt) != None:
         del h5file[pnt];
     h5file.create_dataset(pnt, shape=(npts,1), dtype='i64', data=ts);
     
-
+    
     if h5file.get(pnc) != None:
         del h5file[pnc];
     h5file.create_dataset(pnc, shape=pts.shape, dtype='f32', data=pts);
 
-    
-    
-    
-    
-    
-    
-    
+  
     
 """
 
@@ -155,7 +151,7 @@ dc = f.create_dataset(pnc, shape=pts.shape, dtype='f32', data=pts)
 
 
 
-
+fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524.ims';
 
 #
 pts = np.arange(1, 10);

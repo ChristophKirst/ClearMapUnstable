@@ -28,6 +28,8 @@ from skimage.morphology import reconstruction
 from scipy.ndimage.measurements import center_of_mass
 from mahotas import regmax, regmin
 
+import iDISCO.IO.Imaris as io
+
 
 def structureElementOffsets(sesize):
     sesize = numpy.array(sesize);
@@ -427,7 +429,14 @@ def extendedMax(img, h):
     
 def detectCells(img, mask = None):
     """Detect Cells in 3d grayscale img using DoG filtering and maxima dtection"""
-    
+   
+    # normalize data
+    img = img.astype('float');
+    dmax = 0.075 * 65535;
+    ids = img > dmax;
+    img[ids] = dmax;
+    img /= dmax;    
+  
     # background subtraction in each slice
     for z in range(img.shape[2]):
         img[:,:,z] = img[:,:,z] - morph.grey_opening(img[:,:,z], structure = self.structureELement('Disk', (30,30)));
@@ -484,23 +493,41 @@ def log_template(level, message):
 
 #define the subroutine for the processing
 def processSubStack(dsr):
-    dataset = dsr[0];
+    
+    fn = dsr[0];
     segmentation = dsr[1];
     zrange  = dsr[2];
+    iid = dsr[3];
+    n = dsr[4];
     
-    img = dataset[:,:, zrange[0]:zrange[1]];
+    print "processing chunk " + str(iid) + "/" + str(n);
+    
+    f = io.openFile(fn, mode = 'r');
+    dataset = io.readData(f, resolution=0);    
+    
+    #img = dataset[:,:, zrange[0]:zrange[1]];
+    
+    img = dataset[1200:1400,1200:1400, zrange[0]:zrange[1]];
+    
+    f.close();    
+    
     return segmentation(img);
     
     
-def parallelProcessStack(dataset, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15, processes = 2, segmentation = self.detectCells):
+def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15, processes = 2, segmentation = self.detectCells):
     """Parallel segmetation on a stack"""
-
+    
+    f = io.openFile(fn);
+    dataset = io.readData(f, resolution=0);
     
     #determine z ranges
     nz = dataset.shape[2];    
+    nz = 200;    
+    
+    f.close();
     
     chunksize = chunksizemax;
-    nchunks = math.ceil((nz - chunksize) / (1. * (chunksize - chunkoverlap)) + 1);   
+    nchunks = int(math.ceil((nz - chunksize) / (1. * (chunksize - chunkoverlap)) + 1));   
     chunksize = (nz + (nchunks-1) * chunkoverlap) / nchunks;
     
     #increase overlap if chunks to small
@@ -541,21 +568,25 @@ def parallelProcessStack(dataset, chunksizemax = 100, chunksizemin = 30, chunkov
 
     zcenters.append(nz);
     
-    print zcenters
-    print zranges    
+    #print zcenters
+    #print zranges    
     
     
-    argdata = [(dataset,segmentation, x) for x in zranges];
-       
+    argdata = []
+    for i in range(nchunks):
+        argdata.append((f,segmentation, zranges[i], i, nchunks));
+        
+    
     # process in parallel
     pool = Pool(processes = processes);
-    print processes
+    #print processes
     
     results = pool.map(processSubStack, argdata);
     
     #join the results
     for i in range(nchunks):
         cts = results[i];
+        cts[:,2] += zranges[i][0];
         cts = cts[numpy.logical_and(cts[:,2] < zcenters[i+1], cts[:,2] >= zcenters[i]),:];
         results[i] = cts;
     
