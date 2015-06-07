@@ -20,13 +20,13 @@ import math
 #import mahotas as morph
 import scipy.ndimage.morphology as morph
 from scipy.ndimage.filters import correlate
-from scipy.ndimage import maximum_filter
+#from scipy.ndimage import maximum_filter
 from scipy.ndimage.measurements import label
 
 from skimage.morphology import reconstruction
 #from skimage.measure import regionprops
 from scipy.ndimage.measurements import center_of_mass
-from mahotas import regmax
+from mahotas import regmax, regmin
 
 
 def structureElementOffsets(sesize):
@@ -451,7 +451,7 @@ def detectCells(img, mask = None):
     
     iplt.plotTiling(imghmax) 
     
-    imgmax = regmin(- imghmax);
+    imgmax = regmin(-imghmax);
     
     iplt.plotOverlayLabel(imghmax, imgmax.astype('int64'), alpha = False) 
     

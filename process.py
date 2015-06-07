@@ -18,6 +18,7 @@ import iDISCO.IO.Imaris as io
 
 # open data
 fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
 f = io.openFile(fn);
 
 dataset = io.readData(f, resolution=0);
