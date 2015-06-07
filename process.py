@@ -12,18 +12,19 @@ import numpy as np
 import matplotlib as mpl
 
 import iDISCO.Visualization.Plot as iplt
-#import iDISCO.Segmentation.SpotDetection as iseg
+import iDISCO.Segmentation.SpotDetection as iseg
 import iDISCO.IO.Imaris as io
 
 
 # open data
 fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
-fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+#fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
 f = io.openFile(fn);
 
 dataset = io.readData(f, resolution=0);
-dataraw = dataset[1200:1400,1200:1400,1000:1030];
+dataraw = dataset[1200:1400,1200:1400,1000:1160];
 
+f.close();
 
 # normalize data
 data = dataraw.astype('float');
@@ -36,16 +37,17 @@ data /= dmax;
 iplt.plotTiling(data[:,:,0:8])
 
 
-# run segmentation
-img = data[:,:,0:30];
+#segment
+#centers, imglab, imgmask = iseg.detectCells(data);
 
-import iDISCO.Segmentation.SpotDetection
-import sys
-self = sys.modules['iDISCO.Segmentation.SpotDetection'];
-
+centers = iseg.parallelProcessStack(dataraw, chunksizemax = 50, chunksizemin = 30, chunkoverlap = 15, processes = 5, segmentation = iseg.detectCells);
 
 
 # write result
+
+fout = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524 segmentation.ims';
+
+
 
 
 

@@ -414,7 +414,7 @@ def hMaxTransform(img, h):
     
     
 def regionalMax(img):
-    return regmax(img);
+    return regmin(-img);
     
     
 def extendedMax(img, h):
@@ -445,38 +445,136 @@ def detectCells(img, mask = None):
     imgdog[imgdog < 0] = 0;
     imgdog /= imgdog.max();
     
-    iplt.plotTiling(imgdog) 
+    #iplt.plotTiling(imgdog) 
 
-    imghmax = self.hMaxTransform(imgdog, 0.02);
+    imghmax = self.hMaxTransform(imgdog, 0.01);
     
-    iplt.plotTiling(imghmax) 
+    #iplt.plotTiling(imghmax) 
     
-    imgmax = regmin(-imghmax);
+    imgmax = self.regionalMax(imghmax);
     
-    iplt.plotOverlayLabel(imghmax, imgmax.astype('int64'), alpha = False) 
-    
+    #iplt.plotOverlayLabel(imghmax, imgmax.astype('int64'), alpha = False) 
+    #iplt.plotOverlayLabel(img, imgmax.astype('int64'), alpha = True)     
     
     #extended maxima = h transform + regoinal maxima
     imgmax = self.extendedMax(imgdog, 0.01);
     imgmax = imgmax * mask;
  
-    iplt.plotOverlayLabel(img, imgmax.astype('int64'), alpha = False) 
-    iplt.plotOverlayLabel(imgdog, imgmax.astype('int64'), alpha = True) 
+    #iplt.plotOverlayLabel(img, imgmax.astype('int64'), alpha = False) 
+    #iplt.plotOverlayLabel(imgdog, imgmax.astype('int64'), alpha = True) 
 
  
     #center of maxima
     imglab, nlab = label(imgmax);
-    com = center_of_mass(img, imglab, index = numpy.arange(1, nlab));    
+    centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
+
     
-    #props = regionprops(imglab);
-    
-    #return numpy.array([props[:]['centroid']]), imglab, mask
-    
-    
+    #return centers, imglab, mask
+    return centers;
     
     
+from multiprocessing import Pool
+#from functools import partial
+
+def log_template(level, message):
+    print("{}: {}".format(level, message))
+
+ 
+
+
+#define the subroutine for the processing
+def processSubStack(dsr):
+    dataset = dsr[0];
+    segmentation = dsr[1];
+    zrange  = dsr[2];
+    
+    img = dataset[:,:, zrange[0]:zrange[1]];
+    return segmentation(img);
+    
+    
+def parallelProcessStack(dataset, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15, processes = 2, segmentation = self.detectCells):
+    """Parallel segmetation on a stack"""
+
+    
+    #determine z ranges
+    nz = dataset.shape[2];    
+    
+    chunksize = chunksizemax;
+    nchunks = math.ceil((nz - chunksize) / (1. * (chunksize - chunkoverlap)) + 1);   
+    chunksize = (nz + (nchunks-1) * chunkoverlap) / nchunks;
+    
+    #increase overlap if chunks to small
+    chunksizemin = min(chunksizemin, chunkoverlap);
+    if chunksize < chunksizemin:
+        print "parallelProcessStack: optimal chunk size " + str(chunksize) + " smaller than minimum chunk size " + str(chunksizemin) + "!"; 
+        chunksize = chunksizemin;
+        chunkoverlap = math.ceil(chunksize - (nz - chunksize) / (nchunks -1));
+        print "parallelProcessStack: setting chunk overlap to " + str(chunkoverlap) + "!";
+        
+    #calucalte actual chunk sizes
+    chunksizerest = chunksize;
+    chunksize = math.floor(chunksize);
+    chunksizerest = chunksizerest - chunksize;
+
+    zranges = [(0, chunksize)];
+    zcenters = [0];
+    n = 1;
+    csr = chunksizerest;
+    zhi = chunksize;
+
+    while (n < nchunks):
+        n += 1;
+
+        zhiold = zhi;
+        zlo = zhi - chunkoverlap;
+        zhi = zlo + chunksize;
+        
+        csr += chunksizerest;
+        if csr > 1:
+            csr = csr - 1;
+            zhi += 1;
+        
+        zhi = min(zhi, nz);
+        
+        zranges.append((zlo, zhi));
+        zcenters.append((zhiold - zlo) / 2. + zlo); 
+
+    zcenters.append(nz);
+    
+    print zcenters
+    print zranges    
+    
+    
+    argdata = [(dataset,segmentation, x) for x in zranges];
+       
+    # process in parallel
+    pool = Pool(processes = processes);
+    print processes
+    
+    results = pool.map(processSubStack, argdata);
+    
+    #join the results
+    for i in range(nchunks):
+        cts = results[i];
+        cts = cts[numpy.logical_and(cts[:,2] < zcenters[i+1], cts[:,2] >= zcenters[i]),:];
+        results[i] = cts;
+    
+    return numpy.concatenate(results);
+
     
 """
+
+
+
+# run segmentation
+img = data[:,:,0:30];
+
+import iDISCO.Segmentation.SpotDetection
+import sys
+self = sys.modules['iDISCO.Segmentation.SpotDetection'];
+
+
+
 function hdImage = hdTransform2(I, h, n)
     disp('Enter into h-d transform');
     smallNumber = 1e-7;
