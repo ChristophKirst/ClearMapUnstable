@@ -46,8 +46,11 @@ centers = iseg.parallelProcessStack(dataraw, chunksizemax = 50, chunksizemin = 3
 # write result
 
 fout = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524 segmentation.ims';
+f = io.openFile(fout);
 
+io.writePoints(f, centers, mode = 'o', radius = 0.5);
 
+f.close();
 
 
 
