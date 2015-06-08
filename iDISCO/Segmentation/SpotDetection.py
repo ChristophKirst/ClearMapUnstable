@@ -488,7 +488,7 @@ from multiprocessing import Pool
 def log_template(level, message):
     print("{}: {}".format(level, message))
 
- 
+import sys
 
 
 #define the subroutine for the processing
@@ -502,28 +502,48 @@ def processSubStack(dsr):
     
     print "processing chunk " + str(iid) + "/" + str(n);
     
+    print 'file   = ' + fn
+    print 'seg    = ' + str(segmentation);
+    print 'zrange = ' + str(zrange); 
+    sys.stdout.flush();
+    
     f = io.openFile(fn, mode = 'r');
-    dataset = io.readData(f, resolution=0);    
+    
+    print f    
+    
+    dataset = io.readData(f, resolution=0);  
+    
+    print 'ds'
+    print dataset
+    print zrange
     
     #img = dataset[:,:, zrange[0]:zrange[1]];
+    #img = dataset[1200:1400,1200:1400, zrange[0]:zrange[1]];
+    img = dataset[0:50,0:50, int(zrange[0]):int(zrange[1])];
     
-    img = dataset[1200:1400,1200:1400, zrange[0]:zrange[1]];
+    print 'shape'
+    print img.shape
+    #print dataset.shape
+
+
+    f.close();
     
-    f.close();    
-    
-    return segmentation(img);
+    sys.stdout.flush()    
+     
+    #return segmentation(img);
+    #return 0;
+    return numpy.array([[0,0,0.], [1,1,1]]);
     
     
 def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15, processes = 2, segmentation = self.detectCells):
     """Parallel segmetation on a stack"""
-    
+
+    #determine z ranges    
     f = io.openFile(fn);
     dataset = io.readData(f, resolution=0);
-    
-    #determine z ranges
     nz = dataset.shape[2];    
-    nz = 200;    
-    
+    print nz
+    nz = 100;    
     f.close();
     
     chunksize = chunksizemax;
@@ -557,11 +577,12 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
         zhi = zlo + chunksize;
         
         csr += chunksizerest;
-        if csr > 1:
+        if csr >= 1:
             csr = csr - 1;
             zhi += 1;
-        
-        zhi = min(zhi, nz);
+
+        if n == nchunks:        
+            zhi = nz;
         
         zranges.append((zlo, zhi));
         zcenters.append((zhiold - zlo) / 2. + zlo); 
@@ -574,7 +595,7 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
     
     argdata = []
     for i in range(nchunks):
-        argdata.append((f,segmentation, zranges[i], i, nchunks));
+        argdata.append((fn, segmentation, zranges[i], i, nchunks));
         
     
     # process in parallel
@@ -583,12 +604,22 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
     
     results = pool.map(processSubStack, argdata);
     
+    print '=========== results';
+    print results;
+    print nchunks
+    
+    print zranges
+    print zcenters
+        
     #join the results
     for i in range(nchunks):
         cts = results[i];
         cts[:,2] += zranges[i][0];
+        print cts
         cts = cts[numpy.logical_and(cts[:,2] < zcenters[i+1], cts[:,2] >= zcenters[i]),:];
         results[i] = cts;
+    
+    print results    
     
     return numpy.concatenate(results);
 
