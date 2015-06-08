@@ -72,14 +72,7 @@ h5file.close();
 
 
 
-
-
-
-
-
-
-
-
+"""
 
 import iDISCO.IO.Imaris as io
 
@@ -112,7 +105,7 @@ results = pool.map(readD, argdata);
 print results
 
 
-
+"""
 
 
 

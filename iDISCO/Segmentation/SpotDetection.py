@@ -426,7 +426,9 @@ def extendedMax(img, h):
     #regional max
     return self.regionalMax(img);
             
-    
+
+import time
+
 def detectCells(img, mask = None):
     """Detect Cells in 3d grayscale img using DoG filtering and maxima dtection"""
    
@@ -446,13 +448,23 @@ def detectCells(img, mask = None):
     if mask == None:
         mask = img > 0.01;
         mask = morph.binary_opening(mask, self.structureELement('Disk', (3,3,3)));
-        
-
+    
+    print 'test'
+    time.sleep(15);
+    
     #DoG filter
     fdog = self.filterKernel(ftype = 'DoG', size = [7,7,5]);
     imgdog = correlate(img, fdog);
     imgdog[imgdog < 0] = 0;
-    imgdog /= imgdog.max();
+    
+    imax = imgdog.max();
+    if imax == 0:
+        imax = 1;
+    imgdog /= imax;
+    
+    
+    print 'test2'
+    #time.sleep(15);
     
     #iplt.plotTiling(imgdog) 
 
@@ -468,6 +480,10 @@ def detectCells(img, mask = None):
     #extended maxima = h transform + regoinal maxima
     imgmax = self.extendedMax(imgdog, 0.01);
     imgmax = imgmax * mask;
+    
+    
+    print 'test3'
+    #time.sleep(15);
  
     #iplt.plotOverlayLabel(img, imgmax.astype('int64'), alpha = False) 
     #iplt.plotOverlayLabel(imgdog, imgmax.astype('int64'), alpha = True) 
@@ -489,7 +505,7 @@ def log_template(level, message):
     print("{}: {}".format(level, message))
 
 import sys
-
+import time
 
 #define the subroutine for the processing
 def processSubStack(dsr):
@@ -501,7 +517,6 @@ def processSubStack(dsr):
     n = dsr[4];
     
     print "processing chunk " + str(iid) + "/" + str(n);
-    
     print 'file   = ' + fn
     print 'seg    = ' + str(segmentation);
     print 'zrange = ' + str(zrange); 
@@ -509,31 +524,32 @@ def processSubStack(dsr):
     
     f = io.openFile(fn, mode = 'r');
     
-    print f    
+    #print f    
     
     dataset = io.readData(f, resolution=0);  
     
-    print 'ds'
-    print dataset
-    print zrange
+    #print 'ds'
+    #print dataset
+    #print zrange
     
     #img = dataset[:,:, zrange[0]:zrange[1]];
     #img = dataset[1200:1400,1200:1400, zrange[0]:zrange[1]];
-    img = dataset[0:50,0:50, int(zrange[0]):int(zrange[1])];
+    img = dataset[0:50, 0:50, zrange[0]:zrange[1]];
     
     print 'shape'
     print img.shape
-    #print dataset.shape
-
-
+    print dataset.shape
+    
+    sys.stdout.flush()        
+    
     f.close();
     
-    sys.stdout.flush()    
-     
-    #return segmentation(img);
-    #return 0;
-    return numpy.array([[0,0,0.], [1,1,1]]);
+    #time.sleep(15);
     
+    return segmentation(img);
+    #return 0;
+    #return numpy.array([[0,0,0.], [1,1,1]]);
+
     
 def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15, processes = 2, segmentation = self.detectCells):
     """Parallel segmetation on a stack"""
@@ -560,7 +576,7 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
         
     #calucalte actual chunk sizes
     chunksizerest = chunksize;
-    chunksize = math.floor(chunksize);
+    chunksize = int(math.floor(chunksize));
     chunksizerest = chunksizerest - chunksize;
 
     zranges = [(0, chunksize)];
@@ -584,7 +600,7 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
         if n == nchunks:        
             zhi = nz;
         
-        zranges.append((zlo, zhi));
+        zranges.append((int(zlo), int(zhi)));
         zcenters.append((zhiold - zlo) / 2. + zlo); 
 
     zcenters.append(nz);
@@ -602,24 +618,27 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
     pool = Pool(processes = processes);
     #print processes
     
-    results = pool.map(processSubStack, argdata);
+    resultsseg = pool.map(processSubStack, argdata);
     
-    print '=========== results';
-    print results;
-    print nchunks
+    #print '=========== results';
+    #print resultsseg;
+    #print nchunks
     
-    print zranges
-    print zcenters
+    #print zranges
+    #print zcenters
+    #print nchunks
+    
         
-    #join the results
+    #join the results  
+    results = [];
     for i in range(nchunks):
-        cts = results[i];
-        cts[:,2] += zranges[i][0];
-        print cts
-        cts = cts[numpy.logical_and(cts[:,2] < zcenters[i+1], cts[:,2] >= zcenters[i]),:];
-        results[i] = cts;
-    
-    print results    
+        cts = resultsseg[i];
+        
+        if cts.size > 0:
+            cts[:,2] += zranges[i][0];
+            cts = cts[numpy.logical_and(cts[:,2] < zcenters[i+1], cts[:,2] >= zcenters[i]),:];
+            results.append(cts);
+            
     
     return numpy.concatenate(results);
 
