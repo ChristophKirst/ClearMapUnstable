@@ -11,17 +11,30 @@ Created on Thu Jun  4 14:37:06 2015
 import numpy as np
 import matplotlib as mpl
 
-import iDISCO.Visualization.Plot as iplt
-import iDISCO.Segmentation.SpotDetection as iseg
 import iDISCO.IO.Imaris as io
 
-import time
+from iDISCO.ImageProcessing.SpotDetection import detectCells
+from iDISCO.ImageProcessing.ParallelProcessing import parallelProcessStack
+from iDISCO.Visualization.Plot import plotTiling, plotOverlayLabel
+
+from iDISCO.Utils.Timer import Timer
+timer = Timer();
 
 # open data
-#fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
 #fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
-fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
-fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
+#fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
+#fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
+
+centers = parallelProcessStack(fn, chunksizemax = 40, chunksizemin = 30, chunkoverlap = 15, processes = 5, segmentation = detectCells, zrange = (0, 60));
+timer.printElapsedTime("Main");
+
+
+#fout = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.data';
+#fout = '/home/ckirst/Desktop/cfosRegistrations/Adult cfos C row 20HF 150524 Points.data';
+#centers.tofile(fout);
+
+
 
 #f = io.openFile(fn);
 #dataset = io.readData(f, resolution=0);
@@ -32,25 +45,6 @@ fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spo
 #iplt.plotTiling(data[:,:,0:8])
 #segment
 #centers, imglab, imgmask = iseg.detectCells(data);
-
-t1 = time.time();
-
-centers = iseg.parallelProcessStack(fn, chunksizemax = 50, chunksizemin = 30, chunkoverlap = 15, processes = 5, segmentation = iseg.detectCells);
-
-#fout = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.data';
-#fout = '/home/ckirst/Desktop/cfosRegistrations/Adult cfos C row 20HF 150524 Points.data';
-#centers.tofile(fout);
-
-t2 = time.time();
-
-m, s = divmod(t2-t1, 60)
-h, m = divmod(m, 60)
-print "============="
-print "%d:%02d:%02d" % (h, m, s)
-print "============="
-
-#f.close();
-
 
 # write result
 
@@ -68,8 +62,45 @@ h5file.close();
 
 
 
+"""
+Test between mahotas and skiimage openings
 
+"""
 
+import numpy
+from mahotas import open
+from scipy.ndimage.morphology import binary_opening, grey_opening
+from iDISCO.ImageProcessing.Filter.StructureElement import structureElement
+from iDISCO.Visualization.Plot import plotTiling, plotOverlayLabel
+
+from iDISCO.Utils.Timer import Timer;
+
+t = Timer();
+img = numpy.random.rand(2000,2000) * 65535;
+img = img.astype('int')
+
+res = grey_opening(img, structure = structureElement('Disk', (30,30)));
+
+t.printElapsedTime('scipy');
+t.reset();
+
+res2 = open(img, structureElement('Disk', (30,30)).astype('bool'));
+t.printElapsedTime('mahotas');
+
+from skimage.morphology import opening
+
+t.reset();
+se = structureElement('Disk', (30,30)).astype('uint8');
+res3 = opening(img.astype('uint8'), se);
+t.printElapsedTime('skimage');
+t.reset();
+
+x = (res - res2);
+print (x.min(), x.max())
+
+plotTiling(numpy.dstack((img, res, res2, res3)))
+
+#seems not to work correctly -> scipy gets very slow for larger images (??)
 
 
 """

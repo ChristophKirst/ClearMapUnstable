@@ -13,7 +13,7 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 
-def plotTiling(image, tiling = "automatic"): 
+def plotTiling(image, tiling = "automatic", maxtiles = 20): 
     """Plot 3d image as tiles"""
     
     dim = len(image.shape);
@@ -33,7 +33,12 @@ def plotTiling(image, tiling = "automatic"):
     else:
         ntiles = image.shape[2]; # 3d color = 4d
         cmap = None;
-
+    
+    if ntiles > maxtiles:
+        print "plotTiling: number of tiles %d very big! Clipping at to %d!" % (ntiles, maxtiles);
+        ntiles = maxtiles;
+    
+    
     if tiling == "automatic":
         nx = math.floor(math.sqrt(ntiles));
         ny = int(math.ceil(ntiles / nx));
@@ -41,7 +46,7 @@ def plotTiling(image, tiling = "automatic"):
     else:
         nx = int(tiling[0]);
         ny = int(tiling[1]);     
-        
+    
     #print image.shape
         
     fig, axarr = plt.subplots(nx, ny, sharex = True, sharey = True);
@@ -49,7 +54,7 @@ def plotTiling(image, tiling = "automatic"):
     axarr = axarr.flatten();
     
     imin = image.min();
-    imax = image.max();    
+    imax = image.max();
     
     for i in range(0, ntiles): 
         a = axarr[i];
