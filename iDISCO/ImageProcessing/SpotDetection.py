@@ -17,12 +17,13 @@ self = sys.modules[__name__];
 import numpy
 
 #import mahotas as morph
-from scipy.ndimage.morphology import binary_opening, grey_opening
+#from scipy.ndimage.morphology import binary_opening, grey_opening
 from scipy.ndimage.filters import correlate
 #from scipy.ndimage import maximum_filter
 from scipy.ndimage.measurements import label, center_of_mass
 
-from skimage.morphology import reconstruction
+from skimage.morphology import reconstruction, opening
+from skimage.filter.rank import tophat
 #from skimage.measure import regionprops
 
 from mahotas import regmin
@@ -70,8 +71,9 @@ def detectCells(img, verbose = False, out = sys.stdout):
     
     # background subtraction in each slice
     for z in range(img.shape[2]):
-        img[:,:,z] = img[:,:,z] - grey_opening(img[:,:,z], structure = structureElement('Disk', (30,30)));
+        #img[:,:,z] = img[:,:,z] - grey_opening(img[:,:,z], structure = structureElement('Disk', (30,30)));
         #img[:,:,z] = img[:,:,z] - morph.grey_opening(img[:,:,z], structure = self.structureELement('Disk', (150,150)));
+        img[:,:,z] = tophat()
     
     out.write(timer.elapsedTime(head = 'Background'));
     timer.reset();
