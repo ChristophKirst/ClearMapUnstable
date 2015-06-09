@@ -21,12 +21,15 @@ from iDISCO.Utils.Timer import Timer
 timer = Timer();
 
 # open data
-#fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
-fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+#fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
 #fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
 #fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
 
-centers = parallelProcessStack(fn, chunksizemax = 40, chunksizemin = 30, chunkoverlap = 15, processes = 5, segmentation = detectCells, zrange = (0, 60));
+
+
+centers = parallelProcessStack(fn, chunksizemax = 40, chunksizemin = 30, chunkoverlap = 15, 
+                               processes = 5, segmentation = detectCells, zrange = (0, 60));
 timer.printElapsedTime("Main");
 
 
@@ -35,35 +38,6 @@ timer.printElapsedTime("Main");
 #centers.tofile(fout);
 
 
-
-f = io.openFile(fn);
-dataset = io.readData(f, resolution=0);
-print dataset.shape
-
-dataraw = dataset[1200:1400,1200:1400,1000:1160];
-
-print dataraw.dtype
-print (dataraw.max(), dataraw.min())
-
-datamax = np.iinfo(dataraw.dtype).max;
-
-plotTiling(dataraw[:,:,0:8])
-
-# normalize data -> to check
-#img = img.astype('float');
-img = dataraw;
-dmax = 0.075 * datamax;
-ids = img > dmax;
-img[ids] = dmax;
-img *= datamax dmax; 
-#img = img.astype('unit16');
-
-plotTiling(img[:,:,0:8])
-
-
-f.close();
-segment
-centers, imglab, imgmask = iseg.detectCells(data);
 
 # write result
 
@@ -81,6 +55,37 @@ h5file.close();
 
 
 
+
+
+
+
+
+""" Open Data """
+
+import iDISCO.IO.Imaris as io
+import numpy as np
+
+fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+
+
+f = io.openFile(fn);
+dataset = io.readData(f, resolution=0);
+print dataset.shape
+
+dataraw = dataset[1200:1600,1200:1600,1000:1160];
+
+print dataraw.dtype
+print (dataraw.max(), dataraw.min())
+
+datamax = np.iinfo(dataraw.dtype).max;
+
+
+#plotTiling(img[:,:,0:8])
+#f.close();
+
+
+
+
 """
 Test between openings for speed
 
@@ -89,36 +94,49 @@ Test between openings for speed
 import numpy
 from mahotas import open
 from scipy.ndimage.morphology import binary_opening, grey_opening
-from skimage.morphology import opening
+from skimage.morphology import opening, white_tophat
 from skimage.filter.rank import tophat
+import cv2
 
 from iDISCO.ImageProcessing.Filter.StructureElement import structureElement
 from iDISCO.Visualization.Plot import plotTiling, plotOverlayLabel
 
 from iDISCO.Utils.Timer import Timer;
 
-t = Timer();
+
 img = numpy.random.rand(2000,2000) * 65535;
 img = img.astype('int')
 
-res = grey_opening(img, structure = structureElement('Disk', (30,30)));
+dataraw = dataset[:,:,1160];
 
+img = dataraw[:,:];
+img.shape
+
+
+t = Timer();
+res = grey_opening(img, structure = structureElement('Disk', (15,15)));
 t.printElapsedTime('scipy');
-t.reset();
-
-res2 = open(img, structureElement('Disk', (30,30)).astype('bool'));
-t.printElapsedTime('mahotas');
 
 
+#t.reset();
+#res2 = open(img, structureElement('Disk', (30,30)).astype('bool'));
+#t.printElapsedTime('mahotas');
 
-
-se = structureElement('Disk', (30,30)).astype('uint16');
-
-from skimage.morphology import disk
-se = disk(15);
+#t.reset();
+#res2 = open(img, structureElement('Disk', (30,30)).astype('bool'));
+#t.printElapsedTime('mahotas');
 
 t.reset();
-res3 = tophat(img.astype('uint16'), se);
+se = structureElement('Disk', (55,55)).astype('uint8');
+res2 = cv2.morphologyEx(img, cv2.MORPH_OPEN, se)
+t.printElapsedTime('opencv');
+
+#from skimage.morphology import disk
+#se = disk(10);
+
+t.reset();
+#res3 = opening(img.astype('uint16'), se);
+res3 = white_tophat(img.astype('uint16'), se);
 
 t.printElapsedTime('skimage');
 t.reset();
@@ -126,9 +144,72 @@ t.reset();
 x = (res3);
 print (x.min(), x.max())
 
-plotTiling(numpy.dstack((img, res3)))
+plotTiling(numpy.dstack((20 * img, 20 * (img - res2))))
 
 #seems not to work correctly -> scipy gets very slow for larger images (??)
+
+
+
+
+"""
+Test Speed of Correlation
+"""
+
+
+import scipy
+from iDISCO.ImageProcessing.Filter.FilterKernel import filterKernel
+
+from skimage.feature import match_template
+
+from iDISCO.Utils.Timer import Timer;
+
+timer = Timer();
+
+#DoG filter
+fdog = filterKernel(ftype = 'DoG', size = [7,7,5]);
+img = dataset[:,:,1000:1016];
+
+#timer.reset();
+#res = scipy.signal.correlate(img, fdog);
+#timer.printElapsedTime(head = 'scipy.signal');
+
+
+#res = match_template(img, fdog);
+#timer.printElapsedTime(head = 'skimage');
+
+timer.reset();
+res2 = scipy.ndimage.filters.correlate(img, fdog);
+timer.printElapsedTime(head = 'scipy.ndimage');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 """

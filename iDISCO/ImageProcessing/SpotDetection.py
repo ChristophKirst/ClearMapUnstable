@@ -22,8 +22,11 @@ from scipy.ndimage.filters import correlate
 #from scipy.ndimage import maximum_filter
 from scipy.ndimage.measurements import label, center_of_mass
 
-from skimage.morphology import reconstruction, opening
-from skimage.filter.rank import tophat
+from skimage.morphology import reconstruction
+
+import cv2
+
+#from skimage.filter.rank import tophat
 #from skimage.measure import regionprops
 
 from mahotas import regmin
@@ -32,7 +35,6 @@ from iDISCO.Utils.Timer import Timer
 from iDISCO.ImageProcessing.Filter.StructureElement import structureElement
 from iDISCO.ImageProcessing.Filter.FilterKernel import filterKernel
 from iDISCO.Visualization.Plot import plotTiling, plotOverlayLabel
-
    
 def hMaxTransform(img, h):
     """Calculates h maximum transformation of an image."""
@@ -54,48 +56,49 @@ def extendedMax(img, h):
     return self.regionalMax(img);
             
 
+import scipy
+
 def detectCells(img, verbose = False, out = sys.stdout):
     """Detect Cells in 3d grayscale img using DoG filtering and maxima dtection"""
     
     timer = Timer();
     
     # normalize data -> to check
-    img = img.astype('float');
-    dmax = 0.075 * 65535;
-    ids = img > dmax;
-    img[ids] = dmax;
-    img /= dmax; 
+    #img = img.astype('float');
+    #dmax = 0.075 * 65535;
+    #ids = img > dmax;
+    #img[ids] = dmax;
+    #img /= dmax; 
+    #out.write(timer.elapsedTime(head = 'Normalization'));
     
-    out.write(timer.elapsedTime(head = 'Normalization'));
-    timer.reset();
     
     # background subtraction in each slice
+    timer.reset();
+    se = structureElement('Disk', (15,15)).astype('uint8');
     for z in range(img.shape[2]):
         #img[:,:,z] = img[:,:,z] - grey_opening(img[:,:,z], structure = structureElement('Disk', (30,30)));
         #img[:,:,z] = img[:,:,z] - morph.grey_opening(img[:,:,z], structure = self.structureELement('Disk', (150,150)));
-        img[:,:,z] = tophat()
-    
+        img[:,:,z] = cv2.morphologyEx(img[:,:,z], cv2.MORPH_OPEN, se)    
     out.write(timer.elapsedTime(head = 'Background'));
-    timer.reset();
-    
+
     # mask
+    #timer.reset();
     #if mask == None: #explicit mask
     #    mask = img > 0.01;
     #    mask = binary_opening(mask, self.structureELement('Disk', (3,3,3)));
-    img[img > 0.01] = 0; # masking in place
+    #img[img < 0.01] = 0; # masking in place
     
-    out.write(timer.elapsedTime(head = 'Mask'));
-    timer.reset();
+    #out.write(timer.elapsedTime(head = 'Mask'));
     
     
     #DoG filter
+    timer.reset();
     fdog = filterKernel(ftype = 'DoG', size = [7,7,5]);
-    img = correlate(img, fdog);
+    #img = correlate(img, fdog);
+    img = scipy.signal.correlate(img, fdog);
     img[img < 0] = 0;
-    
     out.write(timer.elapsedTime(head = 'DoG'));
-    timer.reset();    
-    
+       
     imax = img.max();
     if imax == 0:
         imax = 1;
@@ -103,11 +106,10 @@ def detectCells(img, verbose = False, out = sys.stdout):
     
     
     # extended maxima
+    timer.reset(); 
     img = self.hMaxTransform(img, 0.01);
     img = self.regionalMax(img);
-    
     out.write(timer.elapsedTime(head = 'Extened Max'));
-    timer.reset();
     
     if verbose:
         plotTiling(img) 
@@ -116,12 +118,11 @@ def detectCells(img, verbose = False, out = sys.stdout):
     
     
     #center of maxima
+    timer.reset();
     imglab, nlab = label(img);
     centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
-    
     out.write(timer.elapsedTime(head = 'Cell Centers'));
-    timer.reset();
-    
+
     
     #return centers, imglab, mask
     return centers;
