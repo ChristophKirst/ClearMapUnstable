@@ -21,35 +21,71 @@ from iDISCO.Utils.Timer import Timer
 timer = Timer();
 
 # open data
-fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+
+#mount windows folder 
+#sudo mount -t vboxsf D_DRIVE ./Windows/
+
+
+#fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
 #fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
-#fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
+fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
 #fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
 
-
-
-centers = parallelProcessStack(fn, chunksizemax = 40, chunksizemin = 30, chunkoverlap = 15, 
-                               processes = 5, segmentation = detectCells, zrange = (0, 60));
+centers, centint = parallelProcessStack(fn, chunksizemax = 40, chunksizemin = 30, chunkoverlap = 15, 
+                               processes = 5, segmentation = detectCells, zrange = (800, 860));
 timer.printElapsedTime("Main");
 
 
-#fout = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.data';
+fout = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.cent';
+fouti = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.int';
 #fout = '/home/ckirst/Desktop/cfosRegistrations/Adult cfos C row 20HF 150524 Points.data';
-#centers.tofile(fout);
+centers.tofile(fout);
+centint.tofile(fouti);
+
+
+#!/usr/bin/env python
+import numpy as np
+import pylab as P
+
+# the histogram of the data with histtype='step'
+n, bins, patches = P.hist(centint, 50, normed=1, histtype='stepfilled')
+P.setp(patches, 'facecolor', 'g', 'alpha', 0.75)
+
+# add a line showing the expected distribution
+#y = P.normpdf( bins, mu, sigma)
+l = P.plot(bins, y, 'k--', linewidth=1.5)
 
 
 
-# write result
+
+# write resultf.close();
+
+c = centers.copy();
+c = c[:, [2,1,0]];
+
+#c = numpy.array([[0,0,0], [2176,  2560, 1920]])
+#(1920, 2560, 2176600)
+
+c[:,0] = c[:,0] * 4.0625;
+c[:,1] = c[:,1] * 4.0625;
+c[:,2] = c[:,2] * 3; # 4.0625;
+
+#iid = np.logical_and(c[:,2] > 2000, c[:,2]  < 3000);
+#iid2 = np.logical_and(c[:,1] > 2000, c[:,1]  < 3000);
+#iid = np.logical_and(iid, iid2);
+#c2 = c[iid, :];
+
+
+iid = centint > 130;
+c2 = c[iid,:];
 
 #fout = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524 segmentation.ims';
 fout = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
 h5file = io.openFile(fout);
 
-io.writePoints(h5file, centers, mode = 'o', radius = 0.5);
+io.writePoints(h5file, c2, mode = 'o', radius = 0.5);
 
 h5file.close();
-
-
 
 
 
@@ -65,25 +101,53 @@ h5file.close();
 import iDISCO.IO.Imaris as io
 import numpy as np
 
-fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+#fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
 
 
 f = io.openFile(fn);
 dataset = io.readData(f, resolution=0);
 print dataset.shape
 
-dataraw = dataset[1200:1600,1200:1600,1000:1160];
+#dataraw = dataset[1200:1600,1200:1600,1000:1160];
+#print dataraw.dtype
+#print (dataraw.max(), dataraw.min())
+#datamax = np.iinfo(dataraw.dtype).max;
 
-print dataraw.dtype
-print (dataraw.max(), dataraw.min())
+#img = dataset[0:500,0:500,1000:1008];
+img = dataset[600:1000,1600:1800,800:830];
+img = dataset[:,:,800:809];
 
-datamax = np.iinfo(dataraw.dtype).max;
 
-
-#plotTiling(img[:,:,0:8])
+#plotTiling(10 * img)
 #f.close();
 
 
+cc = centers.astype('int');
+cc = cc[cc[:,2] < 809, :];
+#cc = cc[cc[:,0] < 500, :];
+#cc = cc[cc[:,1] < 500, :];
+
+
+
+for i in range(cc.shape[0]):
+    imgc[cc[i,0], cc[i,1], cc[i,2]-800] = 1;
+    
+    
+img = img.astype('float');
+img /= img.max();
+img[img > 0.5] = 0.5;
+
+
+cintensity = numpy.array([img[cc[i,0], cc[i,1], cc[i,2]-800] for i in range(cc.shape[0])]);
+print (cintensity.min(), cintensity.max())
+
+imgc = numpy.zeros(img.shape)
+for i in range(cc.shape[0]):
+    if cintensity[i] > 0.05:
+        imgc[cc[i,0], cc[i,1], cc[i,2]-800] = 1;
+      
+plotOverlayLabel(img * 5, imgc)
 
 
 """
@@ -114,7 +178,7 @@ img.shape
 
 
 t = Timer();
-res = grey_opening(img, structure = structureElement('Disk', (15,15)));
+res = grey_opening(img,#DoG filter
 t.printElapsedTime('scipy');
 
 
@@ -127,7 +191,7 @@ t.printElapsedTime('scipy');
 #t.printElapsedTime('mahotas');
 
 t.reset();
-se = structureElement('Disk', (55,55)).astype('uint8');
+se = structureElement('Disk', (15,15)).astype('uint8');
 res2 = cv2.morphologyEx(img, cv2.MORPH_OPEN, se)
 t.printElapsedTime('opencv');
 
@@ -144,7 +208,7 @@ t.reset();
 x = (res3);
 print (x.min(), x.max())
 
-plotTiling(numpy.dstack((20 * img, 20 * (img - res2))))
+plotTiling(numpy.dstack((10 * img, 10 * (img - res2))))
 
 #seems not to work correctly -> scipy gets very slow for larger images (??)
 
@@ -184,10 +248,8 @@ timer.printElapsedTime(head = 'scipy.ndimage');
 
 
 
-
-
-
-
+dsname = "DataSetInfo/OME Image Tags"
+ds = f.get(dsname)
 
 
 

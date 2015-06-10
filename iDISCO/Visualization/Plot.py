@@ -35,7 +35,7 @@ def plotTiling(image, tiling = "automatic", maxtiles = 20):
         cmap = None;
     
     if ntiles > maxtiles:
-        print "plotTiling: number of tiles %d very big! Clipping at to %d!" % (ntiles, maxtiles);
+        print "plotTiling: number of tiles %d very big! Clipping at %d!" % (ntiles, maxtiles);
         ntiles = maxtiles;
     
     

@@ -33,7 +33,7 @@ def processSubStack(dsr):
     f = io.openFile(fn, mode = 'r');
     dataset = io.readData(f, resolution=0);
     
-    pw.write("Dataset shape: " + str(dataset.shape) + '\n');
+    pw.write("Dataset shape: " + str(dataset.shape));
     
     img = dataset[:,:, zrange[0]:zrange[1]];
     #img = dataset[1200:1400,1200:1400, zrange[0]:zrange[1]];   
@@ -138,16 +138,21 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
     #print zcenters
     #print nchunks
     
-        
+    
     #join the results  
     results = [];
+    resultsi = [];
     for i in range(nchunks):
-        cts = resultsseg[i];
+        cts = resultsseg[i][0];
+        cti = resultsseg[i][1];
         
         if cts.size > 0:
             cts[:,2] += zranges[i][0];
-            cts = cts[numpy.logical_and(cts[:,2] < zcenters[i+1], cts[:,2] >= zcenters[i]),:];
+            iid = numpy.logical_and(cts[:,2] < zcenters[i+1], cts[:,2] >= zcenters[i]);
+            cts = cts[iid,:];
+            cti = cti[iid];
             results.append(cts);
+            resultsi.append(cti);
             
     
-    return numpy.concatenate(results);
+    return (numpy.concatenate(results), numpy.concatenate(resultsi))

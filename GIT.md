@@ -87,7 +87,7 @@ in case you have something to contribute to the code:
  
   * follow the steps in the Backup section first
 
-  * got to [http://github.com](http://github.com) and click pull request 
+  * got to [https://github.com/ChristophKirst/iDisco](https://github.com/ChristophKirst/iDisco) and click pull request 
 
 
 Refs
