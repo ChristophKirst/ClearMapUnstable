@@ -13,7 +13,8 @@ Created on Thu Jun  4 14:37:06 2015
 
 import sys
 self = sys.modules[__name__];
-self = sys.modules['iDISCO.ImageProcessing.SpotDetection']
+#self = sys.modules['iDISCO.ImageProcessing.SpotDetection']
+#self = sys.modules['__main__'];
 
 import numpy
 
@@ -55,13 +56,12 @@ def regionalMax(img):
 def extendedMax(img, h):
     """Calculates extened h maxima of an image."""
     #h max transformimport scipy
-    img = self.hMaxTransform(img, h);
+    img = hMaxTransform(img, h);
         
     #regional max
-    return self.regionalMax(img);
-            
-
-
+    return regionalMax(img);
+     
+@profile       
 def detectCells(img, verbose = False, out = sys.stdout):
     """Detect Cells import scipyin 3d grayscale img using DoG filtering and maxima dtection"""
     
@@ -121,8 +121,8 @@ def detectCells(img, verbose = False, out = sys.stdout):
     
     # extended maxima
     timer.reset(); 
-    imgmax = self.hMaxTransform(img, 20);
-    imgmax = self.regionalMax(imgmax);
+    imgmax = hMaxTransform(img, 20);
+    imgmax = regionalMax(imgmax);
     imgmax = imgmax.astype('float') * img;
     th = 20;
     imgmax = imgmax > th;
@@ -155,7 +155,43 @@ def detectCells(img, verbose = False, out = sys.stdout):
     return (centers, cintensity);
     
 
+
+@profile 
+def test():
+    import iDISCO.IO.Imaris as io  
     
+    fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+    #fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+    #fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
+    #fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
+    
+    f = io.openFile(fn);
+    dataset = io.readData(f, resolution=0);
+    #img = dataset[0:500,0:500,1000:1008];
+    #img = dataset[600:1000,1600:1800,800:830];
+    img = dataset[500:1500,500:1500,800:809];    
+    f.close();
+    
+    print self
+    
+    #m = sys.modules['iDISCO.ImageProcessing.SpotDetection']
+    c = detectCells(img);
+    
+    print 'done !'
+
+
+if __name__ == '__main__':
+    test();
+    
+
+    
+    
+    
+    
+    
+    
+
+   
 """plotTiling(numpy.dstack((10 * img, 1 * (img - res2))))
 
 

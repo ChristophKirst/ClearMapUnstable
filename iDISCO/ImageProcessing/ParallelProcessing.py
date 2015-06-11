@@ -14,6 +14,7 @@ from iDISCO.Utils.ProcessWriter import ProcessWriter;
 from iDISCO.Utils.Timer import Timer;
 
 #define the subroutine for the processing
+@profile
 def processSubStack(dsr):
     
     fn = dsr[0];
@@ -35,7 +36,7 @@ def processSubStack(dsr):
     
     pw.write("Dataset shape: " + str(dataset.shape));
     
-    img = dataset[:,:, zrange[0]:zrange[1]];
+    img = dataset[0:600,0:600, zrange[0]:zrange[1]];
     #img = dataset[1200:1400,1200:1400, zrange[0]:zrange[1]];   
     #img = dataset[0:50, 0:50, zrange[0]:zrange[1]];
     
