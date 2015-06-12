@@ -30,10 +30,10 @@ def readDataSet(h5file, resolution = 4, channel = 0, timepoint = 0):
     return h5file.get(dsname);
     
     
-def readData(filename, x = all, y = all, z = all):
+def readData(filename, x = all, y = all, z = all, resolution = 4, channel = 0, timepoint = 0):
     
     f = h5py.File(filename, "r");
-    dataset = self.readDataSet(f, resolution=0);
+    dataset = self.readDataSet(f, resolution = resolution, channel = channel, timepoint  = timepoint);
     datasetsize = dataset.shape;
     
     if x == all:
@@ -44,7 +44,7 @@ def readData(filename, x = all, y = all, z = all):
     
     if z == all:
         z = (0, datasetsize[2]);
-        
+    
     
     img = dataset[z[0]:z[1],y[0]:y[1], z[0]:z[1]];
     img = img.transpose((2,1,0)); # imaris stores files in reverse x,y,z ordering
@@ -55,7 +55,6 @@ def readData(filename, x = all, y = all, z = all):
     
     return img;
 
-  
 
 
   

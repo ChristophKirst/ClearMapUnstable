@@ -10,15 +10,27 @@ Created on Thu Jun  4 14:37:06 2015
 @author: ckirst
 """
 
-import 
 import numpy
+import scipy.
 
 import sys
 self = sys.modules[__name__];
 
 
+
+
 def readData(filename, x = all, y = all, z = all):
+    """Read data from individual image z slices"""" 
+        
+    #get path    
     
+    
+    #determine zrange
+    if z == all:
+        
+        
+     
+    #determine x,y range (assuming same image size) 
     f = h5py.File(filename, "r");
     dataset = self.readDataSet(f, resolution=0);
     datasetsize = dataset.shape;
