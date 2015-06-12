@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Simple Interface to Imaris Files 
+Simple Interface to OME files
 
-read data and write points
+read data
 
 
 Created on Thu Jun  4 14:37:06 2015

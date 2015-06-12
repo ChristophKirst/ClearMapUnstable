@@ -14,7 +14,7 @@ from iDISCO.Utils.ProcessWriter import ProcessWriter;
 from iDISCO.Utils.Timer import Timer;
 
 #define the subroutine for the processing
-@profile
+
 def processSubStack(dsr):
     
     fn = dsr[0];
@@ -31,16 +31,7 @@ def processSubStack(dsr):
     
     timer = Timer();
     
-    f = io.openFile(fn, mode = 'r');
-    dataset = io.readData(f, resolution=0);
-    
-    pw.write("Dataset shape: " + str(dataset.shape));
-    
-    img = dataset[0:600,0:600, zrange[0]:zrange[1]];
-    #img = dataset[1200:1400,1200:1400, zrange[0]:zrange[1]];   
-    #img = dataset[0:50, 0:50, zrange[0]:zrange[1]];
-    
-    f.close();
+    img = readData(fn, zrange = zrange);
     
     pw.write(timer.elapsedTime(head = 'Reading data of size ' + str(img.shape)));
     timer.reset();    

@@ -61,7 +61,7 @@ def extendedMax(img, h):
     #regional max
     return regionalMax(img);
      
-@profile       
+     
 def detectCells(img, verbose = False, out = sys.stdout):
     """Detect Cells import scipyin 3d grayscale img using DoG filtering and maxima dtection"""
     
@@ -153,10 +153,10 @@ def detectCells(img, verbose = False, out = sys.stdout):
     cintensity = numpy.array([img[centers[i,0], centers[i,1], centers[i,2]] for i in range(centers.shape[0])]);        
     
     return (centers, cintensity);
-    
 
 
-@profile 
+
+       
 def test():
     import iDISCO.IO.Imaris as io  
     
@@ -177,83 +177,12 @@ def test():
     #m = sys.modules['iDISCO.ImageProcessing.SpotDetection']
     c = detectCells(img);
     
-    print 'done !'
+    print 'done, found %d cells !' % c.shape[0]
 
 
 if __name__ == '__main__':
     test();
     
-
-    
-    
-    
-    
-    
-    
-
-   
-"""plotTiling(numpy.dstack((10 * img, 1 * (img - res2))))
-
-
-
-# run segmentation
-img = data[:,:,0:30];
-
-import iDISCO.Segmentation.SpotDetection
-import sys
-self = sys.modules['iDISCO.Segmentation.SpotDetection'];
-
-
-
-function hdImage = hdTransform2(I, h, n)
-    disp('Enter into h-d transform');
-    smallNumber = 1e-7;
-    se = strel(ones(n));
-    J = I-h;
-    flag = 0;
-%      [R C] = size(I);
-%    count = 0;
-    pI = J*0;
-    while flag==0
-        tempJ = min( imdilate(J, se), I);
-        resud = sum( sum(abs(J-tempJ) ));
-        J =  tempJ;
-        pI = max(pI,J);
-%        count = count +1
-        if resud < smallNumber
-            flag = 1;
-        end
-    end
-
-    hdImage = I-pI;
-%         figure
-%     subplot(2,2,1)
-%     imshow(I,[])
-%     subplot(2,2,2)
-%      imshow(pI,[])
-%         subplot(2,2,3)
-%      imshow( hdImage,[])
-%      colormap('jet')
-%      linkaxes;
-    disp('Exit from h-d transform');
-end 
-
-
-
-    
-    
-import numpy as np
-from skimage.morphology import reconstruction
-
-x = np.linspace(0, 4 * np.pi)
-y_mask = np.cos(x)
-
-y_seed = y_mask.min() * np.ones_like(x)
-y_seed[0] = 0.5
-y_seed[-1] = 0
-y_rec = reconstruction(y_seed, y_mask)
-"""
-
     
     
     
