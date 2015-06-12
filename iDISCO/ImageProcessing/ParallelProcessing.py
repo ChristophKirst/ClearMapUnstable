@@ -14,7 +14,7 @@ from iDISCO.Utils.ProcessWriter import ProcessWriter;
 from iDISCO.Utils.Timer import Timer;
 
 #define the subroutine for the processing
-@profile
+
 def processSubStack(dsr):
     
     fn = dsr[0];

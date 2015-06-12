@@ -60,8 +60,7 @@ def extendedMax(img, h):
         
     #regional max
     return regionalMax(img);
-     
-@profile       
+          
 def detectCells(img, verbose = False, out = sys.stdout):
     """Detect Cells import scipyin 3d grayscale img using DoG filtering and maxima dtection"""
     
@@ -155,8 +154,7 @@ def detectCells(img, verbose = False, out = sys.stdout):
     return (centers, cintensity);
     
 
-
-@profile 
+ 
 def test():
     import iDISCO.IO.Imaris as io  
     
