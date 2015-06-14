@@ -13,7 +13,8 @@ Created on Thu Jun  4 14:37:06 2015
 
 import sys
 self = sys.modules[__name__];
-self = sys.modules['iDISCO.ImageProcessing.SpotDetection']
+#self = sys.modules['iDISCO.ImageProcessing.SpotDetection']
+#self = sys.modules['__main__'];
 
 import numpy
 
@@ -55,11 +56,10 @@ def regionalMax(img):
 def extendedMax(img, h):
     """Calculates extened h maxima of an image."""
     #h max transformimport scipy
-    img = self.hMaxTransform(img, h);
+    img = hMaxTransform(img, h);
         
     #regional max
-    return self.regionalMax(img);
-            
+    return regionalMax(img);
 
 
 def detectCells(img, verbose = False, out = sys.stdout):
@@ -121,8 +121,8 @@ def detectCells(img, verbose = False, out = sys.stdout):
     
     # extended maxima
     timer.reset(); 
-    imgmax = self.hMaxTransform(img, 20);
-    imgmax = self.regionalMax(imgmax);
+    imgmax = hMaxTransform(img, 20);
+    imgmax = regionalMax(imgmax);
     imgmax = imgmax.astype('float') * img;
     th = 20;
     imgmax = imgmax > th;
@@ -153,71 +153,35 @@ def detectCells(img, verbose = False, out = sys.stdout):
     cintensity = numpy.array([img[centers[i,0], centers[i,1], centers[i,2]] for i in range(centers.shape[0])]);        
     
     return (centers, cintensity);
+
+
+
+def test():
+    import iDISCO.IO.Imaris as io  
     
-
+    fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+    #fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+    #fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
+    #fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
     
-"""plotTiling(numpy.dstack((10 * img, 1 * (img - res2))))
-
-
-
-# run segmentation
-img = data[:,:,0:30];
-
-import iDISCO.Segmentation.SpotDetection
-import sys
-self = sys.modules['iDISCO.Segmentation.SpotDetection'];
-
-
-
-function hdImage = hdTransform2(I, h, n)
-    disp('Enter into h-d transform');
-    smallNumber = 1e-7;
-    se = strel(ones(n));
-    J = I-h;
-    flag = 0;
-%      [R C] = size(I);
-%    count = 0;
-    pI = J*0;
-    while flag==0
-        tempJ = min( imdilate(J, se), I);
-        resud = sum( sum(abs(J-tempJ) ));
-        J =  tempJ;
-        pI = max(pI,J);
-%        count = count +1
-        if resud < smallNumber
-            flag = 1;
-        end
-    end
-
-    hdImage = I-pI;
-%         figure
-%     subplot(2,2,1)
-%     imshow(I,[])
-%     subplot(2,2,2)
-%      imshow(pI,[])
-%         subplot(2,2,3)
-%      imshow( hdImage,[])
-%      colormap('jet')
-%      linkaxes;
-    disp('Exit from h-d transform');
-end 
-
-
-
+    f = io.openFile(fn);
+    dataset = io.readData(f, resolution=0);
+    #img = dataset[0:500,0:500,1000:1008];
+    #img = dataset[600:1000,1600:1800,800:830];
+    img = dataset[500:1500,500:1500,800:809];    
+    f.close();
     
+    print self
     
-import numpy as np
-from skimage.morphology import reconstruction
+    #m = sys.modules['iDISCO.ImageProcessing.SpotDetection']
+    c = detectCells(img);
+    
+    print 'done, found %d cells !' % c.shape[0]
 
-x = np.linspace(0, 4 * np.pi)
-y_mask = np.cos(x)
 
-y_seed = y_mask.min() * np.ones_like(x)
-y_seed[0] = 0.5
-y_seed[-1] = 0
-y_rec = reconstruction(y_seed, y_mask)
-"""
-
+if __name__ == '__main__':
+    test();
+    
     
     
     

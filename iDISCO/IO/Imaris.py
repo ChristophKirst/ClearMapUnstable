@@ -13,6 +13,9 @@ Created on Thu Jun  4 14:37:06 2015
 import h5py
 import numpy
 
+import sys
+self = sys.modules[__name__];
+
 
 def openFile(filename, mode = "a"):
     return h5py.File(filename, "a");
@@ -21,11 +24,40 @@ def closeFile(h5file, mode = "a"):
     return h5file.close();
 
 
-def readData(h5file, resolution = 4, channel = 0, timepoint = 0):
+def readDataSet(h5file, resolution = 4, channel = 0, timepoint = 0):
     """Read data from Imaris file and returns HDF5 dataset"""
     dsname = "/DataSet/ResolutionLevel " + str(resolution) + "/TimePoint " + str(timepoint) + "/Channel " + str(channel) + "/Data";
     return h5file.get(dsname);
     
+    
+def readData(filename, x = all, y = all, z = all, resolution = 4, channel = 0, timepoint = 0):
+    
+    f = h5py.File(filename, "r");
+    dataset = self.readDataSet(f, resolution = resolution, channel = channel, timepoint  = timepoint);
+    datasetsize = dataset.shape;
+    
+    if x == all:
+        x = (0, datasetsize[0]);
+    
+    if y == all:
+        y = (0, datasetsize[1]);
+    
+    if z == all:
+        z = (0, datasetsize[2]);
+    
+    
+    img = dataset[z[0]:z[1],y[0]:y[1], z[0]:z[1]];
+    img = img.transpose((2,1,0)); # imaris stores files in reverse x,y,z ordering
+    #img = dataset[1200:1400,1200:1400, zrange[0]:zrange[1]];   
+    #img = dataset[0:50, 0:50, zrange[0]:zrange[1]];
+    
+    f.close();
+    
+    return img;
+
+
+
+  
 def writePoints(h5file, points, mode = "a", radius = 0.5):
     """Write points to Imaris file"""
     
@@ -44,7 +76,7 @@ def writePoints(h5file, points, mode = "a", radius = 0.5):
         mode = "a";
     
     #write points
-    if mode == "a":  # add points
+    if mode == "a":  # add points -> need to test further
         
         #update number of points
         np = np + 1;

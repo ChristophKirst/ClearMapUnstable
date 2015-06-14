@@ -27,11 +27,13 @@ timer = Timer();
 #mount windows folder 
 #sudo mount -t vboxsf D_DRIVE ./Windows/
 
-
-#fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
 #fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
 #fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
+<<<<<<< HEAD
 fn = '/media/mtllab/6C9C07289C06EC80/Users/Nicolas/Documents/Adult cfos C row 20HF 150524 - Copy.ims';
+=======
+>>>>>>> remotes/assembla/master
 #fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
 
 centers, centint = parallelProcessStack(fn, chunksizemax = 50, chunksizemin = 30, chunkoverlap = 15, 
@@ -39,11 +41,17 @@ centers, centint = parallelProcessStack(fn, chunksizemax = 50, chunksizemin = 30
 timer.printElapsedTime("Main");
 
 
+<<<<<<< HEAD
 fout =  '/media/mtllab/6C9C07289C06EC80/Users/Nicolas/Documents/Adult cfos C row 20HF 150524 Points.cent';
 fouti = '/media/mtllab/6C9C07289C06EC80/Users/Nicolas/Documents/Adult cfos C row 20HF 150524 Points.int';
+=======
+
+#fout = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.cent';
+#fouti = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.int';
+>>>>>>> remotes/assembla/master
 #fout = '/home/ckirst/Desktop/cfosRegistrations/Adult cfos C row 20HF 150524 Points.data';
-centers.tofile(fout);
-centint.tofile(fouti);
+#centers.tofile(fout);
+#centint.tofile(fouti);
 
 
 
@@ -75,14 +83,20 @@ c = c[:, [2,1,0]];
 #c = numpy.array([[0,0,0], [2176,  2560, 1920]])
 #(1920, 2560, 2176600)
 
-c[:,0] = c[:,0] * 4.0625;
+#working version without tranposing imaris data
+#c[:,0] = c[:,0] * 4.0625;
+#c[:,1] = c[:,1] * 4.0625;
+#c[:,2] = c[:,2] * 3; # 4.0625;
+
+c[:,2] = c[:,2] * 4.0625;
 c[:,1] = c[:,1] * 4.0625;
-c[:,2] = c[:,2] * 3; # 4.0625;
+c[:,0] = c[:,0] * 3; # 4.0625;
+
 
 #iid = np.logical_and(c[:,2] > 2000, c[:,2]  < 3000);
 #iid2 = np.logical_and(c[:,1] > 2000, c[:,1]  < 3000);
 #iid = np.logical_and(iid, iid2);
-#c2 = c[iid, :];
+#c2 = c[iid, :];t
 
 
 iid = centint > 30;
