@@ -12,6 +12,7 @@ import numpy as np
 import matplotlib as mpl
 
 import iDISCO.IO.Imaris as io
+#import iDISCO.IO.OME as io
 
 from iDISCO.ImageProcessing.SpotDetection import detectCells
 from iDISCO.ImageProcessing.ParallelProcessing import parallelProcessStack
@@ -27,31 +28,28 @@ timer = Timer();
 #mount windows folder 
 #sudo mount -t vboxsf D_DRIVE ./Windows/
 
-fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+#fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
 #fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
 #fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
-<<<<<<< HEAD
-fn = '/media/mtllab/6C9C07289C06EC80/Users/Nicolas/Documents/Adult cfos C row 20HF 150524 - Copy.ims';
-=======
->>>>>>> remotes/assembla/master
+fn = '/media/mtllab/6C9C07289C06EC80/Users/Nicolas/My Documents/Adult cfos C row 20HF 150524 - Copy.ims';
+
 #fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
 
+
+# fn = 'plane_z\d{3}.tif'
+
 centers, centint = parallelProcessStack(fn, chunksizemax = 50, chunksizemin = 30, chunkoverlap = 15, 
-                                        processes = 5, segmentation = detectCells, zrange = (0, 1900));
+                                        processes = 5, segmentation = detectCells, zr = (0, 100), xr = (100, 1300), yr = (100, 1300));
 timer.printElapsedTime("Main");
 
 
-<<<<<<< HEAD
-fout =  '/media/mtllab/6C9C07289C06EC80/Users/Nicolas/Documents/Adult cfos C row 20HF 150524 Points.cent';
-fouti = '/media/mtllab/6C9C07289C06EC80/Users/Nicolas/Documents/Adult cfos C row 20HF 150524 Points.int';
-=======
-
+#fout =  '/media/mtllab/6C9C07289C06EC80/Users/Nicolas/Documents/Adult cfos C row 20HF 150524 Points.cent';
+#fouti = '/media/mtllab/6C9C07289C06EC80/Users/Nicolas/Documents/Adult cfos C row 20HF 150524 Points.int';
 #fout = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.cent';
-#fouti = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.int';
->>>>>>> remotes/assembla/master
-#fout = '/home/ckirst/Desktop/cfosRegistrations/Adult cfos C row 20HF 150524 Points.data';
-#centers.tofile(fout);
-#centint.tofile(fouti);
+fouti = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.int';
+fout = '/home/ckirst/Desktop/cfosRegistrations/Adult cfos C row 20HF 150524 Points.data';
+centers.tofile(fout);
+centint.tofile(fouti);
 
 
 

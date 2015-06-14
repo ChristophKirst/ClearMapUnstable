@@ -46,7 +46,7 @@ def readData(filename, x = all, y = all, z = all, resolution = 4, channel = 0, t
         z = (0, datasetsize[2]);
     
     
-    img = dataset[z[0]:z[1],y[0]:y[1], z[0]:z[1]];
+    img = dataset[z[0]:z[1],y[0]:y[1],x[0]:x[1]];
     img = img.transpose((2,1,0)); # imaris stores files in reverse x,y,z ordering
     #img = dataset[1200:1400,1200:1400, zrange[0]:zrange[1]];   
     #img = dataset[0:50, 0:50, zrange[0]:zrange[1]];

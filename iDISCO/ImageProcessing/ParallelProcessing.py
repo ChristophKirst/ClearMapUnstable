@@ -20,8 +20,10 @@ def processSubStack(dsr):
     fn = dsr[0];
     segmentation = dsr[1];
     zrange  = dsr[2];
-    iid = dsr[3];
-    n = dsr[4];
+    xr = dsr[3];
+    yr = dsr[4];
+    iid = dsr[5];
+    n = dsr[6];
     
     pw = ProcessWriter(iid);
     pw.write("processing chunk " + str(iid) + "/" + str(n));
@@ -31,7 +33,7 @@ def processSubStack(dsr):
     
     timer = Timer();
     
-    img = readData(fn, zrange = zrange);
+    img = io.readData(fn, z = zrange, x = xr, y = yr);
     
     pw.write(timer.elapsedTime(head = 'Reading data of size ' + str(img.shape)));
     timer.reset();    
@@ -46,10 +48,11 @@ def processSubStack(dsr):
     #return numpy.array([[0,0,0.], [1,1,1]]);
 
     
-def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15, processes = 2, segmentation = detectCells, zrange = all):
+def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15, processes = 2, segmentation = detectCells, xr = all, yr = all, zr = all):
     """Parallel segmetation on a stack"""
     
     #determine z ranges
+    zrange = zr;
     if zrange == all: 
         f = io.openFile(fn);
         dataset = io.readData(f, resolution=0);
@@ -107,13 +110,13 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
     zcenters = [x + zrange[0] for x in zcenters];
     zranges = [(x[0] + zrange[0], x[1] + zrange[0]) for x in zranges];
     
-    #print zcenters
-    #print zranges    
+    print zcenters
+    print zranges    
     
     
     argdata = []
     for i in range(nchunks):
-        argdata.append((fn, segmentation, zranges[i], i, nchunks));
+        argdata.append((fn, segmentation, zranges[i], xr, yr, i, nchunks));
         
     print argdata
     
