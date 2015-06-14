@@ -36,8 +36,6 @@ timer.printElapsedTime("Main");
 
 
 
-
-
 #fout = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.cent';
 #fouti = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.int';
 #fout = '/home/ckirst/Desktop/cfosRegistrations/Adult cfos C row 20HF 150524 Points.data';
@@ -68,14 +66,20 @@ c = c[:, [2,1,0]];
 #c = numpy.array([[0,0,0], [2176,  2560, 1920]])
 #(1920, 2560, 2176600)
 
-c[:,0] = c[:,0] * 4.0625;
+#working version without tranposing imaris data
+#c[:,0] = c[:,0] * 4.0625;
+#c[:,1] = c[:,1] * 4.0625;
+#c[:,2] = c[:,2] * 3; # 4.0625;
+
+c[:,2] = c[:,2] * 4.0625;
 c[:,1] = c[:,1] * 4.0625;
-c[:,2] = c[:,2] * 3; # 4.0625;
+c[:,0] = c[:,0] * 3; # 4.0625;
+
 
 #iid = np.logical_and(c[:,2] > 2000, c[:,2]  < 3000);
 #iid2 = np.logical_and(c[:,1] > 2000, c[:,1]  < 3000);
 #iid = np.logical_and(iid, iid2);
-#c2 = c[iid, :];
+#c2 = c[iid, :];t
 
 
 iid = centint > 130;
