@@ -11,26 +11,26 @@ plain user:
  
     `cd basedirectory`
  
-    `git clone https://github.com/ChristophKirst/iDisco`
+    `git clone https://git.assembla.com/idisco.git`
 
 
 developer / programmer:
 
   * create account at [http://github.com](http://github.com)
 
-  * got to [https://github.com/ChristophKirst/iDisco](https://github.com/ChristophKirst/iDisco) and press fork button 
+  * got to [https://git.assembla.com/idisco.git](https://git.assembla.com/idisco.git) and press fork button 
 
   * in terminal execute:
 	
 	`cd basedirectory`
 
-	`git clone https://github.com/username/iDisco.git`
+	`git clone https://git.assembla.com/idisco.git`
 	
   * configure remotes (named upstream)
         
 	`cd iDisco`
 
-	`git remote add upstream https://github.com/ChristophKirst/iDisco`
+	`git remote add upstream https://git.assembla.com/idisco.git`
 
 	`git fetch upstream`
 
@@ -87,7 +87,7 @@ in case you have something to contribute to the code:
  
   * follow the steps in the Backup section first
 
-  * got to [https://github.com/ChristophKirst/iDisco](https://github.com/ChristophKirst/iDisco) and click pull request 
+  * got to [https://git.assembla.com/idisco.git](https://git.assembla.com/idisco.git and click pull request 
 
 
 Refs
