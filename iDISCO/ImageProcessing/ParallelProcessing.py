@@ -56,13 +56,14 @@ def processSubStack(dsr):
     
 def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15, processes = 2, segmentation = detectCells, zrange = all):
     """Parallel segmetation on a stack"""
-
+    
     #determine z ranges
     if zrange == all: 
         f = io.openFile(fn);
         dataset = io.readData(f, resolution=0);
         nz = dataset.shape[2];    
         f.close();
+        zrange = (0,nz);
     else:
         nz = zrange[1] - zrange[0];
     
@@ -70,7 +71,7 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
     chunksize = chunksizemax;
     nchunks = int(math.ceil((nz - chunksize) / (1. * (chunksize - chunkoverlap)) + 1));   
     chunksize = (nz + (nchunks-1) * chunkoverlap) / nchunks;
-    
+       
     #increase overlap if chunks to small
     chunksizemin = min(chunksizemin, chunkoverlap);
     if chunksize < chunksizemin:
@@ -78,18 +79,18 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
         chunksize = chunksizemin;
         chunkoverlap = math.ceil(chunksize - (nz - chunksize) / (nchunks -1));
         print "Warning: parallelProcessStack: setting chunk overlap to " + str(chunkoverlap) + "!";
-        
+           
     #calucalte actual chunk sizes
     chunksizerest = chunksize;
     chunksize = int(math.floor(chunksize));
     chunksizerest = chunksizerest - chunksize;
-
+    
     zranges = [(0, chunksize)];
     zcenters = [0];
     n = 1;
     csr = chunksizerest;
     zhi = chunksize;
-
+    
     while (n < nchunks):
         n += 1;
 
@@ -107,7 +108,7 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
         
         zranges.append((int(zlo), int(zhi)));
         zcenters.append((zhiold - zlo) / 2. + zlo); 
-
+        
     zcenters.append(nz);
     
     #adjust for the zrange

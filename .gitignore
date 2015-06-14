@@ -13,4 +13,4 @@ Thumbs.db
 *rtf
 
 # pyc files
-.pyc
+*.pyc

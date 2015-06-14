@@ -18,6 +18,8 @@ from iDISCO.ImageProcessing.ParallelProcessing import parallelProcessStack
 from iDISCO.Visualization.Plot import plotTiling, plotOverlayLabel
 
 from iDISCO.Utils.Timer import Timer
+
+import csv
 timer = Timer();
 
 # open data
@@ -28,41 +30,48 @@ timer = Timer();
 
 #fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
 #fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
-fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
+#fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
+fn = '/media/mtllab/6C9C07289C06EC80/Users/Nicolas/Documents/Adult cfos C row 20HF 150524 - Copy.ims';
 #fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
 
-centers, centint = parallelProcessStack(fn, chunksizemax = 40, chunksizemin = 30, chunkoverlap = 15, 
-                               processes = 5, segmentation = detectCells, zrange = (800, 860));
+centers, centint = parallelProcessStack(fn, chunksizemax = 50, chunksizemin = 30, chunkoverlap = 15, 
+                                        processes = 5, segmentation = detectCells, zrange = (0, 1900));
 timer.printElapsedTime("Main");
 
 
-fout = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.cent';
-fouti = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.int';
+fout =  '/media/mtllab/6C9C07289C06EC80/Users/Nicolas/Documents/Adult cfos C row 20HF 150524 Points.cent';
+fouti = '/media/mtllab/6C9C07289C06EC80/Users/Nicolas/Documents/Adult cfos C row 20HF 150524 Points.int';
 #fout = '/home/ckirst/Desktop/cfosRegistrations/Adult cfos C row 20HF 150524 Points.data';
 centers.tofile(fout);
 centint.tofile(fouti);
 
 
-#!/usr/bin/env python
-import numpy as np
-import pylab as P
 
+
+
+
+#!/usr/bin/env python
+#import numpy as np
+#import pylab as P
 # the histogram of the data with histtype='step'
-n, bins, patches = P.hist(centint, 50, normed=1, histtype='stepfilled')
-P.setp(patches, 'facecolor', 'g', 'alpha', 0.75)
+#n, bins, patches = P.hist(centint, 50, normed=1, histtype='stepfilled')
+#P.setp(patches, 'facecolor', 'g', 'alpha', 0.75)
 
 # add a line showing the expected distribution
 #y = P.normpdf( bins, mu, sigma)
-l = P.plot(bins, y, 'k--', linewidth=1.5)
-
-
+#l = P.plot(bins, y, 'k--', linewidth=1.5)
 
 
 # write resultf.close();
 
+centers = np.fromfile(fout)
+centers = centers.reshape(centers.shape[0] / 3, 3);
+
+centint = np.fromfile(fouti);
+
 c = centers.copy();
 c = c[:, [2,1,0]];
-
+ 
 #c = numpy.array([[0,0,0], [2176,  2560, 1920]])
 #(1920, 2560, 2176600)
 
@@ -76,11 +85,20 @@ c[:,2] = c[:,2] * 3; # 4.0625;
 #c2 = c[iid, :];
 
 
-iid = centint > 130;
+iid = centint > 30;
 c2 = c[iid,:];
 
+ftxt = "output1.csv";
+np.savetxt(ftxt, c2, delimiter=',', newline='\n', fmt='%.5e')
+
+with open("output2.csv", "wb") as f:
+    writer = csv.writer(f)
+    writer.writerows(c2)
+
+
+
 #fout = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524 segmentation.ims';
-fout = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
+fout = fn; #'/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
 h5file = io.openFile(fout);
 
 io.writePoints(h5file, c2, mode = 'o', radius = 0.5);
