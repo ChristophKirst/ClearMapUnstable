@@ -1,4 +1,11 @@
 # -*- coding: utf-8 -*-
+"""
+Process segmentation in parallel
+
+Created on Thu Jun  4 14:37:06 2015
+
+@author: ckirst
+"""
 
 import sys
 self = sys.modules[__name__];
@@ -8,72 +15,108 @@ import numpy
 
 from multiprocessing import Pool
 
-import iDISCO.IO.Imaris as io
+import iDISCO.IO.IO as io
+
 from iDISCO.ImageProcessing.SpotDetection import detectCells;
+
 from iDISCO.Utils.ProcessWriter import ProcessWriter;
 from iDISCO.Utils.Timer import Timer;
 
 #define the subroutine for the processing
 
 def processSubStack(dsr):
-    
+        
     fn = dsr[0];
-    segmentation = dsr[1];
-    zrange  = dsr[2];
+    sf = dsr[1];
+    zr = dsr[2];
     xr = dsr[3];
     yr = dsr[4];
-    iid = dsr[5];
-    n = dsr[6];
+    ii = dsr[5];
+    n  = dsr[6];
     
-    pw = ProcessWriter(iid);
-    pw.write("processing chunk " + str(iid) + "/" + str(n));
-    pw.write("file   = " + fn);
-    pw.write("seg    = " + str(segmentation));
-    pw.write("zrange = " + str(zrange)); 
-    
+    pw = ProcessWriter(ii);
     timer = Timer();
     
-    img = io.readData(fn, z = zrange, x = xr, y = yr);
+    pw.write("processing chunk " + str(ii) + "/" + str(n));
+    pw.write("file          = " + fn);
+    pw.write("segmentation  = " + str(sf));
+    pw.write("ranges: x,y,z = " + str(xr) +  "," + str(yr) + "," + str(zr)); 
     
-    pw.write(timer.elapsedTime(head = 'Reading data of size ' + str(img.shape)));
     timer.reset();    
+    img = io.readData(fn, z = zr, x = xr, y = yr);    
+    pw.write(timer.elapsedTime(head = 'Reading data of size ' + str(img.shape)));
     
-    
-    seg = segmentation(img, out = pw);
-    
+    timer.reset();
+    seg = sf(img, out = pw);
     pw.write(timer.elapsedTime(head = 'Segmenting data of size ' + str(img.shape)));  
     
     return seg;
-    #return 0;
-    #return numpy.array([[0,0,0.], [1,1,1]]);
 
+
+def calculateChunkSize(size, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15, processes = 2, optimizechunks = True, optimizechunksizeincrease = all, verbose = True):
+    """Calculates the chunksize for parallel processing"""
     
-def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15, processes = 2, segmentation = detectCells, xr = all, yr = all, zr = all):
-    """Parallel segmetation on a stack"""
-    
-    #determine z ranges
-    zrange = zr;
-    if zrange == all: 
-        f = io.openFile(fn);
-        dataset = io.readData(f, resolution=0);
-        nz = dataset.shape[2];    
-        f.close();
-        zrange = (0,nz);
-    else:
-        nz = zrange[1] - zrange[0];
+    pre = "ChunkSize: ";
     
     #calcualte chunk sizes
     chunksize = chunksizemax;
-    nchunks = int(math.ceil((nz - chunksize) / (1. * (chunksize - chunkoverlap)) + 1));   
-    chunksize = (nz + (nchunks-1) * chunkoverlap) / nchunks;
-       
+    nchunks = int(math.ceil((size - chunksize) / (1. * (chunksize - chunkoverlap)) + 1));   
+    chunksize = (size + (nchunks-1) * chunkoverlap) / nchunks;
+    
+    if verbose:
+        print pre + "Estimated chunk size " + str(chunksize) + " in " + str(nchunks) + " chunks!";
+    
+    #optimize number of chunks wrt to number of processors
+    if optimizechunks:
+        np = nchunks % processes;
+        if np != 0:
+            if optimizechunksizeincrease == all:
+                if np < processes / 2.0:
+                    optimizechunksizeincrease = True;
+                else:
+                    optimizechunksizeincrease = False;
+                    
+            if verbose:
+                print pre + "Optimizing chunk size to fit number of processes!"
+                
+            if not optimizechunksizeincrease:
+                #try to deccrease chunksize / increase chunk number to fit distribution on processors
+                nchunks = nchunks - np + processes;
+                chunksize = (size + (nchunks-1) * chunkoverlap) / nchunks;
+                
+                if verbose:
+                    print pre + "Optimized chunk size decreased to " + str(chunksize) + " in " + str(nchunks) + " chunks!";
+                    
+            else:
+                if nchunks != np:
+                    #try to decrease chunksize to have 
+                    nchunks = nchunks - np;
+                    chunksize = (size + (nchunks-1) * chunkoverlap) / nchunks;
+                                  
+                    if verbose:
+                        print pre + "Optimized chunk size increased to " + str(chunksize) + " in " + str(nchunks) + " chunks!";
+                
+                else:
+                    if verbose:
+                        print pre + "Optimized chunk size unchanged " + str(chunksize) + " in " + str(nchunks) + " chunks!";
+        
+        else:
+            if verbose:
+                print pre + "Optimized chunk size unchanged " + str(chunksize) + " in " + str(nchunks) + " chunks!";
+         
+
+
+             
     #increase overlap if chunks to small
     chunksizemin = min(chunksizemin, chunkoverlap);
     if chunksize < chunksizemin:
-        print "Warning: parallelProcessStack: optimal chunk size " + str(chunksize) + " smaller than minimum chunk size " + str(chunksizemin) + "!"; 
+        if verbose: 
+            print pre + "Warning: optimal chunk size " + str(chunksize) + " smaller than minimum chunk size " + str(chunksizemin) + "!"; 
         chunksize = chunksizemin;
-        chunkoverlap = math.ceil(chunksize - (nz - chunksize) / (nchunks -1));
-        print "Warning: parallelProcessStack: setting chunk overlap to " + str(chunkoverlap) + "!";
+        chunkoverlap = math.ceil(chunksize - (size - chunksize) / (nchunks -1));
+        
+        if verbose:        
+            print pre + "Warning: setting chunk overlap to " + str(chunkoverlap) + "!";
            
     #calucalte actual chunk sizes
     chunksizerest = chunksize;
@@ -88,7 +131,7 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
     
     while (n < nchunks):
         n += 1;
-
+        
         zhiold = zhi;
         zlo = zhi - chunkoverlap;
         zhi = zlo + chunksize;
@@ -97,28 +140,41 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
         if csr >= 1:
             csr = csr - 1;
             zhi += 1;
-
+        
         if n == nchunks:        
-            zhi = nz;
+            zhi = size;
         
         zranges.append((int(zlo), int(zhi)));
         zcenters.append((zhiold - zlo) / 2. + zlo); 
         
-    zcenters.append(nz);
+    zcenters.append(size);
     
-    #adjust for the zrange
-    zcenters = [x + zrange[0] for x in zcenters];
-    zranges = [(x[0] + zrange[0], x[1] + zrange[0]) for x in zranges];
+    if verbose:    
+        print pre + "final chunks : " + str(zranges);
+        print pre + "final centers: " + str(zcenters);
     
-    print zcenters
-    print zranges    
+    return nchunks, zranges, zcenters;
+
+
+
+def parallelProcessStack(filename, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15, processes = 2, optimizechunks = True, optimizechunksizeincrease = all, segmentation = detectCells, x = all, y = all, z = all):
+    """Parallel segmetation on a stack"""
     
+    #determine z ranges
+    zr = io.readZRange(filename, z = z);
+    nz = zr[1] - zr[0];
     
-    argdata = []
-    for i in range(nchunks):
-        argdata.append((fn, segmentation, zranges[i], xr, yr, i, nchunks));
+    nchunks, zranges, zcenters = self.calculateChunkSizes(nz, chunksizemax = chunksizemax, chunksizemin = chunksizemin, chunkoverlap = chunkoverlap, processes = processes, optimizechunks = optimizechunks, optimizechunksizeincrease = optimizechunksizeincrease);
         
-    print argdata
+    #adjust for the zrange
+    zcenters = [xc + zr[0] for xc in zcenters];
+    zranges = [(zc[0] + zr[0], zc[1] + zr[0]) for zc in zranges];
+    
+    argdata = [];
+    for i in range(nchunks):
+        argdata.append((filename, segmentation, zranges[i], x, y, i, nchunks));
+        
+    #print argdata
     
     # process in parallel
     pool = Pool(processes = processes);
@@ -129,12 +185,7 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
     #print '=========== results';
     #print resultsseg;
     #print nchunks
-    
-    #print zranges
-    #print zcenters
-    #print nchunks
-    
-    
+        
     #join the results  
     results = [];
     resultsi = [];
@@ -150,5 +201,7 @@ def parallelProcessStack(fn, chunksizemax = 100, chunksizemin = 30, chunkoverlap
             results.append(cts);
             resultsi.append(cti);
             
-    
-    return (numpy.concatenate(results), numpy.concatenate(resultsi))
+    if results == []:
+        return numpy.zeros((0,3)), numpy.zeros((0));
+    else:
+        return (numpy.concatenate(results), numpy.concatenate(resultsi));

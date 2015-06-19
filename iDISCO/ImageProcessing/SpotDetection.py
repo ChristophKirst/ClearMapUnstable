@@ -20,31 +20,37 @@ import numpy
 
 #import mahotas as morph
 #from scipy.ndimage.morphology import binary_opening, grey_opening
-from scipy.ndimage.filters import correlate
+#from scipy.ndimage.filters import correlate
+from scipy.signal import fftconvolve
 #from scipy.ndimage import maximum_filter
 from scipy.ndimage.measurements import label, center_of_mass
 
-from skimage.morphology import reconstruction
+#from skimage.morphology import reconstruction
+from iDISCO.ImageProcessing.GreyReconstruct import reconstruction
+
 
 import cv2
 
 #import scipy
-
 #from skimage.filter.rank import tophat
 #from skimage.measure import regionprops
 
 from mahotas import regmin
 
-from iDISCO.Utils.Timer import Timer
+
+from iDISCO.Parameter import ImageProcessingParameter
 from iDISCO.ImageProcessing.Filter.StructureElement import structureElement
 from iDISCO.ImageProcessing.Filter.FilterKernel import filterKernel
+
+from iDISCO.Utils.Timer import Timer
 from iDISCO.Visualization.Plot import plotTiling, plotOverlayLabel
+
    
 def hMaxTransform(img, h):
     """Calculates h maximum transformation of an image."""
     #seed = img.copy();
     #seed[seed < h] = h; # catch errors for uint subtraction !
-    img = img.astype('float');
+    #img = img.astype('float16'); # float32 ?
     return reconstruction(img - h, img);
 
 
@@ -60,9 +66,9 @@ def extendedMax(img, h):
         
     #regional max
     return regionalMax(img);
+    
 
-
-def detectCells(img, verbose = False, out = sys.stdout):
+def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcessingParameter()):
     """Detect Cells import scipyin 3d grayscale img using DoG filtering and maxima dtection"""
     
     timer = Timer();
@@ -80,7 +86,7 @@ def detectCells(img, verbose = False, out = sys.stdout):
     
     # background subtraction in each slice
     timer.reset();
-    se = structureElement('Disk', (15,15)).astype('uint8');
+    se = structureElement('Disk', parameter.Background).astype('uint8');
     for z in range(img.shape[2]):
          #img[:,:,z] = img[:,:,z] - grey_opening(img[:,:,z], structure = structureElement('Disk', (30,30)));
          #img[:,:,z] = img[:,:,z] - morph.grey_opening(img[:,:,z], structure = self.structureELement('Disk', (150,150)));
@@ -103,9 +109,12 @@ def detectCells(img, verbose = False, out = sys.stdout):
     
     #DoG filter
     timer.reset();
-    fdog = filterKernel(ftype = 'DoG', size = [11, 7, 7]);
-    img = correlate(img.astype('float'), fdog);
+    fdog = filterKernel(ftype = 'DoG', size = parameter.DoG);
+    fdog = fdog.astype('float16');
+    img = img.astype('float16');
+    #img = correlate(img, fdog);
     #img = scipy.signal.correlate(img, fdog);
+    img = fftconvolve(img, fdog, mode = 'same');
     img[img < 0] = 0;
     out.write(timer.elapsedTime(head = 'DoG'));
     
@@ -121,10 +130,10 @@ def detectCells(img, verbose = False, out = sys.stdout):
     
     # extended maxima
     timer.reset(); 
-    imgmax = hMaxTransform(img, 20);
+    imgmax = hMaxTransform(img, parameter.HMax);
     imgmax = regionalMax(imgmax);
     imgmax = imgmax.astype('float') * img;
-    th = 20;
+    th = parameter.Threshold;
     imgmax = imgmax > th;
     out.write(timer.elapsedTime(head = 'Extened Max'));
     
@@ -137,22 +146,28 @@ def detectCells(img, verbose = False, out = sys.stdout):
     #center of maxima
     timer.reset();
     imglab, nlab = label(imgmax);
-    centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
-    out.write(timer.elapsedTime(head = 'Cell Centers'));
     
-    if verbose:        
-        plotOverlayLabel(img * 0.01, imglab, alpha = False);
-        #plotTiling(img)
-        imgc = numpy.zeros(img.shape);
-        for i in range(centers.shape[0]):
-            imgc[centers[i,0], centers[i,1], centers[i,2]] = 1;
-        plotOverlayLabel(img * 0.01, imgc, alpha = False);
-        #plotOverlayLabel(img, imgmax.astype('int64'), alpha = True)     
+    if nlab > 0:
+        centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
+        out.write(timer.elapsedTime(head = 'Cell Centers'));
     
-    #return centers, imglab, mask
-    cintensity = numpy.array([img[centers[i,0], centers[i,1], centers[i,2]] for i in range(centers.shape[0])]);        
+        if verbose:        
+            plotOverlayLabel(img * 0.01, imglab, alpha = False);
+            #plotTiling(img)
+            imgc = numpy.zeros(img.shape);
+            for i in range(centers.shape[0]):
+                imgc[centers[i,0], centers[i,1], centers[i,2]] = 1;
+            plotOverlayLabel(img * 0.01, imgc, alpha = False);
+            #plotOverlayLabel(img, imgmax.astype('int64'), alpha = True)     
     
-    return (centers, cintensity);
+        #return centers, imglab, mask
+        cintensity = numpy.array([img[centers[i,0], centers[i,1], centers[i,2]] for i in range(centers.shape[0])]);        
+    
+        return ( centers, cintensity );
+    else:
+        out.write(timer.elapsedTime(head = 'Cell Centers'));
+        out.wrtie('No Cells found !');
+        return ( numpy.zeros((0,3)), numpy.zerso(0) );
 
 
 
@@ -163,6 +178,8 @@ def test():
     #fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
     #fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
     #fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
+    
+    
     
     f = io.openFile(fn);
     dataset = io.readData(f, resolution=0);

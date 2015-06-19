@@ -12,7 +12,8 @@ import numpy as np
 import matplotlib as mpl
 
 import iDISCO.IO.Imaris as io
-#import iDISCO.IO.OME as io
+
+from iDISCO.Parameter import Parameter
 
 from iDISCO.ImageProcessing.SpotDetection import detectCells
 from iDISCO.ImageProcessing.ParallelProcessing import parallelProcessStack
@@ -20,8 +21,75 @@ from iDISCO.Visualization.Plot import plotTiling, plotOverlayLabel
 
 from iDISCO.Utils.Timer import Timer
 
-import csv
 timer = Timer();
+
+
+
+######################
+# Parameter Settings
+######################
+
+parameter = Parameter();
+
+
+parameter.Input.ImageDataFileName = '
+
+parameter.Input.ReferenceDataFileName = ''
+
+
+para,eter.Output.CellDataFileName = 
+
+
+
+
+## Microscope Data
+# Imaris
+filename = 
+
+# OME / tif file stack
+# use 
+filename = 
+
+
+
+## Segmentation Output 
+
+
+
+######################
+# Segmentation
+######################
+
+ImageProcessing = ImageProcessingParameter();
+
+
+    """ Parameter for image processing chain"""
+ImageProcessing.Background = (15,15);
+ImageProcessing.Dog = (11, 7, 7);
+ImageProcessing.HMax = 20;
+    Threshold = 20;
+
+
+
+
+
+
+
+######################
+# Brain Alignment 
+######################
+
+
+
+
+
+
+
+
+
+
+
+
 
 # open data
 
