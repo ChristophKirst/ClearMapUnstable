@@ -86,7 +86,7 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
     
     # background subtraction in each slice
     timer.reset();
-    se = structureElement('Disk', parameter.Background).astype('uint8');
+    se = structureElement('Disk', parameter.Parameter.Background).astype('uint8');
     for z in range(img.shape[2]):
          #img[:,:,z] = img[:,:,z] - grey_opening(img[:,:,z], structure = structureElement('Disk', (30,30)));
          #img[:,:,z] = img[:,:,z] - morph.grey_opening(img[:,:,z], structure = self.structureELement('Disk', (150,150)));
@@ -109,7 +109,7 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
     
     #DoG filter
     timer.reset();
-    fdog = filterKernel(ftype = 'DoG', size = parameter.DoG);
+    fdog = filterKernel(ftype = 'DoG', size = parameter.Parameter.Dog);
     fdog = fdog.astype('float16');
     img = img.astype('float16');
     #img = correlate(img, fdog);
@@ -130,10 +130,10 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
     
     # extended maxima
     timer.reset(); 
-    imgmax = hMaxTransform(img, parameter.HMax);
+    imgmax = hMaxTransform(img, parameter.Parameter.HMax);
     imgmax = regionalMax(imgmax);
     imgmax = imgmax.astype('float') * img;
-    th = parameter.Threshold;
+    th = parameter.Parameter.Threshold;
     imgmax = imgmax > th;
     out.write(timer.elapsedTime(head = 'Extened Max'));
     

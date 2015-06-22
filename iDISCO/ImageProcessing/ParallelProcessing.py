@@ -17,7 +17,9 @@ from multiprocessing import Pool
 
 import iDISCO.IO.IO as io
 
+from iDISCO.Parameter import ImageProcessingParameter
 from iDISCO.ImageProcessing.SpotDetection import detectCells;
+
 
 from iDISCO.Utils.ProcessWriter import ProcessWriter;
 from iDISCO.Utils.Timer import Timer;
@@ -25,14 +27,15 @@ from iDISCO.Utils.Timer import Timer;
 #define the subroutine for the processing
 
 def processSubStack(dsr):
-        
+    
     fn = dsr[0];
     sf = dsr[1];
-    zr = dsr[2];
-    xr = dsr[3];
-    yr = dsr[4];
-    ii = dsr[5];
-    n  = dsr[6];
+    pp = dsr[2];
+    zr = dsr[3];
+    xr = dsr[4];
+    yr = dsr[5];
+    ii = dsr[6];
+    n  = dsr[7];
     
     pw = ProcessWriter(ii);
     timer = Timer();
@@ -47,7 +50,7 @@ def processSubStack(dsr):
     pw.write(timer.elapsedTime(head = 'Reading data of size ' + str(img.shape)));
     
     timer.reset();
-    seg = sf(img, out = pw);
+    seg = sf(img, out = pw, parameter = pp);
     pw.write(timer.elapsedTime(head = 'Segmenting data of size ' + str(img.shape)));  
     
     return seg;
@@ -60,12 +63,17 @@ def calculateChunkSize(size, chunksizemax = 100, chunksizemin = 30, chunkoverlap
     
     #calcualte chunk sizes
     chunksize = chunksizemax;
-    nchunks = int(math.ceil((size - chunksize) / (1. * (chunksize - chunkoverlap)) + 1));   
+    nchunks = int(math.ceil((size - chunksize) / (1. * (chunksize - chunkoverlap)) + 1)); 
+    if nchunks <= 0:
+        nchunks = 1;   
     chunksize = (size + (nchunks-1) * chunkoverlap) / nchunks;
     
     if verbose:
         print pre + "Estimated chunk size " + str(chunksize) + " in " + str(nchunks) + " chunks!";
     
+    if nchunks == 1:
+        return 1, [(0, chunksize)], [0, chunksize]
+        
     #optimize number of chunks wrt to number of processors
     if optimizechunks:
         np = nchunks % processes;
@@ -103,10 +111,8 @@ def calculateChunkSize(size, chunksizemax = 100, chunksizemin = 30, chunkoverlap
         else:
             if verbose:
                 print pre + "Optimized chunk size unchanged " + str(chunksize) + " in " + str(nchunks) + " chunks!";
-         
-
-
-             
+    
+    
     #increase overlap if chunks to small
     chunksizemin = min(chunksizemin, chunkoverlap);
     if chunksize < chunksizemin:
@@ -157,14 +163,16 @@ def calculateChunkSize(size, chunksizemax = 100, chunksizemin = 30, chunkoverlap
 
 
 
-def parallelProcessStack(filename, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15, processes = 2, optimizechunks = True, optimizechunksizeincrease = all, segmentation = detectCells, x = all, y = all, z = all):
+def parallelProcessStack(filename, x = all, y = all, z = all, 
+                         processes = 2, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15,
+                         optimizechunks = True, optimizechunksizeincrease = all, 
+                         segmentation = detectCells, parameter = ImageProcessingParameter()):
     """Parallel segmetation on a stack"""
     
     #determine z ranges
     zr = io.readZRange(filename, z = z);
     nz = zr[1] - zr[0];
-    
-    nchunks, zranges, zcenters = self.calculateChunkSizes(nz, chunksizemax = chunksizemax, chunksizemin = chunksizemin, chunkoverlap = chunkoverlap, processes = processes, optimizechunks = optimizechunks, optimizechunksizeincrease = optimizechunksizeincrease);
+    nchunks, zranges, zcenters = self.calculateChunkSize(nz, chunksizemax = chunksizemax, chunksizemin = chunksizemin, chunkoverlap = chunkoverlap, processes = processes, optimizechunks = optimizechunks, optimizechunksizeincrease = optimizechunksizeincrease);
         
     #adjust for the zrange
     zcenters = [xc + zr[0] for xc in zcenters];
@@ -172,13 +180,13 @@ def parallelProcessStack(filename, chunksizemax = 100, chunksizemin = 30, chunko
     
     argdata = [];
     for i in range(nchunks):
-        argdata.append((filename, segmentation, zranges[i], x, y, i, nchunks));
+        argdata.append((filename, segmentation, parameter, zranges[i], x, y, i, nchunks));
         
     #print argdata
     
     # process in parallel
     pool = Pool(processes = processes);
-    print processes
+    #print processes
     
     resultsseg = pool.map(processSubStack, argdata);
     

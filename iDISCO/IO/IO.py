@@ -7,7 +7,7 @@ Created on Thu Jun  4 14:37:06 2015
 @author: ckirst
 """
 
-import iDISCO.IO as io
+from iDISCO.IO import CSV, Imaris, OME, VTK
 
 def readZRange(filename, z = all, resolution = 4):
     """Determine z range of file filename"""
@@ -20,15 +20,13 @@ def readZRange(filename, z = all, resolution = 4):
     fext = fext[-1];
     
     if fext == "ims":
-        readZRangeFunction = io.Imaris.readZRange;
+        readZRangeFunction = Imaris.readZRange;
     elif fext == "tif":
-        readZRangeFunction = io.OME.readZRange;
+        readZRangeFunction = OME.readZRange;
     else:
         raise RuntimeError('readZRange: file format ' + fext + ' not ims or tif');
 
     return readZRangeFunction(filename, z = z, resolution = resolution);
-
-    
 
 
 def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, resolution = 4):
@@ -42,11 +40,38 @@ def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, re
     fext = fext[-1];
     
     if fext == "ims":
-        readDataFunction = io.Imaris.readData;
+        readDataFunction = Imaris.readData;
     elif fext == "tif":
-        readDataFunction = io.OME.readData;
+        readDataFunction = OME.readData;
     else:
         raise RuntimeError('readData: file format ' + fext + ' not ims or tif');
 
     return readDataFunction(filename, x = x, y = y, z = z, channel = channel, resolution = resolution);
+    
+
+  
+def writePoints(filename, points):
+    
+    if filename == None:
+        return
+    
+    #get extension
+    fext = filename.split('.');
+    if len(fext) < 2:
+        raise RuntimeError('readData: cannot infer file format without extension');
+        
+    fext = fext[-1];
+    
+    if fext == "ims":
+        writePointsFunction = Imaris.writePoints;
+        points = Imaris.transformToImaris(points);
+    elif fext == "csv":
+        writePointsFunction = CSV.writePoints;
+    elif fext == "vtk":
+        writePointsFunction = VTK.writePoints;
+    else:
+        raise RuntimeError('readData: file format ' + fext + ' not ims, vtk or csv');
+
+    return writePointsFunction(filename, points);
+
     

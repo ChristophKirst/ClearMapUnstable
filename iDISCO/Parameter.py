@@ -8,20 +8,30 @@ Created on Thu Jun  4 14:37:06 2015
 @author: ckirst
 """
 
-class IOParameter(object):
+import os
+import sys
+self = sys.modules[__name__];
+
+def iDISCOPath():
+    """Returns path of IDISCO software"""
+    fn = os.path.split(self.__file__);
+    return fn[0];
+
+
+
+class DataSourceParameter(object):
+    """Parameter for files"""
     
     #File name or file pattern of raw image data
     ImageFile = None;
-    
-    #directory of the alignment result
-    AlignmentDirectory = None;
+         
+    #Co-ordinate ranges of raw data
+    ZRange = all;
+    XRange = all;
+    YRange = all;
+        
 
-    #File name for cell coordinates csv, vtk or  ims extension
-    CellCoordinateFile = None;
-    
-
-class ImageProcessingParameter(object):
-    """ Parameter for image processing chain"""
+class SpotDetectionParameter(object):
     
     # Background correctoin: None or (x,y) which is size of disk for gray scale opening
     Background = (15,15);
@@ -35,38 +45,87 @@ class ImageProcessingParameter(object):
     #Threshold for min intensity at center to be counted as cell (should be similar to the h max)
     Threshold = 20;
     
-    #Ilastik classifier
-    IlastikClassifier = None;
     
+class IlastikParameter(object):
+    
+    #ilastik 0.5 path
+    Ilastik = None;
+    
+    #ilastic classifier to use
+    Classifier = os.path.join(self.iDISCOPath(), '/Test/Ilastik/classifier.h5');  
+    
+    # Background correctoin: None or (x,y) which is size of disk for gray scale opening
+    Background = (15,15);
+
+
+
+
+class ImageProcessingParameter(object):
+    """ Parameter for image processing chain"""
+    
+    Method = 'SpotDetection';
+    
+    Parameter = SpotDetectionParameter();
+    
+    #File name for cell coordinates csv, vtk or  ims extension
+    CellCoordinateFile = None;
+
 
 
 class AlignmentParameter(object):
     
+    #directory of the alignment result
+    AlignmentDirectory = None;
+    
     #Elastix binary
     Elastix = '/usr/local/elastix/bin/elastix'
     
-    #TRansformix binary
+    #Transformix binary
     Transformix = '/usr/local/elastix/bin/transformix'
     
+    Lib = '/usr/local/elastix/lib'
+    
     #moving and reference images
-    MovingImage = './Test/Data/Elastix/150524_0_8X-s3-20HFautofluor_18-51-1-warpable.tif'
-    FixedImage  = './Test/Data/Elastix/OstenRefARA_v2_lowerHalf.tif'
+    MovingImage = os.path.join(self.iDISCOPath(), '/Test/Data/Elastix/150524_0_8X-s3-20HFautofluor_18-51-1-warpable.tif');
+    FixedImage  = os.path.join(self.iDISCOPath(), '/Test/Data/Elastix/OstenRefARA_v2_lowerHalf.tif');
     FixedImageMask = None;
     
     #elastix parameter files for alignment
-    AffineParameterFile  = './Test/Elastix/ElastixParamterAffine.txt'
-    BSplineParameterFile = './Test/Elastix/ElastixParamterBSpline.txt'
+    AffineParameterFile  = os.path.join(self.iDISCOPath(), '/Test/Elastix/ElastixParamterAffine.txt');
+    BSplineParameterFile = os.path.join(self.iDISCOPath(), '/Test/Elastix/ElastixParamterBSpline.txt');
+    
+    
+    
+class ParallelProcessingParameter(object):
+    
+    #max number of parallel processes
+    Processes = 2;
+   
+    #chunk sizes
+    ChunkSizeMax = 100;
+    ChunkSizeMin = 30;
+    ChunkOverlap = 15;
+
+    #optimize chunk size and number to number of processes
+    OptimizeChunks = True;
+    
+    #increase chunk size for optimizaition (True, False or all = choose automatically)
+    OptimizeChunkSizeIncrease = all;
     
 
-  
+
+
 class Parameter(object):
     """ Parameter for full processing chain"""
     
     #Image Rpcoessing parameter
     ImageProcessing = ImageProcessingParameter();
     
+    #ParallelProcessing
+    ParallelProcessing = ParallelProcessingParameter();
+    
     #Input files
-    IO = IOParameter();
+    DataSource = DataSourceParameter();
     
     #Elastix alignment parameter
     Alignment = AlignmentParameter();

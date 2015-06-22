@@ -103,6 +103,17 @@ def readZRange(filename, z = all, resolution = 0):
         return z;      
 
 
+def transformToImaris(points, scale = (4.0625, 4.0625, 3)):
+    """Transform pixel coordinates of cell centers to work in Imaris"""
+    if len(scale) == 1:
+        scale = (scale, scale, scale);    
+    
+    for i in range(3):
+        points[:,i] = points[:,i] * scale[i];
+        
+    return points
+
+
 def writePoints(h5file, points, mode = "o", radius = 0.5):
     """Write points to Imaris file"""
     
@@ -180,6 +191,17 @@ def writePoints(h5file, points, mode = "o", radius = 0.5):
     if h5file.get(pnc) != None:
         del h5file[pnc];
     h5file.create_dataset(pnc, shape=pts.shape, dtype='f32', data=pts);
+
+
+
+
+
+
+
+
+
+
+
 
 
 

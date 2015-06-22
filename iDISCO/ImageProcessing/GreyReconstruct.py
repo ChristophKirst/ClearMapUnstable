@@ -11,8 +11,7 @@ All rights reserved.
 Original author: Lee Kamentsky
 
 
-
-Modified by C. Kirst for memory and speed optimization for iDISCO, 2015
+Modified by C. Kirst to optimize memory and speed for iDISCO, 2015
 """
 
 
@@ -131,7 +130,7 @@ def reconstruction(seed, mask, method='dilation', selem=None, offset=None):
         raise ValueError("Intensity of seed image must be greater than that "
                          "of the mask image for reconstruction by erosion.")
     try:
-        from skimage._greyreconstruct import reconstruction_loop
+        from skimage.morphology._greyreconstruct import reconstruction_loop
     except ImportError:
         raise ImportError("_greyreconstruct extension not available.")
 

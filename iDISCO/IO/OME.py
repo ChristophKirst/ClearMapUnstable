@@ -39,7 +39,7 @@ def readFileList(filename):
     return fpath, fl;
 
 
-def readZRange(filename, z = all):
+def readZRange(filename, z = all, resolution = 0):
     """Read z range from file"""
 
     fpath, fl = self.readFileList(filename);
@@ -64,7 +64,7 @@ def readZRange(filename, z = all):
 
 
 
-def readData(filename, x = all, y = all, z = all):
+def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, resolution = 0):
     """Read data from individual images assuming they are the z slices"""
     
     fpath, fl = self.readFileList(filename);
