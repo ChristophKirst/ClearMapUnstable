@@ -177,8 +177,13 @@ parameter.DataSource.ZRange = all;
 # method to segment cells (SpotDetection or Ilastik)
 parameter.ImageProcessing.Method = 'Ilastik';
 
+parameter.ImageProcessing.Parameter = IlastikParameter()
+
 # radius for background removal
 parameter.ImageProcessing.Parameter.Background = (15,15);
+
+
+
 
 # result file for cell coordinates (csv, vtk or ims)
 parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Test/ImageProcessing/cells.csv');

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Correlate volumtric dta with a 3d kernel, optimized for memory / float 32 use
+Convolve volumetric dta with a 3d kernel, optimized for memory / float 32 use
 
 Based on scipy.signal routines
 

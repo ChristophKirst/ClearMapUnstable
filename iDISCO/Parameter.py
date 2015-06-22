@@ -54,6 +54,9 @@ class IlastikParameter(object):
     #ilastic classifier to use
     Classifier = os.path.join(self.iDISCOPath(), '/Test/Ilastik/classifier.h5');  
     
+    # Rescaling of images
+    Rescale = None;
+    
     # Background correctoin: None or (x,y) which is size of disk for gray scale opening
     Background = (15,15);
 

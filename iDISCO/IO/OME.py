@@ -20,6 +20,8 @@ self = sys.modules[__name__];
 import os
 import re
 
+import tifffile as tiff
+
 
 def readFileList(filename):
     
@@ -114,6 +116,14 @@ def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, re
     return img;
 
 
+def writeData(img, fileheader):
+    nz = img.shape[2];
+    #vmin = numpy.iinfo(img.dtype).min
+    #vmax = numpy.iinfo(img.dtype).max
+    for i in range(nz):
+        #mpl.pyplot.imsave(fileheader + "%.4d" % i + ".tif", img[:,:,i], vmin = vmin, vmax = vmax, cmap = mpl.pyplot.cm.gray);
+        tiff.imsave(fileheader + "%.4d" % i + ".tif", img[:,:,i])
+    
 
 def test():    
     """Test OME module"""  

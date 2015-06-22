@@ -15,6 +15,7 @@ Created on Thu Jun  4 14:37:06 2015
 import sys
 import numpy
 import h5py
+import math
 
 # path to illastik installation
 sys.path.insert(1, '/home/ckirst/programs/ilastik-05')
@@ -96,19 +97,22 @@ class IlastikClassifier():
         # Transform input image to ilastik conventions
         # 3d = (time,x,y,z,channel) 
         # 2d = (time,1,x,y,channel)
-        if len(image.shape) == 3:
+        ndim = len(image.shape);
+        if ndim == 2:
             image.shape = (1,1) + image.shape
-        elif len(image.shape) == 4:
+        elif len(image.shape) == 3:
             image.shape = (1,) + image.shape
         else:
             raise RuntimeError("Error: set image: failed: image must be 2 or 3d.");
         
+        #add singelton dim for channel
+        image.shape = image.shape + (1,)
         
         # Create ilastik dataMgr
         dataMgr = DataMgr()
         
         di = DataItemImage('')
-        di.setDataVol(DataAccessor(self.image))
+        di.setDataVol(DataAccessor(image))
         dataMgr.append(di, alreadyLoaded=True)
         dataMgr.module["Classification"]["classificationMgr"].classifiers = self.classifiers
         
@@ -122,11 +126,34 @@ class IlastikClassifier():
         classificationPredict = ClassifierPredictThread(dataMgr)
         classificationPredict.start()
         classificationPredict.wait()
-
+        
+        if ndim == 2:
+            image.shape = image.shape[2:-1];
+        else:
+            image.shape = image.shape[1:-1];
+        
+        
         #del dataMgr
-        return classificationPredict._prediction[0]
+        pred = classificationPredict._prediction[0];
+        if ndim == 2:
+            return pred[0,0,:,:,:]
+        else:
+            return pred[0,:,:,:,:]
 
 
+def rescaleToIlastik(img, parameter = ImageProcessingParameter(), verbose = False):
+    # rescale to fit with ilasstik representation
+    if parameter.Parameter.Rescale != None:
+        img = img.astype('float32') *  parameter.Parameter.Rescale;
+        img[img > math.pow(2,8)-1] = math.pow(2,8)-1;
+        img = img.astype('uint8');
+    else:
+        img = img.astype('uint8');
+    
+    if verbose:
+        plotTiling(img);
+    
+    return img
 
 
 def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcessingParameter()):
@@ -134,34 +161,35 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
 
     timer = Timer();
     
-    # normalize data -> to check
-    #img = img.astype('float');
-    #dmax = 0.075 * 65535;
-    #ids = img > dmax;
-    #img[ids] = dmax;
-    #img /= dmax; 
-    #out.write(timer.elapsedTime(head = 'Normalization'));
-    #img = dataset[600:1000,1600:1800,800:830];
-    #img = dataset[600:1000,:,800:830];
+    # normalize data
+    img = rescaleToIlastik(img, parameter = parameter, verbose = verbose);
     
-    if parameter.Background != None:     # background subtraction in each slice
+    if parameter.Parameter.Background != None:     # background subtraction in each slice
         timer.reset();
-        se = structureElement('Disk', parameter.Background).astype('uint8');
+        se = structureElement('Disk', parameter.Parameter.Background).astype('uint8');
         for z in range(img.shape[2]):
              img[:,:,z] = img[:,:,z] - cv2.morphologyEx(img[:,:,z], cv2.MORPH_OPEN, se)    
-        out.write(timer.elapsedTime(head = 'Background'));
+        out.write(timer.elapsedTime(head = 'Background') + '\n');
     
         if verbose:
-            plotTiling(10*img, maxtiles = 9);       
+            plotTiling(10*img);       
     
     
     #classify image / assume class 1 are the cells !    
     timer.reset();
     cls = IlastikClassifier();
-    cls.loadClassifier(parameter.ClassifierName);
+    cls.loadClassifier(parameter.Parameter.Classifier);
     imgmax = cls.run(img);
+    print imgmax.shape
+    #max probability gives final class
+    imgmax = numpy.argmax(imgmax, axis = -1);
+    
+    # class 1 is used as cells 
     imgmax = imgmax == 1; # class 1 is used as cells 
-    out.write(timer.elapsedTime(head = 'Ilastik classification'));
+    out.write(timer.elapsedTime(head = 'Ilastik classification') + '\n');
+    
+    if verbose:
+        plotTiling(imgmax * 1000);
     
     #center of maxima
     timer.reset();
@@ -169,10 +197,10 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
     
     if nlab > 0:
         centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
-        out.write(timer.elapsedTime(head = 'Cell Centers'));
+        out.write(timer.elapsedTime(head = 'Cell Centers') + '\n');
     
         if verbose:        
-            plotOverlayLabel(img * 0.01, imglab, alpha = False);
+            #plotOverlayLabel(img * 0.01, imglab, alpha = False);
             #plotTiling(img)
             imgc = numpy.zeros(img.shape);
             for i in range(centers.shape[0]):
@@ -186,7 +214,7 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
         return ( centers, cintensity );
         
     else:
-        out.write(timer.elapsedTime(head = 'Cell Centers'));
-        out.wrtie('No Cells found !');
+        out.write(timer.elapsedTime(head = 'Cell Centers') + '\n');
+        out.write('No Cells found !');
         return ( numpy.zeros((0,3)), numpy.zerso(0) );    
     
