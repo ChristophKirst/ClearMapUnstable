@@ -29,8 +29,8 @@ basedirectory = iDISCOPath()
 parameter.DataSource.ImageFile = os.path.join(basedirectory, 'Test/Data/OME/16-17-27_0_8X-s3-20HF_UltraII_C00_xyz-Table Z\d{4}.ome.tif')
 
 #image ranges
-parameter.DataSource.XRange = all;
-parameter.DataSource.YRange = all;
+parameter.DataSource.XRange = (1400, 1800);
+parameter.DataSource.YRange = (1000, 1300);
 parameter.DataSource.ZRange = all;
 
 
@@ -58,21 +58,21 @@ parameter.ImageProcessing.Parameter.ThresholdSave = 30;
 parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Test/ImageProcessing/cells.csv');
 
 
-### Parallel Processing Parameter
+### Stack Processing Parameter
     
 #max number of parallel processes
-parameter.ParallelProcessing.Processes = 2;
+parameter.StackProcessing.Processes = 2;
    
 #chunk sizes
-parameter.ParallelProcessing.ChunkSizeMax = 100;
-parameter.ParallelProcessing.ChunkSizeMin = 30;
-parameter.ParallelProcessing.ChunkOverlap = 15;
+parameter.StackProcessing.ChunkSizeMax = 100;
+parameter.StackProcessing.ChunkSizeMin = 30;
+parameter.StackProcessing.ChunkOverlap = 15;
 
 #optimize chunk size and number to number of processes
-parameter.ParallelProcessing.OptimizeChunks = True;
+parameter.StackProcessing.OptimizeChunks = True;
     
 #increase chunk size for optimizaition (True, False or all = choose automatically)
-parameter.ParallelProcessing.OptimizeChunkSizeIncrease = all;
+parameter.StackProcessing.OptimizeChunkSizeIncrease = all;
 
 
 
@@ -157,6 +157,14 @@ runAlignment(parameter);
 # Segmentation using Ilastik
 ##################################
 
+import os
+
+from iDISCO.Parameter import *
+from iDISCO.Run import *
+from iDISCO.IO import IO as io
+import math
+
+
 parameter = Parameter();
 
 basedirectory = iDISCOPath()
@@ -167,8 +175,8 @@ basedirectory = iDISCOPath()
 parameter.DataSource.ImageFile = os.path.join(basedirectory, 'Test/Data/OME/16-17-27_0_8X-s3-20HF_UltraII_C00_xyz-Table Z\d{4}.ome.tif')
 
 #image ranges
-parameter.DataSource.XRange = all;
-parameter.DataSource.YRange = all;
+parameter.DataSource.XRange = (1400, 1800);
+parameter.DataSource.YRange = (1000, 1300);
 parameter.DataSource.ZRange = all;
 
 
@@ -179,14 +187,25 @@ parameter.ImageProcessing.Method = 'Ilastik';
 
 parameter.ImageProcessing.Parameter = IlastikParameter()
 
+#rescale to fi uint8 data type and enhanve contrast for ilastik
+parameter.ImageProcessing.Parameter.Rescale  =  1.0 / math.pow(2,16) * math.pow(2,8) * 10;
+
 # radius for background removal
 parameter.ImageProcessing.Parameter.Background = (15,15);
 
-
-
+# classifier
+parameter.ImageProcessing.Parameter.Classifier = os.path.join(basedirectory, "Test/Ilastik/classifier.h5");
 
 # result file for cell coordinates (csv, vtk or ims)
 parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Test/ImageProcessing/cells.csv');
+
+
+#Stack Processing
+  
+#chunk sizes
+parameter.StackProcessing.ChunkSizeMax = 100;
+parameter.StackProcessing.ChunkSizeMin = 30;
+parameter.StackProcessing.ChunkOverlap = 15;
 
 
 ### Run and Save

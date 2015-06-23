@@ -7,15 +7,15 @@ Created on Fri Jun 19 12:20:18 2015
 @author: ckirst
 """
 
-import os
+#import os
 
 from iDISCO.Parameter import *
-from iDISCO.IO.IO import writePoints
+#from iDISCO.IO.IO import writePoints
 
 import iDISCO.ImageProcessing.SpotDetection
 import iDISCO.ImageProcessing.IlastikClassification
 
-from iDISCO.ImageProcessing.ParallelProcessing import parallelProcessStack
+from iDISCO.ImageProcessing.StackProcessing import parallelProcessStack, sequentiallyProcessStack
 
 from iDISCO.Alignment.Elastix import transformPoints, alignData
 
@@ -26,21 +26,29 @@ from iDISCO.Utils.Timer import Timer
 def runCellDetection(parameter):
     timer = Timer();
     
+    pp = parameter.StackProcessing;
+    ps = parameter.DataSource;
+    
     # run segmentation
     if parameter.ImageProcessing.Method == "SpotDetection":
+        
         detectCells = iDISCO.ImageProcessing.SpotDetection.detectCells;
-    else:
-        detectCells = iDISCO.ImageProcessing.IlastikClassification.detectCells;
-    
-    pp = parameter.ParallelProcessing;
-    ps = parameter.DataSource;
-    centers, intensities = parallelProcessStack(ps.ImageFile, x = ps.XRange, y = ps.YRange, z = ps.ZRange, 
+        
+        centers, intensities = parallelProcessStack(ps.ImageFile, x = ps.XRange, y = ps.YRange, z = ps.ZRange, 
                                                 processes = pp.Processes, chunksizemax = pp.ChunkSizeMax, chunksizemin = pp.ChunkSizeMin, chunkoverlap = pp.ChunkOverlap, 
                                                 optimizechunks = pp.OptimizeChunks, optimizechunksizeincrease = pp.OptimizeChunkSizeIncrease,
-                                                segmentation = detectCells, parameter = parameter.ImageProcessing);
+                                                segmentation = detectCells, parameter = parameter.ImageProcessing);        
+        
+    else:
+        #ilastik does parallel processing so do sequential processing here
+        detectCells = iDISCO.ImageProcessing.IlastikClassification.detectCells;
+        
+        centers, intensities = sequentiallyProcessStack(ps.ImageFile, x = ps.XRange, y = ps.YRange, z = ps.ZRange, 
+                                                        chunksizemax = pp.ChunkSizeMax, chunksizemin = pp.ChunkSizeMin, chunkoverlap = pp.ChunkOverlap,
+                                                        segmentation = detectCells, parameter = parameter.ImageProcessing);
+
    
     timer.printElapsedTime("Main");
-    
     
     return centers, intensities;
 
@@ -55,7 +63,7 @@ def runCellCoordinateTransformation(parameter):
     print 'todo'    
     
     # transform points
-    points = transfromPoints(cf, transformparameterfile = None, parameter = ap, read = True, tmpfile = None, outdir = None, indices = False);
+    points = transformPoints(cf, transformparameterfile = None, parameter = ap, read = True, tmpfile = None, outdir = None, indices = False);
        
     # upscale ppints back to original size
     print 'todo'

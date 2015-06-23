@@ -18,28 +18,25 @@ self = sys.modules[__name__];
 
 import numpy
 
+import cv2
 #import mahotas as morph
 #from scipy.ndimage.morphology import binary_opening, grey_opening
 #from scipy.ndimage.filters import correlate
 #from scipy.signal import fftconvolve
-
-from iDISCO.ImageProcessing.Convolve import convolve
+#from skimage.morphology import reconstruction
 
 #from scipy.ndimage import maximum_filter
 from scipy.ndimage.measurements import label, center_of_mass
 
-#from skimage.morphology import reconstruction
-from iDISCO.ImageProcessing.GreyReconstruct import reconstruction
-
-
-import cv2
-
 #import scipy
 #from skimage.filter.rank import tophat
 #from skimage.measure import regionprops
-
 from mahotas import regmin
 
+
+#own routines save memory and use faster data types
+from iDISCO.ImageProcessing.Convolution import convolve
+from iDISCO.ImageProcessing.GreyReconstruction import reconstruction
 
 from iDISCO.Parameter import ImageProcessingParameter
 from iDISCO.ImageProcessing.Filter.StructureElement import structureElement

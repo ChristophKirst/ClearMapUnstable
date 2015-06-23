@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Process segmentation in parallel
+Process al large stack in parallel or sequentially
 
 Created on Thu Jun  4 14:37:06 2015
 
@@ -194,6 +194,52 @@ def parallelProcessStack(filename, x = all, y = all, z = all,
     #print resultsseg;
     #print nchunks
         
+    #join the results  
+    results = [];
+    resultsi = [];
+    for i in range(nchunks):
+        cts = resultsseg[i][0];
+        cti = resultsseg[i][1];
+        
+        if cts.size > 0:
+            cts[:,2] += zranges[i][0];
+            iid = numpy.logical_and(cts[:,2] < zcenters[i+1], cts[:,2] >= zcenters[i]);
+            cts = cts[iid,:];
+            cti = cti[iid];
+            results.append(cts);
+            resultsi.append(cti);
+            
+    if results == []:
+        return numpy.zeros((0,3)), numpy.zeros((0));
+    else:
+        return (numpy.concatenate(results), numpy.concatenate(resultsi));
+        
+        
+        
+
+def sequentiallyProcessStack(filename, x = all, y = all, z = all, 
+                             chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15,
+                             segmentation = detectCells, parameter = ImageProcessingParameter()):
+    """Sequential segmetation on a stack"""
+    
+    #determine z ranges
+    zr = io.readZRange(filename, z = z);
+    nz = zr[1] - zr[0];
+    nchunks, zranges, zcenters = self.calculateChunkSize(nz, chunksizemax = chunksizemax, chunksizemin = chunksizemin, chunkoverlap = chunkoverlap, processes = 1, optimizechunks = False, optimizechunksizeincrease = False);
+        
+    #adjust for the zrange
+    zcenters = [xc + zr[0] for xc in zcenters];
+    zranges = [(zc[0] + zr[0], zc[1] + zr[0]) for zc in zranges];
+    
+    argdata = [];
+    for i in range(nchunks):
+        argdata.append((filename, segmentation, parameter, zranges[i], x, y, i, nchunks));
+        
+    #run sequentially
+    resultsseg = [];
+    for i in range(nchunks):
+        resultsseg.append(processSubStack(argdata[i]));
+            
     #join the results  
     results = [];
     resultsi = [];

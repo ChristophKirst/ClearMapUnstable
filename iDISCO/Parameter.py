@@ -99,7 +99,7 @@ class AlignmentParameter(object):
     
     
     
-class ParallelProcessingParameter(object):
+class StackProcessingParameter(object):
     
     #max number of parallel processes
     Processes = 2;
@@ -125,7 +125,7 @@ class Parameter(object):
     ImageProcessing = ImageProcessingParameter();
     
     #ParallelProcessing
-    ParallelProcessing = ParallelProcessingParameter();
+    StackProcessing = StackProcessingParameter();
     
     #Input files
     DataSource = DataSourceParameter();
