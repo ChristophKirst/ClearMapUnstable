@@ -13,7 +13,12 @@ from iDISCO.Parameter import *
 #from iDISCO.IO.IO import writePoints
 
 import iDISCO.ImageProcessing.SpotDetection
-import iDISCO.ImageProcessing.IlastikClassification
+
+try:
+    import iDISCO.ImageProcessing.IlastikClassification
+    haveIlastik = True;
+except:
+    haveIlastik = False;
 
 from iDISCO.ImageProcessing.StackProcessing import parallelProcessStack, sequentiallyProcessStack
 
@@ -40,14 +45,17 @@ def runCellDetection(parameter):
                                                 segmentation = detectCells, parameter = parameter.ImageProcessing);        
         
     else:
-        #ilastik does parallel processing so do sequential processing here
-        detectCells = iDISCO.ImageProcessing.IlastikClassification.detectCells;
-        
-        centers, intensities = sequentiallyProcessStack(ps.ImageFile, x = ps.XRange, y = ps.YRange, z = ps.ZRange, 
+        if haveIlastik:
+            #ilastik does parallel processing so do sequential processing here
+            detectCells = iDISCO.ImageProcessing.IlastikClassification.detectCells;
+            
+            centers, intensities = sequentiallyProcessStack(ps.ImageFile, x = ps.XRange, y = ps.YRange, z = ps.ZRange, 
                                                         chunksizemax = pp.ChunkSizeMax, chunksizemin = pp.ChunkSizeMin, chunkoverlap = pp.ChunkOverlap,
                                                         segmentation = detectCells, parameter = parameter.ImageProcessing);
-
-   
+            
+        else:
+            raise RuntimeError("No Ilastik installed use SpotDectection instead!");
+        
     timer.printElapsedTime("Main");
     
     return centers, intensities;

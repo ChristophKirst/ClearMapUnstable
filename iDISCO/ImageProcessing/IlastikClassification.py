@@ -18,7 +18,7 @@ import h5py
 import math
 
 # path to illastik installation
-sys.path.insert(1, '/home/ckirst/programs/ilastik-05')
+#sys.path.insert(1, '/home/ckirst/programs/ilastik-05')
 
 try:
     #sys.stdout = sys.stderr = open(os.devnull, "w")
