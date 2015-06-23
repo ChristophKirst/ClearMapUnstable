@@ -9,7 +9,7 @@ Created on Thu Jun  4 14:37:06 2015
 
 from iDISCO.IO import CSV, Imaris, OME, VTK
 
-def readZRange(filename, z = all, resolution = 4):
+def readZRange(filename, z = all, resolution = 0):
     """Determine z range of file filename"""
         
     #get extension
@@ -29,7 +29,7 @@ def readZRange(filename, z = all, resolution = 4):
     return readZRangeFunction(filename, z = z, resolution = resolution);
 
 
-def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, resolution = 4):
+def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, resolution = 0):
     """Read data from one of the supported formats"""
     
     #get extension

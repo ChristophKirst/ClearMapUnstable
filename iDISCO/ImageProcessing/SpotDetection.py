@@ -21,7 +21,7 @@ import numpy
 import cv2
 #import mahotas as morph
 #from scipy.ndimage.morphology import binary_opening, grey_opening
-#from scipy.ndimage.filters import correlate
+from scipy.ndimage.filters import correlate
 #from scipy.signal import fftconvolve
 #from skimage.morphology import reconstruction
 
@@ -35,7 +35,7 @@ from mahotas import regmin
 
 
 #own routines save memory and use faster data types
-from iDISCO.ImageProcessing.Convolution import convolve
+#from iDISCO.ImageProcessing.Convolution import convolve
 from iDISCO.ImageProcessing.GreyReconstruction import reconstruction
 
 from iDISCO.Parameter import ImageProcessingParameter
@@ -97,7 +97,8 @@ def dogFilter(img, verbose = False, out = sys.stdout, parameter = ImageProcessin
     img = img.astype('float32');
     #img = correlate(img, fdog);
     #img = scipy.signal.correlate(img, fdog);
-    img = convolve(img, fdog, mode = 'same');
+    img = correlate(img, fdog);
+    #img = convolve(img, fdog, mode = 'same');
     img[img < 0] = 0;
     out.write(timer.elapsedTime(head = 'DoG') + '\n');    
     
@@ -117,10 +118,10 @@ def findExtendedMaxima(img, verbose = False, out = sys.stdout, parameter = Image
     timer.reset(); 
     imgmax = hMaxTransform(img, parameter.Parameter.HMax);
     imgmax = regionalMax(imgmax);
-    imgmax = imgmax.astype('float') * img;
+    imgmax = imgmax.astype('float32') * img;
     th = parameter.Parameter.Threshold;
     imgmax = imgmax > th;
-    out.write(timer.elapsedTime(head = 'Extened Max') + '\n');
+    out.write(timer.elapsedTime(head = 'Extended Max') + '\n');
     
     if verbose:
         #plotTiling(img)
@@ -211,7 +212,8 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
     img = img.astype('float32');
     #img = correlate(img, fdog);
     #img = scipy.signal.correlate(img, fdog);
-    img = convolve(img, fdog, mode = 'same');
+    img = correlate(img, fdog);
+    #img = convolve(img, fdog, mode = 'same');
     img[img < 0] = 0;
     out.write(timer.elapsedTime(head = 'DoG'));
     
@@ -229,7 +231,7 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
     timer.reset(); 
     imgmax = hMaxTransform(img, parameter.Parameter.HMax);
     imgmax = regionalMax(imgmax);
-    imgmax = imgmax.astype('float') * img;
+    imgmax = imgmax.astype('float32') * img;
     th = parameter.Parameter.Threshold;
     imgmax = imgmax > th;
     out.write(timer.elapsedTime(head = 'Extened Max'));

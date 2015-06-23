@@ -31,15 +31,16 @@ basedirectory = iDISCOPath()
 #raw data from microscope used for cell detection (ims or tif)
 parameter.DataSource.ImageFile = os.path.join(basedirectory, 'Test/Data/OME/16-17-27_0_8X-s3-20HF_UltraII_C00_xyz-Table Z\d{4}.ome.tif')
 
+parameter.DataSource.ImageFile = '/run/media/ckirst/ChristophsBackuk4TB/Data/Science/Projects/BrainActiityMap/Experiment/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims'
+
 #image ranges
 parameter.DataSource.XRange = all;
 parameter.DataSource.YRange = all;
-parameter.DataSource.ZRange = all;
-
+parameter.DataSource.ZRange = (100,120);
 
 # load data
 
-data = io.readData(parameter.DataSource.ImageFile, x = (1400, 1800), y = (1000,1300), z = all);
+data = io.readData(parameter.DataSource.ImageFile, x = parameter.DataSource.XRange, y = parameter.DataSource.YRange, z = parameter.DataSource.ZRange, resolution = 0);
 print "Loaded data from " + parameter.DataSource.ImageFile;
 print "Data size is: " + str(data.shape)
 
@@ -59,7 +60,7 @@ print img.dtype
 print img.shape
 
 # size of differeence of gaussian filter
-parameter.ImageProcessing.Parameter.Dog = (11, 7, 7);
+parameter.ImageProcessing.Parameter.Dog = (7, 7, 11);
 
 img = ip.dogFilter(img, parameter = parameter.ImageProcessing, verbose =  verbose);
 print img.dtype
@@ -71,8 +72,6 @@ parameter.ImageProcessing.Parameter.HMax = 20;
 imgmax = ip.findExtendedMaxima(img, parameter = parameter.ImageProcessing, verbose =  verbose);
 print img.dtype
 print img.shape
-
-
 
 centers, intensities = ip.findCenterOfMaxima(img, imgmax, parameter = parameter.ImageProcessing, verbose =  verbose);
 
@@ -129,13 +128,13 @@ verbose = True;
 parameter.DataSource.ImageFile = os.path.join(basedirectory, 'Test/Data/OME/16-17-27_0_8X-s3-20HF_UltraII_C00_xyz-Table Z\d{4}.ome.tif')
 
 #image ranges
-parameter.DataSource.XRange = all;
-parameter.DataSource.YRange = all;
+parameter.DataSource.XRange = (1400,1600);
+parameter.DataSource.YRange = (1400,1600);
 parameter.DataSource.ZRange = all;
 
 
 # load data
-data = io.readData(parameter.DataSource.ImageFile, x = (1400, 1800), y = (1000,1300), z = all);
+data = io.readData(parameter.DataSource.ImageFile, x = parameter.DataSource.XRange, y = parameter.DataSource.YRange, z = parameter.DataSource.ZRange, resolution = 0);
 print "Loaded data from " + parameter.DataSource.ImageFile;
 print "Data size is: " + str(data.shape)
 
@@ -145,7 +144,6 @@ if verbose:
 
 
 #rescale data and save to train classifier in ilastik
-
 import math
 
 parameter.ImageProcessing.Parameter.Rescale  =  1.0 / math.pow(2,16) * math.pow(2,8) * 10;
@@ -153,6 +151,7 @@ parameter.ImageProcessing.Parameter.Rescale  =  1.0 / math.pow(2,16) * math.pow(
 dataw = ip.rescaleToIlastik(data, parameter.ImageProcessing);
 print dataw.dtype
 print dataw.max()
+
 io.OME.writeData(dataw, os.path.join(basedirectory, "Test/Data/Ilastik/image"))
 
 

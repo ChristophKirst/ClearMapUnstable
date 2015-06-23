@@ -33,18 +33,19 @@ def closeFile(h5file, mode = "a"):
     return h5file.close();
 
 
-def readDataSet(h5file, resolution = 4, channel = 0, timepoint = 0):
+def readDataSet(h5file, resolution = 0, channel = 0, timepoint = 0):
     """Open Imaris file and returns hdf5 dataset object"""
     
     dsname = "/DataSet/ResolutionLevel " + str(resolution) + "/TimePoint " + str(timepoint) + "/Channel " + str(channel) + "/Data";
     return h5file.get(dsname);
     
     
-def readData(filename, x = all, y = all, z = all, resolution = 4, channel = 0, timepoint = 0):
+def readData(filename, x = all, y = all, z = all, resolution = 0, channel = 0, timepoint = 0):
     
     f = h5py.File(filename, "r");
     dataset = self.readDataSet(f, resolution = resolution, channel = channel, timepoint  = timepoint);
     datasetsize = dataset.shape;
+    print datasetsize
     
     if x == all:
         x = (0, datasetsize[2]);
@@ -72,6 +73,7 @@ def readData(filename, x = all, y = all, z = all, resolution = 4, channel = 0, t
     
     img = dataset[z[0]:z[1],y[0]:y[1],x[0]:x[1]];
     img = img.transpose((2,1,0)); # imaris stores files in reverse x,y,z ordering
+    #img = dataset[x[0]:x[1],y[0]:y[1],z[0]:z[1]];
     
     f.close();
     
@@ -81,7 +83,7 @@ def readZRange(filename, z = all, resolution = 0):
     """Read z range from file"""
 
     f = self.openFile(filename);
-    dataset = self.readData(f, resolution = resolution);
+    dataset = self.readDataSet(f, resolution = resolution);
     nz = dataset.shape[0];    
     f.close();
     

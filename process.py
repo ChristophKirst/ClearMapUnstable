@@ -27,11 +27,11 @@ basedirectory = iDISCOPath()
 
 #raw data from microscope used for cell detection (ims or tif)
 parameter.DataSource.ImageFile = os.path.join(basedirectory, 'Test/Data/OME/16-17-27_0_8X-s3-20HF_UltraII_C00_xyz-Table Z\d{4}.ome.tif')
-
+parameter.DataSource.ImageFile = '/run/media/ckirst/ChristophsBackuk4TB/Data/Science/Projects/BrainActiityMap/Experiment/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims'
 #image ranges
 parameter.DataSource.XRange = (1400, 1800);
 parameter.DataSource.YRange = (1000, 1300);
-parameter.DataSource.ZRange = all;
+parameter.DataSource.ZRange = (300, 600);
 
 
 ### Cell Segmentation Parameter
@@ -43,7 +43,7 @@ parameter.ImageProcessing.Method = 'SpotDetection';
 parameter.ImageProcessing.Parameter.Background = (15,15);
 
 # size of differeence of gaussian filter
-parameter.ImageProcessing.Parameter.Dog = (11, 7, 7);
+parameter.ImageProcessing.Parameter.Dog = (7, 7, 11);
 
 # h value for h max detection
 parameter.ImageProcessing.Parameter.HMax = 20;

@@ -121,7 +121,7 @@ def convolve(x, y, mode = 'same'):
     
     s1 = numpy.array(x.shape)
     s2 = numpy.array(y.shape)      
-    shape =  s1 + s2 -1;
+    shape =  s1 + s2 - 1;
     
     fshape = [_next_regular(int(d)) for d in shape];
     fslice = tuple([slice(0, int(sz)) for sz in shape]);
