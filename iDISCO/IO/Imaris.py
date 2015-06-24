@@ -45,7 +45,6 @@ def readData(filename, x = all, y = all, z = all, resolution = 0, channel = 0, t
     f = h5py.File(filename, "r");
     dataset = self.readDataSet(f, resolution = resolution, channel = channel, timepoint  = timepoint);
     datasetsize = dataset.shape;
-    print datasetsize
     
     if x == all:
         x = (0, datasetsize[2]);

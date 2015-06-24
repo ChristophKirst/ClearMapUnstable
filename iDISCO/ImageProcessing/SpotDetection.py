@@ -234,7 +234,7 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
     imgmax = imgmax.astype('float32') * img;
     th = parameter.Parameter.Threshold;
     imgmax = imgmax > th;
-    out.write(timer.elapsedTime(head = 'Extened Max'));
+    out.write(timer.elapsedTime(head = 'Extended Max'));
     
     if verbose:
         #plotTiling(img)

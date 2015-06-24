@@ -100,14 +100,16 @@ basedirectory = iDISCOPath()
 #Transformix binary
 parameter.Alignment.Transformix = '/home/ckirst/programs/elastix/bin/transformix'
 
+parameter.Alignment.Lib = '/home/ckirst/programs/elastix/lib'
+
 #Directory of elastix output form Alignment
-parameter.Alignment.AlignmentDirectory = os.path.join(basedirectry, 'Test/Elastix/Output')
+parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'Test/Elastix/Output')
 
 #Cell Coordinates csv file
 parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Test/ImageProcessing/cells.csv');
 
 #File for transfomred coordinates (csv, vtk or ims)
-parameter.Alignment.CellCoordinateFile =  os.path.join(basedirectory, 'Test/Elastix/cells.csv');
+parameter.Alignment.CellCoordinateFile =  os.path.join(basedirectory, 'Test/Elastix/cells_aligned.csv');
 
 # run
 points = runCellCoordinateTransformation(parameter);
@@ -131,6 +133,8 @@ basedirectory = iDISCOPath()
 
 #Elastix binary
 parameter.Alignment.Elastix = '/home/ckirst/programs/elastix/bin/elastix'
+
+parameter.Alignment.Lib = '/home/ckirst/programs/elastix/lib'
 
 #Directory of elastix output form Alignment
 parameter.Alignment.AlignmentDirectory = os.path.join(basedirectry, '/Test/Elastix/Output')

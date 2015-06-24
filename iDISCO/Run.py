@@ -68,13 +68,13 @@ def runCellCoordinateTransformation(parameter):
     ap = parameter.Alignment;
     
     # downscale points to referenece image size
-    print 'todo'    
+    #print 'todo'    
     
     # transform points
     points = transformPoints(cf, transformparameterfile = None, parameter = ap, read = True, tmpfile = None, outdir = None, indices = False);
        
     # upscale ppints back to original size
-    print 'todo'
+    #print 'todo'
     
     return points;
     

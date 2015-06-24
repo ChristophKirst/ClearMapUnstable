@@ -82,8 +82,6 @@ def parseElastixOutputPoints(filename, indices = True):
     
     np = len(lines);
     
-    print np
-    
     if np == 0:
         return numpy.zeros((0,3));
     
@@ -133,7 +131,7 @@ def transformPoints(points, transformparameterfile = None, parameter = Alignment
                         else:
                             newfile.write('point\n')
                         
-                        newfile.write(str(lines.shape[0]) + '\n');
+                        newfile.write(str(len(lines)) + '\n');
                         newfile.writelines(lines);
                 
                 txtfile = tmpfn;   
@@ -199,6 +197,8 @@ def transformPoints(points, transformparameterfile = None, parameter = Alignment
     
     else:
         return outdirname + 'outputpoints.txt'
+        
+        
 
 
 def downSampleData(filename):
@@ -220,6 +220,8 @@ def alignData(movingimage, fixedimage, parameter = AlignmentParameter()):
     
     if not os.path.exists(outdir):
         os.mkdir(outdir);
+        
+    self.setElastixLibraryPath(parameter);
     
     cmd = parameter.Elastix + ' -threads 16 -m ' + movingimage + ' -f ' + fixedimage + ' -p ' + affineparfile + ' -p ' + bsplinefile + ' -out ' + outdir;
     #$ELASTIX -threads 16 -m $MOVINGIMAGE -f $FIXEDIMAGE -fMask $FIXEDIMAGE_MASK -p  $AFFINEPARFILE -p $BSPLINEPARFILE -out $ELASTIX_OUTPUT_DIR
