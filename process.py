@@ -8,12 +8,16 @@ Created on Thu Jun  4 14:37:06 2015
 @author: ckirst
 """
 
+import sys
+
+# path to illastik installation
+sys.path.insert(1, '/home/ckirst/programs/ilastik-05')
+
 import os
 
 from iDISCO.Parameter import *
 from iDISCO.Run import *
 from iDISCO.IO import IO as io
-
 
 ##################################
 # Segmentation
