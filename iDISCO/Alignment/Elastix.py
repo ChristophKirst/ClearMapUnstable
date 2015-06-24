@@ -103,8 +103,12 @@ def parseElastixOutputPoints(filename, indices = True):
           
 def setElastixLibraryPath(parameter = AlignmentParameter()): 
     #make libs for elastix visible in linux
-    lp = os.environ['LD_LIBRARY_PATH']   
-    os.environ['LD_LIBRARY_PATH'] = lp + ':' + parameter.Lib;
+    
+    if os.environ.has_key('LD_LIBRARY_PATH'):
+        lp = os.environ['LD_LIBRARY_PATH']   
+        os.environ['LD_LIBRARY_PATH'] = lp + ':' + parameter.Lib;
+    else:
+        os.environ['LD_LIBRARY_PATH'] = parameter.Lib
     
 
 
