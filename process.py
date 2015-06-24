@@ -137,15 +137,15 @@ parameter.Alignment.Elastix = '/home/ckirst/programs/elastix/bin/elastix'
 parameter.Alignment.Lib = '/home/ckirst/programs/elastix/lib'
 
 #Directory of elastix output form Alignment
-parameter.Alignment.AlignmentDirectory = os.path.join(basedirectry, '/Test/Elastix/Output')
+parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, '/Test/Elastix/Output')
 
 #moving and reference images
-parameter.Alignment.MovingImage = os.path.join(basedirectry, 'Test/Data/Elastix/150524_0_8X-s3-20HFautofluor_18-51-1-warpable.tif');
-parameter.Alignment.FixedImage  = os.path.join(basedirectry, 'Test/Data/Elastix/OstenRefARA_v2_lowerHalf.tif');
+parameter.Alignment.MovingImage = os.path.join(basedirectory, 'Test/Data/Elastix/150524_0_8X-s3-20HFautofluor_18-51-1-warpable.tif');
+parameter.Alignment.FixedImage  = os.path.join(basedirectory, 'Test/Data/Elastix/OstenRefARA_v2_lowerHalf.tif');
 
 #elastix parameter files for alignment
-parameter.Alignment.AffineParameterFile  = os.path.join(basedirectry, 'Test/Elastix/ElastixParamterAffine.txt');
-parameter.Alignment.BSplineParameterFile = os.path.join(basedirectry, 'Test/Elastix/ElastixParamterBSpline.txt');
+parameter.Alignment.AffineParameterFile  = os.path.join(basedirectory, 'Test/Elastix/ElastixParamterAffine.txt');
+parameter.Alignment.BSplineParameterFile = os.path.join(basedirectory, 'Test/Elastix/ElastixParamterBSpline.txt');
 
 #run alignment
 runAlignment(parameter);
@@ -203,6 +203,7 @@ parameter.ImageProcessing.Parameter.Classifier = os.path.join(basedirectory, "Te
 # result file for cell coordinates (csv, vtk or ims)
 parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Test/ImageProcessing/cells.csv');
 
+parameter.ImageProcessing.Parameter.ThresholdSave = 20;
 
 #Stack Processing
   
