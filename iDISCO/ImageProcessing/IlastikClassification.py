@@ -180,7 +180,7 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
     cls = IlastikClassifier();
     cls.loadClassifier(parameter.Parameter.Classifier);
     imgmax = cls.run(img);
-    print imgmax.shape
+    #print imgmax.shape
     #max probability gives final class
     imgmax = numpy.argmax(imgmax, axis = -1);
     

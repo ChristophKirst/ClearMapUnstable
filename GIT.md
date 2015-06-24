@@ -16,7 +16,7 @@ plain user:
 
 developer / programmer:
 
-  * create account at [http://github.com](http://github.com)
+  * create account at assembla
 
   * got to [https://git.assembla.com/idisco.git](https://git.assembla.com/idisco.git) and press fork button 
 
