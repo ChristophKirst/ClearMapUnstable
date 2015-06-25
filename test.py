@@ -11,6 +11,9 @@ Created on Thu Jun  4 14:37:06 2015
 import os
 import numpy
 
+# path to illastik installation
+sys.path.insert(1, '/home/ckirst/programs/ilastik-05')
+
 from iDISCO.Parameter import *
 from iDISCO.IO import IO as io
 from iDISCO.Visualization import Plot as plt
@@ -143,7 +146,7 @@ if verbose:
     plt.plotTiling(15*data)
 
 
-#rescale data and save to train classifier in ilastik
+#rescale data
 import math
 
 parameter.ImageProcessing.Parameter.Rescale  =  1.0 / math.pow(2,16) * math.pow(2,8) * 10;
@@ -152,6 +155,15 @@ dataw = ip.rescaleToIlastik(data, parameter.ImageProcessing);
 print dataw.dtype
 print dataw.max()
 
+
+# radius for background removal
+parameter.ImageProcessing.Parameter.Background = (15,15);
+
+img = ip.removeBackground(data, parameter = parameter.ImageProcessing, verbose =  verbose);
+print img.dtype
+print img.shape
+
+# save to train classifier in ilastik
 io.OME.writeData(dataw, os.path.join(basedirectory, "Test/Data/Ilastik/image"))
 
 

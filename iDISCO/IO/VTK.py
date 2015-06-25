@@ -14,7 +14,4 @@ def writePoints(filename, points, data = None):
     y = points[:,1];
     z = points[:,2];
     
-    if data == None:
-        pointsToVTK(filename, x, y, z);
-    else:
-        pointsToVTK(filename, x, y, z, data = data)
+    pointsToVTK(filename, x, y, z, data = data);

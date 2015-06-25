@@ -138,6 +138,24 @@ class IlastikClassifier():
         else:
             return pred[0,:,:,:,:]
 
+def removeBackground(img, verbose = False, out = sys.stdout, parameter = ImageProcessingParameter()):
+    """Remove Background step of Spot Detection Algorithm"""
+    timer = Timer();
+    
+    # background subtraction in each slice
+    timer.reset();
+    se = structureElement('Disk', parameter.Parameter.Background).astype('uint8');
+    for z in range(img.shape[2]):
+         #img[:,:,z] = img[:,:,z] - grey_opening(img[:,:,z], structure = structureElement('Disk', (30,30)));
+         #img[:,:,z] = img[:,:,z] - morph.grey_opening(img[:,:,z], structure = self.structureELement('Disk', (150,150)));
+         img[:,:,z] = img[:,:,z] - cv2.morphologyEx(img[:,:,z], cv2.MORPH_OPEN, se)    
+    out.write(timer.elapsedTime(head = 'Background') + '\n');
+    
+    if verbose:
+        plotTiling(10*img);
+        
+    return img
+
 
 def rescaleToIlastik(img, parameter = ImageProcessingParameter(), verbose = False):
     # rescale to fit with ilasstik representation

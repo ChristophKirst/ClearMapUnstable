@@ -113,7 +113,7 @@ parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'Test/Elast
 parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Test/ImageProcessing/cells.csv');
 
 #File for transfomred coordinates (csv, vtk or ims)
-parameter.Alignment.CellCoordinateFile =  os.path.join(basedirectory, 'Test/Elastix/cells_aligned.csv');
+parameter.Alignment.CellCoordinateFile = os.path.join(basedirectory, 'Test/Elastix/cells_aligned.csv');
 
 # run
 points = runCellCoordinateTransformation(parameter);
@@ -167,6 +167,10 @@ runAlignment(parameter);
 
 import os
 
+# path to illastik installation
+import sys
+sys.path.insert(1, '/home/ckirst/programs/ilastik-05')
+
 from iDISCO.Parameter import *
 from iDISCO.Run import *
 from iDISCO.IO import IO as io
@@ -205,16 +209,16 @@ parameter.ImageProcessing.Parameter.Background = (15,15);
 parameter.ImageProcessing.Parameter.Classifier = os.path.join(basedirectory, "Test/Ilastik/classifier.h5");
 
 # result file for cell coordinates (csv, vtk or ims)
-parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Test/ImageProcessing/cells.csv');
+parameter.ImageProcessing.CellCoordinateFile = os.path.join(iDISCOPath(), 'Test/ImageProcessing/cells_ilastik.csv');
 
 parameter.ImageProcessing.Parameter.ThresholdSave = 20;
 
 #Stack Processing
   
 #chunk sizes
-parameter.StackProcessing.ChunkSizeMax = 100;
+parameter.StackProcessing.ChunkSizeMax = 10;
 parameter.StackProcessing.ChunkSizeMin = 30;
-parameter.StackProcessing.ChunkOverlap = 15;
+parameter.StackProcessing.ChunkOverlap = 5;
 
 
 ### Run and Save
