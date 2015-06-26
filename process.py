@@ -8,308 +8,231 @@ Created on Thu Jun  4 14:37:06 2015
 @author: ckirst
 """
 
-import numpy as np
-import matplotlib as mpl
+import sys
 
-import iDISCO.IO.Imaris as io
+# path to illastik installation
+sys.path.insert(1, '/home/ckirst/programs/ilastik-05')
 
-from iDISCO.ImageProcessing.SpotDetection import detectCells
-from iDISCO.ImageProcessing.ParallelProcessing import parallelProcessStack
-from iDISCO.Visualization.Plot import plotTiling, plotOverlayLabel
+import os
 
-from iDISCO.Utils.Timer import Timer
-timer = Timer();
+from iDISCO.Parameter import *
+from iDISCO.Run import *
+from iDISCO.IO import IO as io
 
-# open data
+##################################
+# Segmentation
+##################################
 
-#mount windows folder 
-#sudo mount -t vboxsf D_DRIVE ./Windows/
+parameter = Parameter();
 
-fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
-#fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
-#fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
-#fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
+basedirectory = iDISCOPath()
 
-centers, centint = parallelProcessStack(fn, chunksizemax = 40, chunksizemin = 30, chunkoverlap = 15, 
-                               processes = 5, segmentation = detectCells, zrange = (800, 860));
-timer.printElapsedTime("Main");
+### Data Source 
 
-
-
-
-
-#fout = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.cent';
-#fouti = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 Points.int';
-#fout = '/home/ckirst/Desktop/cfosRegistrations/Adult cfos C row 20HF 150524 Points.data';
-#centers.tofile(fout);
-#centint.tofile(fouti);
+#raw data from microscope used for cell detection (ims or tif)
+parameter.DataSource.ImageFile = os.path.join(basedirectory, 'Test/Data/OME/16-17-27_0_8X-s3-20HF_UltraII_C00_xyz-Table Z\d{4}.ome.tif')
+parameter.DataSource.ImageFile = '/run/media/ckirst/ChristophsBackuk4TB/Data/Science/Projects/BrainActiityMap/Experiment/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims'
+#image ranges
+parameter.DataSource.XRange = (1400, 1800);
+parameter.DataSource.YRange = (1000, 1300);
+parameter.DataSource.ZRange = (300, 600);
 
 
-#!/usr/bin/env python
-import numpy as np
-import pylab as P
+### Cell Segmentation Parameter
 
-# the histogram of the data with histtype='step'
-n, bins, patches = P.hist(centint, 50, normed=1, histtype='stepfilled')
-P.setp(patches, 'facecolor', 'g', 'alpha', 0.75)
+# method to segment cells (SpotDetection or Ilastik)
+parameter.ImageProcessing.Method = 'SpotDetection';
 
-# add a line showing the expected distribution
-#y = P.normpdf( bins, mu, sigma)
-l = P.plot(bins, y, 'k--', linewidth=1.5)
+# radius for background removal
+parameter.ImageProcessing.Parameter.Background = (15,15);
 
+# size of differeence of gaussian filter
+parameter.ImageProcessing.Parameter.Dog = (7, 7, 11);
 
+# h value for h max detection
+parameter.ImageProcessing.Parameter.HMax = 20;
 
+# intensity threshold for cells 
+parameter.ImageProcessing.Parameter.Threshold = 20;
 
-# write resultf.close();
+# intensity threshold for final cells to be saved
+parameter.ImageProcessing.Parameter.ThresholdSave = 30;
 
-c = centers.copy();
-c = c[:, [2,1,0]];
-
-#c = numpy.array([[0,0,0], [2176,  2560, 1920]])
-#(1920, 2560, 2176600)
-
-c[:,0] = c[:,0] * 4.0625;
-c[:,1] = c[:,1] * 4.0625;
-c[:,2] = c[:,2] * 3; # 4.0625;
-
-#iid = np.logical_and(c[:,2] > 2000, c[:,2]  < 3000);
-#iid2 = np.logical_and(c[:,1] > 2000, c[:,1]  < 3000);
-#iid = np.logical_and(iid, iid2);
-#c2 = c[iid, :];
+# result file for cell coordinates (csv, vtk or ims)
+parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Test/ImageProcessing/cells.csv');
 
 
-iid = centint > 130;
-c2 = c[iid,:];
-
-#fout = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524 segmentation.ims';
-fout = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
-h5file = io.openFile(fout);
-
-io.writePoints(h5file, c2, mode = 'o', radius = 0.5);
-
-h5file.close();
-
-
-
-
-
-
-
-
-
-
-""" Open Data """
-
-import iDISCO.IO.Imaris as io
-import numpy as np
-
-#fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
-fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
-
-
-f = io.openFile(fn);
-dataset = io.readData(f, resolution=0);
-print dataset.shape
-
-#dataraw = dataset[1200:1600,1200:1600,1000:1160];
-#print dataraw.dtype
-#print (dataraw.max(), dataraw.min())
-#datamax = np.iinfo(dataraw.dtype).max;
-
-#img = dataset[0:500,0:500,1000:1008];
-img = dataset[600:1000,1600:1800,800:830];
-img = dataset[:,:,800:809];
-
-
-#plotTiling(10 * img)
-#f.close();
-
-
-cc = centers.astype('int');
-cc = cc[cc[:,2] < 809, :];
-#cc = cc[cc[:,0] < 500, :];
-#cc = cc[cc[:,1] < 500, :];
-
-
-
-for i in range(cc.shape[0]):
-    imgc[cc[i,0], cc[i,1], cc[i,2]-800] = 1;
+### Stack Processing Parameter
     
+#max number of parallel processes
+parameter.StackProcessing.Processes = 2;
+   
+#chunk sizes
+parameter.StackProcessing.ChunkSizeMax = 100;
+parameter.StackProcessing.ChunkSizeMin = 30;
+parameter.StackProcessing.ChunkOverlap = 15;
+
+#optimize chunk size and number to number of processes
+parameter.StackProcessing.OptimizeChunks = True;
     
-img = img.astype('float');
-img /= img.max();
-img[img > 0.5] = 0.5;
+#increase chunk size for optimizaition (True, False or all = choose automatically)
+parameter.StackProcessing.OptimizeChunkSizeIncrease = all;
 
 
-cintensity = numpy.array([img[cc[i,0], cc[i,1], cc[i,2]-800] for i in range(cc.shape[0])]);
-print (cintensity.min(), cintensity.max())
 
-imgc = numpy.zeros(img.shape)
-for i in range(cc.shape[0]):
-    if cintensity[i] > 0.05:
-        imgc[cc[i,0], cc[i,1], cc[i,2]-800] = 1;
-      
-plotOverlayLabel(img * 5, imgc)
+### Run and Save
 
+centers, intensities = runCellDetection(parameter);
 
-"""
-Test between openings for speed
+iid = intensities > parameter.ImageProcessing.Parameter.ThresholdSave ;
+centersSave = centers[iid,:];
 
-"""
+io.writePoints(parameter.ImageProcessing.CellCoordinateFile, centersSave);
 
-import numpy
-from mahotas import open
-from scipy.ndimage.morphology import binary_opening, grey_opening
-from skimage.morphology import opening, white_tophat
-from skimage.filter.rank import tophat
-import cv2
 
-from iDISCO.ImageProcessing.Filter.StructureElement import structureElement
-from iDISCO.Visualization.Plot import plotTiling, plotOverlayLabel
 
-from iDISCO.Utils.Timer import Timer;
+##################################
+# Transform Cell Coordinates
+##################################
 
+parameter = Parameter();
 
-img = numpy.random.rand(2000,2000) * 65535;
-img = img.astype('int')
+basedirectory = iDISCOPath()
 
-dataraw = dataset[:,:,1160];
+### Alignment Parameter
 
-img = dataraw[:,:];
-img.shape
+#Transformix binary
+parameter.Alignment.Transformix = '/home/ckirst/programs/elastix/bin/transformix'
 
+parameter.Alignment.Lib = '/home/ckirst/programs/elastix/lib'
 
-t = Timer();
-res = grey_opening(img,#DoG filter
-t.printElapsedTime('scipy');
+#Directory of elastix output form Alignment
+parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'Test/Elastix/Output')
 
+#Cell Coordinates csv file
+parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Test/ImageProcessing/cells.csv');
 
-#t.reset();
-#res2 = open(img, structureElement('Disk', (30,30)).astype('bool'));
-#t.printElapsedTime('mahotas');
+#File for transfomred coordinates (csv, vtk or ims)
+parameter.Alignment.CellCoordinateFile = os.path.join(basedirectory, 'Test/Elastix/cells_aligned.csv');
 
-#t.reset();
-#res2 = open(img, structureElement('Disk', (30,30)).astype('bool'));
-#t.printElapsedTime('mahotas');
+# run
+points = runCellCoordinateTransformation(parameter);
 
-t.reset();
-se = structureElement('Disk', (15,15)).astype('uint8');
-res2 = cv2.morphologyEx(img, cv2.MORPH_OPEN, se)
-t.printElapsedTime('opencv');
+#save 
+io.writePoints(parameter.Alignment.CellCoordinateFile, points);
 
-#from skimage.morphology import disk
-#se = disk(10);
 
-t.reset();
-#res3 = opening(img.astype('uint16'), se);
-res3 = white_tophat(img.astype('uint16'), se);
 
-t.printElapsedTime('skimage');
-t.reset();
 
-x = (res3);
-print (x.min(), x.max())
 
-plotTiling(numpy.dstack((10 * img, 10 * (img - res2))))
+##################################
+# Align Data
+##################################
 
-#seems not to work correctly -> scipy gets very slow for larger images (??)
+parameter = Parameter();
 
+basedirectory = iDISCOPath()
 
+### Alignment Parameter
 
+#Elastix binary
+parameter.Alignment.Elastix = '/home/ckirst/programs/elastix/bin/elastix'
 
-"""
-Test Speed of Correlation
-"""
+parameter.Alignment.Lib = '/home/ckirst/programs/elastix/lib'
 
+#Directory of elastix output form Alignment
+parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, '/Test/Elastix/Output')
 
-import scipy
-from iDISCO.ImageProcessing.Filter.FilterKernel import filterKernel
+#moving and reference images
+parameter.Alignment.MovingImage = os.path.join(basedirectory, 'Test/Data/Elastix/150524_0_8X-s3-20HFautofluor_18-51-1-warpable.tif');
+parameter.Alignment.FixedImage  = os.path.join(basedirectory, 'Test/Data/Elastix/OstenRefARA_v2_lowerHalf.tif');
 
-from skimage.feature import match_template
+#elastix parameter files for alignment
+parameter.Alignment.AffineParameterFile  = os.path.join(basedirectory, 'Test/Elastix/ElastixParamterAffine.txt');
+parameter.Alignment.BSplineParameterFile = os.path.join(basedirectory, 'Test/Elastix/ElastixParamterBSpline.txt');
 
-from iDISCO.Utils.Timer import Timer;
+#run alignment
+runAlignment(parameter);
 
-timer = Timer();
 
-#DoG filter
-fdog = filterKernel(ftype = 'DoG', size = [7,7,5]);
-img = dataset[:,:,1000:1016];
 
-#timer.reset();
-#res = scipy.signal.correlate(img, fdog);
-#timer.printElapsedTime(head = 'scipy.signal');
 
 
-#res = match_template(img, fdog);
-#timer.printElapsedTime(head = 'skimage');
 
-timer.reset();
-res2 = scipy.ndimage.filters.correlate(img, fdog);
-timer.printElapsedTime(head = 'scipy.ndimage');
 
 
+##################################
+# Segmentation using Ilastik
+##################################
 
+import os
 
-dsname = "DataSetInfo/OME Image Tags"
-ds = f.get(dsname)
+# path to illastik installation
+import sys
+sys.path.insert(1, '/home/ckirst/programs/ilastik-05')
 
+from iDISCO.Parameter import *
+from iDISCO.Run import *
+from iDISCO.IO import IO as io
+import math
 
 
+parameter = Parameter();
 
+basedirectory = iDISCOPath()
 
+### Data Source 
 
+#raw data from microscope used for cell detection (ims or tif)
+parameter.DataSource.ImageFile = os.path.join(basedirectory, 'Test/Data/OME/16-17-27_0_8X-s3-20HF_UltraII_C00_xyz-Table Z\d{4}.ome.tif')
 
+#image ranges
+parameter.DataSource.XRange = (1400, 1800);
+parameter.DataSource.YRange = (1000, 1300);
+parameter.DataSource.ZRange = all;
 
 
+### Cell Segmentation Parameter
 
+# method to segment cells (SpotDetection or Ilastik)
+parameter.ImageProcessing.Method = 'Ilastik';
 
+parameter.ImageProcessing.Parameter = IlastikParameter()
 
+#rescale to fi uint8 data type and enhanve contrast for ilastik
+parameter.ImageProcessing.Parameter.Rescale  =  1.0 / math.pow(2,16) * math.pow(2,8) * 10;
 
+# radius for background removal
+parameter.ImageProcessing.Parameter.Background = (15,15);
 
+# classifier
+parameter.ImageProcessing.Parameter.Classifier = os.path.join(basedirectory, "Test/Ilastik/classifier.h5");
 
+# result file for cell coordinates (csv, vtk or ims)
+parameter.ImageProcessing.CellCoordinateFile = os.path.join(iDISCOPath(), 'Test/ImageProcessing/cells_ilastik.csv');
 
+parameter.ImageProcessing.Parameter.ThresholdSave = 20;
 
+#Stack Processing
+  
+#chunk sizes
+parameter.StackProcessing.ChunkSizeMax = 10;
+parameter.StackProcessing.ChunkSizeMin = 30;
+parameter.StackProcessing.ChunkOverlap = 5;
 
 
+### Run and Save
 
+centers, intensities = runCellDetection(parameter);
 
+iid = intensities > parameter.ImageProcessing.Parameter.ThresholdSave ;
+centersSave = centers[iid,:];
 
+io.writePoints(parameter.ImageProcessing.CellCoordinateFile, centersSave);
 
 
-"""
 
-import iDISCO.IO.Imaris as io
 
-
-from multiprocessing import Pool
-
-
-# test parallel reading of h5py file
-
-def readD(fnz):
-    fn = fnz[0];
-    z = fnz[1];
-    f = io.openFile(fn, mode = 'r');
-    dataset = io.readData(f, resolution=0);    
-    
-    img = dataset[120:130,120:200,z];
-    
-    f.close();
-    
-    return img;
-    
-    
-fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
-
-
-argdata = [(fn,x) for x in range(50)];
-pool = Pool(processes = 4);
-
-results = pool.map(readD, argdata);
-print results
-
-
-"""
 
 
 

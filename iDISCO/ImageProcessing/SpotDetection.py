@@ -18,33 +18,39 @@ self = sys.modules[__name__];
 
 import numpy
 
+import cv2
 #import mahotas as morph
 #from scipy.ndimage.morphology import binary_opening, grey_opening
 from scipy.ndimage.filters import correlate
+#from scipy.signal import fftconvolve
+#from skimage.morphology import reconstruction
+
 #from scipy.ndimage import maximum_filter
 from scipy.ndimage.measurements import label, center_of_mass
 
-from skimage.morphology import reconstruction
-
-import cv2
-
 #import scipy
-
 #from skimage.filter.rank import tophat
 #from skimage.measure import regionprops
-
 from mahotas import regmin
 
-from iDISCO.Utils.Timer import Timer
+
+#own routines save memory and use faster data types
+#from iDISCO.ImageProcessing.Convolution import convolve
+from iDISCO.ImageProcessing.GreyReconstruction import reconstruction
+
+from iDISCO.Parameter import ImageProcessingParameter
 from iDISCO.ImageProcessing.Filter.StructureElement import structureElement
 from iDISCO.ImageProcessing.Filter.FilterKernel import filterKernel
+
+from iDISCO.Utils.Timer import Timer
 from iDISCO.Visualization.Plot import plotTiling, plotOverlayLabel
+
    
 def hMaxTransform(img, h):
     """Calculates h maximum transformation of an image."""
     #seed = img.copy();
     #seed[seed < h] = h; # catch errors for uint subtraction !
-    img = img.astype('float');
+    #img = img.astype('float16'); # float32 ?
     return reconstruction(img - h, img);
 
 
@@ -60,9 +66,108 @@ def extendedMax(img, h):
         
     #regional max
     return regionalMax(img);
-          
-def detectCells(img, verbose = False, out = sys.stdout):
+    
+def removeBackground(img, verbose = False, out = sys.stdout, parameter = ImageProcessingParameter()):
+    """Remove Background step of Spot Detection Algorithm"""
+    timer = Timer();
+    
+    # background subtraction in each slice
+    timer.reset();
+    se = structureElement('Disk', parameter.Parameter.Background).astype('uint8');
+    for z in range(img.shape[2]):
+         #img[:,:,z] = img[:,:,z] - grey_opening(img[:,:,z], structure = structureElement('Disk', (30,30)));
+         #img[:,:,z] = img[:,:,z] - morph.grey_opening(img[:,:,z], structure = self.structureELement('Disk', (150,150)));
+         img[:,:,z] = img[:,:,z] - cv2.morphologyEx(img[:,:,z], cv2.MORPH_OPEN, se)    
+    out.write(timer.elapsedTime(head = 'Background') + '\n');
+    
+    if verbose:
+        plotTiling(10*img);
+        
+    return img
+
+def dogFilter(img, verbose = False, out = sys.stdout, parameter = ImageProcessingParameter()):
+    """Difference of Gaussians filter step of Spot Detection Algorithm"""
+    
+    timer = Timer();
+    
+    #DoG filter
+    timer.reset();
+    fdog = filterKernel(ftype = 'DoG', size = parameter.Parameter.Dog);
+    fdog = fdog.astype('float32');
+    img = img.astype('float32');
+    #img = correlate(img, fdog);
+    #img = scipy.signal.correlate(img, fdog);
+    img = correlate(img, fdog);
+    #img = convolve(img, fdog, mode = 'same');
+    img[img < 0] = 0;
+    out.write(timer.elapsedTime(head = 'DoG') + '\n');    
+    
+    if verbose:
+        imgp = img;
+        imgp[imgp > 200] = 200;
+        plotTiling(imgp);
+    
+    return img
+
+def findExtendedMaxima(img, verbose = False, out = sys.stdout, parameter = ImageProcessingParameter()):
+    """Find extended maxima of step in Spot Detection Algorithm"""  
+        
+    timer = Timer();
+    
+    # extended maxima
+    timer.reset(); 
+    imgmax = hMaxTransform(img, parameter.Parameter.HMax);
+    imgmax = regionalMax(imgmax);
+    imgmax = imgmax.astype('float32') * img;
+    th = parameter.Parameter.Threshold;
+    imgmax = imgmax > th;
+    out.write(timer.elapsedTime(head = 'Extended Max') + '\n');
+    
+    if verbose:
+        #plotTiling(img)
+        plotOverlayLabel(img * 0.01, imgmax.astype('int64'), alpha = False);
+        #plotOverlayLabel(img, imgmax.astype('int64'), alpha = True)     
+        
+    return imgmax
+
+
+def findCenterOfMaxima(img, imgmax, verbose = False, out = sys.stdout, parameter = ImageProcessingParameter()):
+    """Find center of the maxima step in Spot Detection Algorithm"""  
+    
+    timer = Timer();    
+    
+    #center of maxima
+    timer.reset();
+    imglab, nlab = label(imgmax);
+    
+    if nlab > 0:
+        centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
+        out.write(timer.elapsedTime(head = 'Cell Centers') + '\n');
+    
+        if verbose:        
+            #plotOverlayLabel(img * 0.01, imglab, alpha = False);
+            #plotTiling(img)
+            imgc = numpy.zeros(img.shape);
+            for i in range(centers.shape[0]):
+                imgc[centers[i,0], centers[i,1], centers[i,2]] = 1;
+            plotOverlayLabel(img * 0.01, imgc, alpha = False);
+            #plotOverlayLabel(img, imgmax.astype('int64'), alpha = True)     
+    
+        #return centers, imglab, mask
+        cintensity = numpy.array([img[centers[i,0], centers[i,1], centers[i,2]] for i in range(centers.shape[0])]);        
+    
+        return ( centers, cintensity );
+    else:
+        out.write(timer.elapsedTime(head = 'Cell Centers'));
+        out.wrtie('No Cells found !');
+        return ( numpy.zeros((0,3)), numpy.zerso(0) );
+
+
+
+def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcessingParameter()):
     """Detect Cells import scipyin 3d grayscale img using DoG filtering and maxima dtection"""
+    # effectively removeBackground, dogFilter, 
+    # we do processing steps in place to save memory    
     
     timer = Timer();
     
@@ -79,7 +184,7 @@ def detectCells(img, verbose = False, out = sys.stdout):
     
     # background subtraction in each slice
     timer.reset();
-    se = structureElement('Disk', (15,15)).astype('uint8');
+    se = structureElement('Disk', parameter.Parameter.Background).astype('uint8');
     for z in range(img.shape[2]):
          #img[:,:,z] = img[:,:,z] - grey_opening(img[:,:,z], structure = structureElement('Disk', (30,30)));
          #img[:,:,z] = img[:,:,z] - morph.grey_opening(img[:,:,z], structure = self.structureELement('Disk', (150,150)));
@@ -102,9 +207,13 @@ def detectCells(img, verbose = False, out = sys.stdout):
     
     #DoG filter
     timer.reset();
-    fdog = filterKernel(ftype = 'DoG', size = [11, 7, 7]);
-    img = correlate(img.astype('float'), fdog);
+    fdog = filterKernel(ftype = 'DoG', size = parameter.Parameter.Dog);
+    fdog = fdog.astype('float32');
+    img = img.astype('float32');
+    #img = correlate(img, fdog);
     #img = scipy.signal.correlate(img, fdog);
+    img = correlate(img, fdog);
+    #img = convolve(img, fdog, mode = 'same');
     img[img < 0] = 0;
     out.write(timer.elapsedTime(head = 'DoG'));
     
@@ -120,12 +229,12 @@ def detectCells(img, verbose = False, out = sys.stdout):
     
     # extended maxima
     timer.reset(); 
-    imgmax = hMaxTransform(img, 20);
+    imgmax = hMaxTransform(img, parameter.Parameter.HMax);
     imgmax = regionalMax(imgmax);
-    imgmax = imgmax.astype('float') * img;
-    th = 20;
+    imgmax = imgmax.astype('float32') * img;
+    th = parameter.Parameter.Threshold;
     imgmax = imgmax > th;
-    out.write(timer.elapsedTime(head = 'Extened Max'));
+    out.write(timer.elapsedTime(head = 'Extended Max'));
     
     if verbose:
         #plotTiling(img)
@@ -136,25 +245,31 @@ def detectCells(img, verbose = False, out = sys.stdout):
     #center of maxima
     timer.reset();
     imglab, nlab = label(imgmax);
-    centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
-    out.write(timer.elapsedTime(head = 'Cell Centers'));
     
-    if verbose:        
-        plotOverlayLabel(img * 0.01, imglab, alpha = False);
-        #plotTiling(img)
-        imgc = numpy.zeros(img.shape);
-        for i in range(centers.shape[0]):
-            imgc[centers[i,0], centers[i,1], centers[i,2]] = 1;
-        plotOverlayLabel(img * 0.01, imgc, alpha = False);
-        #plotOverlayLabel(img, imgmax.astype('int64'), alpha = True)     
+    if nlab > 0:
+        centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
+        out.write(timer.elapsedTime(head = 'Cell Centers'));
     
-    #return centers, imglab, mask
-    cintensity = numpy.array([img[centers[i,0], centers[i,1], centers[i,2]] for i in range(centers.shape[0])]);        
+        if verbose:        
+            plotOverlayLabel(img * 0.01, imglab, alpha = False);
+            #plotTiling(img)
+            imgc = numpy.zeros(img.shape);
+            for i in range(centers.shape[0]):
+                imgc[centers[i,0], centers[i,1], centers[i,2]] = 1;
+            plotOverlayLabel(img * 0.01, imgc, alpha = False);
+            #plotOverlayLabel(img, imgmax.astype('int64'), alpha = True)     
     
-    return (centers, cintensity);
+        #return centers, imglab, mask
+        cintensity = numpy.array([img[centers[i,0], centers[i,1], centers[i,2]] for i in range(centers.shape[0])]);        
     
+        return ( centers, cintensity );
+    else:
+        out.write(timer.elapsedTime(head = 'Cell Centers'));
+        out.wrtie('No Cells found !');
+        return ( numpy.zeros((0,3)), numpy.zerso(0) );
 
- 
+
+
 def test():
     import iDISCO.IO.Imaris as io  
     
@@ -162,6 +277,8 @@ def test():
     #fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
     #fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
     #fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
+    
+    
     
     f = io.openFile(fn);
     dataset = io.readData(f, resolution=0);
@@ -175,83 +292,12 @@ def test():
     #m = sys.modules['iDISCO.ImageProcessing.SpotDetection']
     c = detectCells(img);
     
-    print 'done !'
+    print 'done, found %d cells !' % c.shape[0]
 
 
 if __name__ == '__main__':
     test();
     
-
-    
-    
-    
-    
-    
-    
-
-   
-"""plotTiling(numpy.dstack((10 * img, 1 * (img - res2))))
-
-
-
-# run segmentation
-img = data[:,:,0:30];
-
-import iDISCO.Segmentation.SpotDetection
-import sys
-self = sys.modules['iDISCO.Segmentation.SpotDetection'];
-
-
-
-function hdImage = hdTransform2(I, h, n)
-    disp('Enter into h-d transform');
-    smallNumber = 1e-7;
-    se = strel(ones(n));
-    J = I-h;
-    flag = 0;
-%      [R C] = size(I);
-%    count = 0;
-    pI = J*0;
-    while flag==0
-        tempJ = min( imdilate(J, se), I);
-        resud = sum( sum(abs(J-tempJ) ));
-        J =  tempJ;
-        pI = max(pI,J);
-%        count = count +1
-        if resud < smallNumber
-            flag = 1;
-        end
-    end
-
-    hdImage = I-pI;
-%         figure
-%     subplot(2,2,1)
-%     imshow(I,[])
-%     subplot(2,2,2)
-%      imshow(pI,[])
-%         subplot(2,2,3)
-%      imshow( hdImage,[])
-%      colormap('jet')
-%      linkaxes;
-    disp('Exit from h-d transform');
-end 
-
-
-
-    
-    
-import numpy as np
-from skimage.morphology import reconstruction
-
-x = np.linspace(0, 4 * np.pi)
-y_mask = np.cos(x)
-
-y_seed = y_mask.min() * np.ones_like(x)
-y_seed[0] = 0.5
-y_seed[-1] = 0
-y_rec = reconstruction(y_seed, y_mask)
-"""
-
     
     
     

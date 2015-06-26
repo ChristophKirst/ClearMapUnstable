@@ -291,3 +291,16 @@ def filterKernel3D(ftype = 'Gaussian', size = (5,5), sigma = None, sigma2 = None
     else:
         raise StandardError('filter type ' + ftype + ' not implemented!');
 
+
+
+def test():
+    
+        
+    fk = self.filterKernel(ftype = 'Gaussian', size = (5,5), sigma = None, radius = None, sigma2 = None)
+    
+    
+    
+if __name__ == "__main__":
+    
+    self.test();
+    
