@@ -5,6 +5,7 @@ Created on Thu Jul  2 15:17:01 2015
 @author: kannanuv
 """
 import numpy
+import random
 
 
 # vtkFileName is the file name to be written
@@ -38,6 +39,7 @@ def writeSparsePointsWithLabelVTKFile (vtkFileName, pointList, pointLabels):
     #vtkFilePointer.write("\n");
     vtkFilePointer.write("POINT_DATA " + str(nPoint) + "\n");
     vtkFilePointer.write('SCALARS scalars float 1\n');
+    vtkFilePointer.write("LOOKUP_TABLE default\n");
     for iLabel in pointLabels:
         vtkFilePointer.write(str(int(iLabel)) + " ");
         #vtkFilePointer.write("1 ")
@@ -59,8 +61,12 @@ def writeSparsePointsVTKFile (vtkFileName, pointList):
     writeSparsePointsWithLabelVTKFile (vtkFileName, pointList, pointLabels)
 
 vtkFileName = '/Users/kannanuv/Documents/workspace/code/assemblaSVN/idisco/iDISCO/Visualization/test.vtk'
-nPoint = 5;
+nPoint = 100;
 pointList = numpy.zeros([nPoint,3], float)
+for iPoint in range(0, nPoint):
+    for iCoord in range(0, 3):
+        pointList[iPoint,iCoord] = random.random() * 10;
+pointList
 pointLabels = numpy.ones([nPoint,1], dtype=numpy.int)
     
 writeSparsePointsVTKFile (vtkFileName, pointList)
