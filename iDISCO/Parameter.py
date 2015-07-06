@@ -115,7 +115,28 @@ class StackProcessingParameter(object):
     #increase chunk size for optimizaition (True, False or all = choose automatically)
     OptimizeChunkSizeIncrease = all;
     
-
+class CellDensityParameter(object):
+    
+    # Define bounds of the volume to be voxelized
+    minX = 0;
+    maxX = 0;
+    minY = 0;
+    maxY = 0;    
+    minZ = 0;
+    maxZ = 0;
+    nDistance = 200; #Radius of the sphere
+    
+    #Spacing
+    xSpacing = 0;
+    ySpacing = 0;
+    zSpacing = 0;
+    
+    #Image dimensions
+    nX = 0;
+    nY = 0;
+    nZ = 0;
+    
+    voxelNature = 0; # 0 for spherical overlapping and 1 for non-overlapping rectangular voxels
 
 
 class Parameter(object):

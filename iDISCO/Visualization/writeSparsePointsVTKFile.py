@@ -60,6 +60,8 @@ def writeSparsePointsVTKFile (vtkFileName, pointList):
     pointLabels = numpy.ones([nPoint,1], float)
     writeSparsePointsWithLabelVTKFile (vtkFileName, pointList, pointLabels)
 
+
+# sample code of how to use the functions
 vtkFileName = '/Users/kannanuv/Documents/workspace/code/assemblaSVN/idisco/iDISCO/Visualization/test.vtk'
 nPoint = 100;
 pointList = numpy.zeros([nPoint,3], float)
@@ -68,5 +70,4 @@ for iPoint in range(0, nPoint):
         pointList[iPoint,iCoord] = random.random() * 10;
 pointList
 pointLabels = numpy.ones([nPoint,1], dtype=numpy.int)
-    
 writeSparsePointsVTKFile (vtkFileName, pointList)
