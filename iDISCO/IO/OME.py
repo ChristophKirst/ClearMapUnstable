@@ -123,6 +123,11 @@ def writeData(img, fileheader):
     for i in range(nz):
         #mpl.pyplot.imsave(fileheader + "%.4d" % i + ".tif", img[:,:,i], vmin = vmin, vmax = vmax, cmap = mpl.pyplot.cm.gray);
         tiff.imsave(fileheader + "%.4d" % i + ".tif", img[:,:,i])
+
+def writeStack(image, filename):
+    """Writes volumetric data to a single tiff stack"""
+    
+    
     
 
 def test():    

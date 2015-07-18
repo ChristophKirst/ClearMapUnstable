@@ -27,6 +27,8 @@ def sanitizeLoopMinAndMax (iLoopMin, iLoopMax, iImageMin, iImageMax):
         
     return iLoopMin, iLoopMax
 
+
+
 # write voxelzied image
 def writeVoxelizedImage (voxelizedImageFileName, pointList, parameter):
     
@@ -105,7 +107,12 @@ def writeVoxelizedImage (voxelizedImageFileName, pointList, parameter):
                             
     resultImage = Image.fromarray((voxelImage).astype(numpy.uint16))
     resultImage.save('voxelizedImage.tif')
-        
+ 
+
+
+
+if __name__ == "__main__":
+       
 # Test program for the voxelization        
 nPoint = 100;
 pointList = numpy.zeros([nPoint,3], float);

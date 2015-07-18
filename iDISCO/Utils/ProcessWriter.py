@@ -3,7 +3,7 @@
 """
 PrcessWriter
 
-provides simple formatting tolls to print text with process header
+provides simple formatting tools to print text with process header
 
 
 Created on Thu Jun  4 14:37:06 2015

@@ -48,8 +48,7 @@ def setPathTransformParameterFiles(resultdir):
     for f in files:
         fh, tmpfn = tempfile.mkstemp();
         ff = os.path.join(resultdir, f);
-        
-        print ff        
+        #print ff        
         
         with open(tmpfn, 'w') as newfile:
             with open(ff) as parfile:

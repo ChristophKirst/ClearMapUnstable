@@ -1,4 +1,4 @@
-%--------------------------------------------------------------------------
+h%--------------------------------------------------------------------------
 % writeElastixPointFile.m script is used generate elastix file of sparse point lists as input for transformix
 %
 %% Developed and maintained by Kannan Umadevi Venkataraju <kannanuv@cshl.edu>
