@@ -131,7 +131,7 @@ def findExtendedMaxima(img, verbose = False, out = sys.stdout, parameter = Image
     return imgmax
 
 
-def findCenterOfMaxima(img, imgmax, verbose = False, out = sys.stdout, parameter = ImageProcessingParameter()):
+def findCenterOfMaxima(img, imgmax, verbose = False, out = sys.stdout):
     """Find center of the maxima step in Spot Detection Algorithm"""  
     
     timer = Timer();    
@@ -150,7 +150,7 @@ def findCenterOfMaxima(img, imgmax, verbose = False, out = sys.stdout, parameter
             imgc = numpy.zeros(img.shape);
             for i in range(centers.shape[0]):
                 imgc[centers[i,0], centers[i,1], centers[i,2]] = 1;
-            plotOverlayLabel(img * 0.01, imgc, alpha = False);
+            plotOverlayLabel(img, imgc, alpha = False);
             #plotOverlayLabel(img, imgmax.astype('int64'), alpha = True)     
     
         #return centers, imglab, mask
@@ -160,7 +160,7 @@ def findCenterOfMaxima(img, imgmax, verbose = False, out = sys.stdout, parameter
     else:
         out.write(timer.elapsedTime(head = 'Cell Centers'));
         out.wrtie('No Cells found !');
-        return ( numpy.zeros((0,3)), numpy.zerso(0) );
+        return ( numpy.zeros((0,3)), numpy.zeros(0) );
 
 
 
@@ -265,8 +265,12 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
         return ( centers, cintensity );
     else:
         out.write(timer.elapsedTime(head = 'Cell Centers'));
-        out.wrtie('No Cells found !');
-        return ( numpy.zeros((0,3)), numpy.zerso(0) );
+        out.write('No Cells found !');
+        return ( numpy.zeros((0,3)), numpy.zeros(0) );
+
+
+
+
 
 
 

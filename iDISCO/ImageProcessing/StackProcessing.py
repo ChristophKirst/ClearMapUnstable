@@ -168,6 +168,8 @@ def parallelProcessStack(filename, x = all, y = all, z = all,
                          optimizechunks = True, optimizechunksizeincrease = all, 
                          segmentation = detectCells, parameter = ImageProcessingParameter()):
     """Parallel segmetation on a stack"""
+    """Segmentation function is assumed to take a out and a parameter argument for system output and parameter settings, 
+    should return an numpy array of cell coords"""
     
     #determine z ranges
     zr = io.readZRange(filename, z = z);
@@ -220,7 +222,7 @@ def parallelProcessStack(filename, x = all, y = all, z = all,
 def sequentiallyProcessStack(filename, x = all, y = all, z = all, 
                              chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15,
                              segmentation = detectCells, parameter = ImageProcessingParameter()):
-    """Sequential segmetation on a stack"""
+    """Sequential image processing on a stack"""
     
     #determine z ranges
     zr = io.readZRange(filename, z = z);

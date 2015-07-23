@@ -1,0 +1,80 @@
+
+transformix is started at Wed Jul 22 23:39:45 2015.
+
+which transformix:   /home/ckirst/programs/elastix/bin/transformix
+transformix runs at: kagalaska.nld
+  Linux 3.16.7-21-desktop (x64), #1 SMP PREEMPT Tue Apr 14 07:11:37 UTC 2015 (93c1539)
+  with 7881 MB memory, and 2 cores @ 3299 MHz.
+Running transformix with parameter file "/home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/elastix/TransformParameters.0.txt".
+
+Reading the elastix parameters from file ...
+
+Installing all components.
+InstallingComponents was successful.
+
+ELASTIX version: 4.700
+Command line options from ElastixBase:
+-in       /home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/test_iDISCO_resample.tif
+-out      /home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/transformix/
+-threads  unspecified, so all available threads are used
+-tp       /home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/elastix/TransformParameters.0.txt
+-def      unspecified, so no input points transformed
+-jac      unspecified, so no det(dT/dx) computed
+-jacmat   unspecified, so no dT/dx computed
+
+=============== start of ParameterFile: /home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/elastix/TransformParameters.0.txt ===============
+(Transform "AffineTransform")
+(NumberOfParameters 12)
+(TransformParameters 1.002142 0.005523 0.004630 0.006343 1.025344 0.013395 0.000113 0.024543 0.953308 0.008467 0.027858 0.325905)
+(InitialTransformParametersFileName "NoInitialTransform")
+(HowToCombineTransforms "Compose")
+
+// Image specific
+(FixedImageDimension 3)
+(MovingImageDimension 3)
+(FixedInternalImagePixelType "float")
+(MovingInternalImagePixelType "float")
+(Size 75 53 24)
+(Index 0 0 0)
+(Spacing 1.0000000000 1.0000000000 1.0000000000)
+(Origin 0.0000000000 0.0000000000 0.0000000000)
+(Direction 1.0000000000 0.0000000000 0.0000000000 0.0000000000 1.0000000000 0.0000000000 0.0000000000 0.0000000000 1.0000000000)
+(UseDirectionCosines "false")
+
+// AdvancedAffineTransform specific
+(CenterOfRotationPoint 37.0000000000 26.0000000000 11.5000000000)
+
+// ResampleInterpolator specific
+(ResampleInterpolator "FinalBSplineInterpolator")
+(FinalBSplineInterpolationOrder 3)
+
+// Resampler specific
+(Resampler "DefaultResampler")
+(DefaultPixelValue 0.000000)
+(ResultImageFormat "mhd")
+(ResultImagePixelType "short")
+(CompressResultImage "true")
+
+
+=============== end of ParameterFile: /home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/elastix/TransformParameters.0.txt ===============
+
+
+Reading input image ...
+  Reading input image took 0 s
+Calling all ReadFromFile()'s ...
+  Calling all ReadFromFile()'s took 0 s
+Transforming points ...
+  The command-line option "-def" is not used, so no points are transformed
+  Transforming points done, it took 0 s
+Compute determinant of spatial Jacobian ...
+  The command-line option "-jac" is not used, so no det(dT/dx) computed.
+  Computing determinant of spatial Jacobian done, it took 0 s
+Compute spatial Jacobian (full matrix) ...
+  The command-line option "-jacmat" is not used, so no dT/dx computed.
+  Computing spatial Jacobian done, it took 0 s
+Resampling image and writing to disk ...
+  Resampling took 0.07 s
+
+Transformix has finished at Wed Jul 22 23:39:45 2015.
+Elapsed time: 0 Seconds.
+

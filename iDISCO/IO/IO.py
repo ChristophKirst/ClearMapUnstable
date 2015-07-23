@@ -7,7 +7,9 @@ Created on Thu Jun  4 14:37:06 2015
 @author: ckirst
 """
 
-from iDISCO.IO import CSV, Imaris, OME, VTK
+from iDISCO.IO import CSV, Imaris, OME, VTK, RAW
+
+import os
 
 def readZRange(filename, z = all, resolution = 0):
     """Determine z range of file filename"""
@@ -42,16 +44,24 @@ def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, re
     if fext == "ims":
         readDataFunction = Imaris.readData;
     elif fext == "tif":
-        readDataFunction = OME.readData;
+        if os.path.exists(filename):
+            readDataFunction = OME.readDataStack;
+        else:
+            readDataFunction = OME.readData;
+    elif fext == "mhd":
+        readDataFunction = RAW.readData;
     else:
-        raise RuntimeError('readData: file format ' + fext + ' not ims or tif');
+        raise RuntimeError('readData: file format ' + fext + ' not supported');
 
     return readDataFunction(filename, x = x, y = y, z = z, channel = channel, resolution = resolution);
     
-
-  
-def writePoints(filename, points):
+def redDataStack(filename):
+    """Read data from a single tiff stack"""
+    return OME.readDataStack(filename);
     
+
+def writePoints(filename, points):
+    """Write a list of points to csv, vtk or ims files"""
     if filename == None:
         return
     
@@ -73,5 +83,29 @@ def writePoints(filename, points):
         raise RuntimeError('readData: file format ' + fext + ' not ims, vtk or csv');
 
     return writePointsFunction(filename, points);
+    
+    
+def readPoints(filename):
+    """Read a list of points from csv or vtk"""
+    if filename == None:
+        return
+    
+    #get extension
+    fext = filename.split('.');
+    if len(fext) < 2:
+        raise RuntimeError('readData: cannot infer file format without extension');
+        
+    fext = fext[-1];
+    
+    if fext == "ims":
+        readPointsFunction = CSV.readPoints
+    elif fext == "csv":
+        readPointsFunction = CSV.readPoints;
+    elif fext == "vtk":
+        readPointsFunction = VTK.readPoints;
+    else:
+        raise RuntimeError('readData: file format ' + fext + ' not ims, vtk or csv');
+
+    return readPointsFunction(filename);
 
     

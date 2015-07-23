@@ -14,10 +14,16 @@ self = sys.modules[__name__];
 
 def iDISCOPath():
     """Returns path of IDISCO software"""
-    fn = os.path.split(self.__file__);
-    return fn[0];
+    fn = os.path.split(self.__file__)
+    fn = os.path.abspath(fn[0]);
+    return fn;
 
 
+
+
+##############################################################################
+# Image Processing
+##############################################################################
 
 class DataSourceParameter(object):
     """Parameter for files"""
@@ -29,9 +35,10 @@ class DataSourceParameter(object):
     ZRange = all;
     XRange = all;
     YRange = all;
-        
+
 
 class SpotDetectionParameter(object):
+    """Paramters used by the spot detection algorythm"""
     
     # Background correctoin: None or (x,y) which is size of disk for gray scale opening
     Background = (15,15);
@@ -47,6 +54,7 @@ class SpotDetectionParameter(object):
     
     
 class IlastikParameter(object):
+    """Paramters for Ilastik classification"""
     
     #ilastik 0.5 path
     Ilastik = None;
@@ -61,10 +69,8 @@ class IlastikParameter(object):
     Background = (15,15);
 
 
-
-
 class ImageProcessingParameter(object):
-    """ Parameter for image processing chain"""
+    """Parameter for image processing chain"""
     
     Method = 'SpotDetection';
     
@@ -72,34 +78,11 @@ class ImageProcessingParameter(object):
     
     #File name for cell coordinates csv, vtk or  ims extension
     CellCoordinateFile = None;
+    CellInstensityFile = None;
 
 
-
-class AlignmentParameter(object):
-    
-    #directory of the alignment result
-    AlignmentDirectory = None;
-    
-    #Elastix binary
-    Elastix = '/usr/local/elastix/bin/elastix'
-    
-    #Transformix binary
-    Transformix = '/usr/local/elastix/bin/transformix'
-    
-    Lib = '/usr/local/elastix/lib'
-    
-    #moving and reference images
-    MovingImage = os.path.join(self.iDISCOPath(), '/Test/Data/Elastix/150524_0_8X-s3-20HFautofluor_18-51-1-warpable.tif');
-    FixedImage  = os.path.join(self.iDISCOPath(), '/Test/Data/Elastix/OstenRefARA_v2_lowerHalf.tif');
-    FixedImageMask = None;
-    
-    #elastix parameter files for alignment
-    AffineParameterFile  = os.path.join(self.iDISCOPath(), '/Test/Elastix/ElastixParamterAffine.txt');
-    BSplineParameterFile = os.path.join(self.iDISCOPath(), '/Test/Elastix/ElastixParamterBSpline.txt');
-    
-    
-    
 class StackProcessingParameter(object):
+    """Parameter for processing a stack in parallel"""
     
     #max number of parallel processes
     Processes = 2;
@@ -114,33 +97,98 @@ class StackProcessingParameter(object):
     
     #increase chunk size for optimizaition (True, False or all = choose automatically)
     OptimizeChunkSizeIncrease = all;
+
+
+##############################################################################
+# Alignment / Morphin / Resmapling
+##############################################################################
+
+class AlignmentParameter(object):
+    """Parameter for Elastix alignment"""
     
-class CellDensityParameter(object):
+    #directory of the alignment result
+    AlignmentDirectory = None;
+    
+    #Elastix binary
+    ElastixDirectory = '/usr/local/elastix/'
+        
+    #moving and reference images
+    MovingImage = os.path.join(self.iDISCOPath(), '/Test/Data/Elastix/150524_0_8X-s3-20HFautofluor_18-51-1-warpable.tif');
+    FixedImage  = os.path.join(self.iDISCOPath(), '/Test/Data/Elastix/OstenRefARA_v2_lowerHalf.tif');
+    FixedImageMask = None;
+    
+    #elastix parameter files for alignment
+    AffineParameterFile  = os.path.join(self.iDISCOPath(), '/Test/Elastix/ElastixParameterAffine.txt');
+    BSplineParameterFile = os.path.join(self.iDISCOPath(), '/Test/Elastix/ElastixParameterBSpline.txt');
+    
+
+class ResamplingParameter(object):
+    """Parameter for resampling data to reference atlas"""
+    
+    #Data ource and output file
+    DataFiles = None;
+    ResampledFile = None;
+    
+    #Resolution of the raw data (in um / pixel)
+    ResolutionData = (4.0625, 4.0625, 3);
+
+    #Resolution of the Reference / Atlas (in um/ pixel)
+    ResolutionReference = (25, 25, 25);    
+
+    #Orientation of the Data set wrt reference 
+    #(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchnge x,y use (2,1,3) etc)
+    Orientation = None;
+    
+
+
+##############################################################################
+# Analysis
+##############################################################################
+
+class VoxelizationParameter(object):
+    """Parameter to calculate density voxelization"""
     
     # Define bounds of the volume to be voxelized
-    minX = 0;
-    maxX = 0;
-    minY = 0;
-    maxY = 0;    
-    minZ = 0;
-    maxZ = 0;
-    nDistance = 200; #Radius of the sphere
+    MinX = 0;
+    MaxX = 0;
+    MinY = 0;
+    MaxY = 0;    
+    MinZ = 0;
+    MaxZ = 0;
+    Distance = 200;  #Radius of the sphere
     
     #Spacing
-    xSpacing = 0;
-    ySpacing = 0;
-    zSpacing = 0;
+    XSpacing = 0;
+    YSpacing = 0;
+    ZSpacing = 0;
     
     #Image dimensions
-    nX = 0;
-    nY = 0;
-    nZ = 0;
+    NX = 0;
+    NY = 0;
+    NZ = 0;
     
-    voxelNature = 0; # 0 for spherical overlapping and 1 for non-overlapping rectangular voxels
+    Type = 'Spherical' ; # Spherical, , 'Rectangular, Gaussian'
 
+
+
+
+
+
+##############################################################################
+# Full Parameter
+##############################################################################
 
 class Parameter(object):
     """ Parameter for full processing chain"""
+    
+    #Input files
+    DataSource = DataSourceParameter();
+    
+    #Elastix alignment parameter
+    Alignment = AlignmentParameter();
+    
+    #Resampling 
+    Resampling = ResamplingParameter();
     
     #Image Rpcoessing parameter
     ImageProcessing = ImageProcessingParameter();
@@ -148,11 +196,8 @@ class Parameter(object):
     #ParallelProcessing
     StackProcessing = StackProcessingParameter();
     
-    #Input files
-    DataSource = DataSourceParameter();
-    
-    #Elastix alignment parameter
-    Alignment = AlignmentParameter();
+    #Voxelization
+    Voxelization = VoxelizationParameter();
     
     #Plot intermediate results for debugging
     Verbose = False;

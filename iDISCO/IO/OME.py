@@ -2,7 +2,7 @@
 """
 Simple Interface to OME files
 
-read data fro a z-stack of tif files
+read data for a z-stack of tif files
 
 Note: filename is given as regular expression
 
@@ -11,11 +11,11 @@ Created on Thu Jun  4 14:37:06 2015
 @author: ckirst
 """
 
-import numpy
-import matplotlib as mpl
-
 import sys
 self = sys.modules[__name__];
+
+import numpy
+import matplotlib as mpl
 
 import os
 import re
@@ -63,7 +63,12 @@ def readZRange(filename, z = all, resolution = 0):
           raise RuntimeError("z range specifications out of bounds (0," + str(nz) + ") !");
            
         return z;
-
+        
+def readDataStack(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, resolution = 0):
+    """Read data from a single tiff stack"""
+    # todo: ranges
+    data = tiff.imread(filename);
+    return data.transpose([1,2,0]);
 
 
 def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, resolution = 0):
@@ -75,7 +80,7 @@ def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, re
     #determine zrange
     if z == all:
         #assume slices go from 0 to n-1
-        z = (0, nz-1);
+        z = (0, nz);
     else:
         if z[0] == all:
             z = (0, z[1]);
@@ -124,11 +129,12 @@ def writeData(img, fileheader):
         #mpl.pyplot.imsave(fileheader + "%.4d" % i + ".tif", img[:,:,i], vmin = vmin, vmax = vmax, cmap = mpl.pyplot.cm.gray);
         tiff.imsave(fileheader + "%.4d" % i + ".tif", img[:,:,i])
 
-def writeStack(image, filename):
-    """Writes volumetric data to a single tiff stack"""
-    
-    
-    
+
+def writeDataStack(image, filename):
+    """Writes volumetric data to a single tiff stack assuming (y,x,z) array representation"""
+
+    tiff.imsave(filename, image.transpose([2,0,1]));
+ 
 
 def test():    
     """Test OME module"""  

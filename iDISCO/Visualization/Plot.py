@@ -7,6 +7,10 @@ Created on Fri Jun  5 00:04:29 2015
 @author: ckirst
 """
 
+import sys
+self = sys.modules[__name__];
+
+
 import math
 import numpy
 import matplotlib as mpl
@@ -103,11 +107,24 @@ def overlayLabel(image, label, alpha = False, lcmap = 'jet'):
     return cimage;
     
     
-def plotOverlayLabel(image, label, alpha = False, tiling = "automatic"):
+def plotOverlayLabel(image, label, alpha = False, tiling = "automatic", maxtiles = 20):
     """Plot gray scale image overlayed with labeled image"""
     ov = overlayLabel(image, label, alpha = alpha);
     plotTiling(ov, tiling = tiling);
 
+
+    
+def plotOverlayPoints(image, points, alpha = False, tiling = "automatic", maxtiles = 20):
+    
+    dsize = list(image.shape);
+    if dsize[2] > maxtiles:
+        dsize[2] = maxtiles;
+    
+    imgc = numpy.zeros(dsize);
+    for i in range(points.shape[0]):
+        if points[i,0] > 0 and points[i,0] < dsize[0] and points[i,1] > 0 and points[i,1] < dsize[1] and points[i,2] > 0 and points[i,2] < dsize[2]:
+               imgc[points[i,0], points[i,1], points[i,2]] = 1;
+    self.plotOverlayLabel(image[:,:,0:dsize[2]], imgc, alpha = False);
 
 
 if __name__ == "__main__":
@@ -118,6 +135,8 @@ if __name__ == "__main__":
     
     iplt.plotOverlayLabel(x,l, alpha = False);    
     iplt.plotOverlayLabel(x,l, alpha = True);    
+    
+
     
     
     

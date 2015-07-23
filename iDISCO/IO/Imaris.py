@@ -195,9 +195,8 @@ def writePoints(h5file, points, mode = "o", radius = 0.5):
 
 
 
-
-
-
+def readPoints(filename):
+    raise RuntimeError("Reading points form imaris file not implemented yet""")
 
 
 

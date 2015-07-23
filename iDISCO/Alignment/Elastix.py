@@ -18,7 +18,83 @@ import numpy
 
 import re
 
-from iDISCO.Parameter import AlignmentParameter
+import iDISCO.IO.IO as io
+
+##############################################################################
+# Initialization and Enviroment Settings
+##############################################################################
+
+
+class ElastixParameter(object):
+    ElastixBinary = None;
+    ElastixLib = None;
+    TransformixBinary = None;
+    
+    Initialized = False;
+    
+    def printInfo(slf):
+        print "ElastixBinary     = %s" % slf.ElastixBinary;
+        print "ElastixLib        = %s" % slf.ElastixLib;
+        print "TransformixBinary = %s" % slf.TransformixBinary;
+    
+ElastixSettings = ElastixParameter();
+
+
+def setElastixLibraryPath(libpath): 
+    """Add elastix libs to path in linux"""
+    
+    if os.environ.has_key('LD_LIBRARY_PATH'):
+        lp = os.environ['LD_LIBRARY_PATH']   
+        os.environ['LD_LIBRARY_PATH'] = lp + ':' + libpath;
+    else:
+        os.environ['LD_LIBRARY_PATH'] = libpath
+
+
+def initializeElastix(elastixdir):
+    """Initialize all paths and binaries of elastix using installation directory elastixdir"""
+    
+    global ElastixSettings;
+    
+    #search for elastix binary
+    elastixbin = os.path.join(elastixdir, 'bin/elastix');
+    if os.path.exists(elastixbin):
+        ElastixSettings.ElastixBinary = elastixbin;
+    else:
+        RuntimeError("Cannot find elastix binary %s" % elastixbin);
+    
+    #search for transformix binarx
+    transformixbin = os.path.join(elastixdir, 'bin/transformix');
+    if os.path.exists(transformixbin):
+        ElastixSettings.TransformixBinary = transformixbin;
+    else:
+        RuntimeError("Cannot find transformix binary %s" % transformixbin);
+    
+    #search for elastix libs
+    elastixlib = os.path.join(elastixdir, 'lib');
+    if os.path.exists(elastixlib):
+        ElastixSettings.ElastixLib = elastixlib;
+    else:
+        RuntimeError("Cannot find elastix libs in %s" % elastixlib);
+    
+    #set path
+    self.setElastixLibraryPath(elastixlib);
+        
+    ElastixSettings.Initialized = True;
+    
+    print "Elastix sucessfully initialized from path: %s" % elastixdir
+
+
+def checkElastixInitialized():
+    """Checks if elastix is initialized"""
+    
+    global ElastixSettings;
+    
+    if not ElastixSettings.Initialized:
+        RuntimeError("Elastix not initialized: run initializeIlastix first");
+    
+    print ElastixSettings.ElastixBinary;
+
+
 
 
 def getTransformParameterFile(resultdir):
@@ -71,7 +147,6 @@ def setPathTransformParameterFiles(resultdir):
         shutil.move(tmpfn, ff);
 
 
-
 def parseElastixOutputPoints(filename, indices = True):
     """Parses the output points from the output file of transformix"""
     
@@ -99,20 +174,162 @@ def parseElastixOutputPoints(filename, indices = True):
     
     return points;
           
-          
-def setElastixLibraryPath(parameter = AlignmentParameter()): 
-    #make libs for elastix visible in linux
+         
+def getTransformFileSizeAndSpacing(transformfile):
+    """Parse the image size and spacing from a transformation parameter file"""
     
-    if os.environ.has_key('LD_LIBRARY_PATH'):
-        lp = os.environ['LD_LIBRARY_PATH']   
-        os.environ['LD_LIBRARY_PATH'] = lp + ':' + parameter.Lib;
+    resi = re.compile("\(Size (?P<size>.*)\)");
+    resp = re.compile("\(Spacing (?P<spacing>.*)\)");
+    
+    si = None;
+    sp = None;
+    with open(transformfile) as parfile:
+        for line in parfile:
+            #print line;
+            m = resi.match(line)
+            if m != None:
+                pn = m.group('size');
+                si = pn.split();
+                print si
+                
+            m = resp.match(line);
+            if m != None:
+                pn = m.group('spacing');
+                sp = pn.split();
+                print sp 
+    
+        parfile.close();
+    
+    si = [float(x) for x in si];
+    sp = [float(x) for x in sp];
+    
+    return si, sp
+
+    
+def setTransformFileSizeAndSpacing(transformfile, size, spacing):
+    """Replaces size and scale in the transformation parameter file"""
+    
+    resi = re.compile("\(Size (?P<size>.*)\)");
+    resp = re.compile("\(Spacing (?P<spacing>.*)\)");
+    
+    fh, tmpfn = tempfile.mkstemp();
+    
+    si = [int(x) for x in size];
+    
+    with open(transformfile) as parfile:        
+        with open(tmpfn, 'w') as newfile:
+            for line in parfile:
+                print line
+                
+                m = resi.match(line)
+                if m != None:
+                    newfile.write("(Size %d %d %d)" % si);
+                else:
+                    m = resp.match(line)
+                    if m != None:
+                        newfile.write("(Spacing %d %d %d)" % spacing);
+                    else:
+                        newfile.write(line);
+            
+            newfile.close();               
+            parfile.close();
+            
+            os.remove(transformfile);
+            shutil.move(tmpfn, transformfile);
+        
+
+
+def rescaleSizeAndSpacing(transformfile,  size, spacing, scale):
+    si = [int(x * scale) for x in size];
+    sp = spacing / scale;
+    
+    return si, sp
+
+
+
+##############################################################################
+# Elastix Runs
+##############################################################################
+
+def alignData(movingimage, fixedimage, affineparfile, bsplinefile, outdirectory = None):
+    """Align data to reference using elastix"""
+    
+    self.checkElastixInitialized();
+    global ElastixSettings;
+    
+    if outdirectory == None:
+        outdirectory = tempfile.gettempdir();
+    
+    if not os.path.exists(outdirectory):
+        os.mkdir(outdirectory);
+    
+    
+    if bsplinefile is None:
+        cmd = ElastixSettings.ElastixBinary + ' -threads 16 -m ' + movingimage + ' -f ' + fixedimage + ' -p ' + affineparfile + ' -out ' + outdirectory;
     else:
-        os.environ['LD_LIBRARY_PATH'] = parameter.Lib
+        cmd = ElastixSettings.ElastixBinary + ' -threads 16 -m ' + movingimage + ' -f ' + fixedimage + ' -p ' + affineparfile + ' -p ' + bsplinefile + ' -out ' + outdirectory;
+        #$ELASTIX -threads 16 -m $MOVINGIMAGE -f $FIXEDIMAGE -fMask $FIXEDIMAGE_MASK -p  $AFFINEPARFILE -p $BSPLINEPARFILE -out $ELASTIX_OUTPUT_DIR
+    
+    res = os.system(cmd);
+    
+    if res != 0:
+        raise RuntimeError('failed executing: ' + cmd);
+    
+    return outdirectory
+
+
+def transformData(data, alignmentdirectory = None, transformparameterfile = None, outdirectory = None):
+    """Transform a raw data set to reference using the elastix alignment results"""
+    
+    if not isinstance(data, basestring):
+        imgname = os.path.join(tempfile.gettempdir(), 'elastix_input.tif');
+        io.writeDataStack(data, imgname);
+    else:
+        imgname = data;
+
+    if outdirectory == None:
+        outdirname = os.path.join(tempfile.tempdir, 'elastix_output');
+    else:
+        outdirname = outdirectory;
+        
+    if not os.path.exists(outdirname):
+        os.makedirs(outdirname);
+        
+    
+    if transformparameterfile == None:
+        if alignmentdirectory == None:
+            RuntimeError('neither alignment directory and transformation parameter file specified!'); 
+        transformparameterdir = alignmentdirectory
+        transformparameterfile = getTransformParameterFile(transformparameterdir);
+    else:
+        transformparameterdir = os.path.split(transformparameterfile);
+        transformparameterdir = transformparameterdir[0];
+    
+    #transform
+    #make path in parameterfiles absolute
+    self.setPathTransformParameterFiles(transformparameterdir);
+   
+    #transformix -in inputImage.ext -out outputDirectory -tp TransformParameters.txt
+    cmd = ElastixSettings.TransformixBinary + ' -in ' + imgname + ' -out ' + outdirname + ' -tp ' + transformparameterfile;
+    
+    res = os.system(cmd);
+    
+    if res != 0:
+        raise RuntimeError('failed executing: ' + cmd);
+
+    if not isinstance(data, basestring):
+        os.remove(imgname);
+    
+    return outdirectory
+        
     
 
+def transformPoints(points, alignmentdirectory = None, transformparameterfile = None, read = True, tmpfile = None, outdirectory = None, indices = True):
+    """Transform pixel coordinates of cell centers using a calculated transformation obtained form elastix"""
+    
+    self.checkElastixInitialized();    
+    global ElastixSettings;
 
-def transformPoints(points, transformparameterfile = None, parameter = AlignmentParameter(), read = True, tmpfile = None, outdir = None, indices = True):
-    """Transform pixel coordinates of cell centers using a calculated transformation obtained fomr elastix"""
     
     # write text file
     if isinstance(points, basestring):
@@ -156,17 +373,19 @@ def transformPoints(points, transformparameterfile = None, parameter = Alignment
             pointfile.close();
 
     
-    if outdir == None:
+    if outdirectory == None:
         outdirname = os.path.join(tempfile.tempdir, 'elastix_output');
     else:
-        outdirname = outdir;
+        outdirname = outdirectory;
         
     if not os.path.exists(outdirname):
         os.makedirs(outdirname);
         
     
     if transformparameterfile == None:
-        transformparameterdir = parameter.AlignmentDirectory
+        if alignmentdirectory == None:
+            RuntimeError('neither alignment directory and transformation parameter file specified!'); 
+        transformparameterdir = alignmentdirectory
         transformparameterfile = getTransformParameterFile(transformparameterdir);
     else:
         transformparameterdir = os.path.split(transformparameterfile);
@@ -175,11 +394,8 @@ def transformPoints(points, transformparameterfile = None, parameter = Alignment
     #make path in parameterfiles absolute
     self.setPathTransformParameterFiles(transformparameterdir);
     
-    #set library path
-    self.setElastixLibraryPath(parameter);
-
     #run transformix   
-    cmd = parameter.Transformix + ' -def ' + txtfile + ' -out ' + outdirname + ' -tp ' + transformparameterfile;
+    cmd = ElastixSettings.TransformixBinary + ' -def ' + txtfile + ' -out ' + outdirname + ' -tp ' + transformparameterfile;
     res = os.system(cmd);
     
     if res != 0:
@@ -187,7 +403,7 @@ def transformPoints(points, transformparameterfile = None, parameter = Alignment
     
     
     #read data / file 
-    if outdir == None:    
+    if outdirectory == None:    
         #read coordinates
         transpoints = parseElastixOutputPoints(os.path.join(outdirname, 'outputpoints.txt'), indices = indices);
         
@@ -202,40 +418,11 @@ def transformPoints(points, transformparameterfile = None, parameter = Alignment
         return outdirname + 'outputpoints.txt'
         
         
-
-
-def downSampleData(filename):
-    """Samples the raw data to match the reference data for alignmnet"""
-    
-    print 'todo';
  
 
-def alignData(movingimage, fixedimage, parameter = AlignmentParameter()):
-    """Align data to reference using elastix"""
-    
-    affineparfile = parameter.AffineParameterFile;
-    bsplinefile   = parameter.BSplineParameterFile;
-
-    outdir = parameter.AlignmentDirectory;
-    
-    if outdir == None:
-        outdir = tempfile.gettempdir();
-    
-    if not os.path.exists(outdir):
-        os.mkdir(outdir);
-        
-    self.setElastixLibraryPath(parameter);
-    
-    cmd = parameter.Elastix + ' -threads 16 -m ' + movingimage + ' -f ' + fixedimage + ' -p ' + affineparfile + ' -p ' + bsplinefile + ' -out ' + outdir;
-    #$ELASTIX -threads 16 -m $MOVINGIMAGE -f $FIXEDIMAGE -fMask $FIXEDIMAGE_MASK -p  $AFFINEPARFILE -p $BSPLINEPARFILE -out $ELASTIX_OUTPUT_DIR
-    
-    res = os.system(cmd);
-    
-    if res != 0:
-        raise RuntimeError('failed executing ' + cmd);
-    
-    return outdir
-
+##############################################################################
+# Tests
+##############################################################################
 
      
 def test():

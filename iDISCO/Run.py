@@ -10,8 +10,7 @@ Created on Fri Jun 19 12:20:18 2015
 #import os
 
 from iDISCO.Parameter import *
-#from iDISCO.IO.IO import writePoints
-
+from iDISCO.IO import IO as io
 import iDISCO.ImageProcessing.SpotDetection
 
 try:
@@ -22,10 +21,11 @@ except:
 
 from iDISCO.ImageProcessing.StackProcessing import parallelProcessStack, sequentiallyProcessStack
 
-from iDISCO.Alignment.Elastix import transformPoints, alignData
+from iDISCO.Alignment.Elastix import transformPoints, alignData, initializeElastix
 
 from iDISCO.Utils.Timer import Timer
 
+from iDISCO.Alignment.Resampling import resampleData
     
 
 def runCellDetection(parameter):
@@ -55,41 +55,86 @@ def runCellDetection(parameter):
             
         else:
             raise RuntimeError("No Ilastik installed use SpotDectection instead!");
-        
+            
+ 
     timer.printElapsedTime("Main");
     
+    if not parameter.ImageProcessing.Parameter.ThresholdSave is None:
+        iid = intensities >  parameter.ImageProcessing.Parameter.ThresholdSave;
+        centers = centers[iid,:];
+
+    if not parameter.ImageProcessing.CellCoordinateFile is None:
+        io.writePoints(parameter.ImageProcessing.CellCoordinateFile, centers);
+        
+    if not parameter.ImageProcessing.CellIntensityFile is None:
+        io.writePoints(parameter.ImageProcessing.CellIntensityFile, intensities);
+
     return centers, intensities;
+
+
+
+def runInitializeElastix(parameter):
+
+    ed = parameter.Alignment.ElastixDirectory;
+    
+    initializeElastix(ed);
+    
+    return ed;
+
+
+
 
 
 
 def runCellCoordinateTransformation(parameter):
     
     cf = parameter.ImageProcessing.CellCoordinateFile;
-    ap = parameter.Alignment;
+    pa = parameter.Alignment;
+    pr = parameter.Resampling;
     
     # downscale points to referenece image size
-    #print 'todo'    
+     
+    
     
     # transform points
-    points = transformPoints(cf, transformparameterfile = None, parameter = ap, read = True, tmpfile = None, outdir = None, indices = False);
+    points = transformPoints(cf, alignmentDirectory = ap.AlignmentDirectory, transformparameterfile = None, read = True, tmpfile = None, outdir = None, indices = False);
        
     # upscale ppints back to original size
     #print 'todo'
     
     return points;
     
-    
+
+
+
+
+
+
     
 def runAlignment(parameter):
     
-    fi = parameter.Alignmnet.FixedImage;
-    mi = parameter.Alignment.MovingImage;
+    pa = parameter.Alignment;
     
-    alignData(mi, fi, parameter = parameter);
+    fi = pa.FixedImage;
+    mi = pa.MovingImage;
+    
+    af = pa.AffineParameterFile;
+    bf = pa.BSplineParameterFile;
+    
+    od = pa.AlignmentDirectory;
+    
+    alignData(mi, fi, af, bf, od);
         
-    return parameter.Alignment.AlignmentDirectory;
+    return od;
     
     
     
-
-
+def runResampling(parameter):
+    
+    rp = parameter.Resampling;    
+    
+    resampleData(rp.DataFiles, outputFile = rp.ResampledFile, 
+                 resolutionData = rp.ResolutionData, resolutionReference = rp.ResolutionReference,
+                 processingDirectory = None, processes = rp.Processes, cleanup = True, orientation = rp.Orientation);
+    
+    return rp.ResampledFile;
