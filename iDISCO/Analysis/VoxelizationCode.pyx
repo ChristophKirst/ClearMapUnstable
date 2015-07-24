@@ -30,9 +30,9 @@ def voxelizeSphere(np.ndarray[np.float_t, ndim=2] points, int xsize, int ysize, 
     cdef np.ndarray[np.int_t, ndim = 1] zs = np.zeros([nSphereIndices], dtype=np.int);
     cdef int ns = 0;
 
-    cdef float xdiam2 = xdiam * xdiam / 4;
-    cdef float ydiam2 = ydiam * ydiam / 4;
-    cdef float zdiam2 = zdiam * zdiam / 4;
+    cdef float xdiam2 = (xdiam - 1) * (xdiam - 1) / 4;
+    cdef float ydiam2 = (ydiam - 1) * (ydiam - 1) / 4;
+    cdef float zdiam2 = (zdiam - 1) * (zdiam - 1) / 4;
     
     for x in range(int(-xdiam/2 + 1), int(xdiam/2 + 1)):
         for y in range(int(-ydiam/2 + 1), int(ydiam/2 + 1)):
@@ -45,6 +45,10 @@ def voxelizeSphere(np.ndarray[np.float_t, ndim=2] points, int xsize, int ysize, 
     cdef float cx0;
     cdef float cy0;
     cdef float cz0;
+    
+    cdef float cxf;
+    cdef float cyf;
+    cdef float czf;
     
     cdef int cx; 
     cdef int cy;
@@ -59,13 +63,17 @@ def voxelizeSphere(np.ndarray[np.float_t, ndim=2] points, int xsize, int ysize, 
         cz0 = points[iCentroid, 2];
         
         for iss in range(ns):
-            cx = int(cx0 + xs[iss]);
-            cy = int(cy0 + ys[iss]);
-            cz = int(cz0 + zs[iss]);
+            cxf = cx0 + xs[iss];
+            cyf = cy0 + ys[iss];
+            czf = cz0 + zs[iss];
             
-            if cx >= 0 and cx < xsize:
-                if cy >= 0 and cy < ysize:
-                    if cz >= 0 and cz < zsize:
+            if cxf >= 0 and cxf < xsize:
+                if cyf >= 0 and cyf < ysize:
+                    if czf >= 0 and czf < zsize:
+                        cx = int(cxf);
+                        cy = int(cyf);
+                        cz = int(czf);
+                        
                         voximg[cx,cy,cz] = voximg[cx,cy,cz] + 1;
                         
     return voximg;
