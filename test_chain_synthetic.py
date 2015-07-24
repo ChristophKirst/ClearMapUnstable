@@ -367,7 +367,7 @@ parameter.Voxelization.Size = None;  #None extract from data
 parameter.Voxelization.Mode = 'Spherical';
     
 #Output File
-parameter.Voxelization.File = os.path.join(basedirectory, 'Synthetic\points_voxelized.tif');
+parameter.Voxelization.File = os.path.join(basedirectory, 'Synthetic/points_voxelized.tif');
 
 runVoxelization(parameter);
 
