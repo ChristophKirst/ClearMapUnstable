@@ -55,10 +55,14 @@ def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, re
 
     return readDataFunction(filename, x = x, y = y, z = z, channel = channel, resolution = resolution);
     
-def redDataStack(filename):
+def readDataStack(filename):
     """Read data from a single tiff stack"""
     return OME.readDataStack(filename);
     
+def writeDataStack(filename, image):
+    """Write data to a single tiff stack"""
+    return OME.writeDataStack(filename, image);    
+
 
 def writePoints(filename, points):
     """Write a list of points to csv, vtk or ims files"""

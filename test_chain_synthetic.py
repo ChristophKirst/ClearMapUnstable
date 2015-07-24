@@ -264,31 +264,149 @@ if verbose:
     
 
 
+##############################################################################
+# Transform Points from Raw Data to Reference
+############################################################################## 
+
+import os
+
+from iDISCO.Parameter import *
+from iDISCO.Run import runInitializeElastix, runCellCoordinateTransformationToReference
 
 
+import iDISCO.Visualization.Plot as Plot
+import iDISCO.IO.IO as io
+
+basedirectory = os.path.join(iDISCOPath(), 'Test');
+
+verbose = True;
+
+parameter = Parameter();
+
+##Cells
+parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Synthetic/cells.csv');
+parameter.ImageProcessing.CellTransformedCoordinateFile = os.path.join(basedirectory, 'Synthetic/cells_transformed.csv');
+##Resampling Parameter
+#Files
+parameter.Resampling.DataFiles = os.path.join(basedirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif')
+parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif');
+    
+#Resolution of the Data (in um / pixel)
+parameter.Resampling.ResolutionData = (5, 5, 3);
+
+#Resolution of the Reference / Atlas (in um/ pixel)
+parameter.Resampling.ResolutionReference = (12, 15, 5);
+
+#Orientation of the Data set wrt reference 
+#(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchnge x,y use (2,1,3) etc)
+parameter.Resampling.Orientation = (1,2,3);
 
 
+##Alignment Parameter
+#directory of the alignment result
+parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'Synthetic/elastix');
 
+#Elastix binary
+parameter.Alignment.ElastixDirectory = '/home/ckirst/programs/elastix'
+    
+#moving and reference images
+parameter.Alignment.MovingImage = os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif');
+parameter.Alignment.FixedImage  = os.path.join(basedirectory, 'Synthetic/test_iDISCO_reference.tif');
+parameter.Alignment.FixedImageMask = None;
+  
+#elastix parameter files for alignment
+parameter.Alignment.AffineParameterFile  = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterAffine.txt');
+#parameter.Alignment.BSplineParameterFile = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterBSpline.txt');
+parameter.Alignment.BSplineParameterFile = None;
 
+runInitializeElastix(parameter)
 
+runCellCoordinateTransformationToReference(parameter)
 
-# transform raw points to aligned points in raw data size
-
-
-
-
-
-
-
-
-
-# voxelize and plot
+if verbose:
+    refdata = io.readData(parameter.Alignment.FixedImage);
+    pts = io.readPoints(parameter.ImageProcessing.CellTransformedCoordinateFile);
+    Plot.plotOverlayPoints(0.01 * refdata, pts)
 
 
 
 
 ##############################################################################
-# Test Full Chain
+# Test Voxelization
+##############################################################################
+
+import os
+
+from iDISCO.Parameter import *
+from iDISCO.Run import runVoxelization
+
+import iDISCO.Visualization.Plot as Plot
+import iDISCO.IO.IO as io
+
+basedirectory = os.path.join(iDISCOPath(), 'Test');
+
+verbose = True;
+
+parameter = Parameter();
+
+
+#Points
+parameter.ImageProcessing.CellTransformedCoordinateFile = os.path.join(basedirectory, 'Synthetic/cells_transformed.csv');
+
+#Reference file
+parameter.Alignment.FixedImage = os.path.join(basedirectory, 'Synthetic/test_iDISCO_reference.tif');
+
+##Voxelization
+#Size of averaging window
+parameter.Voxelization.AveragingDiameter = (5,5,5);  #Radius of the sphere
+    
+#Image size
+parameter.Voxelization.Size = None;  #None extract from data
+    
+#Mode
+parameter.Voxelization.Mode = 'Spherical';
+    
+#Output File
+parameter.Voxelization.File = os.path.join(basedirectory, 'Synthetic\points_voxelized.tif');
+
+runVoxelization(parameter);
+
+
+if verbose:
+    #voxdata = io.readData(parameter.Alignment.FixedImage);
+    voxdata = io.readData(parameter.Voxelization.File);
+    Plot.plotTiling(0.01 * voxdata)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##############################################################################
+# Test Full Chain - todo: assemble from above !
 ##############################################################################
 
 parameter = Parameter();

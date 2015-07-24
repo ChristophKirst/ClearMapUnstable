@@ -130,7 +130,7 @@ def writeData(img, fileheader):
         tiff.imsave(fileheader + "%.4d" % i + ".tif", img[:,:,i])
 
 
-def writeDataStack(image, filename):
+def writeDataStack(filename, image):
     """Writes volumetric data to a single tiff stack assuming (y,x,z) array representation"""
 
     tiff.imsave(filename, image.transpose([2,0,1]));

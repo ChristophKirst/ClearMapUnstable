@@ -26,6 +26,7 @@ import shutil
 import cv2
 
 from iDISCO.Utils.ProcessWriter import ProcessWriter;
+import iDISCO.IO.IO as io
 
 
 def readFileList(filename):
@@ -47,6 +48,11 @@ def readFileList(filename):
     
 def dataSize(imageFilePattern):
     """Determine full size from raw data in (x,y,z) order (not the array format (y,x,z))"""
+
+    if os.path.exists(imageFilePattern): # single file
+        tf = tiff.TiffFile(imageFilePattern);
+        shape = tf.series[0]['shape'];
+        return (shape[1], shape[2], shape[0])
     
     imageDirectory, listOfImages = self.readFileList(imageFilePattern);
     nz = len(listOfImages);
@@ -58,6 +64,11 @@ def dataSize(imageFilePattern):
     sagittalImage = plt.imread(imagefile);   
     
     return  (sagittalImage.shape[1], sagittalImage.shape[0], nz)
+
+
+
+
+
 
 
 def fixOrientation(orientation):
@@ -257,6 +268,9 @@ def resamplePoints(points, datasize, resolutionData = (4.0625, 4.0625, 3), resol
     if not orientation is None:
         resolutionData = tuple(resolutionData[int(abs(i))-1] for i in orientation);
     
+    if isinstance(points, basestring):
+        points = io.readPoints(points);
+    
     #datasize of file pattern
     if isinstance(datasize, basestring):
         datasize = dataSize(datasize);
@@ -302,6 +316,9 @@ def resamplePointsInverse(points, datasize, resolutionData = (4.0625, 4.0625, 3)
         datasize = dataSize(datasize);
     datasize = self.fixDataSize(datasize);
     
+    if isinstance(points, basestring):
+        points = io.readPoints(points);
+    
     #orient resolutions to reference resolutions
     if not orientation is None:
         resolutionData = tuple(resolutionData[int(abs(i))-1] for i in orientation);  
@@ -345,7 +362,6 @@ def test():
     outfn = os.path.join(fp[0], "../Test/Data/Resample/test.tif")
     
     print "Making subsampled stack " + outfn
-    
     resampleData(fn, outfn, zResolutionData = 1, zResolutionReference = 2, hemisphere = 1)
         
     

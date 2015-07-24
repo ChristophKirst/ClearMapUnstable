@@ -79,6 +79,8 @@ class ImageProcessingParameter(object):
     #File name for cell coordinates csv, vtk or  ims extension
     CellCoordinateFile = None;
     CellInstensityFile = None;
+    
+    CellTransformedCoordinateFile = None;
 
 
 class StackProcessingParameter(object):
@@ -125,7 +127,7 @@ class AlignmentParameter(object):
 class ResamplingParameter(object):
     """Parameter for resampling data to reference atlas"""
     
-    #Data ource and output file
+    #Data source and output file
     DataFiles = None;
     ResampledFile = None;
     
@@ -149,28 +151,16 @@ class VoxelizationParameter(object):
     """Parameter to calculate density voxelization"""
     
     # Define bounds of the volume to be voxelized
-    MinX = 0;
-    MaxX = 0;
-    MinY = 0;
-    MaxY = 0;    
-    MinZ = 0;
-    MaxZ = 0;
-    Distance = 200;  #Radius of the sphere
+    #Min = (0,0,0);
+    #Max = (all,all,all);
+    AveragingDiameter = (1,1,1);  #Radius of the sphere
     
-    #Spacing
-    XSpacing = 0;
-    YSpacing = 0;
-    ZSpacing = 0;
+    #Image size
+    Size = (128,128,32);
     
-    #Image dimensions
-    NX = 0;
-    NY = 0;
-    NZ = 0;
+    Mode = 'Spherical' ; # Spherical,'Rectangular, Gaussian'
     
-    Type = 'Spherical' ; # Spherical, , 'Rectangular, Gaussian'
-
-
-
+    File = None;
 
 
 

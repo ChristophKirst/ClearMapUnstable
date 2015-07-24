@@ -75,9 +75,9 @@ def plotTiling(image, tiling = "automatic", maxtiles = 20):
 def overlayLabel(image, label, alpha = False, lcmap = 'jet'):
     """Overlay a gray scale image with colored labeled image"""
     
-    lmax = label.max();    
+    lmax = label.max();
     
-    if lmax == 1:
+    if lmax <= 1:
         carray = numpy.array([[1,0,0,1]]);
     else:
         cm = mpl.cm.get_cmap(lcmap);

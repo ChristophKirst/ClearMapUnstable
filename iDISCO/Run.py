@@ -25,10 +25,14 @@ from iDISCO.Alignment.Elastix import transformPoints, alignData, initializeElast
 
 from iDISCO.Utils.Timer import Timer
 
-from iDISCO.Alignment.Resampling import resampleData
+from iDISCO.Alignment.Resampling import resampleData, resamplePoints, resamplePointsInverse, dataSize
+
+from iDISCO.Analysis.Voxelization import voxelize;
     
 
 def runCellDetection(parameter):
+    """Detect cells in data"""
+    
     timer = Timer();
     
     pp = parameter.StackProcessing;
@@ -74,7 +78,8 @@ def runCellDetection(parameter):
 
 
 def runInitializeElastix(parameter):
-
+    """Initialize elastix enviroment"""
+    
     ed = parameter.Alignment.ElastixDirectory;
     
     initializeElastix(ed);
@@ -82,36 +87,8 @@ def runInitializeElastix(parameter):
     return ed;
 
 
-
-
-
-
-def runCellCoordinateTransformation(parameter):
-    
-    cf = parameter.ImageProcessing.CellCoordinateFile;
-    pa = parameter.Alignment;
-    pr = parameter.Resampling;
-    
-    # downscale points to referenece image size
-     
-    
-    
-    # transform points
-    points = transformPoints(cf, alignmentDirectory = ap.AlignmentDirectory, transformparameterfile = None, read = True, tmpfile = None, outdir = None, indices = False);
-       
-    # upscale ppints back to original size
-    #print 'todo'
-    
-    return points;
-    
-
-
-
-
-
-
-    
 def runAlignment(parameter):
+    """Align data"""
     
     pa = parameter.Alignment;
     
@@ -130,11 +107,102 @@ def runAlignment(parameter):
     
     
 def runResampling(parameter):
+    """Resample data"""
     
-    rp = parameter.Resampling;    
+    rp = parameter.Resampling;
     
-    resampleData(rp.DataFiles, outputFile = rp.ResampledFile, 
+    im = rp.DataFiles;
+    if im is None:    
+        im = parameter.DataSource.ImageFile;
+    
+    resampleData(im, outputFile = rp.ResampledFile, 
                  resolutionData = rp.ResolutionData, resolutionReference = rp.ResolutionReference,
                  processingDirectory = None, processes = rp.Processes, cleanup = True, orientation = rp.Orientation);
     
     return rp.ResampledFile;
+    
+    
+    
+
+def runCellCoordinateTransformation(parameter):
+    """Transform points by resampling applying the elastix transformation and then upsample again"""
+    
+    im = parameter.Resampling.DataFiles;
+    if im is None:    
+        im = parameter.DataSource.ImageFile;
+        
+    cf = parameter.ImageProcessing.CellCoordinateFile;
+    pa = parameter.Alignment;
+    pr = parameter.Resampling;
+    
+    # downscale points to referenece image size
+    points = resamplePoints(cf, im, resolutionData = pr.ResolutionData, resolutionReference = pr.ResolutionReference, orientation = pr.Orientation);
+    
+    # transform points
+    points = transformPoints(points, alignmentdirectory = pa.AlignmentDirectory, transformparameterfile = None, read = True, tmpfile = None, outdirectory = None, indices = False);
+       
+    # upscale ppints back to original size
+    points = resamplePointsInverse(cf, im, resolutionData = pr.ResolutionData, resolutionReference = pr.ResolutionReference, orientation = pr.Orientation);
+    
+    tf = parameter.ImageProcessing.CellTransformedCoordinateFile;
+    if tf is None:
+        return points;
+    else:
+        io.writePoints(tf, points);
+        return tf;
+    
+def runCellCoordinateTransformationToReference(parameter):
+    """Transform points by resampling and applying the elastix transformation in the reference data"""
+    
+    im = parameter.Resampling.DataFiles;
+    if im is None:    
+        im = parameter.DataSource.ImageFile;
+    
+    cf = parameter.ImageProcessing.CellCoordinateFile;
+    pa = parameter.Alignment;
+    pr = parameter.Resampling;
+    
+    # downscale points to referenece image size
+    points = resamplePoints(cf, im, resolutionData = pr.ResolutionData, resolutionReference = pr.ResolutionReference, orientation = pr.Orientation);
+    
+    # transform points
+    points = transformPoints(points, alignmentdirectory = pa.AlignmentDirectory, transformparameterfile = None, read = True, tmpfile = None, outdirectory = None, indices = False);
+    
+    tf = parameter.ImageProcessing.CellTransformedCoordinateFile;
+    if tf is None:
+        return points;
+    else:
+        io.writePoints(tf, points);
+        return tf;
+
+    
+def runVoxelization(parameter):
+    """Voxelize a set of points"""
+    
+    cf = parameter.ImageProcessing.CellTransformedCoordinateFile;
+    if cf is None:
+        cf =  parameter.ImageProcessing.CellCoordinateFile;
+    
+    points = io.readPoints(cf);
+    
+    pv = parameter.Voxelization;
+
+    si = pv.Size;
+    if si is None:
+        si = parameter.Alignment.FixedImage;
+        if si is None:    
+            si = parameter.Resampling.ResampledFile;
+            
+    if isinstance(si, basestring):
+        si = dataSize(si);
+        
+    print si
+
+    vox = voxelize(points, si, average = pv.AveragingDiameter, mode = pv.Mode);
+    
+    vf = pv.File;
+    if vf is None:
+        return vox;
+    else:
+        io.writeDataStack(vf, vox);
+        return vf;
