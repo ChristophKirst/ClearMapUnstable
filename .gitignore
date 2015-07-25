@@ -17,3 +17,4 @@ Thumbs.db
 
 # data files
 iDISCO/Test/Data
+!iDISCO/Test/Data/Synthetic

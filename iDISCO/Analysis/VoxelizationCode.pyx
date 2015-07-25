@@ -18,21 +18,20 @@ cimport numpy as np
 def voxelizeSphere(np.ndarray[np.float_t, ndim=2] points, int xsize, int ysize, int zsize, float xdiam, float ydiam, float zdiam):
     
     cdef np.ndarray[np.int_t, ndim =3] voximg = np.zeros([xsize, ysize, zsize], dtype=np.int)
-    cdef int x, y, z
 
-    cdef int iCentroid = 0;
-    cdef int nCentroid = points.shape[0];
-    cdef int nSphereIndices = int(xdiam * ydiam * zdiam);
+    cdef int iCentroid = 0
+    cdef int nCentroid = points.shape[0]
+    cdef int nSphereIndices = int(xdiam * ydiam * zdiam)
 
     # precompute indices centered at 0,0,0
-    cdef np.ndarray[np.int_t, ndim = 1] xs = np.zeros([nSphereIndices], dtype=np.int);
-    cdef np.ndarray[np.int_t, ndim = 1] ys = np.zeros([nSphereIndices], dtype=np.int);
-    cdef np.ndarray[np.int_t, ndim = 1] zs = np.zeros([nSphereIndices], dtype=np.int);
-    cdef int ns = 0;
+    cdef np.ndarray[np.int_t, ndim = 1] xs = np.zeros([nSphereIndices], dtype=np.int)
+    cdef np.ndarray[np.int_t, ndim = 1] ys = np.zeros([nSphereIndices], dtype=np.int)
+    cdef np.ndarray[np.int_t, ndim = 1] zs = np.zeros([nSphereIndices], dtype=np.int)
+    cdef int ns = 0
 
-    cdef float xdiam2 = (xdiam - 1) * (xdiam - 1) / 4;
-    cdef float ydiam2 = (ydiam - 1) * (ydiam - 1) / 4;
-    cdef float zdiam2 = (zdiam - 1) * (zdiam - 1) / 4;
+    cdef float xdiam2 = (xdiam - 1) * (xdiam - 1) / 4
+    cdef float ydiam2 = (ydiam - 1) * (ydiam - 1) / 4
+    cdef float zdiam2 = (zdiam - 1) * (zdiam - 1) / 4
     
     for x in range(int(-xdiam/2 + 1), int(xdiam/2 + 1)):
         for y in range(int(-ydiam/2 + 1), int(ydiam/2 + 1)):
@@ -41,18 +40,18 @@ def voxelizeSphere(np.ndarray[np.float_t, ndim=2] points, int xsize, int ysize, 
                     xs[ns] = x; ys[ns] = y; zs[ns] = z;
                     ns += 1;
                     
-    cdef int iss = 0;
-    cdef float cx0;
-    cdef float cy0;
-    cdef float cz0;
+    cdef int iss = 0
+    cdef float cx0
+    cdef float cy0
+    cdef float cz0
     
-    cdef float cxf;
-    cdef float cyf;
-    cdef float czf;
+    cdef float cxf
+    cdef float cyf
+    cdef float czf
     
-    cdef int cx; 
-    cdef int cy;
-    cdef int cz;
+    cdef int cx
+    cdef int cy
+    cdef int cz
                     
     for iCentroid in range(nCentroid):
         if ((iCentroid % 25000) == 0):
@@ -83,31 +82,30 @@ def voxelizeSphere(np.ndarray[np.float_t, ndim=2] points, int xsize, int ysize, 
 def voxelizeRectangle(np.ndarray[np.float_t, ndim=2] points, int xsize, int ysize, int zsize, float xdiam, float ydiam, float zdiam):
     
     cdef np.ndarray[np.int_t, ndim =3] voximg = np.zeros([xsize, ysize, zsize], dtype=np.int)
-    cdef int x, y, z
 
-    cdef int iCentroid = 0;
-    cdef int nCentroid = points.shape[0];
+    cdef int iCentroid = 0
+    cdef int nCentroid = points.shape[0]
                     
-    cdef int iss = 0;
+    cdef int iss = 0
     
-    cdef float cxf;
-    cdef float cyf;
-    cdef float czf;
+    cdef float cxf
+    cdef float cyf
+    cdef float czf
     
-    cdef int cx; 
-    cdef int cy;
-    cdef int cz;
+    cdef int cx
+    cdef int cy
+    cdef int cz
     
-    cdef int xmin = int(-xdiam/2 + 1);
-    cdef int xmax = int(xdiam/2 + 1);
+    cdef int xmin = int(-xdiam/2 + 1)
+    cdef int xmax = int(xdiam/2 + 1)
     
-    cdef int ymin = int(-ydiam/2 + 1);
-    cdef int ymax = int(ydiam/2 + 1);
+    cdef int ymin = int(-ydiam/2 + 1)
+    cdef int ymax = int(ydiam/2 + 1)
     
-    cdef int zmin = int(-zdiam/2 + 1);
-    cdef int zmax = int(zdiam/2 + 1);
+    cdef int zmin = int(-zdiam/2 + 1)
+    cdef int zmax = int(zdiam/2 + 1)
     
-    cdef int xl, xh, yl, yh, zl, zh;
+    cdef int xl, xh, yl, yh, zl, zh
                     
     for iCentroid in range(nCentroid):
         if ((iCentroid % 25000) == 0):

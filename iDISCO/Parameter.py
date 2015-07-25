@@ -78,7 +78,7 @@ class ImageProcessingParameter(object):
     
     #File name for cell coordinates csv, vtk or  ims extension
     CellCoordinateFile = None;
-    CellInstensityFile = None;
+    CellIntensityFile = None;
     
     CellTransformedCoordinateFile = None;
 
