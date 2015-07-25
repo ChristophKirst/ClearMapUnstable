@@ -37,10 +37,10 @@ parameter.Resampling.ResolutionData = (5, 5, 3);
 parameter.Resampling.ResolutionReference = (12, 15, 5);
 
 #Orientation of the Data set wrt reference 
-#(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchnge x,y use (2,1,3) etc)
+#(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchange x,y use (2,1,3) etc)
 parameter.Resampling.Orientation = (1,2,3);
 
-#Processes to use for Resmapling
+#Processes to use for Resampling
 parameter.Resampling.Processes = 4;
 
 resampledImage = runResampling(parameter);
@@ -395,6 +395,7 @@ import numpy
 
 from iDISCO.Parameter import *
 from iDISCO.Run import *
+import iDISCO.Visualization.Plot as Plot
 
 verbose = True;
 
@@ -473,6 +474,24 @@ parameter.ImageProcessing.Parameter.ThresholdSave = None;
 parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Synthetic/cells.csv');
 parameter.ImageProcessing.CellIntensityFile = os.path.join(basedirectory, 'Synthetic/intensities.csv');
 parameter.ImageProcessing.CellTransformedCoordinateFile = os.path.join(basedirectory, 'Synthetic/cells_transformed.csv');
+
+
+## Stack Processing Parameter
+    
+#max number of parallel processes
+parameter.StackProcessing.Processes = 2;
+   
+#chunk sizes
+parameter.StackProcessing.ChunkSizeMax = 100;
+parameter.StackProcessing.ChunkSizeMin = 30;
+parameter.StackProcessing.ChunkOverlap = 15;
+
+#optimize chunk size and number to number of processes
+parameter.StackProcessing.OptimizeChunks = True;
+    
+#increase chunk size for optimizaition (True, False or all = choose automatically)
+parameter.StackProcessing.OptimizeChunkSizeIncrease = all;
+
 
 
 ##Voxelization

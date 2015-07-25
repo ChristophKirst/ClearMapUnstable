@@ -204,5 +204,5 @@ def runVoxelization(parameter):
     if vf is None:
         return vox;
     else:
-        io.writeDataStack(vf, vox);
+        io.writeDataStack(vf, vox.astype('int32'));
         return vf;

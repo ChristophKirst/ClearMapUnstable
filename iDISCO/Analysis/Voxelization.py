@@ -21,7 +21,7 @@ def voxelize(points, imagesize, average = (5,5,5), mode = 'Spherical'):
     if mode == 'Spherical':
         return vox.voxelizeSphere(points, imagesize[0], imagesize[1], imagesize[2], average[0], average[1], average[2]);
     elif mode == 'Rectangular':
-        return vox.voxelizeRectangle(points, imagesize[0], imagesize[1], imagesize[2], average[0], average[1], average[2])    
+        return vox.voxelizeRectangle(points, imagesize[0], imagesize[1], imagesize[2], average[0], average[1], average[2]);   
     else:
         raise RuntimeError('voxelize: mode: %s not supported!' % mode);
 

@@ -17,7 +17,7 @@ cimport numpy as np
 #@cython.boundscheck(False)  # turn of bounds-checking for entire function
 def voxelizeSphere(np.ndarray[np.float_t, ndim=2] points, int xsize, int ysize, int zsize, float xdiam, float ydiam, float zdiam):
     
-    cdef np.ndarray[np.int_t, ndim =3] voximg = np.zeros([xsize, ysize, zsize], dtype=np.int)
+    cdef np.ndarray[np.int32_t, ndim =3] voximg = np.zeros([xsize, ysize, zsize], dtype=np.int32)
 
     cdef int iCentroid = 0
     cdef int nCentroid = points.shape[0]
@@ -81,7 +81,7 @@ def voxelizeSphere(np.ndarray[np.float_t, ndim=2] points, int xsize, int ysize, 
     #@cython.boundscheck(False)  # turn of bounds-checking for entire function
 def voxelizeRectangle(np.ndarray[np.float_t, ndim=2] points, int xsize, int ysize, int zsize, float xdiam, float ydiam, float zdiam):
     
-    cdef np.ndarray[np.int_t, ndim =3] voximg = np.zeros([xsize, ysize, zsize], dtype=np.int)
+    cdef np.ndarray[np.int32_t, ndim =3] voximg = np.zeros([xsize, ysize, zsize], dtype=np.int32)
 
     cdef int iCentroid = 0
     cdef int nCentroid = points.shape[0]
