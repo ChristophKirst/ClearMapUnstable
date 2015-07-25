@@ -77,3 +77,58 @@ def voxelizeSphere(np.ndarray[np.float_t, ndim=2] points, int xsize, int ysize, 
                         voximg[cx,cy,cz] = voximg[cx,cy,cz] + 1;
                         
     return voximg;
+    
+    
+    #@cython.boundscheck(False)  # turn of bounds-checking for entire function
+def voxelizeRectangle(np.ndarray[np.float_t, ndim=2] points, int xsize, int ysize, int zsize, float xdiam, float ydiam, float zdiam):
+    
+    cdef np.ndarray[np.int_t, ndim =3] voximg = np.zeros([xsize, ysize, zsize], dtype=np.int)
+    cdef int x, y, z
+
+    cdef int iCentroid = 0;
+    cdef int nCentroid = points.shape[0];
+                    
+    cdef int iss = 0;
+    
+    cdef float cxf;
+    cdef float cyf;
+    cdef float czf;
+    
+    cdef int cx; 
+    cdef int cy;
+    cdef int cz;
+    
+    cdef int xmin = int(-xdiam/2 + 1);
+    cdef int xmax = int(xdiam/2 + 1);
+    
+    cdef int ymin = int(-ydiam/2 + 1);
+    cdef int ymax = int(ydiam/2 + 1);
+    
+    cdef int zmin = int(-zdiam/2 + 1);
+    cdef int zmax = int(zdiam/2 + 1);
+    
+    cdef int xl, xh, yl, yh, zl, zh;
+                    
+    for iCentroid in range(nCentroid):
+        if ((iCentroid % 25000) == 0):
+            print "\nProcessed %d/%d\n" % (iCentroid, nCentroid);
+    
+        cx0 = points[iCentroid, 0];
+        cy0 = points[iCentroid, 1];
+        cz0 = points[iCentroid, 2];
+        
+        xl = max(0, int(cx0 + xmin));
+        xh = min(xsize, int(cx0 + xmax));
+    
+        yl = max(0, int(cy0 + ymin));
+        yh = min(xsize, int(cy0 + ymax));   
+        
+        zl = max(0, int(cz0 + zmin));
+        zh = min(zsize, int(cz0 + zmax));   
+        
+        for xs in range(xl,xh):
+            for ys in range(yl,yh):
+                for zs in range(zl,zh):
+                    voximg[xs,ys,zs] = voximg[xs,ys,zs] + 1;
+                        
+    return voximg;
