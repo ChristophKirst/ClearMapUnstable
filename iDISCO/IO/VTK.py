@@ -10,62 +10,63 @@ Created on Thu Jun  4 14:37:06 2015
 #from evtk.hl import pointsToVTK 
 
 import numpy;
-
-#import iDISCO.IO.IO as io;
+import iDISCO.IO.IO as io;
 
 def writePoints(filename, points, labelimage = None):
-    return "done"; 
-#    #swap x and y axis
-#    x = points[:,1];
-#    y = points[:,0];
-#    z = points[:,2];
-##    
-#    nPoint = x.size;
-#    
-#    if not labelimage is None:
-#        if 
-#        labelImage = io.readData(labelimage);
-#        dsize =labelImage
-#        for i in range(nPoint):
-#            if x[i] > 0 and x[i] < dsize[0] and points[i,1] > 0 and points[i,1] < dsize[1] and points[i,2] > 0 and points[i,2] < dsize[2]:
-#               imgc[points[i,0], points[i,1], points[i,2]] = 1;
-#    self.plotOverlayLabel(image[:,:,0:dsize[2]], imgc, alpha = False);
-#        pointLabels = labelImage, pointList(1,:), pointList(2,:) , pointList(3,:)
-#    else
-#        pointLabels = numpy.ones(nPoint);
-#    end    
-#    
-##    
-##    #write VTK file
-#    vtkFilePointer = file(filename, 'w')
-#    vtkFilePointer.write('# vtk DataFile Version 2.0\n');
-#    vtkFilePointer.write('Unstructured Grid Example\n');
-#    vtkFilePointer.write('ASCII\n');
-#    vtkFilePointer.write('DATASET UNSTRUCTURED_GRID\n');
-#    vtkFilePointer.write("POINTS " + str(nPoint) + " float\n")
-#    for iPoint in range(0, nPoint):
-#        vtkFilePointer.write(str(x[iPoint]).format('%05.20f') + " " +  str(y[iPoint]).format('%05.20f') + " " + str(z[iPoint]).format('%05.20f') + "\n");    
-#    
-#    vtkFilePointer.write("CELLS " + str(nPoint) + " " + str(nPoint * 2) + "\n");
+
+    #points are (y,x,z)
+    x = points[:,1];
+    y = points[:,0];
+    z = points[:,2];    
+    nPoint = x.size;
+    
+    pointLabels = numpy.ones(nPoint);
+    if not labelimage is None:
+        if isinstance(labelimage, basestring):
+            labelImage = io.readData(labelimage);
+            
+        dsize = labelImage.shape;
+        for i in range(nPoint):
+            if y[i] >= 0 and y[i] < dsize[0] and x[i] >= 0 and x[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
+                 pointLabels[i] = labelImage[y[i],x[i], z[i]];
+        
+    #write VTK file
+    vtkFile = file(filename, 'w')
+    vtkFile.write('# vtk DataFile Version 2.0\n');
+    vtkFile.write('Unstructured Grid Example\n');
+    vtkFile.write('ASCII\n');
+    vtkFile.write('DATASET UNSTRUCTURED_GRID\n');
+    vtkFile.write("POINTS " + str(nPoint) + " float\n")
+    for iPoint in range(nPoint):
+        vtkFile.write(str(x[iPoint]).format('%05.20f') + " " +  str(y[iPoint]).format('%05.20f') + " " + str(z[iPoint]).format('%05.20f') + "\n");    
+    
+    vtkFile.write("CELLS " + str(nPoint) + " " + str(nPoint * 2) + "\n");
 
 
-#    for iPoint in range(0, nPoint):
-#        vtkFilePointer.write("1 " + str(iPoint) + "\n");
-#    vtkFilePointer.write("CELL_TYPES " + str(nPoint) + "\n");
-#    for iPoint in range(0, nPoint):
-#        vtkFilePointer.write("1 \n");
-#    #vtkFilePointer.write("\n");
-#    vtkFilePointer.write("POINT_DATA " + str(nPoint) + "\n");
-#    vtkFilePointer.write('SCALARS scalars float 1\n');
-#    vtkFilePointer.write("LOOKUP_TABLE default\n");
-#    for iLabel in pointLabels:
-#        vtkFilePointer.write(str(int(iLabel)) + " ");
-#        #vtkFilePointer.write("1 ")
-#    vtkFilePointer.write("\n");
-#    vtkFilePointer.close();    
-#
-#
-#
+    for iPoint in range(nPoint):
+        vtkFile.write("1 " + str(iPoint) + "\n");
+    vtkFile.write("CELL_TYPES " + str(nPoint) + "\n");
+    for iPoint in range(0, nPoint):
+        vtkFile.write("1 \n");
+    #vtkFile.write("\n");
+    vtkFile.write("POINT_DATA " + str(nPoint) + "\n");
+    vtkFile.write('SCALARS scalars float 1\n');
+    vtkFile.write("LOOKUP_TABLE default\n");
+    for iLabel in pointLabels:
+        vtkFile.write(str(int(iLabel)) + " ");
+        #vtkFile.write("1 ")
+    vtkFile.write("\n");
+    vtkFile.close();    
+
+
+
+
+
+
+
+
+
+############# Stuff -> test above then delete this here//./
 #
 #if (numel(varargin) >= 2)
 #    labelList = varargin{2};
@@ -130,37 +131,37 @@ def writePoints(filename, points, labelimage = None):
 #    nPoint = x.size;
 #    
 #    #write VTK file
-#    vtkFilePointer = open(vtkFileName, 'w')
-#    vtkFilePointer.write('# vtk DataFile Version 2.0\n');
-#    vtkFilePointer.write('Unstructured Grid Example\n');
-#    vtkFilePointer.write('ASCII\n');
-#    vtkFilePointer.write('DATASET UNSTRUCTURED_GRID\n');
-#    vtkFilePointer.write("POINTS " + str(nPoint) + " float\n")
+#    vtkFile = open(vtkFileName, 'w')
+#    vtkFile.write('# vtk DataFile Version 2.0\n');
+#    vtkFile.write('Unstructured Grid Example\n');
+#    vtkFile.write('ASCII\n');
+#    vtkFile.write('DATASET UNSTRUCTURED_GRID\n');
+#    vtkFile.write("POINTS " + str(nPoint) + " float\n")
 #    for iPoint in range(0,nPoint):
-#        vtkFilePointer.write(str(x[iPoint]).format('%05.20f') + " " +  str(y[iPoint]).format('%05.20f') + " " + str(z[iPoint]).format('%05.20f') + "\n");    
+#        vtkFile.write(str(x[iPoint]).format('%05.20f') + " " +  str(y[iPoint]).format('%05.20f') + " " + str(z[iPoint]).format('%05.20f') + "\n");    
 #    
-#    vtkFilePointer.write("CELLS " + str(nPoint) + " " + str(nPoint * 2) + "\n");
+#    vtkFile.write("CELLS " + str(nPoint) + " " + str(nPoint * 2) + "\n");
 #    for iPoint in range(0, nPoint):
-#        vtkFilePointer.write("1 " + str(iPoint) + "\n");
-#    vtkFilePointer.write("CELL_TYPES " + str(nPoint) + "\n");
+#        vtkFile.write("1 " + str(iPoint) + "\n");
+#    vtkFile.write("CELL_TYPES " + str(nPoint) + "\n");
 #    for iPoint in range(0, nPoint):
-#        vtkFilePointer.write("1 \n");
-#    #vtkFilePointer.write("\n");
-#    vtkFilePointer.write("POINT_DATA " + str(nPoint) + "\n");
-#    vtkFilePointer.write('SCALARS scalars float 1\n');
-#    vtkFilePointer.write("LOOKUP_TABLE default\n");
+#        vtkFile.write("1 \n");
+#    #vtkFile.write("\n");
+#    vtkFile.write("POINT_DATA " + str(nPoint) + "\n");
+#    vtkFile.write('SCALARS scalars float 1\n');
+#    vtkFile.write("LOOKUP_TABLE default\n");
 #    for iLabel in pointLabels:
-#        vtkFilePointer.write(str(int(iLabel)) + " ");
-#        #vtkFilePointer.write("1 ")
-#    vtkFilePointer.write("\n");
-#    vtkFilePointer.close();
+#        vtkFile.write(str(int(iLabel)) + " ");
+#        #vtkFile.write("1 ")
+#    vtkFile.write("\n");
+#    vtkFile.close();
 #    
 #"""
 #    
 #    
 #
 #    
-#    vtkFilePointer.close();
+#    vtkFile.close();
 #"""
 ## If the labels are not specified for the cells then all are assigned as one
 #def writeSparsePointsVTKFile (vtkFileName, pointList):

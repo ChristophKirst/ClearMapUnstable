@@ -115,9 +115,14 @@ def transformToImaris(points, scale = (4.0625, 4.0625, 3)):
     return points
 
 
-def writePoints(h5file, points, mode = "o", radius = 0.5):
+def writePoints(filename, points, mode = "o", radius = 0.5):
     """Write points to Imaris file"""
     
+    if isinstance(filename, basestring):
+        h5file = self.openFile(filename);
+    else:
+        h5file = filename;
+      
     #delete Scene8 info so do not need to write it
     s8 = "/Scene8";
     if h5file.get(s8) != None:
@@ -192,6 +197,9 @@ def writePoints(h5file, points, mode = "o", radius = 0.5):
     if h5file.get(pnc) != None:
         del h5file[pnc];
     h5file.create_dataset(pnc, shape=pts.shape, dtype='f32', data=pts);
+    
+    if isinstance(filename, basestring):
+        h5file.close();
 
 
 

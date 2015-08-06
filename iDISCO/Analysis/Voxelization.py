@@ -37,6 +37,7 @@ def voxelizePixel(points, imagesize):
     return  vox;
 
 
+
 def test():
     points = numpy.random.rand(200,3) * 10;
 
@@ -48,7 +49,7 @@ def test():
     Plot.plotTiling(vi)
     
     #use voxelize
-    vi = self.voxelizeSphere(points, 20,20,20, 5,5,5);
+    vi = self.voxelize(points, 20,20,20, 5,5,5);
     
     Plot.plotTiling(vi)
     
