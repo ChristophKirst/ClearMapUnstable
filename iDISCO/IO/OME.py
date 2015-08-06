@@ -71,7 +71,7 @@ def readDataStack(filename, x = all, y = all, z = all, channel = 0, timepoint = 
     return data.transpose([1,2,0]);
 
 
-def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, resolution = 0):
+def readDataFiles(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, resolution = 0):
     """Read data from individual images assuming they are the z slices"""
     
     fpath, fl = self.readFileList(filename);
@@ -120,6 +120,18 @@ def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, re
     
     return img;
 
+     
+def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, resolution = 0):
+    """Read a tiff stack as multiple form single or multiple images"""
+    
+    if os.path.exists(filename):
+         readDataFunction = self.readDataStack;
+    else:
+         readDataFunction = self.readDataFiles;
+    
+    return readDataFunction(filename, x = x, y = y, z = z, channel = channel, resolution = resolution);
+
+
 
 def writeData(img, fileheader):
     nz = img.shape[2];
@@ -135,6 +147,9 @@ def writeDataStack(filename, image):
 
     tiff.imsave(filename, image.transpose([2,0,1]));
  
+
+
+
 
 def test():    
     """Test OME module"""  

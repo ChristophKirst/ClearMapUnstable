@@ -111,6 +111,8 @@ def plotOverlayLabel(image, label, alpha = False, tiling = "automatic", maxtiles
     """Plot gray scale image overlayed with labeled image"""
     ov = overlayLabel(image, label, alpha = alpha);
     plotTiling(ov, tiling = tiling);
+    
+    return ov;
 
 
     
@@ -124,7 +126,7 @@ def plotOverlayPoints(image, points, alpha = False, tiling = "automatic", maxtil
     for i in range(points.shape[0]):
         if points[i,0] > 0 and points[i,0] < dsize[0] and points[i,1] > 0 and points[i,1] < dsize[1] and points[i,2] > 0 and points[i,2] < dsize[2]:
                imgc[points[i,0], points[i,1], points[i,2]] = 1;
-    self.plotOverlayLabel(image[:,:,0:dsize[2]], imgc, alpha = False);
+    return self.plotOverlayLabel(image[:,:,0:dsize[2]], imgc, alpha = False);
 
 
 if __name__ == "__main__":
@@ -136,8 +138,8 @@ if __name__ == "__main__":
     iplt.plotOverlayLabel(x,l, alpha = False);    
     iplt.plotOverlayLabel(x,l, alpha = True);    
     
-
     
+
     
     
     

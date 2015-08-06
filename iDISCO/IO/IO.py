@@ -44,10 +44,7 @@ def readData(filename, x = all, y = all, z = all, channel = 0, timepoint = 0, re
     if fext == "ims":
         readDataFunction = Imaris.readData;
     elif fext == "tif":
-        if os.path.exists(filename):
-            readDataFunction = OME.readDataStack;
-        else:
-            readDataFunction = OME.readData;
+        readDataFunction = OME.readData;
     elif fext == "mhd":
         readDataFunction = RAW.readData;
     else:

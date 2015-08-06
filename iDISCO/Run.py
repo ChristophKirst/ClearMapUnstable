@@ -125,7 +125,7 @@ def runResampling(parameter):
     
 
 def runCellCoordinateTransformation(parameter):
-    """Transform points by resampling applying the elastix transformation and then upsample again"""
+    """Transform points by resampling applying the elastix transformation and then re-resample again"""
     
     im = parameter.Resampling.DataFiles;
     if im is None:    
@@ -139,8 +139,10 @@ def runCellCoordinateTransformation(parameter):
     points = resamplePoints(cf, im, resolutionData = pr.ResolutionData, resolutionReference = pr.ResolutionReference, orientation = pr.Orientation);
     
     # transform points
+    points = points[:,[1,0,2]]; # account for (y,x, z) array representaton here
     points = transformPoints(points, alignmentdirectory = pa.AlignmentDirectory, transformparameterfile = None, read = True, tmpfile = None, outdirectory = None, indices = False);
-       
+    points = points[:,[1,0,2]]; # account for (y,x, z) array representaton here
+    
     # upscale ppints back to original size
     points = resamplePointsInverse(cf, im, resolutionData = pr.ResolutionData, resolutionReference = pr.ResolutionReference, orientation = pr.Orientation);
     
@@ -166,7 +168,9 @@ def runCellCoordinateTransformationToReference(parameter):
     points = resamplePoints(cf, im, resolutionData = pr.ResolutionData, resolutionReference = pr.ResolutionReference, orientation = pr.Orientation);
     
     # transform points
-    points = transformPoints(points, alignmentdirectory = pa.AlignmentDirectory, transformparameterfile = None, read = True, tmpfile = None, outdirectory = None, indices = False);
+    points = points[:,[1,0,2]];
+    points = transformPoints(points, alignmentdirectory = pa.AlignmentDirectory, transformparameterfile = None, read = True, tmpfile = None, outdirectory = None, indices = True);
+    points = points[:,[1,0,2]];
     
     tf = parameter.ImageProcessing.CellTransformedCoordinateFile;
     if tf is None:

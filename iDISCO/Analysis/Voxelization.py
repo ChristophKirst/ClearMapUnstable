@@ -22,9 +22,19 @@ def voxelize(points, imagesize, average = (5,5,5), mode = 'Spherical'):
         return vox.voxelizeSphere(points, imagesize[0], imagesize[1], imagesize[2], average[0], average[1], average[2]);
     elif mode == 'Rectangular':
         return vox.voxelizeRectangle(points, imagesize[0], imagesize[1], imagesize[2], average[0], average[1], average[2]);   
+    elif mode == "Pixel":
+        return self.voxelizePixel(points, imagesize); 
     else:
         raise RuntimeError('voxelize: mode: %s not supported!' % mode);
 
+
+def voxelizePixel(points, imagesize):
+    vox = numpy.zeros(imagesize, dtype=numpy.int32);
+    for i in range(points.shape[0]):
+        if points[i,0] > 0 and points[i,0] < imagesize[0] and points[i,1] > 0 and points[i,1] < imagesize[1] and points[i,2] > 0 and points[i,2] < imagesize[2]:
+               vox[points[i,0], points[i,1], points[i,2]] = 1;
+    
+    return  vox;
 
 
 def test():

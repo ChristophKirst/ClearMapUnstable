@@ -83,7 +83,7 @@ def readZRange(filename, z = all, resolution = 0):
 
     f = self.openFile(filename);
     dataset = self.readDataSet(f, resolution = resolution);
-    nz = dataset.shape[0];    
+    nz = dataset.shape[0];
     f.close();
     
     if z == all: 
