@@ -10,8 +10,7 @@ Created on Sat Jul 25 16:13:56 2015
 # Test Alignment
 ##############################################################################
 
-import oser();
-
+import os;
 
 from iDISCO.Parameter import *
 from iDISCO.Run import runAlignment, runInitializeElastix
@@ -50,12 +49,97 @@ print "Aligned images: result directory: %s" % resultDirectory
 
 
 
+
+
+##############################################################################
+# Test Alignment CFos with Flourescence to correct for aquisitiion movements 
+##############################################################################
+
+import os
+import numpy
+
+from iDISCO.Parameter import *
+from iDISCO.Run import runAlignment, runInitializeElastix
+from iDISCO.Run import runResampling
+
+import iDISCO.Alignment.Elastix as elx
+
+basedirectory = '/home/mtllab/Documents/whiskers/shaved/150620-3R';
+
+parameter = Parameter();
+
+
+## Resample Flourescent and Cos images
+    
+#Resolution of the Data (in um / pixel)
+parameter.Resampling.ResolutionData = (4.0625, 4.0625, 3);
+
+#Resolution of the Reference / Atlas (in um/ pixel)
+parameter.Resampling.ResolutionReference = (25, 25, 25);
+
+#Orientation of the Data set wrt reference 
+parameter.Resampling.Orientation = (1,2,3);
+
+#Processes to use for Resampling
+parameter.Resampling.Processes = 12;
+
+
+
+#Files for Cfos
+parameter.Resampling.DataFiles = os.path.join(basedirectory, 'XXX\d{4}.tif')
+parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'XXX_resample.tif');
+
+resampledImage = runResampling(parameter);
+
+
+#Files for flourescent
+parameter.Resampling.DataFiles = os.path.join(basedirectory, 'XXX\d{4}.tif')
+parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'XXX_resample.tif');
+
+resampledImage = runResampling(parameter);
+
+
+
+## Align 
+
+#directory of the alignment result
+parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'elastix_cfos_auto');
+
+#Elastix binary
+parameter.Alignment.ElastixDirectory = '/usr/local/elastix'
+    
+#moving and reference images
+   
+parameter.Alignment.MovingImage = os.path.join(basedirectory, 'autoflou_resample.tif');
+parameter.Alignment.FixedImage  = os.path.join(basedirectory, 'cfos_resample.tif');
+parameter.Alignment.FixedImageMask = None;
+
+#elastix parameter files for alignment
+parameter.Alignment.AffineParameterFile  = os.path.join(pp, 'Par0000affine.txt');
+parameter.Alignment.BSplineParameterFile = None;
+
+
+runInitializeElastix(parameter)
+iDISCO.Alignment.Elastix.ElastixSettings.printInfo();
+
+resultDirectory = runAlignment(parameter);
+
+print "Aligned cfos with autoflou: result directory: %s" % resultDirectory
+
+
+
+
+
+
+
+
+
 ##############################################################################
 # Test Resample Points
 ############################################################################## 
 
 import os
-import numpyer();
+import numpy;
 
 
 from iDISCO.Parameter import *
@@ -306,6 +390,16 @@ print counts
 
 
 
+##############################################################################
+# Test label
+############################################################################## 
+
+import iDISCO.Analysis.Label as lbl
+
+
+#l = [317, 997, 1058, 650]
+col = lbl.makeColorPalette()
+
 
 ##############################################################################
 # Misc / Test Transform Points
@@ -347,5 +441,10 @@ rdata = io.readData(os.path.join(basedirectory, 'half_template_25_right.tif'));
 
 voximg = vox.voxelizePixel(acenters2, rdata.shape) * 5000;
 io.writeDataStack(os.path.join(basedirectory, 'cells_transformed.tif'), voximg.astype('int16'))
+
+
+
+
+
 
 
