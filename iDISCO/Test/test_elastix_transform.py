@@ -455,6 +455,45 @@ if verbose:
 
 
 
+##############################################################################
+# Test Resampling / Make Reference
+##############################################################################
+
+import os
+import numpy
+
+from iDISCO.Parameter import *
+from iDISCO.Run import runResampling
+
+import shutil
+
+basedirectory = os.path.join(iDISCOaPath(), 'Test');
+
+parameter = Parameter();
+
+
+#Files
+parameter.Resampling.DataFiles = os.path.join(basedirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif')
+parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif');
+    
+#Resolution of the Data (in um / pixel)
+parameter.Resampling.ResolutionData = (5, 5, 3);
+
+#Resolution of the Reference / Atlas (in um/ pixel)
+parameter.Resampling.ResolutionReference = (12, 15, 5);
+
+#Orientation of the Data set wrt reference 
+#(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchange x,y use (2,1,3) etc)
+parameter.Resampling.Orientation = (1,2,3);
+
+#Processes to use for Resampling
+parameter.Resampling.Processes = 4;
+
+resampledImage = runResampling(parameter);
+
+print "Resampled image saved as %s" % resampledImage
+
+
 
 
 
@@ -462,7 +501,6 @@ if verbose:
 
 # voxelize result
 
-referencedata = io.readData(parameter.Alignment.MovingImage);
 voximg = vox.voxelizePixel(acenters, referencedata.shape);
 io.writeDataStack(os.path.join(basedirectory, 'Synthetic/points_transformed_pixel.tif'), 5000* voximg)
 

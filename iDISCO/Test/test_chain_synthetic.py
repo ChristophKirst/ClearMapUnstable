@@ -74,7 +74,7 @@ parameter = Parameter();
 parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'Synthetic/elastix');
 
 #Elastix binary
-parameter.Alignment.ElastixDirectory = '/home/ckirst/programs/elastix'
+parameter.Alignment.ElastixDirectory = "/usr/local/elastix'
     
 #moving and reference images
 parameter.Alignment.MovingImage = os.path.join(basedirectory, 'Synthetic/test_iDISCO_reference.tif');

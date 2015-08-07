@@ -193,7 +193,7 @@ def runVoxelization(parameter):
 
     si = pv.Size;
     if si is None:
-        si = parameter.Alignment.FixedImage;
+        si = parameter.Alignment.MovingImage;
         if si is None:    
             si = parameter.Resampling.ResampledFile;
             

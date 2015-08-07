@@ -10,7 +10,7 @@ Created on Thu Jun  4 14:37:06 2015
 #from evtk.hl import pointsToVTK 
 
 import numpy;
-import iDISCO.IO.IO as io;
+import iDISCO.IO.OME as io;
 
 def writePoints(filename, points, labelimage = None):
 
@@ -19,6 +19,8 @@ def writePoints(filename, points, labelimage = None):
     y = points[:,0];
     z = points[:,2];    
     nPoint = x.size;
+    
+    #print nPoint;
     
     pointLabels = numpy.ones(nPoint);
     if not labelimage is None:

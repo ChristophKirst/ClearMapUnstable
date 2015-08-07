@@ -10,14 +10,15 @@ Created on Sat Jul 25 16:13:56 2015
 # Test Alignment
 ##############################################################################
 
-import os
+import oser();
+
 
 from iDISCO.Parameter import *
 from iDISCO.Run import runAlignment, runInitializeElastix
 
 import iDISCO.Alignment.Elastix
 
-basedirectory = '/home/ckirst/Science/Projects/BrainActivityMap/Experiment/FullChainTest/';
+basedirectory = '/home/mtllab/Documents/whiskers/shaved/150620-3R';
 
 parameter = Parameter();
 
@@ -25,18 +26,17 @@ parameter = Parameter();
 parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'elastix');
 
 #Elastix binary
-parameter.Alignment.ElastixDirectory = '/home/ckirst/programs/elastix'
+parameter.Alignment.ElastixDirectory = '/usr/local/elastix'
     
 #moving and reference images
-parameter.Alignment.MovingImage = os.path.join(basedirectory, 'half_template_25_right.tif');
+pp = '/home/mtllab/Documents/warping';     
+parameter.Alignment.MovingImage = os.path.join(pp, 'half_template_25_right.tif');
 parameter.Alignment.FixedImage  = os.path.join(basedirectory, 'autofluo_resample.tif');
 parameter.Alignment.FixedImageMask = None;
-  
-  
+
 #elastix parameter files for alignment
-pp = '/home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Elastix/'
-parameter.Alignment.AffineParameterFile  = os.path.join(pp, 'ElastixParameterAffine.txt');
-parameter.Alignment.BSplineParameterFile = os.path.join(pp, 'ElastixParameterBSpline.txt');
+parameter.Alignment.AffineParameterFile  = os.path.join(pp, 'Par0000affine.txt');
+parameter.Alignment.BSplineParameterFile = os.path.join(pp, 'Par0000bspline.txt');
 #parameter.Alignment.BSplineParameterFile = None;
 
 
@@ -55,7 +55,8 @@ print "Aligned images: result directory: %s" % resultDirectory
 ############################################################################## 
 
 import os
-import numpy
+import numpyer();
+
 
 from iDISCO.Parameter import *
 from iDISCO.Run import runResampling
@@ -97,7 +98,8 @@ if verbose:
     #print "Shape raw: " + str(dataraw.shape)
     print "Shape res: " + str(datares.shape)
     
-    #Plot.plotOverlayPoints(dataraw*0.01, centers)
+    #Plot.plotOverlayPoints(dataraw*0.01, centers)er();
+
     Plot.plotOverlayPoints(datares*0.01, rcenters)
     
 io.writePoints(os.path.join(basedirectory, 'cells_resampled.csv'), rcenters)
@@ -106,6 +108,7 @@ io.writePoints(os.path.join(basedirectory, 'cells_resampled.csv'), rcenters)
 import iDISCO.Analysis.Voxelization as vox;
 import iDISCO.IO.IO as io
 
+er();
 
 rdata = io.readData(os.path.join(basedirectory, 'autofluo_resample.tif'));
 rcenters = io.readPoints(os.path.join(basedirectory, 'cells_resampled.csv'));
@@ -131,7 +134,7 @@ import iDISCO.IO.IO as io
 import iDISCO.Analysis.Voxelization as vox;
 
 
-basedirectory = '/home/ckirst/Science/Projects/BrainActivityMap/Experiment/FullChainTest/';
+basedirectory = '/home/mtllab/Documents/whiskers/shaved/150620-3R';
 
 verbose = True;
 
@@ -139,11 +142,11 @@ parameter = Parameter();
 
 ##Cells
 parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'cells.csv')
-parameter.ImageProcessing.CellTransformedCoordinateFile = os.path.join(basedirectory, 'cells_transformed_1.csv');
+parameter.ImageProcessing.CellTransformedCoordinateFile = os.path.join(basedirectory, 'cells_transformed.csv');
 ##Resampling Parameter
 #Files
-parameter.Resampling.DataFiles = (2160, 2560, 1728);
-parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif');
+parameter.Resampling.DataFiles = '/home/mtllab/Documents/whiskers/shaved/150620-3R/150716_0_8X-autofluor_17-00-34/17-00-34_0_8X-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+#parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif');
 
 
 #Resolution of the Data (in um / pixel)
@@ -162,11 +165,11 @@ parameter.Resampling.Orientation = (1,2,3);
 parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'elastix');
 
 #Elastix binary
-parameter.Alignment.ElastixDirectory = '/home/ckirst/programs/elastix'
+parameter.Alignment.ElastixDirectory = '/usr/local/elastix'
     
 #moving and reference images
 parameter.Alignment.MovingImage = os.path.join(basedirectory, 'autofluo_resample.tif');
-parameter.Alignment.FixedImage  = os.path.join(basedirectory, 'half_template_25_right.tif');
+parameter.Alignment.FixedImage  = '/home/mtllab/Documents/warping/half_template_25_right.tif';
 parameter.Alignment.FixedImageMask = None;
   
 #elastix parameter files for alignment
@@ -196,7 +199,7 @@ if verbose:
     Plot.plotOverlayPoints(0.1 * refdata, pts2)
 
 
-
+refdata.shape
 
 pts2 = io.readPoints(parameter.ImageProcessing.CellTransformedCoordinateFile);
 #pts2 = pts2[:,[1,0,2]];
@@ -209,12 +212,96 @@ io.writeDataStack(os.path.join(basedirectory, 'points_transformed_pixel.tif'), v
 
 
 
+##############################################################################
+# Test VTK 
+############################################################################## 
+
+import os
+
+from iDISCO.Parameter import *
+import iDISCO.IO.IO as io
+import iDISCO.IO.VTK as iovtk
+
+
+basedirectory = '/home/mtllab/Documents/whiskers/shaved/150620-3R';
+
+##Cells
+parameter = Parameter();
+
+parameter.ImageProcessing.CellTransformedCoordinateFile = os.path.join(basedirectory, 'cells_transformed.csv');
+
+ptsv = io.readPoints(parameter.ImageProcessing.CellTransformedCoordinateFile);
+
+iovtk.writePoints(os.path.join(basedirectory, 'points_transformed.vtk'), ptsv, labelimage = '/home/mtllab/Documents/warping/annotation_25_right.tif')
 
 
 
 
 
+##############################################################################
+# Test points in original data to tif
+############################################################################## 
 
+import os
+
+from iDISCO.Parameter import *
+import iDISCO.IO.IO as io
+
+from iDISCO.Alignment.Resampling import dataSize
+
+import iDISCO.Analysis.Voxelization as vox
+
+basedirectory = '/home/mtllab/Documents/whiskers/shaved/150620-3R';
+
+##Cells
+parameter = Parameter();
+
+parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'cells.csv');
+
+
+parameter.DataSource.ImageFile = '/home/mtllab/Documents/whiskers/shaved/150620-3R/150716_0_8X-autofluor_17-00-34/17-00-34_0_8X-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+
+
+pts = io.readPoints(parameter.ImageProcessing.CellCoordinateFile);
+
+
+ds = dataSize(parameter.DataSource.ImageFile);
+ds = (ds[1], ds[0], ds[2]);
+
+voximg = vox.voxelizePixel(pts, ds);
+io.writeDataStack(os.path.join(basedirectory, 'points_pixel.tif'), 5000 * voximg)
+
+
+
+
+##############################################################################
+# Test label points 
+############################################################################## 
+
+import os
+
+from iDISCO.Parameter import *
+import iDISCO.IO.IO as io
+
+import iDISCO.Analysis.Label as lb
+
+
+basedirectory = '/home/mtllab/Documents/whiskers/shaved/150620-3R';
+
+##Cells
+parameter = Parameter();
+
+parameter.ImageProcessing.CellTransformedCoordinateFile = os.path.join(basedirectory, 'cells_transformed.csv');
+
+pts =  io.readPoints(parameter.ImageProcessing.CellTransformedCoordinateFile);
+
+
+labs = lb.labelPoints(pts, '/home/mtllab/Documents/warping/annotation_25_right.tif');
+
+##
+counts = lb.countPointsInRegions(pts, '/home/mtllab/Documents/warping/annotation_25_right.tif');
+
+print counts
 
 
 
