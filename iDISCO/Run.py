@@ -121,7 +121,27 @@ def runResampling(parameter):
     
     return rp.ResampledFile;
     
+
+
+def runCellCoordinateResampling(parameter):
+    """Transform points by resampling"""
     
+    im = parameter.Resampling.DataFiles;
+    if im is None:    
+        im = parameter.DataSource.ImageFile;
+        
+    cf = parameter.ImageProcessing.CellCoordinateFile;
+    pr = parameter.Resampling;
+    
+    # downscale points to referenece image size
+    points = resamplePoints(cf, im, resolutionData = pr.ResolutionData, resolutionReference = pr.ResolutionReference, orientation = pr.Orientation);
+        
+    tf = parameter.ImageProcessing.CellTransformedCoordinateFile;
+    if tf is None:
+        return points;
+    else:
+        io.writePoints(tf, points);
+        return tf;
     
 
 def runCellCoordinateTransformation(parameter):
@@ -144,7 +164,7 @@ def runCellCoordinateTransformation(parameter):
     points = points[:,[1,0,2]]; # account for (y,x, z) array representaton here
     
     # upscale ppints back to original size
-    points = resamplePointsInverse(cf, im, resolutionData = pr.ResolutionData, resolutionReference = pr.ResolutionReference, orientation = pr.Orientation);
+    points = resamplePointsInverse(points, im, resolutionData = pr.ResolutionData, resolutionReference = pr.ResolutionReference, orientation = pr.Orientation);
     
     tf = parameter.ImageProcessing.CellTransformedCoordinateFile;
     if tf is None:

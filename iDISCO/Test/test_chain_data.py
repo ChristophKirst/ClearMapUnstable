@@ -64,7 +64,7 @@ from iDISCO.Run import runResampling
 
 import iDISCO.Alignment.Elastix as elx
 
-basedirectory = '/home/mtllab/Documents/whiskers/shaved/150620-3R';
+basedirectory = '/home/mtllab/Documents/whiskers/2ndgroup/C';
 
 parameter = Parameter();
 
@@ -75,10 +75,10 @@ parameter = Parameter();
 parameter.Resampling.ResolutionData = (4.0625, 4.0625, 3);
 
 #Resolution of the Reference / Atlas (in um/ pixel)
-parameter.Resampling.ResolutionReference = (25, 25, 25);
+parameter.Resampling.ResolutionReference = (16, 16, 16);
 
 #Orientation of the Data set wrt reference 
-parameter.Resampling.Orientation = (1,2,3);
+parameter.Resampling.Orientation = (-1,2,3);
 
 #Processes to use for Resampling
 parameter.Resampling.Processes = 12;
@@ -86,18 +86,36 @@ parameter.Resampling.Processes = 12;
 
 
 #Files for Cfos
-parameter.Resampling.DataFiles = os.path.join(basedirectory, 'XXX\d{4}.tif')
-parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'XXX_resample.tif');
+parameter.Resampling.DataFiles = os.path.join(basedirectory, '150722_0_8xs3-cfos20HFcont_07-48-42/07-48-42_0_8xs3-cfos20HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif')
+parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'cfos_resample.tif');
 
 resampledImage = runResampling(parameter);
 
 
 #Files for flourescent
-parameter.Resampling.DataFiles = os.path.join(basedirectory, 'XXX\d{4}.tif')
-parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'XXX_resample.tif');
+parameter.Resampling.DataFiles = os.path.join(basedirectory, '150722_0_8xs3-autofluor_10-25-24/10-25-24_0_8xs3-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif')
+parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'autofluo_for_cfos_resample.tif');
 
 resampledImage = runResampling(parameter);
 
+
+
+##############################################################################
+# Test Alignment CFos with Flourescence to correct for aquisitiion movements 
+##############################################################################
+
+import os
+import numpy
+
+from iDISCO.Parameter import *
+from iDISCO.Run import runAlignment, runInitializeElastix
+from iDISCO.Run import runResampling
+
+import iDISCO.Alignment.Elastix as elx
+
+basedirectory = '/home/mtllab/Documents/whiskers/2ndgroup/C';
+
+parameter = Parameter();
 
 
 ## Align 
@@ -110,17 +128,20 @@ parameter.Alignment.ElastixDirectory = '/usr/local/elastix'
     
 #moving and reference images
    
-parameter.Alignment.MovingImage = os.path.join(basedirectory, 'autoflou_resample.tif');
+parameter.Alignment.MovingImage = os.path.join(basedirectory, 'autofluo_for_cfos_resample.tif');
 parameter.Alignment.FixedImage  = os.path.join(basedirectory, 'cfos_resample.tif');
 parameter.Alignment.FixedImageMask = None;
 
+
 #elastix parameter files for alignment
-parameter.Alignment.AffineParameterFile  = os.path.join(pp, 'Par0000affine.txt');
+pp = '/home/mtllab/Documents/warping'; 
+parameter.Alignment.AffineParameterFile  = os.path.join(pp, 'Par0000affine_cfos.txt');
+#parameter.Alignment.BSplineParameterFile = os.path.join(pp, 'Par0000bspline_cfos.txt');
 parameter.Alignment.BSplineParameterFile = None;
 
 
 runInitializeElastix(parameter)
-iDISCO.Alignment.Elastix.ElastixSettings.printInfo();
+elx.ElastixSettings.printInfo();
 
 resultDirectory = runAlignment(parameter);
 
@@ -131,8 +152,118 @@ print "Aligned cfos with autoflou: result directory: %s" % resultDirectory
 
 
 
+##############################################################################
+# Test Transform data auto to cfos
+############################################################################## 
+
+from iDISCO.Parameter import *
+import iDISCO.Alignment.Elastix as elx
+import iDISCO.Visualization.Plot as Plot
+import iDISCO.IO.IO as io
+
+basedirectory = '/home/mtllab/Documents/whiskers/2ndgroup/C';
+
+resultdir = os.path.join(basedirectory, 'elastix_cfos_auto');
+transformfile = elx.getTransformParameterFile(resultdir)
+
+# tranform points according to alignment of data and reference 
+resamplefile = os.path.join(basedirectory, 'autofluo_for_cfos_resample.tif');
+transformdir = os.path.join(basedirectory, 'transform_data_cfos_auto')
+
+elx.initializeElastix('/usr/local/elastix')
+elx.ElastixSettings.printInfo()
+
+#elx.transformData(dataresname, alignmentdirectory = resultdir, outdirectory = dataalgname)
+elx.transformData(resamplefile, transformparameterfile = transformfile, outdirectory = transformdir)
+   
 
 
+
+
+
+
+
+
+##############################################################################
+# Transform Points from Cfos to Autoflou
+############################################################################## 
+
+import os
+
+from iDISCO.Parameter import *
+from iDISCO.Run import runInitializeElastix, runCellCoordinateTransformationToReference
+from iDISCO.Run import runCellCoordinateResampling, runCellCoordinateTransformation
+
+import iDISCO.Visualization.Plot as Plot
+import iDISCO.IO.IO as io
+
+import iDISCO.Analysis.Voxelization as vox;
+
+from iDISCO.Alignment.Resampling import dataSize
+
+
+basedirectory = '/home/mtllab/Documents/whiskers/2ndgroup/C';
+
+verbose = True;
+
+parameter = Parameter();
+
+##Cells
+parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'cells.csv')
+#parameter.ImageProcessing.CellTransformedCoordinateFile = os.path.join(basedirectory, 'cells_transformed_cfos_to_auto.csv');
+parameter.ImageProcessing.CellTransformedCoordinateFile = None;
+##Resampling Parameter
+#Files
+parameter.Resampling.DataFiles = os.path.join(basedirectory, '150722_0_8xs3-cfos20HFcont_07-48-42/07-48-42_0_8xs3-cfos20HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif')
+#parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif');
+
+
+#Resolution of the Data (in um / pixel)
+parameter.Resampling.ResolutionData = (4.0625, 4.0625, 3);
+
+#Resolution of the Reference / Atlas (in um/ pixel)
+parameter.Resampling.ResolutionReference = (16, 16, 16);
+
+#Orientation of the Data set wrt reference 
+parameter.Resampling.Orientation = (-1,2,3);
+
+
+##Alignment Parameter
+#directory of the alignment result
+parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'elastix_cfos_auto');
+
+#Elastix binary
+parameter.Alignment.ElastixDirectory = '/usr/local/elastix'
+    
+#moving and reference images
+parameter.Alignment.MovingImage = os.path.join(basedirectory, 'autofluo_for_cfos_resample.tif');
+parameter.Alignment.FixedImage  = os.path.join(basedirectory, 'cfos_resample.tif');
+parameter.Alignment.FixedImageMask = None;
+  
+#elastix parameter files for alignment
+#parameter.Alignment.AffineParameterFile  = os.path.join(parameter.Alignment.AlignmentDirectory, '');
+#parameter.Alignment.BSplineParameterFile = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterBSpline.txt');#
+#parameter.Alignment.BSplineParameterFile = None;
+
+runInitializeElastix(parameter)
+
+pts = runCellCoordinateTransformation(parameter)
+
+
+
+
+## Visualize cfos to auto points
+parameter.ImageProcessing.CellCoordinateFile = pts;
+parameter.ImageProcessing.CellTransformedCoordinateFile = None;
+
+pts2 = runCellCoordinateResampling(parameter)
+
+ds = dataSize(os.path.join(basedirectory, 'autofluo_for_cfos_resample.tif'));
+
+voximg = vox.voxelizePixel(pts2, ds);
+io.writeDataStack(os.path.join(basedirectory, 'points_transformed_cfos_to_auto.tif'), voximg)
+
+#pts0 = io.readPoints(os.path.join(basedirectory, 'cells.csv'));
 
 ##############################################################################
 # Test Resample Points
