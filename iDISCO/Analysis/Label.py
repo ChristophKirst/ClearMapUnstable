@@ -97,14 +97,15 @@ Label.initialize();
 def labelPoints(points, labelimage, level = None):
     
     #points are (y,x,z) -> which is also the way the labeled image is read in
-    x = points[:,0];
-    y = points[:,1];
+    x = points[:,1];
+    y = points[:,0];
     z = points[:,2];    
     nPoint = x.size;    
     
     pointLabels = numpy.ones(nPoint, 'int32');
     if isinstance(labelimage, basestring):
         labelImage = io.readData(labelimage);
+        print labelImage.shape
                   
     dsize = labelImage.shape;
     for i in range(nPoint):

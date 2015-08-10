@@ -52,7 +52,7 @@ print "Aligned images: result directory: %s" % resultDirectory
 
 
 ##############################################################################
-# Test Alignment CFos with Flourescence to correct for aquisitiion movements 
+# Test Alignment CFos with Fluorescence to correct for aquisition movements 
 ##############################################################################
 
 import os
@@ -69,7 +69,7 @@ basedirectory = '/home/mtllab/Documents/whiskers/2ndgroup/C';
 parameter = Parameter();
 
 
-## Resample Flourescent and Cos images
+## Resample Fluorescent and CFos images
     
 #Resolution of the Data (in um / pixel)
 parameter.Resampling.ResolutionData = (4.0625, 4.0625, 3);
@@ -101,7 +101,7 @@ resampledImage = runResampling(parameter);
 
 
 ##############################################################################
-# Test Alignment CFos with Flourescence to correct for aquisitiion movements 
+# Test Alignment CFos with Fluorescence to correct for acquisition movements 
 ##############################################################################
 
 import os
@@ -145,7 +145,7 @@ elx.ElastixSettings.printInfo();
 
 resultDirectory = runAlignment(parameter);
 
-print "Aligned cfos with autoflou: result directory: %s" % resultDirectory
+print "Aligned cfos with autofluo: result directory: %s" % resultDirectory
 
 
 
@@ -185,7 +185,7 @@ elx.transformData(resamplefile, transformparameterfile = transformfile, outdirec
 
 
 ##############################################################################
-# Transform Points from Cfos to Autoflou
+# Transform Points from Cfos to Autofluo
 ############################################################################## 
 
 import os
@@ -245,11 +245,11 @@ parameter.Alignment.FixedImageMask = None;
 #parameter.Alignment.BSplineParameterFile = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterBSpline.txt');#
 #parameter.Alignment.BSplineParameterFile = None;
 
-runInitializeElastix(parameter)
+runInitializeElastix(parameter);
 
-pts = runCellCoordinateTransformation(parameter)
+pts = runCellCoordinateTransformation(parameter);
 
-
+io.writePoints(os.path.join(basedirectory, 'cells_to_autofluo.csv'), pts);
 
 
 ## Visualize cfos to auto points
@@ -264,6 +264,98 @@ voximg = vox.voxelizePixel(pts2, ds);
 io.writeDataStack(os.path.join(basedirectory, 'points_transformed_cfos_to_auto.tif'), voximg)
 
 #pts0 = io.readPoints(os.path.join(basedirectory, 'cells.csv'));
+
+
+##############################################################################
+# Transform Points matched to Autofluorescence to Atlas Reference
+############################################################################## 
+
+import os
+
+from iDISCO.Parameter import *
+from iDISCO.Run import runInitializeElastix, runCellCoordinateTransformationToReference
+
+
+import iDISCO.Visualization.Plot as Plot
+import iDISCO.IO.IO as io
+
+import iDISCO.Analysis.Voxelization as vox;
+
+
+basedirectory = '/home/mtllab/Documents/whiskers/2ndgroup/C';
+
+verbose = True;
+
+parameter = Parameter();
+
+##Cells
+parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'cells_to_autofluo.csv')
+parameter.ImageProcessing.CellTransformedCoordinateFile = os.path.join(basedirectory, 'cells_transformed.csv');
+##Resampling Parameter
+#Files
+parameter.Resampling.DataFiles = os.path.join(basedirectory, 'autofluo_for_cfos_resample.tif');
+#parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif');
+
+
+#Resolution of the Data (in um / pixel)
+parameter.Resampling.ResolutionData = (16, 16, 16);
+
+#Resolution of the Reference / Atlas (in um/ pixel)
+parameter.Resampling.ResolutionReference = (25, 25, 25);
+
+#Orientation of the Data set wrt reference
+#(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchnge x,y use (2,1,3) etc)
+parameter.Resampling.Orientation = (1,2,3);
+
+
+##Alignment Parameter
+#directory of the alignment result
+parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'elastix');
+
+#Elastix binary
+parameter.Alignment.ElastixDirectory = '/usr/local/elastix'
+    
+#moving and reference images
+parameter.Alignment.MovingImage = os.path.join(basedirectory, '150722_0_8xs3-autofluor_10-25-24/10-25-24_0_8xs3-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif');
+parameter.Alignment.FixedImage  = '/home/mtllab/Documents/warping/half_template_25_right.tif';
+parameter.Alignment.FixedImageMask = None;
+  
+#elastix parameter files for alignment
+#parameter.Alignment.AffineParameterFile  = os.path.join(parameter.Alignment.AlignmentDirectory, '');
+#parameter.Alignment.BSplineParameterFile = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterBSpline.txt');#
+#parameter.Alignment.BSplineParameterFile = None;
+
+runInitializeElastix(parameter)
+
+
+#pts = io.readPoints(parameter.ImageProcessing.CellCoordinateFile);
+#pts = pts[0:10000, :];
+#pts[0,:] = [0,0,0];
+#pts = pts[:, [1,0,2]];
+
+runCellCoordinateTransformationToReference(parameter)
+
+#pts2 = io.readPoints(parameter.ImageProcessing.CellTransformedCoordinateFile);
+#pts2 = pts2[:,[1,0,2]];
+
+
+if verbose:
+    refdata = io.readData(parameter.Alignment.FixedImage);
+    #pts = io.readPoints(parameter.ImageProcessing.CellTransformedCoordinateFile);
+    Plot.plotOverlayPoints(0.1 * refdata, pts2)
+
+
+refdata.shape
+
+pts2 = io.readPoints(parameter.ImageProcessing.CellTransformedCoordinateFile);
+#pts2 = pts2[:,[1,0,2]];
+voximg = vox.voxelizePixel(pts2, refdata.shape);
+io.writeDataStack(os.path.join(basedirectory, 'points_transformed_pixel.tif'), voximg)
+
+
+
+
+
 
 ##############################################################################
 # Test Resample Points
@@ -480,7 +572,7 @@ parameter.DataSource.ImageFile = '/home/mtllab/Documents/whiskers/shaved/150620-
 pts = io.readPoints(parameter.ImageProcessing.CellCoordinateFile);
 
 
-ds = dataSize(parameter.DataSource.ImageFile);
+ds = dataSize(cFosFile);
 ds = (ds[1], ds[0], ds[2]);
 
 voximg = vox.voxelizePixel(pts, ds);
