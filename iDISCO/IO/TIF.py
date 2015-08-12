@@ -52,7 +52,7 @@ def readData(filename, x = all, y = all, z = all, **args):
             return io.dataToRange(data.transpose([1,2,0]), x = x, y = y, z = all);
         else: #optimize for z ranges
             dsize = io.dataSizeFromDataRange(dsize, x = x, y = y, z = z);
-            t = tiff.Tifffile(filename);
+            t = tiff.TiffFile(filename);
             p = t.pages[0];
             data = numpy.zeros(dsize, dtype = p.dtype);
             rz = io.toDataRange(dsize[2], r = z);

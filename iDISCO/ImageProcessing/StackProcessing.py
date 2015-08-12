@@ -154,6 +154,7 @@ def calculateChunkSize(size, chunksizemax = 100, chunksizemin = 30, chunkoverlap
         zcenters.append((zhiold - zlo) / 2. + zlo); 
         
     zcenters.append(size);
+          
     
     if verbose:    
         print pre + "final chunks : " + str(zranges);
@@ -172,7 +173,8 @@ def parallelProcessStack(filename, x = all, y = all, z = all,
     should return an numpy array of cell coords"""
     
     #determine z ranges
-    zr = io.readZRange(filename, z = z);
+    zs = io.dataZSize(filename);
+    zr = io.toDataRange(zs, r = z);
     nz = zr[1] - zr[0];
     nchunks, zranges, zcenters = self.calculateChunkSize(nz, chunksizemax = chunksizemax, chunksizemin = chunksizemin, chunkoverlap = chunkoverlap, processes = processes, optimizechunks = optimizechunks, optimizechunksizeincrease = optimizechunksizeincrease);
         

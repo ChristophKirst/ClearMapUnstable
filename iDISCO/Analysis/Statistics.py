@@ -53,7 +53,7 @@ def test():
     # reload(self)
     #x = stats.norm.rvs(loc=5,scale=1,size=1500)
     #y = stats.norm.rvs(loc=-5,scale=1,size=1500)
-    x = numpy.random.rand(15,3,20);
+    x = numpy.random.rand(4,3,20);
     y = numpy.random.rand(5, 3,20) + 0.5;
     
     print stats.ttest_ind(x,y, axis = 0, equal_var = False);

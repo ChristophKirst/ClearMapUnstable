@@ -228,7 +228,7 @@ def readPoints(filename, **args):
     if filename == None:
         return
     
-    mod = self.pointFilenameToModule(filename);
+    mod = self.pointFileNameToModule(filename);
     return mod.readPoints(filename, **args);
 
    
@@ -237,7 +237,7 @@ def writePoints(filename, points, **args):
     if filename == None:
         return
     
-    mod = self.pointFilenameToModule(filename);
+    mod = self.pointFileNameToModule(filename);
     return mod.writePoints(filename, points, **args);
 
 
