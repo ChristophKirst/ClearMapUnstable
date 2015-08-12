@@ -24,9 +24,15 @@ def toInt(txt):
         return -1;
     else:
         return int(txt);
-        
+    
 import collections
 LabelRecord = collections.namedtuple('LabelRecord', 'id, name, acronym, color, parent');
+
+
+def defaultLabeledImage():
+    #move to /Data folder -> 150mb in git repository ??
+    return os.path.join(iDISCOPath(), 'Test/Data/Annotation/annotations.tif');
+
 
 class LabelInfo(object):
     ids = None;
@@ -93,7 +99,6 @@ Label = LabelInfo();
 Label.initialize();
 
 
-
 def labelPoints(points, labelimage, level = None):
     
     #points are (y,x,z) -> which is also the way the labeled image is read in
@@ -102,7 +107,7 @@ def labelPoints(points, labelimage, level = None):
     z = points[:,2];    
     nPoint = x.size;    
     
-    pointLabels = numpy.ones(nPoint, 'int32');
+    pointLabels = numpy.zeros(nPoint, 'int32');
     if isinstance(labelimage, basestring):
         labelImage = io.readData(labelimage);
         print labelImage.shape
@@ -144,10 +149,13 @@ def labelToAcronym(label):
 def labelToColor(label):
     global Label;
     return [Label.color(x) for x in label];
- 
 
 
 
+#def writeCountsToLabeledImage(counts, labelimage = defaultLabeledImage(), level = None):
+#    #read the labeled image
+#    labelimage = io.readData(labelimage);
+    
 
 def writePal(filename, cols):
     with open(filename, 'w') as f:

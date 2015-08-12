@@ -20,11 +20,13 @@ import numpy
 import sys
 self = sys.modules[__name__];
 
+import iDISCO.IO.IO as io
+
 
 def openFile(filename, mode = "a"):
     """Open Imaris file as hdf5 object"""
     
-    return h5py.File(filename, "a");
+    return h5py.File(filename, mode);
 
     
 def closeFile(h5file, mode = "a"):
@@ -38,71 +40,40 @@ def readDataSet(h5file, resolution = 0, channel = 0, timepoint = 0):
     
     dsname = "/DataSet/ResolutionLevel " + str(resolution) + "/TimePoint " + str(timepoint) + "/Channel " + str(channel) + "/Data";
     return h5file.get(dsname);
-    
-    
-def readData(filename, x = all, y = all, z = all, resolution = 0, channel = 0, timepoint = 0):
+
+
+def dataSize(filename, resolution = 0, channel = 0, timepoint = 0, **args):
+    f = self.openFile(filename);
+    ds = self.readDataSet(f, resolution = 0, channel = 0, timepoint = 0);
+    dsize = list(ds.shape);
+    dims = (dsize[1], dsize[2], dsize[0]);    
+    return io.dataSizeFromDataRange(dims, **args);
+
+ 
+def dataZSize(filename, **args):
+    dsize = self.dataSize(filename, **args);
+    return dsize[2];
+
+
+def readData(filename, x = all, y = all, z = all, resolution = 0, channel = 0, timepoint = 0, **args):
     
     f = h5py.File(filename, "r");
-    dataset = self.readDataSet(f, resolution = resolution, channel = channel, timepoint  = timepoint);
-    datasetsize = dataset.shape;
+    dataset = self.readDataSet(f, resolution = resolution, channel = channel, timepoint = timepoint);
+    dsize = dataset.shape;
     
-    if x == all:
-        x = (0, datasetsize[2]);
-    else:
-        if x[0] == all:
-            x = (0, x[1]);
-        if x[1] == all:
-            x = (x[0], datasetsize[2]);    
-            
-    if y == all:
-        y = (0,  datasetsize[1]);
-    else:
-        if y[0] == all:
-            y = (0, y[1]);
-        if y[1] == all:
-            y = (y[0], datasetsize[1]);             
-
-    if z == all:
-        z = (0,  datasetsize[0]);
-    else:
-        if y[0] == all:
-            y = (0, y[1]);
-        if y[1] == all:
-            y = (y[0], datasetsize[0]);  
+    rz = io.toDataRange(dsize[0], r = z);
+    rx = io.toDataRange(dsize[1], r = y);
+    rx = io.toDataRange(dsize[2], r = x);    
     
-    img = dataset[z[0]:z[1],y[0]:y[1],x[0]:x[1]];
-    img = img.transpose((2,1,0)); # imaris stores files in reverse x,y,z ordering
-    #img = dataset[x[0]:x[1],y[0]:y[1],z[0]:z[1]];
+    data = dataset[rz[0]:rz[1],ry[0]:ry[1],rx[0]:rx[1]];
+    data = data.transpose((2,1,0)); # imaris stores files in reverse x,y,z ordering
+    #data = dataset[x[0]:x[1],y[0]:y[1],z[0]:z[1]];
     
     f.close();
     
-    return img;
+    return data;
 
-def readZRange(filename, z = all, resolution = 0):
-    """Read z range from file"""
-
-    f = self.openFile(filename);
-    dataset = self.readDataSet(f, resolution = resolution);
-    nz = dataset.shape[0];
-    f.close();
-    
-    if z == all: 
-        return (0,nz);
-    else:
-        if len(z) != 2:
-            raise RuntimeError("z range has wrong format: " + str(z));
-        
-        if z[0] == all:
-            z = (0, z[1]);
-            
-        if z[1] == all:
-            z = (z[0], nz);
-            
-        if z[0] < 0 or z[0] > nz or z[1] < z[0] or z[1] > nz:
-            raise RuntimeError("z range specifications out of bounds (0," + str(nz) + ") !");
-        
-        return z;      
-
+   
 
 def transformToImaris(points, scale = (4.0625, 4.0625, 3)):
     """Transform pixel coordinates of cell centers to work in Imaris"""
@@ -202,23 +173,58 @@ def writePoints(filename, points, mode = "o", radius = 0.5):
         h5file.close();
 
 
+def writeData(filename, **args):
+    raise RuntimeError("Writing data to imaris file not implemented yet""")
+
 
 def readPoints(filename):
     raise RuntimeError("Reading points form imaris file not implemented yet""")
 
 
 
+def test():
+    """Test Imaris module"""
+    import iDISCO.IO.IO as io
+    import iDISCO.IO.Imaris as self
+    
+    from iDISCO.Parameter import iDISCOPath
+    import os
+    import numpy
+
+    basedir = iDISCOPath();
+    fn = os.path.join(basedir,'Test/Data/Imaris/test for spots with spot.ims')  
+    fn = os.path.join(basedir,'Test/Data/Imaris/test for spots added spot.ims') 
+    
+
+    import h5py
+    f = h5py.File(fn, "a");    
+    
+    dsname = "/DataSet/ResolutionLevel 0/TimePoint 0/Channel 0/Data"
+    ds = f.get(dsname)
 
 
+    data = numpy.random.rand(20,50,10);
+    data[5:15, 20:45, 2:9] = 0;
+    data = 20 * data;
+    data = data.astype('int32');
 
+    #reload(self)
+    print "writing raw image to: " + fn;    
+    self.writeData(fn, data);
 
-
+    
+    
+    
+if __name__ == "__main__":
+    self.test():
+    
+    for key,val in f.iteritems():
+        print key
 
 
 """
 
-if __name__ == "__main__":
-    
+
     import h5py    
     
     fn = "/home/ckirst/Data/Science/Projects/BrainActivityMap/iDISCO_2015_06/Adult cfos all shaved 20HF 150523.ims";
