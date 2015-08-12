@@ -88,6 +88,9 @@ class LabelInfo(object):
     
     def toLabelAtLevel(slf, iid, level):
         i = iid;
+        if not i in slf.ids:
+            return i;
+        
         #print i, levels[i]
         while slf.levels[i] > level:
             i = slf.parents[i];
@@ -128,7 +131,10 @@ def labelAtLevel(label, level):
     if level is None:
         return label;
     else:
-        return [Label.toLabelAtLevel(x, level) for x in label];
+        if isinstance(label, numpy.ndarray):
+            return [Label.toLabelAtLevel(x, level) for x in label];
+        else:
+            return Label.toLabelAtLevel(label, level);
 
  
 def countPointsInRegions(points, labelimage, level= None):

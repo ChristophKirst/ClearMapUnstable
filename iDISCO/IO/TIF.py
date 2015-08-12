@@ -49,6 +49,7 @@ def readData(filename, x = all, y = all, z = all, **args):
     else:
         if z is all:
             data = tiff.imread(filename);
+            return io.dataToRange(data.transpose([1,2,0]), x = x, y = y, z = all);
         else: #optimize for z ranges
             dsize = io.dataSizeFromDataRange(dsize, x = x, y = y, z = z);
             t = tiff.Tifffile(filename);
@@ -75,6 +76,7 @@ def writeData(filename, data):
 
 def test():    
     """Test TIF module"""  
+    #import iDISCO.IO.TIF as self
     
     from iDISCO.Parameter import iDISCOPath
     import os

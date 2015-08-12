@@ -27,7 +27,9 @@ def readGroup(filenames, **args):
     #read the individual files
     group = [];
     for f in filenames:
-        group.append(io.readData(f, **args));
+        data = io.readData(f, **args);
+        data = numpy.reshape(data, (1,) + data.shape);
+        group.append(data);
     
     return numpy.vstack(group);
 
@@ -36,23 +38,23 @@ def readGroup(filenames, **args):
 def tTest(group1, group2):
     """t-Test on differences between the individual voxels in group1 and group2, group is a array of voxelizations"""
     
-    group1 = self.readGroup(group1);  
-    group2 = self.readGroup(group2);  
+    g1 = self.readGroup(group1);  
+    g2 = self.readGroup(group2);  
     
-    (tvals, pvals) = stats.ttest_ind(group1, group1, axis = 0, equal_var = False);
+    tvals, pvals = stats.ttest_ind(g1, g2, axis = 0, equal_var = False);
     
     return pvals;
     
 
 
 
-
 def test():
-    
+    #import iDISCO.Analysis.Statistics as self
+    # reload(self)
     #x = stats.norm.rvs(loc=5,scale=1,size=1500)
     #y = stats.norm.rvs(loc=-5,scale=1,size=1500)
     x = numpy.random.rand(15,3,20);
-    y = numpy.random.rand(5, 3,20) + 10;
+    y = numpy.random.rand(5, 3,20) + 0.5;
     
     print stats.ttest_ind(x,y, axis = 0, equal_var = False);
     
