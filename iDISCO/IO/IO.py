@@ -31,7 +31,7 @@ imageFileExtensions = ["tif", "tiff", "mdh", "raw", "ims", "nrrd"]
 
 imageFileTypes = ["FileList", "TIF", "RAW", "NRRD", "Imaris"]
 
-imageFileExtensionToType = { "tif" : "TIF", "tiff" : "TIF", "raw" : "RAW", "mhd" : "RAW", "nnrd": "NRRD", "ims" : "Imaris"}
+imageFileExtensionToType = { "tif" : "TIF", "tiff" : "TIF", "raw" : "RAW", "mhd" : "RAW", "nrrd": "NRRD", "ims" : "Imaris"}
 
 
 ##############################################################################

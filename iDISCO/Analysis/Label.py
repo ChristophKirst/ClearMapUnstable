@@ -29,9 +29,7 @@ import collections
 LabelRecord = collections.namedtuple('LabelRecord', 'id, name, acronym, color, parent');
 
 
-def defaultLabeledImage():
-    #move to /Data folder -> 150mb in git repository ??
-    return os.path.join(iDISCOPath(), 'Test/Data/Annotation/annotations.tif');
+defaultLabeledImage = os.path.join(iDISCOPath(), 'Test/Data/Annotation/annotation_25_right.nrrd');
 
 
 class LabelInfo(object):
@@ -161,14 +159,24 @@ def labelToColor(label):
 #def writeCountsToLabeledImage(counts, labelimage = defaultLabeledImage(), level = None):
 #    #read the labeled image
 #    labelimage = io.readData(labelimage);
-    
+ 
 
-def writePal(filename, cols):
+   
+
+def writePAL(filename, cols):
     with open(filename, 'w') as f:
         for c in cols:
             f.write(('%3.3f' % c[0]).rjust(10) +  ('%3.3f' % c[1]).rjust(11) + ('%3.3f' % c[2]).rjust(11));
             f.write('\n');
         f.close();
+
+def writeLUT(filename, cols):
+    with open(filename, 'w') as f:
+        for c in cols:
+            f.write(('%d' % c[0]).rjust(4) +  ('%d' % c[1]).rjust(5) + ('%d' % c[2]).rjust(5));
+            f.write('\n');
+        f.close();
+
       
 def makeColorPalette(filename = None):
     """Creates a pal file for imaris based on label colors"""
@@ -182,7 +190,43 @@ def makeColorPalette(filename = None):
     if filename is None:
         return colarray;
     else:
-        writePal(filename, colarray);
+        fext = io.fileExtension(filename);
+        if fext == 'pal':
+            writePAL(filename, colarray);
+        elif fext == 'lut':
+            writeLUT(filename, colarray);
+        else:
+            raise RuntimeError('color pallete format: %s not supported' % fext);
+        
         return colarray;
             
-   
+
+def makeColorAnnotations(filename, labeledimage = None):
+    if labeledimage is None:
+        labeledimage = defaultLabeledImage;
+    
+    li = io.readData(labeledimage);
+    dsize = li.shape;
+    
+    lr = numpy.zeros(dsize, dtype = numpy.uint8);
+    lg = lr.copy();
+    lb = lr.copy();
+    
+    global Label; 
+    maxlabel = max(Label.ids);
+    colarray = numpy.zeros((maxlabel, 3));
+    for i in Label.ids:
+        colarray[i-1,:] = Label.color(i);
+    
+    for i in Label.ids:
+        ll = li == i;
+        lr[ll] = colarray[i-1,0];
+        lg[ll] = colarray[i-1,1];
+        lb[ll] = colarray[i-1,2];
+    
+    io.writeData(filename + "_r.tif", lr);
+    io.writeData(filename + "_g.tif", lg);  
+    io.writeData(filename + "_b.tif", lb);
+    
+    return (lr,lg,lb);
+    

@@ -356,7 +356,7 @@ def readData(filename):
     """Read a nrrd file and return data, header"""
     with open(filename,'rb') as filehandle:
         header = readHeader(filehandle)
-        print header
+        #print header
         data = _read_data(header, filehandle, filename)
         #return (data, header)
         return data.transpose([1,0,2]);

@@ -16,8 +16,7 @@ group1 = ['/home/mtllab/Documents/whiskers/nonshaved/150620-6R/cells_heatmap.tif
           '/home/mtllab/Documents/whiskers/nonshaved/150620-7R/cells_heatmap.tif',
           '/home/mtllab/Documents/whiskers/nonshaved/150620-9R/cells_heatmap.tif',
           '/home/mtllab/Documents/whiskers/nonshaved/150620-10R/cells_heatmap.tif'];
-          
-          
+                  
           
 group2 = ['/home/mtllab/Documents/whisker806s/shaved/150620-1R/cells_heatmap.tif',
           '/home/mtllab/Documents/whiskers/shaved/150620-2R/cells_heatmap.tif',
