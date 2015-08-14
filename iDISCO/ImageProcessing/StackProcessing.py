@@ -168,9 +168,7 @@ def parallelProcessStack(filename, x = all, y = all, z = all,
                          processes = 2, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15,
                          optimizechunks = True, optimizechunksizeincrease = all, 
                          segmentation = detectCells, parameter = ImageProcessingParameter()):
-    """Parallel segmetation on a stack"""
-    """Segmentation function is assumed to take a out and a parameter argument for system output and parameter settings, 
-    should return an numpy array of cell coords"""
+    """Parallel segmetation on a stack distributes cell detection on parallel processes"""
     
     #determine z ranges
     zs = io.dataZSize(filename);

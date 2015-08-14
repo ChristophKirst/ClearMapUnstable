@@ -28,13 +28,14 @@ def iDISCOPath():
 class DataSourceParameter(object):
     """Parameter for files"""
     
-    #File name or file pattern of raw image data
-    ImageFile = None;
+    #filename or array
+    Source = None;
          
     #Co-ordinate ranges of raw data
     ZRange = all;
     XRange = all;
     YRange = all;
+
 
 
 class SpotDetectionParameter(object):
@@ -48,6 +49,10 @@ class SpotDetectionParameter(object):
     
     #h of h-max transform
     HMax = 20;
+    
+    #intensity detection   
+    Intensity = 'Max';  #None -> intensity of pixel or string of numpy method
+    IntensityBoxSize = (3,3,3); # size of box to include in intensity determination
     
     #Threshold for min intensity at center to be counted as cell (should be similar to the h max)
     Threshold = 20;
@@ -77,10 +82,10 @@ class ImageProcessingParameter(object):
     Parameter = SpotDetectionParameter();
     
     #File name for cell coordinates csv, vtk or  ims extension
-    CellCoordinateFile = None;
-    CellIntensityFile = None;
+    PointFile      = None;
+    IntensityFile  = None;
     
-    CellTransformedCoordinateFile = None;
+    TransformedPointFile = None;
 
 
 class StackProcessingParameter(object):
@@ -128,14 +133,14 @@ class ResamplingParameter(object):
     """Parameter for resampling data to reference atlas"""
     
     #Data source and output file
-    DataFiles = None;
-    ResampledFile = None;
+    Source = None;
+    Sink   = None;
     
     #Resolution of the raw data (in um / pixel)
-    ResolutionData = (4.0625, 4.0625, 3);
+    ResolutionSource = (4.0625, 4.0625, 3);
 
     #Resolution of the Reference / Atlas (in um/ pixel)
-    ResolutionReference = (25, 25, 25);    
+    ResolutionSink = (25, 25, 25);    
 
     #Orientation of the Data set wrt reference 
     #(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchnge x,y use (2,1,3) etc)
@@ -161,6 +166,8 @@ class VoxelizationParameter(object):
     Mode = 'Spherical' ; # Spherical,'Rectangular, Gaussian'
     
     File = None;
+    
+    Weights = None;
 
 
 

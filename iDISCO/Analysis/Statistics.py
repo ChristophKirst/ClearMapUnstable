@@ -34,7 +34,6 @@ def readGroup(filenames, **args):
     return numpy.vstack(group);
 
 
-
 def tTest(group1, group2):
     """t-Test on differences between the individual voxels in group1 and group2, group is a array of voxelizations"""
     
@@ -46,9 +45,34 @@ def tTest(group1, group2):
     return pvals;
     
 
+def mean(group, **args):
+    g = self.readGroup(group, **args);  
+    return g.mean(axis = 0);
+
+
+def std(group, **args):
+    g = self.readGroup(group, **args);  
+    return g.std(axis = 0);
+
+   
+def var(group, **args):
+    g = self.readGroup(group, **args);  
+    return g.var(axis = 0);    
+    
+
+def weightsFromPrecentiles(intensities, percentiles = [25,50,75,100]):
+    perc = numpy.percentiles(intensities, percentiles);
+    weights = numpy.zeros(intensities.shape);
+    for p in perc:
+        ii = intensities > p;
+        weights[ii] = weights[ii] + 1;
+    
+    return weights;
+        
 
 
 def test():
+    """Test the statistics array"""
     #import iDISCO.Analysis.Statistics as self
     # reload(self)
     #x = stats.norm.rvs(loc=5,scale=1,size=1500)

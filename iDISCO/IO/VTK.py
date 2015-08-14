@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Simple Interface to writing VTK files
+Simple Interface for writing points to VTK files
+
+Notes:
+    - points are assumed to be in (y,x,z) coords as standard in iDISCO
 
 Created on Thu Jun  4 14:37:06 2015
 
@@ -61,10 +64,8 @@ def writePoints(filename, points, labelimage = None):
     vtkFile.close();    
 
 
-
-
-
-
+def readPoints(filename, **args):
+    raise RuntimeError('readPoints for VTK files not implmented!');
 
 
 

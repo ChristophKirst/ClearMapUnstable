@@ -67,11 +67,11 @@ def runCellDetection(parameter):
         iid = intensities >  parameter.ImageProcessing.Parameter.ThresholdSave;
         centers = centers[iid,:];
 
-    if not parameter.ImageProcessing.CellCoordinateFile is None:
-        io.writePoints(parameter.ImageProcessing.CellCoordinateFile, centers);
+    if not parameter.ImageProcessing.PointFile is None:
+        io.writePoints(parameter.ImageProcessing.PointFile, centers);
         
-    if not parameter.ImageProcessing.CellIntensityFile is None:
-        io.writePoints(parameter.ImageProcessing.CellIntensityFile, intensities);
+    if not parameter.ImageProcessing.IntensityFile is None:
+        io.writePoints(parameter.ImageProcessing.IntensityFile, intensities);
 
     return centers, intensities;
 
@@ -100,7 +100,7 @@ def runAlignment(parameter):
     
     od = pa.AlignmentDirectory;
     
-    alignData(mi, fi, af, bf, od);
+    alignData(fi, mi, af, bf, od);
         
     return od;
     
@@ -111,7 +111,7 @@ def runResampling(parameter):
     
     rp = parameter.Resampling;
     
-    im = rp.DataFiles;
+    im = rp.Source;
     if im is None:    
         im = parameter.DataSource.ImageFile;
     
@@ -188,9 +188,9 @@ def runCellCoordinateTransformationToReference(parameter):
     points = resamplePoints(cf, im, resolutionData = pr.ResolutionData, resolutionReference = pr.ResolutionReference, orientation = pr.Orientation);
     
     # transform points
-    points = points[:,[1,0,2]];
+    #points = points[:,[1,0,2]];
     points = transformPoints(points, alignmentdirectory = pa.AlignmentDirectory, transformparameterfile = None, read = True, tmpfile = None, outdirectory = None, indices = True);
-    points = points[:,[1,0,2]];
+    #points = points[:,[1,0,2]];
     
     tf = parameter.ImageProcessing.CellTransformedCoordinateFile;
     if tf is None:

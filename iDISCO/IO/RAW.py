@@ -96,8 +96,19 @@ def writeHeader(filename, meta_dict):
 def writeRawData(filename, data):
     """ Write the data into a raw format file. Big endian is always used. """    
     rawfile = open(filename,'wb');
-    data.transpose([2,0,1]).tofile(rawfile);
-    rawfile.close()
+    d = len(data.shape);
+    if d <= 2:
+        data.tofile(rawfile);
+    elif d == 3:
+        data.transpose([2,0,1]).tofile(rawfile);
+    elif d== 4:
+        data.transpose([3,2,0,1]).tofile(rawfile);
+    else:
+        raise RuntimeError('writeRawData: image dimension %d not supported!' % d);
+    
+    rawfile.close();
+    
+    return filename;
 
 
 def writeData(filename, data, **args):
@@ -145,8 +156,45 @@ def writeData(filename, data, **args):
         data_file = meta_dict['ElementDataFile']
 
     self.writeRawData(data_file, data)
+    
+    return fname;
 
 
+def copyData(source, sink):
+    sourceExt = io.fileExtension(source);
+    sinkExt   = io.fileExtension(sink);
+    
+    sources = [source]; 
+    sinks = [];
+    
+    if sourceExt == 'raw':
+        sources.append(source[:-3] + 'mhd');
+        
+        if sinkExt == 'raw':
+            sinks.append(sink);
+            sinks.append(sink[:-3] + 'mhd');
+        elif sinkExt == 'mhd':
+            sinks.append(sink[:-3] + 'raw');
+            sinks.append(sink);
+        else:
+            raise RuntimeError('copyData: sink extension %s not raw or mhd' % sinkExt);
+    
+    elif sourceExt == 'mhd':
+        sources.append(source[:-3] + 'raw');
+        
+        if sinkExt == 'raw':
+            sinks.append(sink[:-3] + 'mhd');
+            sinks.append(sink);
+        elif sinkExt == 'mhd':
+            sinks.append(sink);
+            sinks.append(sink[:-3] + 'raw');
+        else:
+            raise RuntimeError('copyData: sink extension %s not raw or mhd' % sinkExt);
+        
+    for i in range(2):
+        io.copyData(sources[i], sinks[i]);
+    
+    return sink;
 
 
 

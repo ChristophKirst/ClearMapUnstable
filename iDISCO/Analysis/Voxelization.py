@@ -15,32 +15,70 @@ pyximport.install(setup_args={"include_dirs":numpy.get_include()}, reload_suppor
 
 import iDISCO.Analysis.VoxelizationCode as vox
 
+import iDISCO.IO.IO as io
+import math
 
-def voxelize(points, imagesize, average = (5,5,5), mode = 'Spherical'):
+
+def voxelize(points, dataSize = None, average = (5,5,5), mode = 'Spherical', weights = None):
     
+    if dataSize is None:
+        dataSize = tuple(int(math.ceil(points[:,i].max())) for i in range(points.shape[1]));
+    elif isinstance(dataSize, basestring):
+        dataSize = io.dataSize(dataSize);
+    
+        
     if mode == 'Spherical':
-        return vox.voxelizeSphere(points, imagesize[0], imagesize[1], imagesize[2], average[0], average[1], average[2]);
+        if weights is None:
+            return vox.voxelizeSphere(points, dataSize[0], dataSize[1], dataSize[2], average[0], average[1], average[2]);
+        else:
+            return vox.voxelizeSphereWithWeights(points, dataSize[0], dataSize[1], dataSize[2], average[0], average[1], average[2], weights);
+           
     elif mode == 'Rectangular':
-        return vox.voxelizeRectangle(points, imagesize[0], imagesize[1], imagesize[2], average[0], average[1], average[2]);   
+        if weights is None:
+            return vox.voxelizeRectangle(points, dataSize[0], dataSize[1], dataSize[2], average[0], average[1], average[2]);
+        else:
+            return vox.voxelizeRectangleWithWeights(points, dataSize[0], dataSize[1], dataSize[2], average[0], average[1], average[2], weights);
+    
     elif mode == "Pixel":
-        return self.voxelizePixel(points, imagesize); 
+        return self.voxelizePixel(points, dataSize, weights);
+        
     else:
         raise RuntimeError('voxelize: mode: %s not supported!' % mode);
 
 
-def voxelizePixel(points, imagesize):
-    vox = numpy.zeros(imagesize, dtype=numpy.int16);
-    for i in range(points.shape[0]):
-        if points[i,0] > 0 and points[i,0] < imagesize[0] and points[i,1] > 0 and points[i,1] < imagesize[1] and points[i,2] > 0 and points[i,2] < imagesize[2]:
-               vox[points[i,0], points[i,1], points[i,2]] = 1;
+def voxelizePixel(points,  dataSize = None, weights = None):
+    """Mark single pixel of each point in image"""
+    
+    if dataSize is None:
+        dataSize = tuple(int(math.ceil(points[:,i].max())) for i in range(points.shape[1]));
+    elif isinstance(dataSize, basestring):
+        dataSize = io.dataSize(dataSize);
+    
+    if weights is None:
+        vox = numpy.zeros(dataSize, dtype=numpy.int16);
+        for i in range(points.shape[0]):
+            if points[i,0] > 0 and points[i,0] < dataSize[0] and points[i,1] > 0 and points[i,1] < dataSize[1] and points[i,2] > 0 and points[i,2] < dataSize[2]:
+                vox[points[i,0], points[i,1], points[i,2]] = 1;
+    else:
+        vox = numpy.zeros(dataSize, dtype=weights.dtype);
+        for i in range(points.shape[0]):
+            if points[i,0] > 0 and points[i,0] < dataSize[0] and points[i,1] > 0 and points[i,1] < dataSize[1] and points[i,2] > 0 and points[i,2] < dataSize[2]:
+                vox[points[i,0], points[i,1], points[i,2]] = weights[i];
     
     return  vox;
 
 
 
 def test():
+    """Test vioxelization Module"""
+    #import iDISCO.Analysis.Voxelization as self
+    
+    import iDISCO.Analysis.VoxelizationCode as vox
+    import numpy
+    
+    
     points = numpy.random.rand(200,3) * 10;
-
+    
     #use cython code
     vi = vox.voxelizeSphere(points, 20,20,20, 5,5,5);
     
@@ -49,10 +87,23 @@ def test():
     Plot.plotTiling(vi)
     
     #use voxelize
-    vi = self.voxelize(points, 20,20,20, 5,5,5);
+    vi = self.voxelize(points, dataSize = (20,20,20), average = (5,5,5));
     
     Plot.plotTiling(vi)
     
     
+    #weighted voxelization 
+    
+    points = numpy.random.rand(10,3) * 10;    
+    weights = numpy.random.rand(10);
+    
+    #use voxelize
+    vi = self.voxelize(points, dataSize = (20,20,20), average = (5,5,5));
+    viw =  self.voxelize(points, dataSize = (20,20,20), average = (5,5,5), weights = weights);
+    
+    Plot.plotTiling(vi)
+    Plot.plotTiling(viw)
+    
+   
 if __name__ == "__main__":
     self.test();

@@ -89,9 +89,8 @@ def readData(filename, **args):
          return self.readDataFiles(filename, **args);
 
 
-def writeData(filename, data):
-    """Write image stack to single or multiple image files"""
-    #check for the \d{xx} part of the regular expression -> if not assume file header
+def splitFileExpression(filename):
+    
     searchRegex = re.compile('.*\\\\d\{(?P<digit>\d)\}.*').search
     m = searchRegex(filename); 
     
@@ -101,7 +100,7 @@ def writeData(filename, data):
         m = searchRegex(filename);       
         fs = filename.split(m.group('replace'));
         if not len(fs) == 2:
-            raise RuntimeError('FileList: writeData: more than a single replacement for z indexing!');
+            raise RuntimeError('FileList: more than a single replacement for z indexing!');
         fileheader = fs[0];
         fileext    = fs[1];
         
@@ -110,7 +109,17 @@ def writeData(filename, data):
         fileheader = filename;
         fileext    = '.tif';
         
-    digitfrmt = "%." + str(digits) + "d";
+    digitfrmt = "%." + str(digits) + "d";        
+        
+    return (fileheader, fileext, digitfrmt);
+
+
+
+def writeData(filename, data):
+    """Write image stack to single or multiple image files"""
+    #check for the \d{xx} part of the regular expression -> if not assume file header
+
+    (fileheader, fileext, digitfrmt) = self.splitFileExpression(filename);
 
     d = len(data.shape);
     if d == 2:
@@ -123,6 +132,18 @@ def writeData(filename, data):
             fname = fileheader + (digitfrmt % i) + fileext;
             io.writeData(fname, data[:,:,i]);
         return filename;
+
+
+def copyData(source, sink):
+    
+    (fileheader, fileext, digitfrmt) = self.splitFileExpression(sink);
+    
+    fp, fl = self.readFileList(source);
+    
+    for i in range(len(fl)):
+        io.copyFile(os.path.join(fp, fl[i]), fileheader + (digitfrmt % i) + fileext);
+    
+    return sink
 
 
 def test():    

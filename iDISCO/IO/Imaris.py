@@ -181,6 +181,9 @@ def readPoints(filename):
     raise RuntimeError("Reading points form imaris file not implemented yet""")
 
 
+def copyData(source, sink):
+    io.copyFile(source, sink);
+
 
 def test():
     """Test Imaris module"""
@@ -216,10 +219,13 @@ def test():
     
     
 if __name__ == "__main__":
-    self.test():
+    self.test();
     
-    for key,val in f.iteritems():
-        print key
+
+
+
+
+
 
 
 """

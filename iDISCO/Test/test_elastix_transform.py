@@ -10,7 +10,7 @@ Notes:
 - for alignment use fixed = data and moving = atlas / reference
 - result.mdh in elastix directory is T^(-1) moving, i.e. has size of fixed image
 - result of transformix on points is T fixed
-- transforming data with transformix also uses T
+- transforming data with transformix uses T^(-1)
 - transformix points are (x,y,z) as displayed e.g. by imagej
 - array representation uses (y,x,z)
 - points detected here are thus (y,x,z) coordinates

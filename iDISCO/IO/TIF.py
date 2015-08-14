@@ -49,7 +49,14 @@ def readData(filename, x = all, y = all, z = all, **args):
     else:
         if z is all:
             data = tiff.imread(filename);
-            return io.dataToRange(data.transpose([1,2,0]), x = x, y = y, z = all);
+            if data.ndim == 3:
+                data = data.transpose([1,2,0]);
+            elif data.ndim == 4: # multi channel image
+                data = data.transpose([1,2,0,3]);
+            else:
+                raise RuntimeError('readData: dimension %d not supproted!' % data.ndim)
+            return io.dataToRange(data, x = x, y = y, z = all);
+            
         else: #optimize for z ranges
             dsize = io.dataSizeFromDataRange(dsize, x = x, y = y, z = z);
             t = tiff.TiffFile(filename);
@@ -70,9 +77,20 @@ def writeData(filename, data):
         tiff.imsave(filename, data);
     elif d == 3:   
         tiff.imsave(filename, data.transpose([2,0,1]));
+    elif d == 4:
+        #tiffile (z,y,x,c)
+        t = tiff.TiffWriter(filename, bigtiff = True);
+        t.save(data.transpose([2,0,1,3]), photometric = 'minisblack',  planarconfig = 'contig')
+        t.close();    
     else:
         raise RuntimeError('writing multiple channel data to tif not supported');
     
+    return filename;
+    
+
+def copyData(source, sink):
+    io.copyFile(source, sink);
+
 
 def test():    
     """Test TIF module"""  
@@ -113,8 +131,50 @@ def test():
     print "dataSize  is %s" % str(self.dataSize(fn, x = (10,20)))
     print "dataZSize is %s" % str(self.dataZSize(fn))
         
+    #test writing multi channel image
+    x = numpy.random.rand(50,100,30,4) * 10;
+    x = x.astype('float32');
+    self.writeData(os.path.join(basedir,'Test/Data/Tif/composite.tif'), x)
+
+    y = self.readData(os.path.join(basedir,'Test/Data/Tif/composite.tif'));
+    y.shape
+        
+    diff = x - y;
+    print (diff.max(), diff.min())
 
 if __name__ == "__main__":
     
     self.test();
     
+
+
+
+# Test various tif libs:
+#import numpy;
+#import iDISCO.IO.IO as io
+#x = numpy.random.rand(30,50,100,4) * 10;
+#x = x.astype('float32');
+#
+#io.writeData('test.tif', x.astype('float32'))
+#
+#import tifffile as tiff
+#
+#tiff.imsave('test.tif', d)   
+#
+#t = tiff.TiffWriter('test.tif', bigtiff = True);
+#
+#t.save(x.astype('int16'), photometric = 'minisblack',  planarconfig = 'contig')
+##t.save(x.astype('int16'), photometric = 'minisblack',  planarconfig = None)
+#t.close();
+#
+#d = tiff.imread('Composite.tif')
+#
+#from libtiff import TIFF
+#tif = TIFF.open('Composite.tif', mode='r')
+#image = tif.read_image()
+#image.shape
+#
+#from PIL import Image
+#im = Image.open('Composite.tif');
+#img = numpy.array(im);
+#img.shape

@@ -510,6 +510,8 @@ def writeData(filename, data, options={}, separate_header=False):
     if separate_header:
         with open(datafilename, 'wb') as datafilehandle:
             _write_data(data, datafilehandle, options)
+    
+    return filename;
 
 
 def dataSize(filename, **args):
@@ -532,8 +534,12 @@ def dataZSize(filename, z = all, **args):
     else:
         return None;
     
-            
-            
+def copyData(source, sink):
+    #Todo; deal with nhrd files
+    io.copyFile(source, sink);
+
+ 
+
 def test():
     from iDISCO.Parameter import iDISCOPath
     import os

@@ -39,7 +39,7 @@ from mahotas import regmin
 from iDISCO.ImageProcessing.GreyReconstruction import reconstruction
 
 from iDISCO.Parameter import ImageProcessingParameter
-from iDISCO.ImageProcessing.Filter.StructureElement import structureElement
+from iDISCO.ImageProcessing.Filter.StructureElement import structureElement, structureElementOffsets
 from iDISCO.ImageProcessing.Filter.FilterKernel import filterKernel
 
 from iDISCO.Utils.Timer import Timer
@@ -164,8 +164,50 @@ def findCenterOfMaxima(img, imgmax, verbose = False, out = sys.stdout):
 
 
 
+def findIntensity(img, centers, method = 'Max', boxSize = (3,3,3)):
+    """Find instensity value around centers in the image img using a box"""
+    isize = img.shape;
+    #print isize
+    
+    offs = structureElementOffsets(boxSize);
+    
+    if isinstance(method, basestring):
+        method = eval('numpy.' + method.lower());
+
+    intensities = numpy.zeros(centers.shape[0], dtype = img.dtype);
+    
+    for c in range(centers.shape[0]):
+        xmin = int(-offs[0,0] + centers[c,0]);
+        if xmin < 0:
+            xmin = 0;       
+        xmax = int(offs[0,1] + centers[c,0]);
+        if xmax > isize[0]:
+            xmax = isize[0];
+            
+        ymin = int(-offs[1,0] + centers[c,1]);
+        if ymin < 0:
+            ymin = 0;       
+        ymax = int(offs[1,1] + centers[c,1]);
+        if ymax > isize[1]:
+            ymax = isize[1];
+            
+        zmin = int(-offs[2,0] + centers[c,2]);
+        if zmin < 0:
+            zmin = 0;       
+        zmax = int(offs[1,1] + centers[c,2]);
+        if zmax > isize[2]:
+            zmax = isize[2];
+        
+        #print xmin, xmax, ymin, ymax, zmin, zmax
+        data = img[xmin:xmax, ymin:ymax, zmin:zmax];
+        
+        intensities[c] = method(data);
+    
+    return intensities;
+
+
 def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcessingParameter()):
-    """Detect Cells import scipyin 3d grayscale img using DoG filtering and maxima dtection"""
+    """Detect Cells in 3d grayscale image using DoG filtering and maxima detection"""
     # effectively removeBackground, dogFilter, 
     # we do processing steps in place to save memory    
     
@@ -260,9 +302,16 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
             #plotOverlayLabel(img, imgmax.astype('int64'), alpha = True)     
     
         #return centers, imglab, mask
-        cintensity = numpy.array([img[centers[i,0], centers[i,1], centers[i,2]] for i in range(centers.shape[0])]);        
+        
+        #intensity detection
+        method = parameter.Parameter.Intensiy;
+        if method is None:
+            cintensity = numpy.array([img[centers[i,0], centers[i,1], centers[i,2]] for i in range(centers.shape[0])]);        
+        else:
+            cintensity = findIntensity(img, centers, method = method, boxSize = parameter.Parameter.IntensiyBoxSize);
     
         return ( centers, cintensity );
+        
     else:
         out.write(timer.elapsedTime(head = 'Cell Centers'));
         out.write('No Cells found !');
@@ -270,11 +319,9 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
 
 
 
-
-
-
-
 def test():
+    """Test Spot Detection Module"""
+    import iDISCO.ImageProcessing.SpotDetection as self
     import iDISCO.IO.Imaris as io  
     
     fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
@@ -298,6 +345,13 @@ def test():
     
     print 'done, found %d cells !' % c.shape[0]
 
+
+    #test intensities:
+    import numpy;
+    x = numpy.random.rand(30,30,10);
+    centers = numpy.array([[0,0,0], [29,29,9]]);
+    i = self.findIntensity(x, centers, boxSize = (1,1,1));
+    print i
 
 if __name__ == '__main__':
     test();
