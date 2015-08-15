@@ -2,14 +2,17 @@
 """
 Inteface to Illastik pixel classification
 
-Note: genereate a classifier from illastik 0.5 
-      Press 'Train and classify' button and save as file, use file name in routine to classify
-
-      Ilastik classification is very memory intensive !
+Note: 
+    - genereate a classifier from illastik 0.5 
+    - press 'Train and classify' button and then save as file
+    - use file for routines here to classify
+    - try to avoid too many features in classifier as classification gets very memory intensive otherwise
 
 Created on Thu Jun  4 14:37:06 2015
 
 @author: ckirst
+
+based on ilastik interface from cell profiler
 """
 
 import sys
@@ -17,7 +20,19 @@ import numpy
 import h5py
 import math
 
+import iDISCO.Settings as settings
 
+def initializeIlastik(path = None):
+    """Set system path for illastik installation"""
+    if path is None:
+        path = settings.IlastikPath;
+    sys.path.insert(1, path);
+
+initializeIlastik();
+
+Initialized = False;
+
+#initialize ilastik
 try:
     #sys.stdout = sys.stderr = open(os.devnull, "w")
     from ilastik.core.dataMgr import DataMgr, DataItemImage
@@ -27,23 +42,28 @@ try:
     from ilastik.modules.classification.core.classifiers.classifierRandomForest import ClassifierRandomForest
     from ilastik.modules.classification.core.classificationMgr import ClassifierPredictThread
     from ilastik.core.volume import DataAccessor
+    
+    Initialized = True;
     #sys.stdout = old_stdout
 except ImportError, ilastikImport:
     #sys.stdout = old_stdout
-    print """ilastik import: failed to import the ilastik library. Please follow the instructions on "http://www.ilastik.org" to install ilastik"""
-    raise ilastikImport
+    print """Ilastik import: failed to import the ilastik libraries, set path in Settings.py!"""
+    #raise ilastikImport
+    
+    
+from iDISCO.ImageProcessing.BackgroundRemoval import removeBackground
 
-import cv2
-
-from scipy.ndimage.measurements import label, center_of_mass
-
-from iDISCO.ImageProcessing.Filter.StructureElement import structureElement
-from iDISCO.Parameter import ImageProcessingParameter
+from iDISCO.ImageProcessing.MaximaDetection import findCenterOfMaxima, findIntensity
 
 from iDISCO.Utils.Timer import Timer
-from iDISCO.Visualization.Plot import plotTiling, plotOverlayLabel
+from iDISCO.Utils.ParameterTools import writeParameter
+
+from iDISCO.Visualization.Plot import plotTiling
+
+
 
 class IlastikClassifier():
+    """Ilastik classifier class to handle ilastik runs using a random forest classifier"""    
     
     def __init__(self):
         
@@ -138,29 +158,22 @@ class IlastikClassifier():
         else:
             return pred[0,:,:,:,:]
 
-def removeBackground(img, verbose = False, out = sys.stdout, parameter = ImageProcessingParameter()):
-    """Remove Background step of Spot Detection Algorithm"""
+
+def checkIlastikInitialized():
+    global Initialized;
+    if not Initialized:
+        raise RuntimeError('Ilastik is not initialized, set path in Settings.py');
+    
+
+
+
+def rescaleToIlastik(img, rescale = None, verbose = False, out = sys.stdout, **parameter):
+    # rescale to fit with ilasstik representation of intensities
     timer = Timer();
+    writeParameter(out = out, head = 'Rescaling:', rescale = rescale);
     
-    # background subtraction in each slice
-    timer.reset();
-    se = structureElement('Disk', parameter.Parameter.Background).astype('uint8');
-    for z in range(img.shape[2]):
-         #img[:,:,z] = img[:,:,z] - grey_opening(img[:,:,z], structure = structureElement('Disk', (30,30)));
-         #img[:,:,z] = img[:,:,z] - morph.grey_opening(img[:,:,z], structure = self.structureELement('Disk', (150,150)));
-         img[:,:,z] = img[:,:,z] - cv2.morphologyEx(img[:,:,z], cv2.MORPH_OPEN, se)    
-    out.write(timer.elapsedTime(head = 'Background') + '\n');
-    
-    if verbose:
-        plotTiling(10*img);
-        
-    return img
-
-
-def rescaleToIlastik(img, parameter = ImageProcessingParameter(), verbose = False):
-    # rescale to fit with ilasstik representation
-    if parameter.Parameter.Rescale != None:
-        img = img.astype('float32') *  parameter.Parameter.Rescale;
+    if not rescale is None:
+        img = img.astype('float32') *  rescale;
         img[img > math.pow(2,8)-1] = math.pow(2,8)-1;
         img = img.astype('uint8');
     else:
@@ -169,32 +182,28 @@ def rescaleToIlastik(img, parameter = ImageProcessingParameter(), verbose = Fals
     if verbose:
         plotTiling(img);
     
+    out.write(timer.elapsedTime(head = 'Rescaling') + '\n');  
     return img
 
 
-def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcessingParameter()):
+def detectCells(img, classifier = None, verbose = False, out = sys.stdout, **parameter):
     """Detect Cells Using a trained classifier in Ilastik"""
 
-    timer = Timer();
+    checkIlastikInitialized();
     
     # normalize data
-    img = rescaleToIlastik(img, parameter = parameter, verbose = verbose);
+    img = rescaleToIlastik(img, verbose = verbose, out = out, **parameter);
     
-    if parameter.Parameter.Background != None:     # background subtraction in each slice
-        timer.reset();
-        se = structureElement('Disk', parameter.Parameter.Background).astype('uint8');
-        for z in range(img.shape[2]):
-             img[:,:,z] = img[:,:,z] - cv2.morphologyEx(img[:,:,z], cv2.MORPH_OPEN, se)    
-        out.write(timer.elapsedTime(head = 'Background') + '\n');
+    #remove backgroudn
+    img = removeBackground(img, verbose = verbose, out = out, **parameter);
+      
+
+    #classify image / assume class 1 are the cells !  
+    timer = Timer();  
+    writeParameter(out = out, head = 'Ilastik classification:', classifier = classifier);
     
-        if verbose:
-            plotTiling(10*img);       
-    
-    
-    #classify image / assume class 1 are the cells !    
-    timer.reset();
     cls = IlastikClassifier();
-    cls.loadClassifier(parameter.Parameter.Classifier);
+    cls.loadClassifier(classifier);
     imgmax = cls.run(img);
     #print imgmax.shape
     #max probability gives final class
@@ -202,35 +211,20 @@ def detectCells(img, verbose = False, out = sys.stdout, parameter = ImageProcess
     
     # class 1 is used as cells 
     imgmax = imgmax == 1; # class 1 is used as cells 
-    out.write(timer.elapsedTime(head = 'Ilastik classification') + '\n');
     
     if verbose:
         plotTiling(imgmax * 1000);
     
+    out.write(timer.elapsedTime(head = 'Ilastik classification') + '\n');    
+    
+    
     #center of maxima
-    timer.reset();
-    imglab, nlab = label(imgmax);
+    centers = findCenterOfMaxima(img, imgmax, verbose = verbose, out = out);
     
-    if nlab > 0:
-        centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
-        out.write(timer.elapsedTime(head = 'Cell Centers') + '\n');
+    #intensity of cells
+    cintensity = findIntensity(img, centers, verbose = verbose, out = out, **parameter);
     
-        if verbose:        
-            #plotOverlayLabel(img * 0.01, imglab, alpha = False);
-            #plotTiling(img)
-            imgc = numpy.zeros(img.shape);
-            for i in range(centers.shape[0]):
-                imgc[centers[i,0], centers[i,1], centers[i,2]] = 1;
-            plotOverlayLabel(img * 0.01, imgc, alpha = False);
-            #plotOverlayLabel(img, imgmax.astype('int64'), alpha = True)     
-    
-        #return centers, imglab, mask
-        cintensity = numpy.array([img[centers[i,0], centers[i,1], centers[i,2]] for i in range(centers.shape[0])]);        
-    
-        return ( centers, cintensity );
-        
-    else:
-        out.write(timer.elapsedTime(head = 'Cell Centers') + '\n');
-        out.write('No Cells found !');
-        return ( numpy.zeros((0,3)), numpy.zerso(0) );    
-    
+    return ( centers, cintensity );
+
+
+

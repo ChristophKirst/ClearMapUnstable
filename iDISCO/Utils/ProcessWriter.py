@@ -23,5 +23,5 @@ class ProcessWriter(object):
     def write(self, text):
         print self.writeString(text);
         sys.stdout.flush();
-    
 
+    

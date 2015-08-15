@@ -15,7 +15,7 @@ Created on Thu Jun  4 14:37:06 2015
 import numpy;
 import iDISCO.IO.OME as io;
 
-def writePoints(filename, points, labelimage = None):
+def writePoints(filename, points, labelImage = None):
 
     #points are (y,x,z) as 
     y = points[:,0];
@@ -28,7 +28,7 @@ def writePoints(filename, points, labelimage = None):
     pointLabels = numpy.ones(nPoint);
     if not labelimage is None:
         if isinstance(labelimage, basestring):
-            labelImage = io.readData(labelimage);
+            labelImage = io.readData(labelImage);
             
         dsize = labelImage.shape;
         for i in range(nPoint):

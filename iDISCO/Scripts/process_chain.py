@@ -5,25 +5,21 @@ Main Script to Run Full Pricess Chain
 @author: ckirst
 """
 
-
-import sys, os, numpy, math
-from iDISCO.Parameter import * 
-
 # path to illastik installation
 sys.path.insert(1, '/usr/local/ilastik-05-rc-final')
 
 
+from iDISCO.Parameter import * 
 import iDISCO.IO.IO as io
 import iDISCO.Alignment.Elastix as elx;
-import iDISCO.Alignment.Resampling as rsp;
-
-
-
+import iDISCO.Alignment.Resampling as rspl;
 import iDISCO.Analysis.Label as lbl
+import iDISCO.Analysis.Statistics as stats
 
 verbose = True;
 
-parameter = Parameter();
+par = Parameter();
+
 
 ######################### Data parameters
 

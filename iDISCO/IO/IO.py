@@ -149,7 +149,7 @@ def dataZSize(source, z = all, **args):
         return mod.dataZSize(source, z = z, **args);
     elif isinstance(source, numpy.ndarray):
         if len(source.shape) > 2: 
-            return source.shape[2];
+            return self.toDataSize(source.shape[2], r = z);
         else:
             return None;   
     else:
@@ -303,9 +303,21 @@ def toMultiChannelData(*args):
 # Read / Write Points
 ##############################################################################
 
+def points(points):
+    if isinstance(points, tuple):
+        return points[0];
+    else:
+        return points;
+        
+def intensities(points):
+    if isinstance(points, tuple):
+        return points[1];
+    else:
+        return None;
+
 
 def pointShiftFromRange(dataSize, x = all, y = all, z = all, **args):
-    """Calculate shift of points give a specific range restriction"""
+    """Calculate shift of points given a specific range restriction"""
     
     if isinstance(dataSize, basestring):
         dataSize = self.dataSize(dataSize);
@@ -325,7 +337,8 @@ def pointShiftFromRange(dataSize, x = all, y = all, z = all, **args):
 
 
 def pointsToRange(points, dataSize = all, x = all, y = all, z = all, shift = False, **args):
-
+    """Restrict points to a specific range"""
+        
     d = points.shape[1];
     
     if dataSize is all:

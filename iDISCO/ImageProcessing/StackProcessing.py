@@ -17,9 +17,7 @@ from multiprocessing import Pool
 
 import iDISCO.IO.IO as io
 
-from iDISCO.Parameter import ImageProcessingParameter
 from iDISCO.ImageProcessing.SpotDetection import detectCells;
-
 
 from iDISCO.Utils.ProcessWriter import ProcessWriter;
 from iDISCO.Utils.Timer import Timer;
@@ -27,6 +25,7 @@ from iDISCO.Utils.Timer import Timer;
 #define the subroutine for the processing
 
 def processSubStack(dsr):
+    """Helper to process stack in parallel"""
     
     fn = dsr[0];
     sf = dsr[1];
@@ -50,23 +49,23 @@ def processSubStack(dsr):
     pw.write(timer.elapsedTime(head = 'Reading data of size ' + str(img.shape)));
     
     timer.reset();
-    seg = sf(img, out = pw, parameter = pp);
+    seg = sf(img, out = pw, **pp);
     pw.write(timer.elapsedTime(head = 'Segmenting data of size ' + str(img.shape)));  
     
     return seg;
 
 
-def calculateChunkSize(size, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15, processes = 2, optimizechunks = True, optimizechunksizeincrease = all, verbose = True):
+def calculateChunkSize(size, processes = 2, chunkSizeMax = 100, chunkSizeMin = 30, chunkOverlap = 15,  chunkOptimization = True, chunkOptimizationSize = all, verbose = True):
     """Calculates the chunksize for parallel processing"""
     
     pre = "ChunkSize: ";
     
     #calcualte chunk sizes
-    chunksize = chunksizemax;
-    nchunks = int(math.ceil((size - chunksize) / (1. * (chunksize - chunkoverlap)) + 1)); 
+    chunksize = chunkSizeMax;
+    nchunks = int(math.ceil((size - chunksize) / (1. * (chunksize - chunkOverlap)) + 1)); 
     if nchunks <= 0:
         nchunks = 1;   
-    chunksize = (size + (nchunks-1) * chunkoverlap) / nchunks;
+    chunksize = (size + (nchunks-1) * chunkOverlap) / nchunks;
     
     if verbose:
         print pre + "Estimated chunk size " + str(chunksize) + " in " + str(nchunks) + " chunks!";
@@ -75,22 +74,22 @@ def calculateChunkSize(size, chunksizemax = 100, chunksizemin = 30, chunkoverlap
         return 1, [(0, chunksize)], [0, chunksize]
         
     #optimize number of chunks wrt to number of processors
-    if optimizechunks:
+    if chunkOptimization:
         np = nchunks % processes;
         if np != 0:
-            if optimizechunksizeincrease == all:
+            if chunkOptimizationSize == all:
                 if np < processes / 2.0:
-                    optimizechunksizeincrease = True;
+                    chunkOptimizationSize = True;
                 else:
-                    optimizechunksizeincrease = False;
+                    chunkOptimizationSize = False;
                     
             if verbose:
                 print pre + "Optimizing chunk size to fit number of processes!"
                 
-            if not optimizechunksizeincrease:
+            if not chunkOptimizationSize:
                 #try to deccrease chunksize / increase chunk number to fit distribution on processors
                 nchunks = nchunks - np + processes;
-                chunksize = (size + (nchunks-1) * chunkoverlap) / nchunks;
+                chunksize = (size + (nchunks-1) * chunkOverlap) / nchunks;
                 
                 if verbose:
                     print pre + "Optimized chunk size decreased to " + str(chunksize) + " in " + str(nchunks) + " chunks!";
@@ -99,7 +98,7 @@ def calculateChunkSize(size, chunksizemax = 100, chunksizemin = 30, chunkoverlap
                 if nchunks != np:
                     #try to decrease chunksize to have 
                     nchunks = nchunks - np;
-                    chunksize = (size + (nchunks-1) * chunkoverlap) / nchunks;
+                    chunksize = (size + (nchunks-1) * chunkOverlap) / nchunks;
                                   
                     if verbose:
                         print pre + "Optimized chunk size increased to " + str(chunksize) + " in " + str(nchunks) + " chunks!";
@@ -114,15 +113,15 @@ def calculateChunkSize(size, chunksizemax = 100, chunksizemin = 30, chunkoverlap
     
     
     #increase overlap if chunks to small
-    chunksizemin = min(chunksizemin, chunkoverlap);
-    if chunksize < chunksizemin:
+    chunkSizeMin = min(chunkSizeMin, chunkOverlap);
+    if chunksize < chunkSizeMin:
         if verbose: 
-            print pre + "Warning: optimal chunk size " + str(chunksize) + " smaller than minimum chunk size " + str(chunksizemin) + "!"; 
-        chunksize = chunksizemin;
-        chunkoverlap = math.ceil(chunksize - (size - chunksize) / (nchunks -1));
+            print pre + "Warning: optimal chunk size " + str(chunksize) + " smaller than minimum chunk size " + str(chunkSizeMin) + "!"; 
+        chunksize = chunkSizeMin;
+        chunkOverlap = math.ceil(chunksize - (size - chunksize) / (nchunks -1));
         
         if verbose:        
-            print pre + "Warning: setting chunk overlap to " + str(chunkoverlap) + "!";
+            print pre + "Warning: setting chunk overlap to " + str(chunkOverlap) + "!";
            
     #calucalte actual chunk sizes
     chunksizerest = chunksize;
@@ -139,7 +138,7 @@ def calculateChunkSize(size, chunksizemax = 100, chunksizemin = 30, chunkoverlap
         n += 1;
         
         zhiold = zhi;
-        zlo = zhi - chunkoverlap;
+        zlo = zhi - chunkOverlap;
         zhi = zlo + chunksize;
         
         csr += chunksizerest;
@@ -164,17 +163,49 @@ def calculateChunkSize(size, chunksizemax = 100, chunksizemin = 30, chunkoverlap
 
 
 
-def parallelProcessStack(filename, x = all, y = all, z = all, 
-                         processes = 2, chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15,
-                         optimizechunks = True, optimizechunksizeincrease = all, 
-                         segmentation = detectCells, parameter = ImageProcessingParameter()):
-    """Parallel segmetation on a stack distributes cell detection on parallel processes"""
+def joinPoints(pointlist, zranges, zcenters, intensities = None):
+    """Joins a list of points obtained from processing a stack in chunks"""
+    
+    nchunks = len(pointlist);
+    results = [];
+    resultsi = [];
+    for i in range(nchunks):
+        cts = pointlist[i];
+        if not intensities is None:
+            cti = intensities[i];
+        
+        if cts.size > 0:
+            cts[:,2] += zranges[i][0];
+            iid = numpy.logical_and(cts[:,2] < zcenters[i+1], cts[:,2] >= zcenters[i]);
+            cts = cts[iid,:];
+            results.append(cts);
+            if not intensities is None:
+                cti = cti[iid];
+                resultsi.append(cti);
+            
+    if results == []:
+        if not intensities is None:
+            return (numpy.zeros((0,3)), numpy.zeros((0)));
+        else:
+            return numpy.zeros((0,3))
+    else:
+        if not intensities is None:
+            return (numpy.concatenate(results), numpy.concatenate(resultsi));
+        else:
+            return numpy.concatenate(results);
+
+
+def parallelProcessStack(source, x = all, y = all, z = all, sink = None,
+                         processes = 2, chunkSizeMax = 100, chunkSizeMin = 30, chunkOverlap = 15,
+                         chunkOptimization = True, chunkOptimizationSize = all, 
+                         function = detectCells, join = self.joinPoints, **parameter):
+    """Parallel process a stack using"""
     
     #determine z ranges
-    zs = io.dataZSize(filename);
+    zs = io.dataZSize(source, z = all);
     zr = io.toDataRange(zs, r = z);
     nz = zr[1] - zr[0];
-    nchunks, zranges, zcenters = self.calculateChunkSize(nz, chunksizemax = chunksizemax, chunksizemin = chunksizemin, chunkoverlap = chunkoverlap, processes = processes, optimizechunks = optimizechunks, optimizechunksizeincrease = optimizechunksizeincrease);
+    nchunks, zranges, zcenters = self.calculateChunkSize(nz, processes = processes, chunkSizeMax = chunkSizeMax, chunkSizeMin = chunkSizeMin, chunkOverlap = chunkOverlap, chunkOptimization = chunkOptimization, chunkOptimizationSize = chunkOptimizationSize);
         
     #adjust for the zrange
     zcenters = [xc + zr[0] for xc in zcenters];
@@ -182,7 +213,7 @@ def parallelProcessStack(filename, x = all, y = all, z = all,
     
     argdata = [];
     for i in range(nchunks):
-        argdata.append((filename, segmentation, parameter, zranges[i], x, y, i, nchunks));
+        argdata.append((source, function, parameter, zranges[i], x, y, i, nchunks));
         
     #print argdata
     
@@ -196,38 +227,33 @@ def parallelProcessStack(filename, x = all, y = all, z = all,
     #print resultsseg;
     #print nchunks
         
-    #join the results  
-    results = [];
-    resultsi = [];
-    for i in range(nchunks):
-        cts = resultsseg[i][0];
-        cti = resultsseg[i][1];
-        
-        if cts.size > 0:
-            cts[:,2] += zranges[i][0];
-            iid = numpy.logical_and(cts[:,2] < zcenters[i+1], cts[:,2] >= zcenters[i]);
-            cts = cts[iid,:];
-            cti = cti[iid];
-            results.append(cts);
-            resultsi.append(cti);
-            
-    if results == []:
-        return numpy.zeros((0,3)), numpy.zeros((0));
-    else:
-        return (numpy.concatenate(results), numpy.concatenate(resultsi));
-        
-        
-        
+    #join the results: extension: make this a join function and pass as argument 
+    results, resultsi = join([resultsseg[i][0] for i in range(nchunks)], zranges, zcenters, [resultsseg[i][1] for i in range(nchunks)]);
 
-def sequentiallyProcessStack(filename, x = all, y = all, z = all, 
-                             chunksizemax = 100, chunksizemin = 30, chunkoverlap = 15,
-                             segmentation = detectCells, parameter = ImageProcessingParameter()):
+    if sink is None:
+        sink = (None, None);
+    elif isinstance(sink, basestring):
+        sink = (sink, sink[:,-4] + ".intensities." + sink[-3:]);
+    else:
+        raise RuntimeWarning('sink not well defined!')
+        sink = (None, None);
+    
+    ce = io.writePoints(sink[0], numpy.concatenate(results));
+    ii = io.writePoints(sink[1], numpy.concatenate(resultsi));
+    
+    return (ce, ii);
+
+
+def sequentiallyProcessStack(source, x = all, y = all, z = all, sink = None,
+                             chunkSizeMax = 100, chunkSizeMin = 30, chunkOverlap = 15,
+                             function = detectCells, join = self.joinPoints, **parameter):
     """Sequential image processing on a stack"""
     
     #determine z ranges
-    zr = io.readZRange(filename, z = z);
+    zs = io.dataZSize(source, z = all);
+    zr = io.toDataRange(zs, r = z);
     nz = zr[1] - zr[0];
-    nchunks, zranges, zcenters = self.calculateChunkSize(nz, chunksizemax = chunksizemax, chunksizemin = chunksizemin, chunkoverlap = chunkoverlap, processes = 1, optimizechunks = False, optimizechunksizeincrease = False);
+    nchunks, zranges, zcenters = self.calculateChunkSize(nz, processes = 1, chunkSizeMax = chunkSizeMax, chunkSizeMin = chunkSizeMin, chunkOverlap = chunkOverlap, chunkOptimization = False, chunkOptimizationSize = False);
         
     #adjust for the zrange
     zcenters = [xc + zr[0] for xc in zcenters];
@@ -235,7 +261,7 @@ def sequentiallyProcessStack(filename, x = all, y = all, z = all,
     
     argdata = [];
     for i in range(nchunks):
-        argdata.append((filename, segmentation, parameter, zranges[i], x, y, i, nchunks));
+        argdata.append((source, function, parameter, zranges[i], x, y, i, nchunks));
         
     #run sequentially
     resultsseg = [];
@@ -243,21 +269,20 @@ def sequentiallyProcessStack(filename, x = all, y = all, z = all,
         resultsseg.append(processSubStack(argdata[i]));
             
     #join the results  
-    results = [];
-    resultsi = [];
-    for i in range(nchunks):
-        cts = resultsseg[i][0];
-        cti = resultsseg[i][1];
-        
-        if cts.size > 0:
-            cts[:,2] += zranges[i][0];
-            iid = numpy.logical_and(cts[:,2] < zcenters[i+1], cts[:,2] >= zcenters[i]);
-            cts = cts[iid,:];
-            cti = cti[iid];
-            results.append(cts);
-            resultsi.append(cti);
-            
-    if results == []:
-        return numpy.zeros((0,3)), numpy.zeros((0));
+    #join the results: extension: make this a join function and pass as argument 
+    results, resultsi = self.join([resultsseg[i][0] for i in range(nchunks)], zranges, zcenters, [resultsseg[i][1] for i in range(nchunks)]);
+
+    #todo: make clean independent of return of two results -> io.wrtiePoints -> take care of pairs: (points,intensities)
+    if sink is None:
+        sink = (None, None);
+    elif isinstance(sink, basestring):
+        sink = (sink, sink[:,-4] + ".intensities." + sink[-3:]);
     else:
-        return (numpy.concatenate(results), numpy.concatenate(resultsi));
+        raise RuntimeWarning('sink not well defined!')
+        sink = (None, None);
+    
+    ce = io.writePoints(sink[0], numpy.concatenate(results));
+    ii = io.writePoints(sink[1], numpy.concatenate(resultsi));
+    
+    return (ce, ii); 
+
