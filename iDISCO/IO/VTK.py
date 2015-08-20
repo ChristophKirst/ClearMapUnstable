@@ -17,23 +17,28 @@ import iDISCO.IO.OME as io;
 
 def writePoints(filename, points, labelImage = None):
 
-    #points are (y,x,z) as 
-    y = points[:,0];
-    x = points[:,1];
+    #y = points[:,0];
+    #x = points[:,1];
+    #z = points[:,2];    
+    
+    x = points[:,0];
+    y = points[:,1];
     z = points[:,2];    
     nPoint = x.size;
     
     #print nPoint;
     
     pointLabels = numpy.ones(nPoint);
-    if not labelimage is None:
-        if isinstance(labelimage, basestring):
+    if not labelImage is None:
+        if isinstance(labelImage, basestring):
             labelImage = io.readData(labelImage);
             
         dsize = labelImage.shape;
         for i in range(nPoint):
-            if y[i] >= 0 and y[i] < dsize[0] and x[i] >= 0 and x[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
-                 pointLabels[i] = labelImage[y[i], x[i], z[i]];
+            #if y[i] >= 0 and y[i] < dsize[0] and x[i] >= 0 and x[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
+            if x[i] >= 0 and x[i] < dsize[0] and y[i] >= 0 and y[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
+                 #pointLabels[i] = labelImage[y[i], x[i], z[i]];
+                 pointLabels[i] = labelImage[x[i], y[i], z[i]];
         
     #write VTK file
     vtkFile = file(filename, 'w')

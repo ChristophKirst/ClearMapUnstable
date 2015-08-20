@@ -13,59 +13,39 @@ Created on Fri Aug 14 03:34:23 2015
 @author: ckirst
 """
 
-from iDISCO.IO import IO as io
 import iDISCO.ImageProcessing.SpotDetection
-
-try:
-    import iDISCO.ImageProcessing.IlastikClassification
-    haveIlastik = True;
-except:
-    haveIlastik = False;
+import iDISCO.ImageProcessing.IlastikClassification
 
 from iDISCO.ImageProcessing.StackProcessing import parallelProcessStack, sequentiallyProcessStack
 
 from iDISCO.Utils.Timer import Timer
     
 
-def detectCells(source, method = **parameter):
+def detectCells(source, sink = None, method ="SpotDetection", processMethod = all, **parameter):
     """Detect cells in data"""
-    
     timer = Timer();
         
     # run segmentation
     if method == "SpotDetection":
-        
         detectCells = iDISCO.ImageProcessing.SpotDetection.detectCells;
-        
-        centers, intensities = parallelProcessStack(source, x = ps.XRange, y = ps.YRange, z = ps.ZRange, 
-                                                processes = pp.Processes, chunksizemax = pp.ChunkSizeMax, chunksizemin = pp.ChunkSizeMin, chunkoverlap = pp.ChunkOverlap, 
-                                                optimizechunks = pp.OptimizeChunks, optimizechunksizeincrease = pp.OptimizeChunkSizeIncrease,
-                                                segmentation = detectCells, parameter = parameter.ImageProcessing);        
-        
-    else:
-        if haveIlastik:
-            #ilastik does parallel processing so do sequential processing here
+    elif method == 'Ilastik':
+        if iDISCO.ImageProcessing.IlastikClassification.Initialized:
             detectCells = iDISCO.ImageProcessing.IlastikClassification.detectCells;
-            
-            centers, intensities = sequentiallyProcessStack(ps.ImageFile, x = ps.XRange, y = ps.YRange, z = ps.ZRange, 
-                                                        chunksizemax = pp.ChunkSizeMax, chunksizemin = pp.ChunkSizeMin, chunkoverlap = pp.ChunkOverlap,
-                                                        segmentation = detectCells, parameter = parameter.ImageProcessing);
-            
+            processMethod = 'sequential';  #ilastik does parallel processing so force sequential processing here
         else:
-            raise RuntimeError("No Ilastik installed use SpotDectection instead!");
-            
- 
-    timer.printElapsedTime("Main");
+            raise RuntimeError("detectCells: Ilastik not initialized, fix in Settings.py or use SpotDectection method instead!");
+    else:
+        raise RuntimeError("detectCells: invalid method %s" % str(method));
     
-    if not parameter.ImageProcessing.Parameter.ThresholdSave is None:
-        iid = intensities >  parameter.ImageProcessing.Parameter.ThresholdSave;
-        centers = centers[iid,:];
+    if processMethod == 'sequential':
+        result = sequentiallyProcessStack(source, sink = sink, function = detectCells, **parameter);  
+    elif processMethod is all or processMethod == 'parallel':
+        result = parallelProcessStack(source, sink = sink, function = detectCells, **parameter);  
+    else:
+        raise RuntimeError("detectCells: invalid processMethod %s" % str(processMethod));
+    
+    timer.printElapsedTime("Total Cell Detection");
+    
+    return result;
 
-    if not parameter.ImageProcessing.PointFile is None:
-        io.writePoints(parameter.ImageProcessing.PointFile, centers);
-        
-    if not parameter.ImageProcessing.IntensityFile is None:
-        io.writePoints(parameter.ImageProcessing.IntensityFile, intensities);
-
-    return centers, intensities;
 

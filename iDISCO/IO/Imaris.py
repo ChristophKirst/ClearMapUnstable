@@ -44,9 +44,12 @@ def readDataSet(h5file, resolution = 0, channel = 0, timepoint = 0):
 
 def dataSize(filename, resolution = 0, channel = 0, timepoint = 0, **args):
     f = self.openFile(filename);
+    
+    #todo: read array size not full data !
     ds = self.readDataSet(f, resolution = 0, channel = 0, timepoint = 0);
-    dsize = list(ds.shape);
-    dims = (dsize[1], dsize[2], dsize[0]);    
+    dims = list(ds.shape);
+    #dims = (dims[1], dims[2], dims[0]);
+    
     return io.dataSizeFromDataRange(dims, **args);
 
  
@@ -62,7 +65,7 @@ def readData(filename, x = all, y = all, z = all, resolution = 0, channel = 0, t
     dsize = dataset.shape;
     
     rz = io.toDataRange(dsize[0], r = z);
-    rx = io.toDataRange(dsize[1], r = y);
+    ry = io.toDataRange(dsize[1], r = y);
     rx = io.toDataRange(dsize[2], r = x);    
     
     data = dataset[rz[0]:rz[1],ry[0]:ry[1],rx[0]:rx[1]];
@@ -152,9 +155,9 @@ def writePoints(filename, points, mode = "o", radius = 0.5):
     if points.shape[1] != 3:
         raise StandardError("Points shape is not (n,3)!");
     
+    points = points[:,[1,0,2]]; # todo: check exchange of coordinates
     pts = numpy.c_[points, radius * numpy.ones(npts)];
     ts =  numpy.zeros(npts);
-    
     
     # write points
     pnt = pn + '/Time';

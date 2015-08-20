@@ -103,9 +103,14 @@ Label.initialize();
 def labelPoints(points, labelimage, level = None):
     
     #points are (y,x,z) -> which is also the way the labeled image is read in
-    x = points[:,1];
-    y = points[:,0];
-    z = points[:,2];    
+    #x = points[:,1];
+    #y = points[:,0];
+    #z = points[:,2];
+
+    x = points[:,0];
+    y = points[:,1];
+    z = points[:,2]; 
+    
     nPoint = x.size;    
     
     pointLabels = numpy.zeros(nPoint, 'int32');
@@ -115,14 +120,16 @@ def labelPoints(points, labelimage, level = None):
                   
     dsize = labelImage.shape;
     for i in range(nPoint):
-        if y[i] >= 0 and y[i] < dsize[0] and x[i] >= 0 and x[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
-             pointLabels[i] = labelImage[y[i], x[i], z[i]];
+        #if y[i] >= 0 and y[i] < dsize[0] and x[i] >= 0 and x[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
+        #     pointLabels[i] = labelImage[y[i], x[i], z[i]];
+        if x[i] >= 0 and x[i] < dsize[0] and y[i] >= 0 and y[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
+             pointLabels[i] = labelImage[x[i], y[i], z[i]];
     
     pointLabels = self.labelAtLevel(pointLabels, level);
     
     return pointLabels;
 
- 
+
 def labelAtLevel(label, level):
     global Label;
     

@@ -63,15 +63,19 @@ def plotTiling(image, tiling = "automatic", maxtiles = 20):
     for i in range(0, ntiles): 
         a = axarr[i];
         imgpl = image[:,:,i,:];
+        imgpl = imgpl.transpose([1,0,2]);      
+        
         if imgpl.shape[2] == 1:
             imgpl = imgpl.reshape((imgpl.shape[0], imgpl.shape[1]));       
+        #a.imshow(imgpl, interpolation='none', cmap = cmap, vmin = imin, vmax = imax);
         a.imshow(imgpl, interpolation='none', cmap = cmap, vmin = imin, vmax = imax);
-
+    
     fig.canvas.manager.window.activateWindow()
     fig.canvas.manager.window.raise_()
     
     return fig;
- 
+
+
 def overlayLabel(image, label, alpha = False, lcmap = 'jet'):
     """Overlay a gray scale image with colored labeled image"""
     
@@ -110,14 +114,11 @@ def overlayLabel(image, label, alpha = False, lcmap = 'jet'):
 def plotOverlayLabel(image, label, alpha = False, tiling = "automatic", maxtiles = 20):
     """Plot gray scale image overlayed with labeled image"""
     ov = overlayLabel(image, label, alpha = alpha);
-    plotTiling(ov, tiling = tiling);
-    
-    return ov;
-
+    return plotTiling(ov, tiling = tiling);
 
     
 def plotOverlayPoints(image, points, alpha = False, tiling = "automatic", maxtiles = 20):
-    
+    """Plot points overlayed on gray scale image"""
     dsize = list(image.shape);
     if dsize[2] > maxtiles:
         dsize[2] = maxtiles;
@@ -129,14 +130,20 @@ def plotOverlayPoints(image, points, alpha = False, tiling = "automatic", maxtil
     return self.plotOverlayLabel(image[:,:,0:dsize[2]], imgc, alpha = False);
 
 
-if __name__ == "__main__":
+def test():
+    """Test Plot module"""
     import numpy as np
-    import iDISCO.Visualization.Plot as iplt
+    import iDISCO.Visualization.Plot as self
     l = np.array([[0,0,0,0,0], [0,1,1,0,0], [3,0,5,0,2], [5,0,0,0,0], [4,4,0,0,0]])
     x = np.random.rand(5,5);  
     
-    iplt.plotOverlayLabel(x,l, alpha = False);    
-    iplt.plotOverlayLabel(x,l, alpha = True);    
+    self.plotOverlayLabel(x,l, alpha = False);    
+    self.plotOverlayLabel(x,l, alpha = True);    
+
+
+if __name__ == "__main__":
+    test();
+
     
     
 

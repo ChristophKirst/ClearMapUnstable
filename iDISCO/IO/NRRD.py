@@ -272,7 +272,7 @@ def _validate_magic_line(line):
     try:
         if int(line[4:]) > 5:
             raise NrrdError('NRRD file version too new for this library.')
-    except Value:
+    except:
         raise NrrdError('Invalid NRRD magic line: %s' % (line,))
     return len(line)
 
@@ -359,7 +359,8 @@ def readData(filename):
         #print header
         data = _read_data(header, filehandle, filename)
         #return (data, header)
-        return data.transpose([1,0,2]);
+        #return data.transpose([1,0,2]);
+        return data;
 
 
 def _format_nrrd_list(fieldValue) :
@@ -415,7 +416,8 @@ _NRRD_FIELD_FORMATTERS = {
 
 def _write_data(data, filehandle, options):
     # Now write data directly
-    rawdata = data.transpose([2,0,1]).tostring(order = 'C')
+    #rawdata = data.transpose([2,0,1]).tostring(order = 'C')
+    rawdata = data.transpose([2,1,0]).tostring(order = 'C');
     if options['encoding'] == 'raw':
         filehandle.write(rawdata)
     elif options['encoding'] == 'gzip':
@@ -450,7 +452,7 @@ def writeData(filename, data, options={}, separate_header=False):
         del options['space dimension']
     options['dimension'] = data.ndim
     dsize = list(data.shape);
-    dsize[0:2] = [dsize[1], dsize[0]];
+    #dsize[0:2] = [dsize[1], dsize[0]];
     options['sizes'] = dsize;
 
     # The default encoding is 'gzip'
@@ -519,7 +521,7 @@ def dataSize(filename, **args):
     
     header = self.readHeader(filename);
     dims = header['sizes'];
-    dims[0:2] = [dims[1], dims[0]];
+    #dims[0:2] = [dims[1], dims[0]];
     return io.dataSizeFromDataRange(dims, **args);
 
     
@@ -541,12 +543,15 @@ def copyData(source, sink):
  
 
 def test():
-    from iDISCO.Parameter import iDISCOPath
+    """Test NRRD IO module"""
+    import iDISCO.IO.NRRD as self    
+    
+    from iDISCO.Settings import IDISCOPath
     import os
     import numpy
     
     """Test NRRD module"""
-    basedir = iDISCOPath();
+    basedir = IDISCOPath;
     fn = os.path.join(basedir, 'Test/Data/Nrrd/test.nrrd')
 
     data = numpy.random.rand(20,50,10);
@@ -555,6 +560,9 @@ def test():
     reload(self)
     print "writing nrrd image to: " + fn;    
     self.writeData(fn, data);
+    
+    ds = self.dataSize(fn);
+    print "dataSize: %s" % str(ds);
 
     print "Loading raw image from: " + fn;
     img = self.readData(fn);  

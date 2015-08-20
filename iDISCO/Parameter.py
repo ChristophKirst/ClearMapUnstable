@@ -14,7 +14,7 @@ Created on Thu Jun  4 14:37:06 2015
 import os
 import iDISCO.Settings as settings
 
-from iDISCO.Utils.ParameterTools import joinParameter
+#from iDISCO.Utils.ParameterTools import joinParameter
 
 ##############################################################################
 # Image Processing
@@ -29,7 +29,7 @@ SpotDetectionParameter = {
     "dogSize" : (7, 7, 11),
     
     #h of h-max transform
-    "HMax" : 20,
+    "hMax" : 20,
     
     #intensity detection   
     "intensityMethod"  : 'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number

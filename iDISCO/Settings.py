@@ -68,4 +68,4 @@ def iDISCOPath():
     fn = os.path.abspath(fn[0]);
     return fn;
 
-IDICSOPath = iDISCOPath();
+IDISCOPath = iDISCOPath();

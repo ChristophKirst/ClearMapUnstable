@@ -18,7 +18,8 @@ class ProcessWriter(object):
         self.process = process;
     
     def writeString(self, text):
-        return ("Process %d: " % self.process) + str(text);
+        pre = ("Process %d: " % self.process);
+        return pre + str(text).replace('\n', '\n' + pre);
     
     def write(self, text):
         print self.writeString(text);

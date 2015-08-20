@@ -19,31 +19,34 @@ import iDISCO.IO.IO as io
 import math
 
 
-def voxelize(points, dataSize = None, average = (5,5,5), mode = 'Spherical', weights = None):
+def voxelize(points, dataSize = None, sink = None, voxelizationSize = (5,5,5), voxelizationMethod = 'Spherical', voxelizationWeights = None):
     
     if dataSize is None:
         dataSize = tuple(int(math.ceil(points[:,i].max())) for i in range(points.shape[1]));
     elif isinstance(dataSize, basestring):
         dataSize = io.dataSize(dataSize);
     
+    points = io.readPoints(points);
         
-    if mode == 'Spherical':
-        if weights is None:
-            return vox.voxelizeSphere(points, dataSize[0], dataSize[1], dataSize[2], average[0], average[1], average[2]);
+    if voxelizationMethod == 'Spherical':
+        if voxelizationWeights is None:
+            data = vox.voxelizeSphere(points, dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2]);
         else:
-            return vox.voxelizeSphereWithWeights(points, dataSize[0], dataSize[1], dataSize[2], average[0], average[1], average[2], weights);
+            data = vox.voxelizeSphereWithWeights(points, dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2], voxelizationWeights);
            
-    elif mode == 'Rectangular':
-        if weights is None:
-            return vox.voxelizeRectangle(points, dataSize[0], dataSize[1], dataSize[2], average[0], average[1], average[2]);
+    elif voxelizationMethod == 'Rectangular':
+        if voxelizationWeights is None:
+            data = vox.voxelizeRectangle(points, dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2]);
         else:
-            return vox.voxelizeRectangleWithWeights(points, dataSize[0], dataSize[1], dataSize[2], average[0], average[1], average[2], weights);
+            data = vox.voxelizeRectangleWithWeights(points, dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2], voxelizationWeights);
     
-    elif mode == "Pixel":
-        return self.voxelizePixel(points, dataSize, weights);
+    elif voxelizationMethod == "Pixel":
+        data = self.voxelizePixel(points, dataSize, voxelizationWeights);
         
     else:
-        raise RuntimeError('voxelize: mode: %s not supported!' % mode);
+        raise RuntimeError('voxelize: mode: %s not supported!' % voxelizationMethod);
+    
+    return io.writeData(sink, data);
 
 
 def voxelizePixel(points,  dataSize = None, weights = None):

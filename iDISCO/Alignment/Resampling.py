@@ -30,7 +30,7 @@ import iDISCO.IO.IO as io
 
 
 def fixOrientation(orientation):
-    """Fix orientation as images are represented as (y,x,z) arrays but user provides orientation as premutation of x,y,z"""
+    #"""Fix orientation as images are represented as (y,x,z) arrays but user provides orientation as premutation of x,y,z"""
     
     if orientation is None:
         return None;
@@ -42,39 +42,41 @@ def fixOrientation(orientation):
         orientation = (-1,2,3);
             
     #fix (y,x) image representation / take into account sign too
-    o = list(orientation);
-    for i in range(3):
-        if int(abs(orientation[i])) == 1:
-            pos1 = i;
-        if int(abs(orientation[i])) == 2:
-            pos2 = i;
-    
-    if orientation[pos2] < 0:
-        o[pos2] = -abs(orientation[pos1]);
-    else:
-        o[pos2] = abs(orientation[pos1]);
-        
-    if orientation[pos1] < 0:
-        o[pos1] = -abs(orientation[pos2]);
-    else:
-        o[pos1] = abs(orientation[pos2]);
-        
-    orientation = (o[1],o[0],o[2]); 
+    #o = list(orientation);
+    #for i in range(3):
+    #    if int(abs(orientation[i])) == 1:
+    #        pos1 = i;
+    #    if int(abs(orientation[i])) == 2:
+    #        pos2 = i;
+    #
+    #if orientation[pos2] < 0:
+    #    o[pos2] = -abs(orientation[pos1]);
+    #else:
+    #    o[pos2] = abs(orientation[pos1]);
+    #    
+    #if orientation[pos1] < 0:
+    #    o[pos1] = -abs(orientation[pos2]);
+    #else:
+    #    o[pos1] = abs(orientation[pos2]);
+    #    
+    #orientation = (o[1],o[0],o[2]); 
     
     return orientation;
 
 
-def fixResolutions(resolutionSource, resolutionSink):
-    """Fix resolutions as images are represented as (y,x,z) arrays but the user provides resolutions in x,y,z"""
-
-    rd = (resolutionSource[1], resolutionSource[0], resolutionSource[2]);
-    rr = (resolutionSink[1], resolutionSink[0], resolutionSink[2]);
-    
-    return (rd,rr);  
+#def fixResolutions(resolutionSource, resolutionSink):
+    #"""Fix resolutions as images are represented as (y,x,z) arrays but the user provides resolutions in x,y,z"""
+    #
+    #rd = (resolutionSource[1], resolutionSource[0], resolutionSource[2]);
+    #rr = (resolutionSink[1], resolutionSink[0], resolutionSink[2]);
+    #return (rd,rr); 
+    #
+    #return (resolutionSource, resolutionSink)
    
-def fixDataSize(dataSize):
-    """Fix data sizes as images are represented as (y,x,z) arrays but the user provides datasize as x,y,z"""
-    return (dataSize[1], dataSize[0], dataSize[2]);
+#def fixDataSize(dataSize):
+    #"""Fix data sizes as images are represented as (y,x,z) arrays but the user provides datasize as x,y,z"""    
+    #return (dataSize[1], dataSize[0], dataSize[2]);
+    #return dataSize;
     
 
 def inversePermutation(per):
@@ -103,11 +105,15 @@ def resampleXY(source, sink = None, resolutionSource = (4.0625, 4.0625), resolut
     
     outputSize = tuple([int(math.ceil(dataSize[i] *  resolutionSource[i]/resolutionSink[i])) for i in range(2)]);
     out.write(("resampleData: Imagesize: %d, %d " % dataSize) + ("Resampled Imagesize: %d, %d" % outputSize))
+    #out.write(("resampleData: Imagesize: %d, %d " % dataSize) + ("Resampled Imagesize: %d, %d" % (outputSize[1], outputSize[0])))
     
     # note: cv2.resize reverses x-Y axes
     outputData = cv2.resize(data,  (outputSize[1], outputSize[0]));
+    #outputData = cv2.resize(data,  outputSize);
+    
     #sagittalImage = scipy.misc.imresize(sagittalImage, outputImageSize, interp = 'bilinear'); #normalizes images -> not usefull for stacks !
-    out.write("resampleData: resized Image size: %d, %d " % outputData.shape)
+    
+    #out.write("resampleData: resized Image size: %d, %d " % outputData.shape)
     
     return io.writeData(sink, outputData);
 
@@ -129,17 +135,16 @@ def resampleXYParallel(arg):
     self.resampleXY(data, sink = outputFile, resolutionSource = resolutionSource,  resolutionSink = resolutionSink, out = pw);
 
 
-def resampleData(source, sink = None, resolutionSource = (4.0625, 4.0625, 3), orientation = None, resolutionSink = (25, 25, 25), processingDirectory = None, processes = 1, cleanup = True):
+def resampleData(source, sink = None, resolutionSource = (4.0625, 4.0625, 3), orientation = None, resolutionSink = (25, 25, 25), processingDirectory = None, processes = 1, cleanup = True, **args):
     """Resample data in source in resolution and orientation"""   
     """Notes: resolutions are assumed to be given for the axes of the intrinsic orientation of the data and reference as when viewed by matplotlib or ImageJ,
-              in particular images are loaded with shape (y,x) into numpy arrays
-              the scaling is determined by taking into acccount potential reorientation of the data
               orientation: permuation of 1,2,3 with potential sign, indicating which axes map onto the reference axes, 
               negative sign indicates reversal of that particular axes        
     """
     
     #fix (y,x,z) image array representation
-    resolutionSource, resolutionSink = self.fixResolutions(resolutionSource, resolutionSink);
+    #resolutionSource, resolutionSink = self.fixResolutions(resolutionSource, resolutionSink);
+    
     orientation = fixOrientation(orientation);
     
     #orient actual resolutions onto reference resolution
@@ -158,32 +163,34 @@ def resampleData(source, sink = None, resolutionSource = (4.0625, 4.0625, 3), or
         argdata.append( (source, os.path.join(processingDirectory, 'resample_%d.tif' % i), resolutionSource, resolutionSink, i, nZ) );  
     pool.map(self.resampleXYParallel, argdata);
     
-    #rescale in z we read 2d images as y,x
+    #rescale in z we read 2d images as x,y
     fn = os.path.join(processingDirectory, 'resample_%d.tif' % 0);
     data = io.readData(fn);
     dataSize = data.shape;
-    zImage = numpy.zeros((nZ, dataSize[0], dataSize[1]));
-    zImage[0,:,:] = data;
+    zImage = numpy.zeros((dataSize[0], dataSize[1], nZ), dtype = data.dtype);
+    zImage[:,:, 0] = data;
     
     for i in range(1,nZ):
         if i % 10 == 0:
             print "resampleData; reading %d/%d" % (i, nZ);
         fn = os.path.join(processingDirectory, 'resample_%d.tif' % i);
-        zImage[i,:,:] = io.readData(fn);
+        zImage[:,:, i] = io.readData(fn);
 
     resizedZSize = int(math.ceil(nZ * resolutionSource[2]/resolutionSink[2]));
-    resampledData = numpy.zeros((resizedZSize, dataSize[0], dataSize[1]));
+    resampledData = numpy.zeros((dataSize[0], dataSize[1], resizedZSize), dtype = zImage.dtype);
 
     for i in range(dataSize[0]):
-        if i % 10 == 0:
+        if i % 25 == 0:
             print "resampleData: processing %d/%d" % (i, dataSize[0])
         #resampledImage[:, iImage ,:] =  scipy.misc.imresize(zImage[:,iImage,:], [resizedZAxisSize, sagittalImageSize[1]] , interp = 'bilinear'); 
         #cv2.resize takes reverse order of sizes !
-        resampledData[:, i ,:] =  cv2.resize(zImage[:,i,:], (dataSize[1], resizedZSize));
+        resampledData[i ,:, :] =  cv2.resize(zImage[i,:,:], (resizedZSize, dataSize[1]));
+        #resampledData[i ,:, :] =  cv2.resize(zImage[i,:, :], (dataSize[1], resizedZSize));
     
 
     #account for using (z,y,x) array representation -> (y,x,z)
-    resampledData = resampledData.transpose([1,2,0]);
+    #resampledData = resampledData.transpose([1,2,0]);
+    #resampledData = resampledData.transpose([2,1,0]);
     
     print "resampleData: resampled image size:" + str(resampledData.shape)  
     
@@ -219,11 +226,12 @@ def resampleData(source, sink = None, resolutionSource = (4.0625, 4.0625, 3), or
     return io.writeData(sink, resampledData);
     
 
-def resamplePoints(source, dataSize, sink = None, resolutionSource = (4.0625, 4.0625, 3), resolutionSink = (25, 25, 25), orientation = None):
+def resamplePoints(source, dataSize, sink = None, resolutionSource = (4.0625, 4.0625, 3), resolutionSink = (25, 25, 25), orientation = None, **args):
     """Resample Points to map from original data to the coordinates of the resampled image"""
     
     #fix (y,x,z) image array representation
-    resolutionSource, resolutionSink = self.fixResolutions(resolutionSource, resolutionSink);
+    #resolutionSource, resolutionSink = self.fixResolutions(resolutionSource, resolutionSink);
+    
     orientation = self.fixOrientation(orientation);
     
     #orient actual resolutions onto reference resolution
@@ -235,8 +243,8 @@ def resamplePoints(source, dataSize, sink = None, resolutionSource = (4.0625, 4.
     #datasize of file pattern
     if isinstance(dataSize, basestring):
         dataSize = io.dataSize(dataSize);
-    else:
-        dataSize = self.fixDataSize(dataSize);
+    #else:
+    #    dataSize = self.fixDataSize(dataSize);
 
     #orient resolutions to reference resolutions
     if not orientation is None:
@@ -261,11 +269,12 @@ def resamplePoints(source, dataSize, sink = None, resolutionSource = (4.0625, 4.
 
 
      
-def resamplePointsInverse(source, dataSize, sink = None, resolutionSource = (4.0625, 4.0625, 3), resolutionSink = (25, 25, 25), orientation = None):
+def resamplePointsInverse(source, dataSize, sink = None, resolutionSource = (4.0625, 4.0625, 3), resolutionSink = (25, 25, 25), orientation = None, **args):
     """Resample Points to map from the coordinates of the resampled image to the original data"""
    
     #fix (y,x,z) image array representation
-    resolutionSource, resolutionSink = self.fixResolutions(resolutionSource, resolutionSink);
+    #resolutionSource, resolutionSink = self.fixResolutions(resolutionSource, resolutionSink);
+    
     orientation = fixOrientation(orientation);
     
     
@@ -276,8 +285,8 @@ def resamplePointsInverse(source, dataSize, sink = None, resolutionSource = (4.0
     #datasize of file pattern
     if isinstance(dataSize, basestring):
         dataSize = dataSize(dataSize);
-    else:
-        dataSize = self.fixDataSize(dataSize);
+    #else:
+    #    dataSize = self.fixDataSize(dataSize);
     
     
     points = io.readPoints(source);
@@ -315,23 +324,23 @@ def resamplePointsInverse(source, dataSize, sink = None, resolutionSource = (4.0
 
 def test():
     """Test Resampling Module"""
-    #import iDISCO.Alignment.Resampling as self
-    #reload(self)
-    from iDISCO.Parameter import iDISCOPath 
+    import iDISCO.Alignment.Resampling as self
+    reload(self)
+    from iDISCO.Settings import IDISCOPath 
     import iDISCO.IO.IO as io
     import os
 
-    fn = os.path.join(iDISCOPath(), 'Test/Data/OME/16-17-27_0_8X-s3-20HF_UltraII_C00_xyz-Table Z\d{4}.ome.tif');
-    outfn = os.path.join(iDISCOPath(), "Test/Data/Resampling/test.raw")
+    fn = os.path.join(IDISCOPath, 'Test/Data/OME/16-17-27_0_8X-s3-20HF_UltraII_C00_xyz-Table Z\d{4}.ome.tif');
+    outfn = os.path.join(IDISCOPath, "Test/Data/Resampling/test.raw")
     
-    print "Making subsampled stack " + outfn
+    print "Making resampled stack " + outfn
+    print "source datasize %s" % str(io.dataSize(fn));
     data = self.resampleData(fn, sink = None, resolutionSource = (1,1,1), orientation = (1,2,3), resolutionSink = (10,10,2));
     print data.shape
     io.writeData(outfn, data)   
     
 
 if __name__ == "__main__":
-    
     self.test();
     
 

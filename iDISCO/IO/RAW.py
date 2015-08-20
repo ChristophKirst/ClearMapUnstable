@@ -30,9 +30,9 @@ def dataSize(filename, **args):
 
     im = imr.GetOutput()
     dims = im.GetDimensions();
-    dims = list(dims);
-    dims[0:2] = [dims[1], dims[0]];
-    dims = tuple(dims);
+    #dims = list(dims);
+    #dims[0:2] = [dims[1], dims[0]];
+    #dims = tuple(dims);
     return io.dataSizeFromDataRange(dims, **args);
 
     
@@ -68,7 +68,8 @@ def readData(filename, x = all, y = all, z = all):
 
     dims = (dims[2], dims[1], dims[0]);
     img = img.reshape(dims)
-    img = img.transpose([1,2,0]);
+    #img = img.transpose([1,2,0]);
+    img = img.transpose([2,1,0]);
     
     return io.dataToRange(img, x = x, y = y, z = z);
 
@@ -98,11 +99,14 @@ def writeRawData(filename, data):
     rawfile = open(filename,'wb');
     d = len(data.shape);
     if d <= 2:
-        data.tofile(rawfile);
+        #data.tofile(rawfile);
+        data.transpose([1,0]).tofile(rawfile);
     elif d == 3:
-        data.transpose([2,0,1]).tofile(rawfile);
+        #data.transpose([2,0,1]).tofile(rawfile);
+        data.transpose([2,1,0]).tofile(rawfile);
     elif d== 4:
-        data.transpose([3,2,0,1]).tofile(rawfile);
+        #data.transpose([3,2,0,1]).tofile(rawfile);
+        data.transpose([3,2,1,0]).tofile(rawfile);
     else:
         raise RuntimeError('writeRawData: image dimension %d not supported!' % d);
     
@@ -141,9 +145,9 @@ def writeData(filename, data, **args):
     dtype = data.dtype;    
     meta_dict['ElementType'] = numpy_to_datatype[dtype];
     
-    #fix arrays represented as (y,x,z)
     dsize = list(data.shape);    
-    dsize[0:2] = [dsize[1],dsize[0]];
+    #dsize[0:2] = [dsize[1],dsize[0]];  #fix arrays represented as (y,x,z)
+    
     meta_dict['NDims'] = str(len(dsize))
     meta_dict['DimSize'] = ' '.join([str(i) for i in dsize])
     meta_dict['ElementDataFile'] = os.path.split(fname)[1].replace('.mhd','.raw')
@@ -198,13 +202,16 @@ def copyData(source, sink):
 
 
 
-def test():    
-    from iDISCO.Parameter import iDISCOPath
+def test():
+    """Test RAW io module"""
+    import iDISCO.IO.RAW as self
+    
+    from iDISCO.Settings import IDISCOPath
     import os
     import numpy
     
     """Test RAW module"""
-    basedir = iDISCOPath();
+    basedir = IDISCOPath;
     fn = os.path.join(basedir, 'Test/Data/Raw/test.mhd')
 
     data = numpy.random.rand(20,50,10);

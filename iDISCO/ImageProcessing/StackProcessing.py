@@ -163,7 +163,7 @@ def calculateChunkSize(size, processes = 2, chunkSizeMax = 100, chunkSizeMin = 3
 
 
 
-def joinPoints(pointlist, zranges, zcenters, intensities = None):
+def joinPoints(pointlist, zranges, zcenters, intensities = None, dataSize = None, x = all, y = all, z = all, shiftPoints = True, **args):
     """Joins a list of points obtained from processing a stack in chunks"""
     
     nchunks = len(pointlist);
@@ -189,10 +189,15 @@ def joinPoints(pointlist, zranges, zcenters, intensities = None):
         else:
             return numpy.zeros((0,3))
     else:
-        if not intensities is None:
-            return (numpy.concatenate(results), numpy.concatenate(resultsi));
+        points = numpy.concatenate(results);
+        
+        if shiftPoints:
+            points = points + io.pointShiftFromRange(dataSize, x = x, y = y, z = z);
+            
+        if intensities is None:
+            return points;
         else:
-            return numpy.concatenate(results);
+            return (points, numpy.concatenate(resultsi));
 
 
 def parallelProcessStack(source, x = all, y = all, z = all, sink = None,
@@ -202,7 +207,8 @@ def parallelProcessStack(source, x = all, y = all, z = all, sink = None,
     """Parallel process a stack using"""
     
     #determine z ranges
-    zs = io.dataZSize(source, z = all);
+    fs = io.dataSize(source);
+    zs = fs[2];
     zr = io.toDataRange(zs, r = z);
     nz = zr[1] - zr[0];
     nchunks, zranges, zcenters = self.calculateChunkSize(nz, processes = processes, chunkSizeMax = chunkSizeMax, chunkSizeMin = chunkSizeMin, chunkOverlap = chunkOverlap, chunkOptimization = chunkOptimization, chunkOptimizationSize = chunkOptimizationSize);
@@ -228,20 +234,10 @@ def parallelProcessStack(source, x = all, y = all, z = all, sink = None,
     #print nchunks
         
     #join the results: extension: make this a join function and pass as argument 
-    results, resultsi = join([resultsseg[i][0] for i in range(nchunks)], zranges, zcenters, [resultsseg[i][1] for i in range(nchunks)]);
-
-    if sink is None:
-        sink = (None, None);
-    elif isinstance(sink, basestring):
-        sink = (sink, sink[:,-4] + ".intensities." + sink[-3:]);
-    else:
-        raise RuntimeWarning('sink not well defined!')
-        sink = (None, None);
+    results = join([resultsseg[i][0] for i in range(nchunks)], zranges, zcenters, [resultsseg[i][1] for i in range(nchunks)], dataSize = fs, x = x, y = y, z = z, **parameter);
     
-    ce = io.writePoints(sink[0], numpy.concatenate(results));
-    ii = io.writePoints(sink[1], numpy.concatenate(resultsi));
-    
-    return (ce, ii);
+    #write / or return 
+    return io.writePoints(sink, results);
 
 
 def sequentiallyProcessStack(source, x = all, y = all, z = all, sink = None,
@@ -250,7 +246,8 @@ def sequentiallyProcessStack(source, x = all, y = all, z = all, sink = None,
     """Sequential image processing on a stack"""
     
     #determine z ranges
-    zs = io.dataZSize(source, z = all);
+    fs = io.dataSize(source);
+    zs = fs[2];
     zr = io.toDataRange(zs, r = z);
     nz = zr[1] - zr[0];
     nchunks, zranges, zcenters = self.calculateChunkSize(nz, processes = 1, chunkSizeMax = chunkSizeMax, chunkSizeMin = chunkSizeMin, chunkOverlap = chunkOverlap, chunkOptimization = False, chunkOptimizationSize = False);
@@ -270,19 +267,8 @@ def sequentiallyProcessStack(source, x = all, y = all, z = all, sink = None,
             
     #join the results  
     #join the results: extension: make this a join function and pass as argument 
-    results, resultsi = self.join([resultsseg[i][0] for i in range(nchunks)], zranges, zcenters, [resultsseg[i][1] for i in range(nchunks)]);
+    results = join([resultsseg[i][0] for i in range(nchunks)], zranges, zcenters, [resultsseg[i][1] for i in range(nchunks)], dataSize = fs, x = x, y = y, z = z, **parameter);
 
-    #todo: make clean independent of return of two results -> io.wrtiePoints -> take care of pairs: (points,intensities)
-    if sink is None:
-        sink = (None, None);
-    elif isinstance(sink, basestring):
-        sink = (sink, sink[:,-4] + ".intensities." + sink[-3:]);
-    else:
-        raise RuntimeWarning('sink not well defined!')
-        sink = (None, None);
-    
-    ce = io.writePoints(sink[0], numpy.concatenate(results));
-    ii = io.writePoints(sink[1], numpy.concatenate(resultsi));
-    
-    return (ce, ii); 
+    #write / or return 
+    return io.writePoints(sink, results);
 

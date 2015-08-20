@@ -14,13 +14,15 @@ self = sys.modules[__name__];
 
 import iDISCO.IO.IO as io;
 
-def writePoints(filename, points):
+def writePoints(filename, points, **args):
     numpy.savetxt(filename, points, delimiter=',', newline='\n', fmt='%.5e')
+    return filename
+
 
 def readPoints(filename, **args):
     points = numpy.loadtxt(filename, delimiter=',');
     return io.pointsToRange(points, **args);
-    
+
 
 def test():    
     """Test CSV module"""

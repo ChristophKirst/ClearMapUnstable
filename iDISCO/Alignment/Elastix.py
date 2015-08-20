@@ -6,9 +6,9 @@ Interface to Elastix for brain alignment
 Notes:
     - elastix finds map T: fixed -> moving
     - the result folder may contain an image (mhd file) that is T^-1(moving) i.e. has size of fixed image
-    - transformix applied on data gives T^(-1)(data)
-    - transformix applied on points gives T(points) !!
-    - point arrays are assumed to be in (y,x,z) coordinates consistent with (y,x,z) array represenation of images
+    - transformix applied to data gives T^(-1)(data) !
+    - transformix applied to points gives T(points)
+    - point arrays are assumed to be in (x,y,z) coordinates consistent with (x,y,z) array represenation of images in iDISCO
 
 Created on Thu Jun  4 14:37:06 2015
 
@@ -22,12 +22,11 @@ import os
 import tempfile
 import shutil
 import numpy
-
 import re
 
-import iDISCO.IO.IO as io
-
 import iDISCO.Settings as settings
+
+import iDISCO.IO.IO as io
 
 ##############################################################################
 # Initialization and Enviroment Settings
@@ -110,9 +109,9 @@ initializeElastix();
 def checkElastixInitialized():
     """Checks if elastix is initialized"""
     
-    global ElastixSettings;
+    global Initialized;
     
-    if not ElastixSettings.Initialized:
+    if not Initialized:
         raise RuntimeError("Elastix not initialized: run initializeElastix(path) with proper path to elastix first");
     #print ElastixSettings.ElastixBinary;
 
@@ -297,7 +296,7 @@ def alignData(fixedImage, movingImage, affineParameterFile, bSplineParameterFile
     """Align images using elastix, estimates transformation T:fixed -> moving"""
     
     self.checkElastixInitialized();
-    global ElastixSettings;
+    global ElastixBinary;
     
     if resultDirectory == None:
         resultDirectory = tempfile.gettempdir();
@@ -307,9 +306,9 @@ def alignData(fixedImage, movingImage, affineParameterFile, bSplineParameterFile
     
     
     if bSplineParameterFile is None:
-        cmd = ElastixSettings.ElastixBinary + ' -threads 16 -m ' + movingImage + ' -f ' + fixedImage + ' -p ' + affineParameterFile + ' -out ' + resultDirectory;
+        cmd = ElastixBinary + ' -threads 16 -m ' + movingImage + ' -f ' + fixedImage + ' -p ' + affineParameterFile + ' -out ' + resultDirectory;
     else:
-        cmd = ElastixSettings.ElastixBinary + ' -threads 16 -m ' + movingImage + ' -f ' + fixedImage + ' -p ' + affineParameterFile + ' -p ' + bSplineParameterFile + ' -out ' + resultDirectory;
+        cmd = ElastixBinary + ' -threads 16 -m ' + movingImage + ' -f ' + fixedImage + ' -p ' + affineParameterFile + ' -p ' + bSplineParameterFile + ' -out ' + resultDirectory;
         #$ELASTIX -threads 16 -m $MOVINGIMAGE -f $FIXEDIMAGE -fMask $FIXEDIMAGE_MASK -p  $AFFINEPARFILE -p $BSPLINEPARFILE -out $ELASTIX_OUTPUT_DIR
     
     res = os.system(cmd);
@@ -323,11 +322,13 @@ def alignData(fixedImage, movingImage, affineParameterFile, bSplineParameterFile
 def transformData(source, sink = [], transformParameterFile = None, transformDirectory = None, resultDirectory = None):
     """Transform a raw data set to reference using the elastix alignment results"""
     
+    global TransformixBinary;    
+    
     if isinstance(source, numpy.ndarray):
         imgname = os.path.join(tempfile.gettempdir(), 'elastix_input.tif');
         io.writeData(source, imgname);
     elif isinstance(source, basestring):
-        if io.imageFileNameToType(source) == "TIF":
+        if io.dataFileNameToType(source) == "TIF":
             imgname = source;
         else:
             imgname = os.path.join(tempfile.gettempdir(), 'elastix_input.tif');
@@ -358,7 +359,7 @@ def transformData(source, sink = [], transformParameterFile = None, transformDir
     self.setPathTransformParameterFiles(transformparameterdir);
    
     #transformix -in inputImage.ext -out outputDirectory -tp TransformParameters.txt
-    cmd = ElastixSettings.TransformixBinary + ' -in ' + imgname + ' -out ' + resultdirname + ' -tp ' + transformParameterFile;
+    cmd = TransformixBinary + ' -in ' + imgname + ' -out ' + resultdirname + ' -tp ' + transformParameterFile;
     
     res = os.system(cmd);
     
@@ -370,13 +371,13 @@ def transformData(source, sink = [], transformParameterFile = None, transformDir
         os.remove(imgname);
 
     if sink == []:
-        return self.getResultDatafile(resultdirname);
+        return self.getResultDataFile(resultdirname);
     elif sink is None:
-        resultfile = self.getResultDatafile(resultdirname);
+        resultfile = self.getResultDataFile(resultdirname);
         return io.readData(resultfile);
     elif isinstance(sink, basestring):
-        resultfile = self.getResultDatafile(resultdirname);
-        return io.transformData(resultfile, sink);
+        resultfile = self.getResultDataFile(resultdirname);
+        return io.convertData(resultfile, sink);
     else:
         raise RuntimeError('transformData: sink not valid!');
 
@@ -385,7 +386,7 @@ def transformData(source, sink = [], transformParameterFile = None, transformDir
 def writePoints(filename, points, indices = True):
     """Write points as elastix/transformix point file"""
 
-    points = points[:,[1,0,2]]; # points in iDISCO (y,x,z) -> permute to (x,y,z)
+    #points = points[:,[1,0,2]]; # points in iDISCO (y,x,z) -> permute to (x,y,z)
   
     with open(filename, 'w') as pointfile:
         if indices:
@@ -405,6 +406,8 @@ def transformPoints(source, sink = None, transformParameterFile = None, transfor
     """Transform pixel coordinates of cell centers using a calculated transformation obtained form elastix"""
     """Note: assumes iDISCOs (y,x,z) representation of points as arrays/sources but (x,y,z) representation of elastix type point files""" 
     
+    global TransformixBinary;    
+    
     self.checkElastixInitialized();    
     global ElastixSettings;
 
@@ -423,11 +426,13 @@ def transformPoints(source, sink = None, transformParameterFile = None, transfor
                 txtfile = source;
             else:                
                 points = io.readPoints(source);
+                #points = points[:,[1,0,2]];
                 txtfile = tmpFile;
                 self.writePoints(txtfile, points); 
     
     elif isinstance(source, numpy.ndarray):
         txtfile = tmpFile;
+        #points = source[:,[1,0,2]];
         self.writePoints(txtfile, source);
         
     else:
@@ -458,7 +463,7 @@ def transformPoints(source, sink = None, transformParameterFile = None, transfor
     self.setPathTransformParameterFiles(transformparameterdir);
     
     #run transformix   
-    cmd = ElastixSettings.TransformixBinary + ' -def ' + txtfile + ' -out ' + outdirname + ' -tp ' + transformparameterfile;
+    cmd = TransformixBinary + ' -def ' + txtfile + ' -out ' + outdirname + ' -tp ' + transformparameterfile;
     res = os.system(cmd);
     
     if res != 0:
@@ -474,7 +479,7 @@ def transformPoints(source, sink = None, transformParameterFile = None, transfor
         transpoints = parseElastixOutputPoints(os.path.join(outdirname, 'outputpoints.txt'), indices = indices);
 
         #correct x,y,z to y,x,z
-        transpoints = transpoints[:,[1,0,2]];     
+        #transpoints = transpoints[:,[1,0,2]];     
         
         #cleanup
         for f in os.listdir(outdirname):

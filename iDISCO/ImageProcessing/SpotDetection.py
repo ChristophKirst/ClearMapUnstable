@@ -14,8 +14,6 @@ Created on Thu Jun  4 14:37:06 2015
 import sys
 self = sys.modules[__name__];
 
-import numpy
-
 from scipy.ndimage.filters import correlate
 #from scipy.signal import fftconvolve
 
@@ -24,8 +22,8 @@ from iDISCO.ImageProcessing.BackgroundRemoval import removeBackground
 from iDISCO.ImageProcessing.MaximaDetection import findExtendedMaxima, findCenterOfMaxima, findIntensity
 
 from iDISCO.Utils.Timer import Timer
-from iDISCO.Utils.ParameterTools import writeParameter;
-from iDISCO.Visualization.Plot import plotTiling, 
+from iDISCO.Utils.ParameterTools import writeParameter
+from iDISCO.Visualization.Plot import plotTiling
 
 
 ##############################################################################

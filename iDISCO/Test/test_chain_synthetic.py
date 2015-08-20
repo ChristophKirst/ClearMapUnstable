@@ -14,45 +14,56 @@ Test Processing Chain with Synthetic Data
 ##############################################################################
 
 import os
-import numpy
 
-from iDISCO.Parameter import *
-from iDISCO.Run import runResampling
+import iDISCO.Settings as settings
 
-import shutil
+from iDISCO.Alignment.Resampling import resampleData
 
-basedirectory = os.path.join(iDISCOPath(), 'Test');
+baseDirectory = os.path.join(settings.IDISCOPath, 'Test');
 
-parameter = Parameter();
-
-
-#Files
-parameter.Resampling.DataFiles = os.path.join(basedirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif')
-parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif');
+## Parameter for resampling data
+resamplingParameter = {
     
-#Resolution of the Data (in um / pixel)
-parameter.Resampling.ResolutionData = (5, 5, 3);
+    #Data source and output file
+    "source" : os.path.join(baseDirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif'),
+    "sink"   : os.path.join(baseDirectory, 'Synthetic/test_iDISCO_resample.tif'),
+    
+    #Resolution of the raw data (in um / pixel) as (x,y,z)
+    "resolutionSource" : (5, 5, 3),
 
-#Resolution of the Reference / Atlas (in um/ pixel)
-parameter.Resampling.ResolutionReference = (12, 15, 5);
+    #Resolution of the Reference / Atlas (in um/ pixel) as (x,y,z)
+    "resolutionSink" : (12, 15, 5),
 
-#Orientation of the Data set wrt reference 
-#(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchange x,y use (2,1,3) etc)
-parameter.Resampling.Orientation = (1,2,3);
+    #Orientation of the Data set wrt reference as (x=1,y=2,z=3)
+    #(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchnge x,y use (2,1,3) etc)
+    "orientation" : (1,2,3),
+    
+    #number of processes to use in parallel:
+    "processes" : 4,     
+    };
 
-#Processes to use for Resampling
-parameter.Resampling.Processes = 4;
 
-resampledImage = runResampling(parameter);
-
+resampledImage = resampleData(**resamplingParameter)
 print "Resampled image saved as %s" % resampledImage
 
-# Reference = Identity to test
-#shutil.copyfile(resampledImage, os.path.join(basedirectory, 'Synthetic/test_iDISCO_reference.tif'))
-parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'Synthetic/test_iDISCO_reference.tif');
-parameter.Resampling.ResolutionReference = (15, 17, 5);
-resampledImage = runResampling(parameter);
 
+
+# create reference for further tests
+#import shutil
+#shutil.copyfile(resampledImage, os.path.join(baseDirectory, 'Synthetic/test_iDISCO_reference.tif'))
+resamplingParameter["sink"] = os.path.join(baseDirectory, 'Synthetic/test_iDISCO_reference.tif');
+resamplingParameter["resolutionSink"] = (12, 12, 5);
+referenceImage = resampleData(**resamplingParameter);
+print "Reference image saved as %s" % referenceImage
+
+
+# use None as sink to get the numpy array
+resamplingParameter["sink"] = None
+referenceImage = resampleData(**resamplingParameter);
+referenceImage.shape
+
+#import iDISCO.IO.IO as io
+#io.writeData(os.path.join(baseDirectory, 'Synthetic/test_iDISCO_reference.tif'), referenceImage.astype('int16'))
 
 
 ##############################################################################
@@ -61,39 +72,32 @@ resampledImage = runResampling(parameter);
 
 import os
 
-from iDISCO.Parameter import *
-from iDISCO.Run import runAlignment, runInitializeElastix
+import iDISCO.Settings as settings
 
-import iDISCO.Alignment.Elastix
+from iDISCO.Alignment.Elastix import alignData
 
-basedirectory = os.path.join(iDISCOPath(), 'Test');
+baseDirectory = os.path.join(settings.IDISCOPath, 'Test');
 
-parameter = Parameter();
+alignmentDirectory = os.path.join(baseDirectory, 'Synthetic/elastix');
 
-#directory of the alignment result
-parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'Synthetic/elastix');
-
-#Elastix binary
-parameter.Alignment.ElastixDirectory = "/usr/local/elastix'
+alignmentParameter = {            
+    #moving and reference images
+    "movingImage" : os.path.join(baseDirectory, 'Synthetic/test_iDISCO_reference.tif'),
+    "fixedImage"  : os.path.join(baseDirectory, 'Synthetic/test_iDISCO_resample.tif'),
     
-#moving and reference images
-parameter.Alignment.MovingImage = os.path.join(basedirectory, 'Synthetic/test_iDISCO_reference.tif');
-parameter.Alignment.FixedImage  = os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif');
-parameter.Alignment.FixedImageMask = None;
-  
-  
-#elastix parameter files for alignment
-parameter.Alignment.AffineParameterFile  = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterAffine.txt');
-#parameter.Alignment.BSplineParameterFile = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterBSpline.txt');
-parameter.Alignment.BSplineParameterFile = None;
+    #elastix parameter files for alignment
+    "affineParameterFile"  : os.path.join(alignmentDirectory, 'ElastixParameterAffine.txt'),
+    "bSplineParameterFile" : None,
+    
+    #directory of the alignment result
+    "resultDirectory" : alignmentDirectory
+    };
 
 
-runInitializeElastix(parameter)
-iDISCO.Alignment.Elastix.ElastixSettings.printInfo();
 
-resultDirectory = runAlignment(parameter);
+result = alignData(**alignmentParameter);
 
-print "Aligned images: result directory: %s" % resultDirectory
+print "Aligned images: result directory: %s" % result
 
 
 
@@ -104,41 +108,79 @@ print "Aligned images: result directory: %s" % resultDirectory
 
 import os
 
-from iDISCO.Parameter import *
-from iDISCO.Run import runCellDetection
+import iDISCO.Settings as settings
 
-parameter = Parameter();
+from iDISCO.ImageProcessing.CellDetection import detectCells
+from iDISCO.Utils.ParameterTools import joinParameter
 
-basedirectory = os.path.join(iDISCOPath(), 'Test');
+baseDirectory = os.path.join(settings.IDISCOPath, 'Test');
 
-### Data Source 
+## Parameter for processing a stack in parallel
+stackProcessingParameter = {
+    #max number of parallel processes
+    "processes" : 4,
+   
+    #chunk sizes
+    "chunkSizeMax" : 100,
+    "chunkSizeMin" : 30,
+    "cChunkOverlap" : 15,
 
-#raw data from microscope used for cell detection (ims or tif)
-parameter.DataSource.ImageFile = os.path.join(basedirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif')
+    #optimize chunk size and number to number of processes
+    "chunkOptimization" : True,
+    
+    #increase chunk size for optimizaition (True, False or all = automatic)
+    "chunkOptimizationSize" : all
+    };
 
-#image ranges
-parameter.DataSource.XRange = all;
-parameter.DataSource.YRange = all;
-parameter.DataSource.ZRange = all;
 
-# radius for background removal
-parameter.ImageProcessing.Parameter.Background = (20,20);
+## Paramters for cell detection using spot detection alorithm 
+spotDetectionParameter = {
+    # background correctoin: None or (y,x) which is size of disk for gray scale opening
+    "backgroundSize" : (20,20),
+    
+    # spot Detection via Difference of Gaussians (DoG) filter: (y,x,z) size
+    "dogSize" : (8, 8, 6),
+    
+    # h of h-max transform
+    "hMax" : 0.15,
+    
+    # intensity detection   
+    "intensityMethod"  : 'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
+    "intensitySize"    : (3,3,3),  # size of box in (y,x,z) to include in intensity determination
+    
+    # threshold for min intensity at center to be counted as cell (should be similar to the h max)
+    "threshold" : 0.15,
+    
+    # data and range
+    "source" : os.path.join(baseDirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif'),
+    "x" : all,
+    "y" : all,
+    "z" : all,
+    
+    # file names to save coordinates and intensities result, (None, None) = return numpy array
+    "sink" : (os.path.join(baseDirectory, 'Synthetic/cells.csv'), os.path.join(baseDirectory, 'Synthetic/intensities.csv')),
+    #"sink" : (None,  None),
+    
+    #some debug / quality check output
+    #"verbose" : True,
+    #"processMethod" : "sequential"  #  plotting during image processing only in sequential mode !
+    };
 
-# size of differeence of gaussian filter
-parameter.ImageProcessing.Parameter.Dog = (8, 8, 6);
+allParameter = joinParameter(stackProcessingParameter, spotDetectionParameter)
 
-# h value for h max detection
-parameter.ImageProcessing.Parameter.HMax = 0.5;
-parameter.ImageProcessing.Parameter.Threshold = 0.5;
 
-# intensity threshold for final cells to be saved
-parameter.ImageProcessing.Parameter.ThresholdSave = None;
+result = detectCells(**allParameter);
+print result
 
-# result file for cell coordinates (csv, vtk or ims)
-parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Synthetic/cells.csv');
-parameter.ImageProcessing.CellIntensityFile = os.path.join(basedirectory, 'Synthetic/intensities.csv');
+verbose = True;
+if verbose:
+    import iDISCO.IO.IO as io
+    import iDISCO.Visualization.Plot as plot   
+    
+    dataraw = io.readData(spotDetectionParameter["source"]);
+    points  = io.readPoints(spotDetectionParameter["sink"][0]);
+    plot.plotOverlayPoints(dataraw, points);
 
-runCellDetection(parameter)
 
 
 
@@ -147,56 +189,61 @@ runCellDetection(parameter)
 ############################################################################## 
 
 import os
-import numpy
 
-from iDISCO.Parameter import *
-from iDISCO.Run import runResampling
+import iDISCO.Settings as settings
 import iDISCO.IO.IO as io
-from iDISCO.Visualization import Plot
+import iDISCO.Visualization.Plot as plot
 
-from iDISCO.Alignment.Resampling import resamplePoints, resamplePointsInverse, dataSize
+from iDISCO.Alignment.Resampling import resamplePoints, resamplePointsInverse
 
 verbose = True;
 
-basedirectory = os.path.join(iDISCOPath(), 'Test');
+baseDirectory = os.path.join(settings.IDISCOPath, 'Test');
 
-parameter = Parameter();
+files = os.path.join(baseDirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif');
 
-files = os.path.join(basedirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif');
+dataSize = io.dataSize(files);
+print dataSize
 
-datasize = dataSize(files);
-print datasize
 
-#Resolution of the Data (in um / pixel)
-parameter.Resampling.ResolutionData = (5, 5, 3);
+resamplingParameter = {
+    #Resolution of the raw data (in um / pixel) as (x,y,z)
+    "resolutionSource" : (5, 5, 3),
 
-#Resolution of the Reference / Atlas (in um/ pixel)
-parameter.Resampling.ResolutionReference = (12, 15, 5);
+    #Resolution of the Reference / Atlas (in um/ pixel) as (x,y,z)
+    "resolutionSink"   : (12, 15, 5),
 
-#Orientation of the Data set wrt reference 
-#(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchnge x,y use (2,1,3) etc)
-parameter.Resampling.Orientation = (1,2,3);
+    #Orientation of the Data set wrt reference as (x=1,y=2,z=3)
+    #(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchnge x,y use (2,1,3) etc)
+    "orientation" : (1,2,3),
+    
+    #number of processes to use in parallel:
+    "processes" : 4,     
+    };
+
 
 #centers
-centers = io.readPoints(os.path.join(basedirectory, 'Synthetic/cells.csv'))
-print "Center shape: (%d, %d)" % centers.shape
-rcenters = resamplePoints(centers, datasize, parameter.Resampling.ResolutionData, parameter.Resampling.ResolutionReference, parameter.Resampling.Orientation)
-print "Reshaped centers shape: (%d, %d)" % rcenters.shape
+points = io.readPoints(os.path.join(baseDirectory, 'Synthetic/cells.csv'));
+print "points shape: (%d, %d)" % points.shape
+
+respoints = resamplePoints(points, dataSize, shiftPoints = True, **resamplingParameter);
+print "Reshaped centers shape: (%d, %d)" % respoints.shape
 
 if verbose:
-    dataraw = io.readData(os.path.join(basedirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif'));
-    datares = io.readData(os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif'));
+    dataraw = io.readData(os.path.join(baseDirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif'));
+    datares = io.readData(os.path.join(baseDirectory, 'Synthetic/test_iDISCO_resample.tif'));
     print "Shape raw: " + str(dataraw.shape)
     print "Shape res: " + str(datares.shape)
     
-    Plot.plotOverlayPoints(dataraw*0.01, centers)
-    Plot.plotOverlayPoints(datares*0.01, rcenters)
+    plot.plotOverlayPoints(dataraw*0.01, points);
+    plot.plotOverlayPoints(datares*0.01, respoints);
 
 
 #check inverse:
-rrcenters = resamplePointsInverse(rcenters, datasize, parameter.Resampling.ResolutionData, parameter.Resampling.ResolutionReference, parameter.Resampling.Orientation);
-diff = centers - rrcenters;
+resipoints = resamplePointsInverse(respoints, dataSize, **resamplingParameter);
+diff = points - resipoints;
 print (diff.max(), diff.min());
+
 
 
 
@@ -204,68 +251,69 @@ print (diff.max(), diff.min());
 # Test Transform Points on Corners
 ############################################################################## 
 
-import iDISCO.Visualization.Plot as Plot;
+import numpy
 
 import iDISCO.Alignment.Elastix as elx;
 
-import iDISCO.Analysis.Voxelization as vox
-import iDISCO.IO.IO as io
-
-elx.initializeElastix('/home/ckirst/programs/elastix')
-elx.ElastixSettings.printInfo()
-
 verbose = True;
 
-transformdir = os.path.join(basedirectory, 'Synthetic/transformix')
+# directory in with elastix alignment result 
+transformDirectory  =  os.path.join(baseDirectory, 'Synthetic/elastix');
 
-pointsdir = os.path.join(basedirectory, 'Synthetic/points')
+#result diectory to write transformed points to (None = read back as array)
+resultDirectory    = os.path.join(baseDirectory, 'Synthetic/transformix')
 
-parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'Synthetic/elastix');
-
-#define (x,y,z) coordinates for testing
-rcenters = numpy.array([[0,0,0],[46,0,0],[0,46,0],[0,0,23],[89,0,0],[0,89,0],[89,46,0]]);
+#define (y,x,z) coordinates for testing
+points = numpy.array([[0,0,0],[74,0,0],[0,52,0],[0,0,23],[74,52,0]]);
 
 #acenters = elx.transformPoints(rcenters, alignmentdirectory = parameter.Alignment.AlignmentDirectory, outdirectory = pointsdir);
-acenters = elx.transformPoints(rcenters, alignmentdirectory = parameter.Alignment.AlignmentDirectory);
+pointsa = elx.transformPoints(points, resultDirectory = resultDirectory, transformDirectory = transformDirectory);
 
-print acenters
+print pointsa
 
 
 
 ##############################################################################
-# Test Transform Resampled Data to Reference
+# Test Transform Reference to Ressampled Data
 ############################################################################## 
 
-from iDISCO.Parameter import *
-import iDISCO.Alignment.Elastix as elx
-import iDISCO.Visualization.Plot as Plot
-import iDISCO.IO.IO as io
+import os
 
-basedirectory = os.path.join(iDISCOPath(), 'Test');
+import iDISCO.Settings as settings
+
+import iDISCO.IO.IO as io
+import iDISCO.Alignment.Elastix as elx
+
+import iDISCO.Visualization.Plot as plot
+
+baseDirectory = os.path.join(settings.IDISCOPath,  'Test');
 
 verbose = True;
 
-elx.initializeElastix('/home/ckirst/programs/elastix')
-elx.ElastixSettings.printInfo()
-
-resultdir = os.path.join(basedirectory, 'Synthetic/elastix');
-transformfile = elx.getTransformParameterFile(resultdir)
+transformDirectory = os.path.join(baseDirectory, 'Synthetic/elastix');
+transformFile      = elx.getTransformParameterFile(transformDirectory)
 
 # tranform points according to alignment of data and reference 
-resamplefile = os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif');
-transformdir = os.path.join(basedirectory, 'Synthetic/transformix')
+resampleFile    = os.path.join(baseDirectory, 'Synthetic/test_iDISCO_resample.tif');
+referenceFile    = os.path.join(baseDirectory, 'Synthetic/test_iDISCO_reference.tif');
+
+resultDirectory = os.path.join(baseDirectory, 'Synthetic/transformix')
 
 #elx.transformData(dataresname, alignmentdirectory = resultdir, outdirectory = dataalgname)
-elx.transformData(resamplefile, transformparameterfile = os.path.join(basedirectory, 'Synthetic/elastix/TransformParameters.0.txt'), outdirectory = transformdir)
+resultFile = elx.transformData(referenceFile, transformDirectory = transformDirectory, resultDirectory = resultDirectory)
 
 if verbose:
-    transformdata = io.readData(os.path.join(transformdir, 'result.mhd'));
-    resampledata  = io.readData(resamplefile);
-    
-    Plot.plotTiling(0.01 * transformdata)
-    Plot.plotTiling(0.01 * resampledata)
-   
-    
+    resampledata  = io.readData(resampleFile);
+    referencedata = io.readData(referenceFile);
+    transformdata = io.readData(resultFile);
+
+    print resampledata.shape
+    print referencedata.shape
+    print transformdata.shape    
+
+    plot.plotTiling(0.01 * resampledata)
+    plot.plotTiling(0.01 * referencedata)
+    plot.plotTiling(0.01 * transformdata)    
 
 
 
@@ -275,64 +323,59 @@ if verbose:
 
 import os
 
-from iDISCO.Parameter import *
-from iDISCO.Run import runInitializeElastix, runCellCoordinateTransformationToReference
-
-
-import iDISCO.Visualization.Plot as Plot
+import iDISCO.Settings as settings
+import iDISCO.Visualization.Plot as plot
 import iDISCO.IO.IO as io
 
-basedirectory = os.path.join(iDISCOPath(), 'Test');
+from iDISCO.Alignment.Elastix import transformPoints
+from iDISCO.Alignment.Resampling import resamplePoints
+
+baseDirectory = os.path.join(settings.IDISCOPath, 'Test');
 
 verbose = True;
 
-parameter = Parameter();
+## Data sources
+dataFile = os.path.join(baseDirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif')
 
-##Cells
-parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Synthetic/cells.csv');
-parameter.ImageProcessing.CellTransformedCoordinateFile = os.path.join(basedirectory, 'Synthetic/cells_transformed.csv');
-##Resampling Parameter
-#Files
-parameter.Resampling.DataFiles = os.path.join(basedirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif')
-parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif');
+## Cell coordinates source
+pointsFile = os.path.join(baseDirectory, 'Synthetic/cells.csv')
+
+## Cell transformed cordinate resilt file
+transformedPointsFile = os.path.join(baseDirectory, 'Synthetic/cells_transformed_to_reference.csv')
+
+## Parameter for resampling data
+resamplingParameter = {
+   
+    #Resolution of the raw data (in um / pixel) as (x,y,z)
+    "resolutionSource" : (5, 5, 3),
+
+    #Resolution of the Reference / Atlas (in um/ pixel) as (x,y,z)
+    "resolutionSink" : (12, 15, 5),
+
+    #Orientation of the Data set wrt reference as (x=1,y=2,z=3)
+    #(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchnge x,y use (2,1,3) etc)
+    "orientation" : (1,2,3)   
+    };
+
+alignmentDirectory = os.path.join(baseDirectory, 'Synthetic/elastix');
+
     
-#Resolution of the Data (in um / pixel)
-parameter.Resampling.ResolutionData = (5, 5, 3);
-
-#Resolution of the Reference / Atlas (in um/ pixel)
-parameter.Resampling.ResolutionReference = (12, 15, 5);
-
-#Orientation of the Data set wrt reference 
-#(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchnge x,y use (2,1,3) etc)
-parameter.Resampling.Orientation = (1,2,3);
-
-
-##Alignment Parameter
-#directory of the alignment result
-parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'Synthetic/elastix');
-
-#Elastix binary
-parameter.Alignment.ElastixDirectory = '/home/ckirst/programs/elastix'
+# downscale points to referenece image size
+points = resamplePoints(pointsFile, dataFile, **resamplingParameter);
     
-#moving and reference images
-parameter.Alignment.MovingImage = os.path.join(basedirectory, 'Synthetic/test_iDISCO_reference.tif');
-parameter.Alignment.FixedImage  = parameter.Resampling.ResampledFile;
+# transform points
+points = transformPoints(points, transformDirectory = alignmentDirectory, indices = False, resultDirectory = None);
 
-parameter.Alignment.FixedImageMask = None;
-  
-#elastix parameter files for alignment
-parameter.Alignment.AffineParameterFile  = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterAffine.txt');
-#parameter.Alignment.BSplineParameterFile = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterBSpline.txt');
-parameter.Alignment.BSplineParameterFile = None;
-
-runInitializeElastix(parameter)
-
-runCellCoordinateTransformationToReference(parameter)
+# save
+io.writePoints(transformedPointsFile, points);
 
 if verbose:
-    refdata = io.readData(parameter.Alignment.MovingImage);
-    pts = io.readPoints(parameter.ImageProcessing.CellTransformedCoordinateFile);
-    Plot.plotOverlayPoints(0.01 * refdata, pts)
+    refdata = io.readData(os.path.join(baseDirectory, 'Synthetic/test_iDISCO_reference.tif'));
+    plot.plotOverlayPoints(0.01 * refdata, points)
+
+
+
+
 
 
 
@@ -343,212 +386,65 @@ if verbose:
 
 import os
 
-from iDISCO.Parameter import *
-from iDISCO.Run import runVoxelization
-
-import iDISCO.Visualization.Plot as Plot
+import iDISCO.Settings as settings
 import iDISCO.IO.IO as io
+import iDISCO.Visualization.Plot as plot
 
-basedirectory = os.path.join(iDISCOPath(), 'Test');
+from iDISCO.Analysis.Voxelization import voxelize
+
+
+baseDirectory = os.path.join(settings.IDISCOPath, 'Test');
 
 verbose = True;
 
-parameter = Parameter();
+
+## Parameter to calculate density voxelization
+voxelizationParameter = {
+    #Method to voxelize
+    "voxelizationMethod" : 'Spherical', # Spherical,'Rectangular, Gaussian'
+       
+    # Define bounds of the volume to be voxelized
+    "voxelizationSize" : (5,5,5),  
+
+    # Voxelization weigths (e/g intensities)
+    "voxelizationWeights" : None
+    };
 
 
 #Points
-parameter.ImageProcessing.CellTransformedCoordinateFile = os.path.join(basedirectory, 'Synthetic/cells_transformed.csv');
+transformedPointsFile = os.path.join(baseDirectory, 'Synthetic/cells_transformed_to_reference.csv')
 
 #Reference file
-parameter.Alignment.FixedImage = os.path.join(basedirectory, 'Synthetic/test_iDISCO_reference.tif');
+referenceFile = os.path.join(baseDirectory, 'Synthetic/test_iDISCO_reference.tif');
 
-##Voxelization
-#Size of averaging window
-parameter.Voxelization.AveragingDiameter = (15,15,15);  #Radius of the sphere
-    
-#Image size
-parameter.Voxelization.Size = None;  #None extract from data
-    
-#Mode
-parameter.Voxelization.Mode = 'Spherical';
-    
-#Output File
-parameter.Voxelization.File = os.path.join(basedirectory, 'Synthetic/points_voxelized.tif');
+#voxelization file 
+voxelizationFile = None;
 
-runVoxelization(parameter);
-
+voxdata = voxelize(transformedPointsFile, dataSize = referenceFile, sink = voxelizationFile, **voxelizationParameter)
 
 if verbose:
     #voxdata = io.readData(parameter.Alignment.FixedImage);
-    voxdata = io.readData(parameter.Voxelization.File);
-    points  = io.readPoints(parameter.ImageProcessing.CellTransformedCoordinateFile)
-    Plot.plotOverlayPoints(voxdata.astype('float') / voxdata.max(), points)
+    voxdata = io.readData(voxdata);
+    points  = io.readPoints(transformedPointsFile)
+    plot.plotOverlayPoints(voxdata.astype('float') / voxdata.max(), points)
 
 
 
-
-
-
-
-
-
-##############################################################################
-# Test Full Chain
-##############################################################################
-
-import os
+## with weights
 import numpy
 
-from iDISCO.Parameter import *
-from iDISCO.Run import *
-import iDISCO.Visualization.Plot as Plot
+points  = io.readPoints(transformedPointsFile)
 
-verbose = True;
+voxelizationParameter["voxelizationSize"]    = (9,9,9);
+voxelizationParameter["voxelizationWeights"] = numpy.random.rand(points.shape[0]);
 
-basedirectory = os.path.join(iDISCOPath(), 'Test');
-
-parameter = Parameter();
-
-
-## Resampling to prepare alignment
-
-#Files
-parameter.Resampling.DataFiles = os.path.join(basedirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif')
-parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif');
-    
-#Resolution of the Data (in um / pixel)
-parameter.Resampling.ResolutionData = (5, 5, 3);
-
-#Resolution of the Reference / Atlas (in um/ pixel)
-parameter.Resampling.ResolutionReference = (12, 15, 5);
-
-#Orientation of the Data set wrt reference 
-#(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchnge x,y use (2,1,3) etc)
-parameter.Resampling.Orientation = (1,2,3);
-
-#Processes to use for Resmapling
-parameter.Resampling.Processes = 4;
-
-
-## Alignment
-
-#directory of the alignment result
-parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'Synthetic/elastix');
-
-#Elastix binary
-parameter.Alignment.ElastixDirectory = '/home/ckirst/programs/elastix'
-    
-#moving and reference images
-parameter.Alignment.MovingImage = os.path.join(basedirectory, 'Synthetic/test_iDISCO_resample.tif');
-parameter.Alignment.FixedImage  = os.path.join(basedirectory, 'Synthetic/test_iDISCO_reference.tif');
-parameter.Alignment.FixedImageMask = None;
-
-#elastix parameter files for alignment
-parameter.Alignment.AffineParameterFile  = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterAffine.txt');
-#parameter.Alignment.BSplineParameterFile = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterBSpline.txt');
-parameter.Alignment.BSplineParameterFile = None;
-
-#initialize elastix
-runInitializeElastix(parameter)
-iDISCO.Alignment.Elastix.ElastixSettings.printInfo();
-
-
-## Cell Detection
-
-#raw data from microscope used for cell detection (ims or tif)
-parameter.DataSource.ImageFile = os.path.join(basedirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif')
-
-#image ranges
-parameter.DataSource.XRange = all;
-parameter.DataSource.YRange = all;
-parameter.DataSource.ZRange = all;
-
-# radius for background removal
-parameter.ImageProcessing.Parameter.Background = (20,20);
-
-# size of differeence of gaussian filter
-parameter.ImageProcessing.Parameter.Dog = (8, 8, 6);
-
-# h value for h max detection
-parameter.ImageProcessing.Parameter.HMax = 0.5;
-parameter.ImageProcessing.Parameter.Threshold = 0.5;
-
-# intensity threshold for final cells to be saved
-parameter.ImageProcessing.Parameter.ThresholdSave = None;
-
-# result files for cell coordinates (csv, vtk or ims)
-parameter.ImageProcessing.CellCoordinateFile = os.path.join(basedirectory, 'Synthetic/cells.csv');
-parameter.ImageProcessing.CellIntensityFile = os.path.join(basedirectory, 'Synthetic/intensities.csv');
-parameter.ImageProcessing.CellTransformedCoordinateFile = os.path.join(basedirectory, 'Synthetic/cells_transformed.csv');
-
-
-## Stack Processing Parameter
-    
-#max number of parallel processes
-parameter.StackProcessing.Processes = 2;
-   
-#chunk sizes
-parameter.StackProcessing.ChunkSizeMax = 100;
-parameter.StackProcessing.ChunkSizeMin = 30;
-parameter.StackProcessing.ChunkOverlap = 15;
-
-#optimize chunk size and number to number of processes
-parameter.StackProcessing.OptimizeChunks = True;
-    
-#increase chunk size for optimizaition (True, False or all = choose automatically)
-parameter.StackProcessing.OptimizeChunkSizeIncrease = all;
-
-
-
-##Voxelization
-
-#Size of averaging window
-parameter.Voxelization.AveragingDiameter = (15,15,15);  #Radius of the sphere
-    
-#Image size
-parameter.Voxelization.Size = None;  #None extract from data
-    
-#Mode
-parameter.Voxelization.Mode = 'Spherical';
-    
-#Output File
-parameter.Voxelization.File = os.path.join(basedirectory, 'Synthetic/points_voxelized.tif');
-
-
-
-##Processing
-
-resampledImage = runResampling(parameter);
-
-print "Resampled image saved as %s" % resampledImage
-
-resultDirectory = runAlignment(parameter);
-
-print "Aligned images: result directory: %s" % resultDirectory
-
-runCellDetection(parameter)
-
-print "Cell detection done!"
-
-runCellCoordinateTransformationToReference(parameter)
-
-print "Cell transformation to reference done!"
-
-if verbose:
-    refdata = io.readData(parameter.Alignment.FixedImage);
-    pts = io.readPoints(parameter.ImageProcessing.CellTransformedCoordinateFile);
-    Plot.plotOverlayPoints(0.01 * refdata, pts)
-
-
-runVoxelization(parameter);
-
-print "Voxelization done!"
+voxdata = voxelize(transformedPointsFile, dataSize = referenceFile, sink = voxelizationFile, **voxelizationParameter)
 
 if verbose:
     #voxdata = io.readData(parameter.Alignment.FixedImage);
-    voxdata = io.readData(parameter.Voxelization.File);
-    points  = io.readPoints(parameter.ImageProcessing.CellTransformedCoordinateFile)
-    Plot.plotOverlayPoints(voxdata.astype('float') / voxdata.max(), points)
+    voxdata = io.readData(voxdata);
+    points  = io.readPoints(transformedPointsFile)
+    plot.plotOverlayPoints(voxdata.astype('float') / voxdata.max(), points)
 
 
 
@@ -560,8 +456,167 @@ if verbose:
 
 
 
+## old stuff
 
 
+###############################################################################
+## Test Full Chain
+###############################################################################
+#
+#import os
+#import numpy
+#
+#from iDISCO.Parameter import *
+#from iDISCO.Run import *
+#import iDISCO.Visualization.Plot as Plot
+#
+#verbose = True;
+#
+#baseDirectory = os.path.join(iDISCOPath(), 'Test');
+#
+#parameter = Parameter();
+#
+#
+### Resampling to prepare alignment
+#
+##Files
+#parameter.Resampling.DataFiles = os.path.join(baseDirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif')
+#parameter.Resampling.ResampledFile = os.path.join(baseDirectory, 'Synthetic/test_iDISCO_resample.tif');
+#    
+##Resolution of the Data (in um / pixel)
+#parameter.Resampling.ResolutionData = (5, 5, 3);
+#
+##Resolution of the Reference / Atlas (in um/ pixel)
+#parameter.Resampling.ResolutionReference = (12, 15, 5);
+#
+##Orientation of the Data set wrt reference 
+##(-axis will invert the orientation, for other hemisphere use (-1, 2, 3), to exchnge x,y use (2,1,3) etc)
+#parameter.Resampling.Orientation = (1,2,3);
+#
+##Processes to use for Resmapling
+#parameter.Resampling.Processes = 4;
+#
+#
+### Alignment
+#
+##directory of the alignment result
+#parameter.Alignment.AlignmentDirectory = os.path.join(baseDirectory, 'Synthetic/elastix');
+#
+##Elastix binary
+#parameter.Alignment.ElastixDirectory = '/home/ckirst/programs/elastix'
+#    
+##moving and reference images
+#parameter.Alignment.MovingImage = os.path.join(baseDirectory, 'Synthetic/test_iDISCO_resample.tif');
+#parameter.Alignment.FixedImage  = os.path.join(baseDirectory, 'Synthetic/test_iDISCO_reference.tif');
+#parameter.Alignment.FixedImageMask = None;
+#
+##elastix parameter files for alignment
+#parameter.Alignment.AffineParameterFile  = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterAffine.txt');
+##parameter.Alignment.BSplineParameterFile = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterBSpline.txt');
+#parameter.Alignment.BSplineParameterFile = None;
+#
+##initialize elastix
+#runInitializeElastix(parameter)
+#iDISCO.Alignment.Elastix.ElastixSettings.printInfo();
+#
+#
+### Cell Detection
+#
+##raw data from microscope used for cell detection (ims or tif)
+#parameter.DataSource.ImageFile = os.path.join(baseDirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif')
+#
+##image ranges
+#parameter.DataSource.XRange = all;
+#parameter.DataSource.YRange = all;
+#parameter.DataSource.ZRange = all;
+#
+## radius for background removal
+#parameter.ImageProcessing.Parameter.Background = (20,20);
+#
+## size of differeence of gaussian filter
+#parameter.ImageProcessing.Parameter.Dog = (8, 8, 6);
+#
+## h value for h max detection
+#parameter.ImageProcessing.Parameter.HMax = 0.5;
+#parameter.ImageProcessing.Parameter.Threshold = 0.5;
+#
+## intensity threshold for final cells to be saved
+#parameter.ImageProcessing.Parameter.ThresholdSave = None;
+#
+## result files for cell coordinates (csv, vtk or ims)
+#parameter.ImageProcessing.CellCoordinateFile = os.path.join(baseDirectory, 'Synthetic/cells.csv');
+#parameter.ImageProcessing.CellIntensityFile = os.path.join(baseDirectory, 'Synthetic/intensities.csv');
+#parameter.ImageProcessing.CellTransformedCoordinateFile = os.path.join(baseDirectory, 'Synthetic/cells_transformed.csv');
+#
+#
+### Stack Processing Parameter
+#    
+##max number of parallel processes
+#parameter.StackProcessing.Processes = 2;
+#   
+##chunk sizes
+#parameter.StackProcessing.ChunkSizeMax = 100;
+#parameter.StackProcessing.ChunkSizeMin = 30;
+#parameter.StackProcessing.ChunkOverlap = 15;
+#
+##optimize chunk size and number to number of processes
+#parameter.StackProcessing.OptimizeChunks = True;
+#    
+##increase chunk size for optimizaition (True, False or all = choose automatically)
+#parameter.StackProcessing.OptimizeChunkSizeIncrease = all;
+#
+#
+#
+###Voxelization
+#
+##Size of averaging window
+#parameter.Voxelization.AveragingDiameter = (15,15,15);  #Radius of the sphere
+#    
+##Image size
+#parameter.Voxelization.Size = None;  #None extract from data
+#    
+##Mode
+#parameter.Voxelization.Mode = 'Spherical';
+#    
+##Output File
+#parameter.Voxelization.File = os.path.join(baseDirectory, 'Synthetic/points_voxelized.tif');
+#
+#
+#
+###Processing
+#
+#resampledImage = runResampling(parameter);
+#
+#print "Resampled image saved as %s" % resampledImage
+#
+#resultDirectory = runAlignment(parameter);
+#
+#print "Aligned images: result directory: %s" % resultDirectory
+#
+#runCellDetection(parameter)
+#
+#print "Cell detection done!"
+#
+#runCellCoordinateTransformationToReference(parameter)
+#
+#print "Cell transformation to reference done!"
+#
+#if verbose:
+#    refdata = io.readData(parameter.Alignment.FixedImage);
+#    pts = io.readPoints(parameter.ImageProcessing.CellTransformedCoordinateFile);
+#    Plot.plotOverlayPoints(0.01 * refdata, pts)
+#
+#
+#runVoxelization(parameter);
+#
+#print "Voxelization done!"
+#
+#if verbose:
+#    #voxdata = io.readData(parameter.Alignment.FixedImage);
+#    voxdata = io.readData(parameter.Voxelization.File);
+#    points  = io.readPoints(parameter.ImageProcessing.CellTransformedCoordinateFile)
+#    Plot.plotOverlayPoints(voxdata.astype('float') / voxdata.max(), points)
+#
 
 
 
