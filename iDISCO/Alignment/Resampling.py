@@ -226,6 +226,22 @@ def resampleData(source, sink = None, resolutionSource = (4.0625, 4.0625, 3), or
     return io.writeData(sink, resampledData);
     
 
+#def resampleDataInverse(source, sink = None, resolutionSource = (4.0625, 4.0625, 3), orientation = None, resolutionSink = (25, 25, 25), processingDirectory = None, processes = 1, cleanup = True, **args):
+#    """Resmaple data inversely to resampleData routine"""
+#    
+#    # to get inverse:
+#    # adjust the resmapling orientatio to the resmapled one:
+#    if orientation is None:
+#        orientation = (1,2,3);
+#        
+#    per = [int(abs(x)-1) for x in orientation];
+#    ressouce = (resolutionSource[i] for i in per);
+#    ressink  = (resolutionSink[i] for i in per);
+#    o = self.inversePermuation(orientation);
+#    
+#    return self.resampleData(source, sink, resolutionSource = resolutionSink)
+
+
 def resamplePoints(source, dataSize, sink = None, resolutionSource = (4.0625, 4.0625, 3), resolutionSink = (25, 25, 25), orientation = None, **args):
     """Resample Points to map from original data to the coordinates of the resampled image"""
     
