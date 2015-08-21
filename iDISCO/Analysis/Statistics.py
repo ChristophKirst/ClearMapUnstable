@@ -34,13 +34,16 @@ def readGroup(filenames, **args):
     return numpy.vstack(group);
 
 
-def tTest(group1, group2):
+def tTest(group1, group2, signed = True):
     """t-Test on differences between the individual voxels in group1 and group2, group is a array of voxelizations"""
     
     g1 = self.readGroup(group1);  
     g2 = self.readGroup(group2);  
     
     tvals, pvals = stats.ttest_ind(g1, g2, axis = 0, equal_var = False);
+    
+    if signed:
+        pvals = pvals * numpy.sign(tvals);
     
     return pvals;
     
@@ -69,6 +72,22 @@ def weightsFromPrecentiles(intensities, percentiles = [25,50,75,100]):
     
     return weights;
         
+
+def colorPValues(pvals, positive = [1,0,0], negative = [0,1,0]):
+    ds = pvals.shape + (3,);
+    pvc = numpy.zeros(ds);
+    
+    ids = pvals > 0;
+    pvalsi = pvals[ids];
+    for i in range(3):
+        pvc[ids, i] = pvalsi * positive[i];
+    
+    ids = pvals < 0;
+    pvalsi = pvals[ids];
+    for i in range(3):
+        pvc[ids, i] = pvalsi * negative[i];
+        
+    return pvc;
 
 
 def test():

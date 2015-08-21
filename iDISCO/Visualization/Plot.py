@@ -20,12 +20,16 @@ import matplotlib.pyplot as plt
 def plotTiling(image, tiling = "automatic", maxtiles = 20): 
     """Plot 3d image as tiles"""
     
-    dim = len(image.shape);
-     
-    if dim < 3 or dim > 4:
-        raise StandardError('plotTiling: image dimension must be 3  or 4');
+    dim = image.ndim;
     
-    if len(image.shape) == 3: 
+    if dim < 2 or dim > 4:
+        raise StandardError('plotTiling: image dimension must be 2 to 4');    
+    
+    if dim == 2:
+        image = image.reshape(image.shape + (1,));
+        dim = 3;
+
+    if image.ndim == 3: 
         if image.shape[2] == 3:  # 2d color image
             ntiles = 1;
             cmap = None;
