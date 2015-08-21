@@ -3,8 +3,8 @@
 Resample data to match Allen Brain Atlas
 
 Notes:
- - uses iDISCO convetion of (y,x) array representation of an image
- - points are assumed to be given in iDISCO y,x,z representation
+ - uses iDISCO convetion of (x,y) array representation of an image
+ - points are assumed to be given in iDISCO x,y,z representation
  - parameters such as resolutions and orientation or datasize are assumed to be given as x,y,z as when viewed e.g. in imagej 
  - a permutation is defined as permuting the axes and then inverting the axes 
 
