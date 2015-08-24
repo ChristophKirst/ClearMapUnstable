@@ -16,7 +16,7 @@ self = sys.modules[__name__];
 import os
 import csv
 
-from iDISCO.Parameter import iDISCOPath
+from iDISCO.Settings import iDISCOPath
 
 
 def toInt(txt):

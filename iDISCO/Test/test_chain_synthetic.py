@@ -39,13 +39,12 @@ resamplingParameter = {
     "orientation" : (1,2,3),
     
     #number of processes to use in parallel:
-    "processes" : 4,     
+    "processes" : 4,
     };
 
 
 resampledImage = resampleData(**resamplingParameter)
 print "Resampled image saved as %s" % resampledImage
-
 
 
 # create reference for further tests
@@ -135,10 +134,10 @@ stackProcessingParameter = {
 
 ## Paramters for cell detection using spot detection alorithm 
 spotDetectionParameter = {
-    # background correctoin: None or (y,x) which is size of disk for gray scale opening
+    # background correctoin: None or (x,y) which is size of disk for gray scale opening
     "backgroundSize" : (20,20),
     
-    # spot Detection via Difference of Gaussians (DoG) filter: (y,x,z) size
+    # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
     "dogSize" : (8, 8, 6),
     
     # h of h-max transform
@@ -146,16 +145,16 @@ spotDetectionParameter = {
     
     # intensity detection   
     "intensityMethod"  : 'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
-    "intensitySize"    : (3,3,3),  # size of box in (y,x,z) to include in intensity determination
+    "intensitySize"    : (3,3,3),  # size of box in (x,y,z) to include in intensity determination
     
     # threshold for min intensity at center to be counted as cell (should be similar to the h max)
     "threshold" : 0.15,
     
     # data and range
     "source" : os.path.join(baseDirectory, 'Data/Synthetic/test_iDISCO_\d{3}.tif'),
-    "x" : all,
-    "y" : all,
-    "z" : all,
+    #"x" : all,
+    #"y" : all,
+    #"z" : all,
     
     # file names to save coordinates and intensities result, (None, None) = return numpy array
     "sink" : (os.path.join(baseDirectory, 'Synthetic/cells.csv'), os.path.join(baseDirectory, 'Synthetic/intensities.csv')),
@@ -166,7 +165,9 @@ spotDetectionParameter = {
     #"processMethod" : "sequential"  #  plotting during image processing only in sequential mode !
     };
 
-allParameter = joinParameter(stackProcessingParameter, spotDetectionParameter)
+
+
+allParameter = joinParameter(stackProcessingParameter, spotDetectionParameter, {'x' : (100,160), 'y' : (10,140), 'z' : all})
 
 
 result = detectCells(**allParameter);
@@ -274,7 +275,7 @@ print pointsa
 
 
 ##############################################################################
-# Test Transform Reference to Ressampled Data
+# Test Transform Reference to Resampled Data
 ############################################################################## 
 
 import os
@@ -456,6 +457,8 @@ if verbose:
 
 
 
+
+
 ## old stuff
 
 
@@ -512,7 +515,7 @@ if verbose:
 #
 ##elastix parameter files for alignment
 #parameter.Alignment.AffineParameterFile  = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterAffine.txt');
-##parameter.Alignment.BSplineParameterFile = os.path.join(parameter.Alignment.AlignmentDirectory, 'ElastixParameterBSpline.txt');
+##parameter.Alignment.BSplineParameterFile = os.path.join(pbasedirectoryarameter.Alignment.AlignmentDirectory, 'ElastixParameterBSpline.txt');
 #parameter.Alignment.BSplineParameterFile = None;
 #
 ##initialize elastix

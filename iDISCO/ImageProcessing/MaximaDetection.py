@@ -76,7 +76,7 @@ def findExtendedMaxima(img, hMax = 10, threshold = 0, verbose = False, out = sys
     imgmax = hMaxTransform(img, hMax);
     imgmax = regionalMax(imgmax);
     imgmax = imgmax.astype('float32') * img;
-    imgmax = imgmax > threshold;
+    imgmax = imgmax >= threshold;
     
     if verbose:
         #plotTiling(img)

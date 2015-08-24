@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Aug  8 20:27:23 2015
-
-@author: mtllab
-"""
 
 # -*- coding: utf-8 -*-
 """
@@ -13,28 +7,21 @@ Created on Sat Aug  8 14:58:07 2015
 """
 
 
-import os
-import numpy
-import math
-#import iDISCO.Visualization.Plot as Plot
-from iDISCO.Parameter import * 
-# path to illastik installation
-sys.path.insert(1, '/usr/local/ilastik-05-rc-final')
+import os, numpy, math
+
+import iDISCO.Settings as settings
 
 
-from iDISCO.Run import *
-from iDISCO.Analysis.Label import *
-
-verbose = True;
-
-parameter = Parameter();
+from iDISCO.Alignment.Resampling import resampleData;
 
 ######################### Data parameters
 
-basedirectory = '/home/mtllab/Documents/whiskers/nonshaved/150620-6R';
+BaseDirectory = '/home/mtllab/Documents/whiskers/nonshaved/150620-6R';
    
-cFosFile = '/home/mtllab/Documents/whiskers/nonshaved/150620-6R/150717_0_8xs3-cfos-20HFcont_06-56-36/06-56-36_0_8xs3-cfos-20HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-AutofluoFile = '/home/mtllab/Documents/whiskers/nonshaved/150620-6R/150717_0_8xs3-autofluor_08-33-50/08-33-50_0_8xs3-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+cFosFile      = '/home/mtllab/Documents/whiskers/nonshaved/150620-6R/150717_0_8xs3-cfos-20HFcont_06-56-36/06-56-36_0_8xs3-cfos-20HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+cFosFileRange = {'x' : all, 'y' : all, 'z' : all};
+
+AutofluoFile  = '/home/mtllab/Documents/whiskers/nonshaved/150620-6R/150717_0_8xs3-autofluor_08-33-50/08-33-50_0_8xs3-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 
 #Resolution of the Data (in um / pixel)
 OriginalResolution = (4.0625, 4.0625, 3);
@@ -45,104 +32,117 @@ AtlasResolution = (25, 25, 25);
 #Orientation
 FinalOrientation = (1,2,3);
 
+VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 
 
-############################## Cell Detection Parameters using DoG
+######################### Cell Detection Parameters using DoG
 
-parameter.ImageProcessing.Method = "SpotDetection"
-
-#image ranges
-parameter.DataSource.XRange = all;
-parameter.DataSource.YRange = all;
-parameter.DataSource.ZRange = all;
-
-# radius for background removal
-parameter.ImageProcessing.Parameter.Background = (15,15);
-
-# size of differeence of gaussian filter
-parameter.ImageProcessing.Parameter.Dog = (7, 7, 11);
-
-# h value for h max detection
-parameter.ImageProcessing.Parameter.HMax = 10;
-parameter.ImageProcessing.Parameter.Threshold = 20;
-
-# intensity threshold for final cells to be saved
-parameter.ImageProcessing.Parameter.ThresholdSave = 0;
+SpotDetectionParameter = {
+    # background correctoin: None or (x,y) which is size of disk for gray scale opening
+    "backgroundSize" : (15,15),
+    
+    # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
+    "dogSize" : (7, 7, 11),
+    
+    # h of h-max transform
+    "hMax" : 20,
+    
+    # intensity detection   
+    "intensityMethod"  : None,  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
+    #"intensitySize"    : (3,3,3),  # size of box in (x,y,z) to include in intensity determination
+    
+    # threshold for min intensity at center to be counted as cell (should be similar to the h max)
+    "threshold" : 20,
+        
+    #some debug / quality check output
+    #"verbose" : True,
+    #"processMethod" : "sequential"  #  plotting during image processing only in sequential mode !
+    };
 
 #################### Heat map generation
 
 ##Voxelization
 
-#Size of averaging window
-parameter.Voxelization.AveragingDiameter = (15,15,15);  #Radius of the sphere
-    
-#Image size
-parameter.Voxelization.Size = None;  #None extract from data
-    
-#Mode
-parameter.Voxelization.Mode = 'Spherical';
+## Parameter to calculate density voxelization
+VoxelizationParameter = {
+    #Method to voxelize
+    "voxelizationMethod" : 'Spherical', # Spherical,'Rectangular, Gaussian'
+       
+    # Define bounds of the volume to be voxelized
+    "voxelizationSize" : (15,15,15),  
 
-parameter.Voxelization.File = os.path.join(basedirectory, 'points_voxelized.tif');
+    # Voxelization weigths (e/g intensities)
+    "voxelizationWeights" : None
+    };
+
+
+
+
 
 
 ############################ Config parameters
 
 #Processes to use for Resampling
-parameter.Resampling.Processes = 12;
-
-#Elastix binary
-parameter.Alignment.ElastixDirectory = '/usr/local/elastix'
+ResamplingParameter = { "processes": 12 };
 
 #Path to registration parameters and atlases
-PathReg = '/home/mtllab/Documents/warping';
-AtlasFile = os.path.join(PathReg, 'half_template_25_right.tif');
+PathReg        = '/home/mtllab/Documents/warping';
+AtlasFile      = os.path.join(PathReg, 'half_template_25_right.tif');
 AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 
-#Stack Processing Parameter for cell detection using DoG
+#Stack Processing Parameter for cell detection
+StackProcessingParameter = {
+    #max number of parallel processes
+    "processes" : 4,
+   
+    #chunk sizes
+    "chunkSizeMax" : 100,
+    "chunkSizeMin" : 30,
+    "cChunkOverlap" : 15,
 
-#max number of parallel processes
-parameter.StackProcessing.Processes = 3;
-#chunk sizes
-parameter.StackProcessing.ChunkSizeMax = 100;
-parameter.StackProcessing.ChunkSizeMin = 30;
-parameter.StackProcessing.ChunkOverlap = 15;
+    #optimize chunk size and number to number of processes
+    "chunkOptimization" : True,
+    
+    #increase chunk size for optimizaition (True, False or all = automatic)
+    "chunkOptimizationSize" : all
+    };
 
-#optimize chunk size and number to number of processes
-parameter.StackProcessing.OptimizeChunks = True;
-#increase chunk size for optimizaition (True, False or all = choose automatically)
-parameter.StackProcessing.OptimizeChunkSizeIncrease = all;
-
-
+ResolutionAffineCFosAutoFluo =  (16, 16, 16);
 
 
 
 ######################## RUN
 
 
-## Resample Fluorescent and CFos images
+### Resample Fluorescent and CFos images
     
-parameter.Resampling.ResolutionData = OriginalResolution;
-parameter.Resampling.ResolutionReference = (16, 16, 16);
-parameter.Resampling.Orientation = FinalOrientation;
+ResamplingParameter["source"] = cFosFile;
+ResamplingParameter["sink"]   = os.path.join(BaseDirectory, 'cfos_resampled.tif');
+    
+ResamplingParameter["resolutionSource"] = OriginalResolution;
+ResamplingParameter["resolutionSink"]   = ResolutionAffineCFosAutoFluo;
 
-#Files for Cfos
-parameter.Resampling.DataFiles = cFosFile;
-parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'cfos_resampled.tif');
-resampledImage = runResampling(parameter);
+ResamplingParameter["orientation"] = FinalOrientation;
+   
+resampleData(**ResamplingParameter);
+
 
 #Files for Auto-fluorescence (acquisition movements correction)
-parameter.Resampling.DataFiles = AutofluoFile;
-parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'autofluo_for_cfos_resampled.tif');
-resampledImage = runResampling(parameter);
+ResamplingParameter["source"] = AutofluoFile;
+ResamplingParameter["sink"]   = os.path.join(BaseDirectory, 'autofluo_for_cfos_resampled.tif');
+
+resampleData(**ResamplingParameter);
 
 
 #Files for Auto-fluorescence (Atlas Registration)
-parameter.Resampling.ResampledFile = os.path.join(basedirectory, 'autofluo_resampled.tif');
-parameter.Resampling.ResolutionReference = AtlasResolution;
-resampledImage = runResampling(parameter);
+ResamplingParameter["sink"]  =  os.path.join(BaseDirectory, 'autofluo_resampled.tif');
+ResamplingParameter["resolutionSink"]  = AtlasResolution;
+
+resampleData(**ResamplingParameter);
 
 
-# Align cFos and Autofluo
+
+### Align cFos and Autofluo
 
 #directory of the alignment result
 parameter.Alignment.AlignmentDirectory = os.path.join(basedirectory, 'elastix_cfos_to_auto');

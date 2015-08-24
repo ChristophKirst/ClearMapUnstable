@@ -261,11 +261,11 @@ def resamplePoints(source, dataSize, sink = None, resolutionSource = (4.0625, 4.
         dataSize = io.dataSize(dataSize);
     #else:
     #    dataSize = self.fixDataSize(dataSize);
-
+    
     #orient resolutions to reference resolutions
     if not orientation is None:
         resolutionSource = tuple(resolutionSource[int(abs(i))-1] for i in orientation);   
-    
+        
     #scaling factors
     scale = [int(math.ceil(dataSize[i] *  resolutionSource[i]/resolutionSink[i])) / float(dataSize[i]) for i in range(3)];
     repoints = points.copy();
@@ -300,7 +300,7 @@ def resamplePointsInverse(source, dataSize, sink = None, resolutionSource = (4.0
     
     #datasize of file pattern
     if isinstance(dataSize, basestring):
-        dataSize = dataSize(dataSize);
+        dataSize = io.dataSize(dataSize);
     #else:
     #    dataSize = self.fixDataSize(dataSize);
     

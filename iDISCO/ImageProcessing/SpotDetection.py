@@ -128,7 +128,6 @@ def test():
     img = dataset[500:1500,500:1500,800:809];    
     f.close();
     
-
     #m = sys.modules['iDISCO.ImageProcessing.SpotDetection']
     c = detectCells(img);
     

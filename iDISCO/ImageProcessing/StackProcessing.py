@@ -45,7 +45,9 @@ def processSubStack(dsr):
     pw.write("ranges: x,y,z = " + str(xr) +  "," + str(yr) + "," + str(zr)); 
     
     timer.reset();    
-    img = io.readData(fn, z = zr, x = xr, y = yr);    
+    img = io.readData(fn, z = zr, x = xr, y = yr); 
+    print "hkjhkjhkjhkjh"
+    print img.shape
     pw.write(timer.elapsedTime(head = 'Reading data of size ' + str(img.shape)));
     
     timer.reset();

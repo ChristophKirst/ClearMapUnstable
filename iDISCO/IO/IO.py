@@ -301,6 +301,18 @@ def toMultiChannelData(*args):
     return data.rollaxis(data, 0, data.ndim);
 
 
+
+def sagittalToCoronalData(source, sink = None):
+    """Change from saggital to coronal orientation"""
+    
+    source = self.readData(source);
+    source = source.transpose([2,0,1]);
+    source = source[::-1,:,:];
+    #source = source[::-1,:,:];
+    return self.writeData(sink, source);
+
+
+
 ##############################################################################
 # Read / Write Points
 ##############################################################################
