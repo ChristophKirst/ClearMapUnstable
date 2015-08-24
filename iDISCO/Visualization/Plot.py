@@ -129,6 +129,7 @@ def overlayPoints(dataSource, pointSource, x = all, y = all, z = all, pointColor
     """Overlay points on 3D Data"""
     data = io.readData(dataSource, x = x, y = y, z = z);
     points = io.readPoints(pointSource, x = x, y = y, z = z, shift = True);
+    #print data.shape
     
     if not pointColor is None:
         dmax = data.max(); dmin = data.min();
@@ -137,8 +138,14 @@ def overlayPoints(dataSource, pointSource, x = all, y = all, z = all, pointColor
         cimage = numpy.repeat( (data - dmin) / (dmax - dmin), 3);
         cimage = cimage.reshape(data.shape + (3,));    
     
-        for p in points: # faster version using voxelize ?
-            cimage[p[0], p[1], p[2], :] = pointColor;
+        if data.ndim == 2:
+            for p in points: # faster version using voxelize ?
+                cimage[p[0], p[1], :] = pointColor;
+        elif data.ndim == 2:
+            for p in points: # faster version using voxelize ?
+                cimage[p[0], p[1], p[2], :] = pointColor;
+        else:
+            raise RuntimeError('overlayPoints: data dimension %d not suported' % data.ndim);
     
     else:
         cimage = vox.voxelize(points, data.shape);
@@ -146,7 +153,8 @@ def overlayPoints(dataSource, pointSource, x = all, y = all, z = all, pointColor
         data.shape =  data.shape + (1,);
         cimage.shape =  cimage.shape + (1,);
         cimage = numpy.concatenate((data, cimage), axis  = 4);
-        
+    
+    #print cimage.shape    
     return cimage;   
 
 
@@ -162,11 +170,20 @@ def test():
     """Test Plot module"""
     import numpy as np
     import iDISCO.Visualization.Plot as self
+    reload(self)
+    
     l = np.array([[0,0,0,0,0], [0,1,1,0,0], [3,0,5,0,2], [5,0,0,0,0], [4,4,0,0,0]])
     x = np.random.rand(5,5);  
     
     self.plotOverlayLabel(x,l, alpha = False);    
     self.plotOverlayLabel(x,l, alpha = True);    
+
+
+    # 
+    x = np.random.rand(50,20); 
+    p = np.array([[10,15], [40,10]]);
+    
+    self.plotOverlayPoints(x, p)
 
 
 if __name__ == "__main__":
