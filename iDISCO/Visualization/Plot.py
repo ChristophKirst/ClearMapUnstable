@@ -16,6 +16,9 @@ import numpy
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+import iDISCO.IO.IO as io
+import iDISCO.Analysis.Voxelization as vox
+
 
 def plotTiling(image, tiling = "automatic", maxtiles = 20): 
     """Plot 3d image as tiles"""
@@ -80,7 +83,7 @@ def plotTiling(image, tiling = "automatic", maxtiles = 20):
     return fig;
 
 
-def overlayLabel(image, label, alpha = False, lcmap = 'jet'):
+def overlayLabel(image, label, alpha = False, labelColorMap = 'jet'):
     """Overlay a gray scale image with colored labeled image"""
     
     lmax = label.max();
@@ -88,7 +91,7 @@ def overlayLabel(image, label, alpha = False, lcmap = 'jet'):
     if lmax <= 1:
         carray = numpy.array([[1,0,0,1]]);
     else:
-        cm = mpl.cm.get_cmap(lcmap);
+        cm = mpl.cm.get_cmap(labelColorMap);
         cNorm  = mpl.colors.Normalize(vmin=1, vmax = int(lmax));
         carray = mpl.cm.ScalarMappable(norm=cNorm, cmap=cm);
         carray = carray.to_rgba(numpy.arange(1, int(lmax + 1)));
@@ -120,18 +123,39 @@ def plotOverlayLabel(image, label, alpha = False, tiling = "automatic", maxtiles
     ov = overlayLabel(image, label, alpha = alpha);
     return plotTiling(ov, tiling = tiling);
 
+
+
+def overlayPoints(dataSource, pointSource, x = all, y = all, z = all, pointColor = [1,0,0], **args):
+    """Overlay points on 3D Data"""
+    data = io.readData(dataSource, x = x, y = y, z = z);
+    points = io.readPoints(pointSource, x = x, y = y, z = z, shift = True);
     
-def plotOverlayPoints(image, points, alpha = False, tiling = "automatic", maxtiles = 20):
-    """Plot points overlayed on gray scale image"""
-    dsize = list(image.shape);
-    if dsize[2] > maxtiles:
-        dsize[2] = maxtiles;
+    if not pointColor is None:
+        dmax = data.max(); dmin = data.min();
+        if dmin == dmax:
+            dmax = dmin + 1;
+        cimage = numpy.repeat( (data - dmin) / (dmax - dmin), 3);
+        cimage = cimage.reshape(data.shape + (3,));    
     
-    imgc = numpy.zeros(dsize);
-    for i in range(points.shape[0]):
-        if points[i,0] > 0 and points[i,0] < dsize[0] and points[i,1] > 0 and points[i,1] < dsize[1] and points[i,2] > 0 and points[i,2] < dsize[2]:
-               imgc[points[i,0], points[i,1], points[i,2]] = 1;
-    return self.plotOverlayLabel(image[:,:,0:dsize[2]], imgc, alpha = False);
+        for p in points: # faster version using voxelize ?
+            cimage[p[0], p[1], p[2], :] = pointColor;
+    
+    else:
+        cimage = vox.voxelize(points, data.shape);
+        cimage = cimage.astype(data.dtype);
+        data.shape =  data.shape + (1,);
+        cimage.shape =  cimage.shape + (1,);
+        cimage = numpy.concatenate((data, cimage), axis  = 4);
+        
+    return cimage;   
+
+
+def plotOverlayPoints(dataSource, pointSource, pointColor = [1,0,0], **args):
+    """Plot points overlayed on gray scale 3d image"""
+    cimg = self.overlayPoints(dataSource, pointSource, pointColor = pointColor, **args);
+    return self.plotTiling(cimg);
+        
+
 
 
 def test():

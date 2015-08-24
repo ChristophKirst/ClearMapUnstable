@@ -38,7 +38,7 @@ TransformixBinary = None;
     
 Initialized = False;
     
-def printSettings(slf):
+def printSettings():
     global ElastixBinary, ElastixLib, TransformixBinary, Initialized
     
     if Initialized:
@@ -307,6 +307,8 @@ def alignData(fixedImage, movingImage, affineParameterFile, bSplineParameterFile
     
     if bSplineParameterFile is None:
         cmd = ElastixBinary + ' -threads 16 -m ' + movingImage + ' -f ' + fixedImage + ' -p ' + affineParameterFile + ' -out ' + resultDirectory;
+    elif affineParameterFile is None:
+        cmd = ElastixBinary + ' -threads 16 -m ' + movingImage + ' -f ' + fixedImage + ' -p ' + bSplineParameterFile + ' -out ' + resultDirectory;
     else:
         cmd = ElastixBinary + ' -threads 16 -m ' + movingImage + ' -f ' + fixedImage + ' -p ' + affineParameterFile + ' -p ' + bSplineParameterFile + ' -out ' + resultDirectory;
         #$ELASTIX -threads 16 -m $MOVINGIMAGE -f $FIXEDIMAGE -fMask $FIXEDIMAGE_MASK -p  $AFFINEPARFILE -p $BSPLINEPARFILE -out $ELASTIX_OUTPUT_DIR
@@ -382,6 +384,68 @@ def transformData(source, sink = [], transformParameterFile = None, transformDir
         raise RuntimeError('transformData: sink not valid!');
 
 
+def deformationField(sink = [], transformParameterFile = None, transformDirectory = None, resultDirectory = None):
+    """Create the deformation field T(x) - x"""
+    
+    global TransformixBinary;    
+    
+    if resultDirectory == None:
+        resultdirname = os.path.join(tempfile.tempdir, 'elastix_output');
+    else:
+        resultdirname = resultDirectory;
+        
+    if not os.path.exists(resultdirname):
+        os.makedirs(resultdirname);
+        
+    if transformParameterFile == None:
+        if transformDirectory == None:
+            raise RuntimeError('neither alignment directory and transformation parameter file specified!'); 
+        transformparameterdir = transformDirectory
+        transformParameterFile = self.getTransformParameterFile(transformparameterdir);
+    else:
+        transformparameterdir = os.path.split(transformParameterFile);
+        transformparameterdir = transformparameterdir[0];
+    
+    #transform
+    #make path in parameterfiles absolute
+    self.setPathTransformParameterFiles(transformparameterdir);
+   
+    #transformix -in inputImage.ext -out outputDirectory -tp TransformParameters.txt
+    cmd = TransformixBinary + ' -def all -out ' + resultdirname + ' -tp ' + transformParameterFile;
+    
+    res = os.system(cmd);
+    
+    if res != 0:
+        raise RuntimeError('deformationField: failed executing: ' + cmd);
+    
+    
+    if sink == []:
+        return self.getResultDataFile(resultdirname);
+    elif sink is None:
+        resultfile = self.getResultDataFile(resultdirname);
+        data = io.readData(resultfile);
+        if resultDirectory is None:
+            shutil.rmtree(resultdirname);
+        return data;
+    elif isinstance(sink, basestring):
+        resultfile = self.getResultDataFile(resultdirname);
+        data = io.convertData(resultfile, sink);
+        if resultDirectory is None:
+            shutil.rmtree(resultdirname);
+        return data;
+    else:
+        raise RuntimeError('deformationField: sink not valid!');
+
+
+def deformationDistance(deformationField, sink = None, scale = None):
+    """Compute the distance field from a deformation vector field"""
+    
+    df = numpy.square(deformationField);
+    if not scale is None:
+        for i in range(3):
+            df[:,:,:,i] = df[:,:,:,i] * (scale[i] * scale[i]);
+    return numpy.sqrt(numpy.sum(df, axis = 3));
+    
 
 def writePoints(filename, points, indices = True):
     """Write points as elastix/transformix point file"""
@@ -500,11 +564,12 @@ def transformPoints(source, sink = None, transformParameterFile = None, transfor
 def test():
     """Test Elastix module"""
     import iDISCO.Alignment.Elastix as self
+    reload(self)
     
-    from iDISCO.Parameter import iDISCOPath;
+    from iDISCO.Settings import IDISCOPath;
     import os, numpy
     
-    p = iDISCOPath();
+    p = IDISCOPath;
     
     resultdir = os.path.join(p, 'Test/Elastix/Output');
     
@@ -519,7 +584,7 @@ def test():
     
     #initialize
     self.initializeElastix('/home/ckirst/programs/elastix')
-    self.ElastixSettings.printInfo()
+    self.printSettings()
 
     #transform points
     pts = numpy.random.rand(5,3);    
@@ -530,6 +595,17 @@ def test():
     print 'Transformed points: '
     print tpts
     
+    
+    #deformation and distance fields     
+    df = self.deformationField(transformParameterFile = pf, resultDirectory = None);
+    df =  '/tmp/elastix_output/deformationField.mhd';
+
+    import iDISCO.IO.IO as io
+    data = io.readData('/tmp/elastix_output/deformationField.mhd');
+    
+    ds = self.deformationDistance(data);
+    
+    io.writeData(os.path.join(p, 'Test/Elastix/Output/distances.raw'), ds);
     
 if __name__ == "__main__":
     self.test();

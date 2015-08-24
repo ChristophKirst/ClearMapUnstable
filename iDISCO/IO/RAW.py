@@ -59,17 +59,29 @@ def readData(filename, x = all, y = all, z = all):
     imr = vtk.vtkMetaImageReader()
     imr.SetFileName(filename);
     imr.Update()
-
+    
     im = imr.GetOutput()
     dims = im.GetDimensions()
+    
+    print dims    
+    
     sc = im.GetPointData().GetScalars()
     img = vtk_to_numpy(sc)
     #print img.shape
-
-    dims = (dims[2], dims[1], dims[0]);
+    
+    dims = list(dims);
+    dims[0:3] = [dims[2], dims[1], dims[0]];
+    
+    imgs = list(img.shape);
+    if len(imgs) > 1:
+        imgs.pop(0);
+        dims = dims + imgs;
+    
     img = img.reshape(dims)
     #img = img.transpose([1,2,0]);
-    img = img.transpose([2,1,0]);
+    tp = [2,1,0];
+    tp = tp + [i for i in range(3, len(dims))];
+    img = img.transpose(tp);
     
     return io.dataToRange(img, x = x, y = y, z = z);
 
