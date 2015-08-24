@@ -46,8 +46,6 @@ def processSubStack(dsr):
     
     timer.reset();    
     img = io.readData(fn, z = zr, x = xr, y = yr); 
-    print "hkjhkjhkjhkjh"
-    print img.shape
     pw.write(timer.elapsedTime(head = 'Reading data of size ' + str(img.shape)));
     
     timer.reset();
@@ -194,7 +192,9 @@ def joinPoints(pointlist, zranges, zcenters, intensities = None, dataSize = None
         points = numpy.concatenate(results);
         
         if shiftPoints:
-            points = points + io.pointShiftFromRange(dataSize, x = x, y = y, z = z);
+            points = points + io.pointShiftFromRange(dataSize, x = x, y = y, z = 0);
+        else:
+            points = points - io.pointShiftFromRange(dataSize, x = 0, y = 0, z = z); #absolute offset is added initially via zranges !
             
         if intensities is None:
             return points;

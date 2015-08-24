@@ -192,10 +192,10 @@ def detectCells(img, classifier = None, verbose = False, out = sys.stdout, **par
     checkIlastikInitialized();
     
     # normalize data
-    img = rescaleToIlastik(img, verbose = verbose, out = out, **parameter);
+    img2 = rescaleToIlastik(img, verbose = verbose, out = out, **parameter);
     
     #remove backgroudn
-    img = removeBackground(img, verbose = verbose, out = out, **parameter);
+    img2 = removeBackground(img, verbose = verbose, out = out, **parameter);
       
 
     #classify image / assume class 1 are the cells !  
@@ -204,7 +204,7 @@ def detectCells(img, classifier = None, verbose = False, out = sys.stdout, **par
     
     cls = IlastikClassifier();
     cls.loadClassifier(classifier);
-    imgmax = cls.run(img);
+    imgmax = cls.run(img2);
     #print imgmax.shape
     #max probability gives final class
     imgmax = numpy.argmax(imgmax, axis = -1);
@@ -219,12 +219,18 @@ def detectCells(img, classifier = None, verbose = False, out = sys.stdout, **par
     
     
     #center of maxima
-    centers = findCenterOfMaxima(img, imgmax, verbose = verbose, out = out);
+    centers = findCenterOfMaxima(img2, imgmax, verbose = verbose, out = out);
+    
     
     #intensity of cells
     cintensity = findIntensity(img, centers, verbose = verbose, out = out, **parameter);
+
+    #intensity of cells in filtered image
+    cintensity2 = findIntensity(img2, centers, verbose = verbose, out = out, **parameter);
+
     
-    return ( centers, cintensity );
+    return ( centers, numpy.vstack((cintensity, cintensity2)).transpose());    
+    
 
 
 

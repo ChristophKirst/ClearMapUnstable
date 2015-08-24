@@ -125,7 +125,7 @@ def plotOverlayLabel(image, label, alpha = False, tiling = "automatic", maxtiles
 
 
 
-def overlayPoints(dataSource, pointSource, x = all, y = all, z = all, pointColor = [1,0,0], **args):
+def overlayPoints(dataSource, pointSource, x = all, y = all, z = all, pointColor = [1,0,0]):
     """Overlay points on 3D Data"""
     data = io.readData(dataSource, x = x, y = y, z = z);
     points = io.readPoints(pointSource, x = x, y = y, z = z, shift = True);
@@ -148,19 +148,19 @@ def overlayPoints(dataSource, pointSource, x = all, y = all, z = all, pointColor
             raise RuntimeError('overlayPoints: data dimension %d not suported' % data.ndim);
     
     else:
-        cimage = vox.voxelize(points, data.shape);
-        cimage = cimage.astype(data.dtype);
-        data.shape =  data.shape + (1,);
+        cimage = vox.voxelize(points, data.shape, voxelizationMethod = 'Pixel');
+        cimage = cimage.astype(data.dtype) * data.max();
+        data.shape = data.shape + (1,);
         cimage.shape =  cimage.shape + (1,);
-        cimage = numpy.concatenate((data, cimage), axis  = 4);
+        cimage = numpy.concatenate((data, cimage), axis  = 3);
     
     #print cimage.shape    
     return cimage;   
 
 
-def plotOverlayPoints(dataSource, pointSource, pointColor = [1,0,0], **args):
+def plotOverlayPoints(dataSource, pointSource, pointColor = [1,0,0], x = all, y = all, z = all):
     """Plot points overlayed on gray scale 3d image"""
-    cimg = self.overlayPoints(dataSource, pointSource, pointColor = pointColor, **args);
+    cimg = self.overlayPoints(dataSource, pointSource, pointColor = pointColor, x = x, y = y, z = z);
     return self.plotTiling(cimg);
         
 

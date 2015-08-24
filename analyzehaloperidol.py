@@ -21,8 +21,7 @@ group1 = ['/home/mtllab/Documents/Haloperidol/1266/cells_heatmap.tif',
           '/home/mtllab/Documents/Haloperidol/1269/cells_heatmap.tif',
           '/home/mtllab/Documents/Haloperidol/1270/cells_heatmap.tif'];
           
-          
-          
+                  
 group2 = ['/home/mtllab/Documents/Haloperidol/1271/cells_heatmap.tif',
           '/home/mtllab/Documents/Haloperidol/1272/cells_heatmap.tif',
           '/home/mtllab/Documents/Haloperidol/1273/cells_heatmap.tif',
@@ -35,7 +34,7 @@ g1.shape
 g2.shape
 
 
-pvals = stat.tTest(g1.astype('float'), g2.astype('float'), signed = False);
+pvals = stat.tTest(g1.astype('float'), g2.astype('float'), signed = True);
 
 pi = numpy.isnan(pvals);
 pvals2 = pvals.copy();
@@ -43,10 +42,21 @@ pvals2[pi] = 1.0;
 
 pcutoff = 0.05;
 
-pi = pvals2 > pcutoff;
+piplus = pvals2 > pcutoff;
 pvals2[pi] = pcutoff;
-pi = pvals2 < - pcutoff;
+piminus = pvals2 < - pcutoff;
 pvals2[pi] = - pcutoff;
+
+pvalsplus = numpy.ones(pvals.shape, dtype = pvals2.dtype) * pcutoff;
+pvalsplus[piminus] = pcutoff;
+
+pvalsminus = numpy.ones(pvals.shape, dtype = pvals2.dtype) * pcutoff;
+pvalsminus[piplus] = pcutoff;
+
+io.writeData(os.path.join(baseDirectory, 'pvalues_plus.raw'), pvalsplus);
+io.writeData(os.path.join(baseDirectory, 'pvalues_minus.raw'), pvalsminus);
+
+
 
 
 io.writeData(os.path.join(baseDirectory, 'pvalues_allcells.raw'), io.sagittalToCoronalData(numpy.abs(pvals2)));
@@ -103,11 +113,11 @@ g1s = numpy.std(g1,axis = 0);
 g2a = numpy.mean(g2,axis = 0);
 g2s = numpy.std(g2,axis = 0);
 
-io.writeData(os.path.join(baseDirectory, 'mean_haloperidol.raw'), g1a);
-io.writeData(os.path.join(baseDirectory, 'std_haloperidol.raw'), g1s);
+io.writeData(os.path.join(baseDirectory, 'mean_haloperidol_allcells.raw'), io.sagittalToCoronalData(g1a));
+io.writeData(os.path.join(baseDirectory, 'std_haloperidol_allcells.raw'), io.sagittalToCoronalData(g1s));
 
-io.writeData(os.path.join(baseDirectory, 'mean_saline.raw'), g2a);
-io.writeData(os.path.join(baseDirectory, 'std_saline.raw'), g2s);
+io.writeData(os.path.join(baseDirectory, 'mean_saline_allcells.raw'), io.sagittalToCoronalData(g2a));
+io.writeData(os.path.join(baseDirectory, 'std_saline_allcells.raw'), io.sagittalToCoronalData(g2s));
 
 
 #
@@ -247,19 +257,19 @@ import numpy, os
 baseDirectory = '/home/mtllab/Documents/Haloperidol'
 
 
-group1 = ['/home/mtllab/Documents/Haloperidol/1266/cells_intensity_heatmap10.tif',
-          '/home/mtllab/Documents/Haloperidol/1267/cells_intensity_heatmap10.tif',
-          '/home/mtllab/Documents/Haloperidol/1268/cells_intensity_heatmap10.tif',
-          '/home/mtllab/Documents/Haloperidol/1269/cells_intensity_heatmap10.tif',
-          '/home/mtllab/Documents/Haloperidol/1270/cells_intensity_heatmap10.tif'];
+group1 = ['/home/mtllab/Documents/Haloperidol/1266/cells_intensity_heatmap.tif',
+          '/home/mtllab/Documents/Haloperidol/1267/cells_intensity_heatmap.tif',
+          '/home/mtllab/Documents/Haloperidol/1268/cells_intensity_heatmap.tif',
+          '/home/mtllab/Documents/Haloperidol/1269/cells_intensity_heatmap.tif',
+          '/home/mtllab/Documents/Haloperidol/1270/cells_intensity_heatmap.tif'];
           
           
           
-group2 = ['/home/mtllab/Documents/Haloperidol/1271/cells_intensity_heatmap10.tif',
-          '/home/mtllab/Documents/Haloperidol/1272/cells_intensity_heatmap10.tif',
-          '/home/mtllab/Documents/Haloperidol/1273/cells_intensity_heatmap10.tif',
-          '/home/mtllab/Documents/Haloperidol/1274/cells_intensity_heatmap10.tif',
-          '/home/mtllab/Documents/Haloperidol/1275/cells_intensity_heatmap10.tif'];
+group2 = ['/home/mtllab/Documents/Haloperidol/1271/cells_intensity_heatmap.tif',
+          '/home/mtllab/Documents/Haloperidol/1272/cells_intensity_heatmap.tif',
+          '/home/mtllab/Documents/Haloperidol/1273/cells_intensity_heatmap.tif',
+          '/home/mtllab/Documents/Haloperidol/1274/cells_intensity_heatmap.tif',
+          '/home/mtllab/Documents/Haloperidol/1275/cells_intensity_heatmap.tif'];
 
 g1 = stat.readGroup(group1);
 g2 = stat.readGroup(group2);
@@ -281,7 +291,7 @@ pvals2[pi] = pcutoff;
 #pvals2[pi] = - pcutoff;
 
 
-io.writeData(os.path.join(baseDirectory, 'pvalues_intensitiesweighted10.raw'), numpy.abs(pvals2));
+io.writeData(os.path.join(baseDirectory, 'pvalues_intensity.raw'), numpy.abs(pvals2));
 
 
 
@@ -328,11 +338,11 @@ g1s = numpy.std(g1,axis = 0);
 g2a = numpy.mean(g2,axis = 0);
 g2s = numpy.std(g2,axis = 0);
 
-io.writeData(os.path.join(baseDirectory, 'mean_haloperidol_int10.raw'), g1a);
-io.writeData(os.path.join(baseDirectory, 'std_haloperidol_int10.raw'), g1s);
+io.writeData(os.path.join(baseDirectory, 'mean_haloperidol_intensity.raw'), g1a);
+io.writeData(os.path.join(baseDirectory, 'std_haloperidol_intensity.raw'), g1s);
 
-io.writeData(os.path.join(baseDirectory, 'mean_saline_int10.raw'), g2a);
-io.writeData(os.path.join(baseDirectory, 'std_saline_int10.raw'), g2s);
+io.writeData(os.path.join(baseDirectory, 'mean_saline_intensity.raw'), g2a);
+io.writeData(os.path.join(baseDirectory, 'std_saline_intensity.raw'), g2s);
 
 
 #
@@ -356,9 +366,9 @@ intensities = intensities[intensities > 0];
 points.shape
 intensities.shape
 
-voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (10,10,10), voxelizationWeights = intensities);
+voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (15,15,15), voxelizationWeights = intensities);
 
-io.writeData('/home/mtllab/Documents/Haloperidol/1266/cells_intensity_heatmap10.tif', io.sagittalToCoronalData(voximg.astype('float32')))
+io.writeData('/home/mtllab/Documents/Haloperidol/1266/cells_intensity_heatmap.tif', io.sagittalToCoronalData(voximg.astype('float32')))
 
 
 
@@ -377,9 +387,9 @@ intensities = intensities[intensities > 0];
 points.shape
 intensities.shape
 
-voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (10,10,10), voxelizationWeights = intensities);
+voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (15,15,15), voxelizationWeights = intensities);
 
-io.writeData('/home/mtllab/Documents/Haloperidol/1267/cells_intensity_heatmap10.tif', io.sagittalToCoronalData(voximg.astype('float32')))
+io.writeData('/home/mtllab/Documents/Haloperidol/1267/cells_intensity_heatmap.tif', io.sagittalToCoronalData(voximg.astype('float32')))
 
 
 
@@ -397,9 +407,9 @@ intensities = intensities[intensities > 0];
 points.shape
 intensities.shape
 
-voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (10,10,10), voxelizationWeights = intensities);
+voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (15,15,15), voxelizationWeights = intensities);
 
-io.writeData('/home/mtllab/Documents/Haloperidol/1268/cells_intensity_heatmap10.tif', io.sagittalToCoronalData(voximg.astype('float32')))
+io.writeData('/home/mtllab/Documents/Haloperidol/1268/cells_intensity_heatmap.tif', io.sagittalToCoronalData(voximg.astype('float32')))
 
 
 
@@ -418,9 +428,9 @@ intensities = intensities[intensities > 0];
 points.shape
 intensities.shape
 
-voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1269/cells_heatmap.tif', voxelizationSize = (10,10,10), voxelizationWeights = intensities);
+voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1269/cells_heatmap.tif', voxelizationSize = (15,15,15), voxelizationWeights = intensities);
 
-io.writeData('/home/mtllab/Documents/Haloperidol/1269/cells_intensity_heatmap10.tif', io.sagittalToCoronalData(voximg.astype('float32')))
+io.writeData('/home/mtllab/Documents/Haloperidol/1269/cells_intensity_heatmap.tif', io.sagittalToCoronalData(voximg.astype('float32')))
 
 
 
@@ -438,9 +448,9 @@ intensities = intensities[intensities > 0];
 points.shape
 intensities.shape
 
-voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1270/cells_heatmap.tif', voxelizationSize = (10,10,10), voxelizationWeights = intensities);
+voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1270/cells_heatmap.tif', voxelizationSize = (15,15,15), voxelizationWeights = intensities);
 
-io.writeData('/home/mtllab/Documents/Haloperidol/1270/cells_intensity_heatmap10.tif', io.sagittalToCoronalData(voximg.astype('float32')))
+io.writeData('/home/mtllab/Documents/Haloperidol/1270/cells_intensity_heatmap.tif', io.sagittalToCoronalData(voximg.astype('float32')))
 
 
 
@@ -459,9 +469,9 @@ intensities = intensities[intensities > 0];
 points.shape
 intensities.shape
 
-voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (10,10,10), voxelizationWeights = intensities);
+voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (15,15,15), voxelizationWeights = intensities);
 
-io.writeData('/home/mtllab/Documents/Haloperidol/1271/cells_intensity_heatmap10.tif', io.sagittalToCoronalData(voximg.astype('float32')))
+io.writeData('/home/mtllab/Documents/Haloperidol/1271/cells_intensity_heatmap.tif', io.sagittalToCoronalData(voximg.astype('float32')))
 
 
 
@@ -478,9 +488,9 @@ intensities = intensities[intensities > 0];
 points.shape
 intensities.shape
 
-voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (10,10,10), voxelizationWeights = intensities);
+voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (15,15,15), voxelizationWeights = intensities);
 
-io.writeData('/home/mtllab/Documents/Haloperidol/1272/cells_intensity_heatmap10.tif', io.sagittalToCoronalData(voximg.astype('float32')))
+io.writeData('/home/mtllab/Documents/Haloperidol/1272/cells_intensity_heatmap.tif', io.sagittalToCoronalData(voximg.astype('float32')))
 
 
 
@@ -496,9 +506,9 @@ intensities = intensities[intensities > 0];
 points.shape
 intensities.shape
 
-voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (10,10,10), voxelizationWeights = intensities);
+voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (15,15,15), voxelizationWeights = intensities);
 
-io.writeData('/home/mtllab/Documents/Haloperidol/1273/cells_intensity_heatmap10.tif', io.sagittalToCoronalData(voximg.astype('float32')))
+io.writeData('/home/mtllab/Documents/Haloperidol/1273/cells_intensity_heatmap.tif', io.sagittalToCoronalData(voximg.astype('float32')))
 
 
 
@@ -513,9 +523,9 @@ intensities = intensities[intensities > 0];
 points.shape
 intensities.shape
 
-voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (10,10,10), voxelizationWeights = intensities);
+voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif', voxelizationSize = (15,15,15), voxelizationWeights = intensities);
 
-io.writeData('/home/mtllab/Documents/Haloperidol/1274/cells_intensity_heatmap10.tif', io.sagittalToCoronalData(voximg.astype('float32')))
+io.writeData('/home/mtllab/Documents/Haloperidol/1274/cells_intensity_heatmap.tif', io.sagittalToCoronalData(voximg.astype('float32')))
 
 
 
@@ -529,7 +539,7 @@ intensities = intensities[intensities > 0];
 points.shape
 intensities.shape
 
-voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1275/cells_heatmap.tif', voxelizationSize = (10,10,10), voxelizationWeights = intensities);
+voximg = voxelize(points, '/home/mtllab/Documents/Haloperidol/1275/cells_heatmap.tif', voxelizationSize = (15,15,15), voxelizationWeights = intensities);
 
-io.writeData('/home/mtllab/Documents/Haloperidol/1275/cells_intensity_heatmap10.tif', io.sagittalToCoronalData(voximg.astype('float32')))
+io.writeData('/home/mtllab/Documents/Haloperidol/1275/cells_intensity_heatmap.tif', io.sagittalToCoronalData(voximg.astype('float32')))
 
