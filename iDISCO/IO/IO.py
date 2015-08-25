@@ -86,6 +86,11 @@ def isFileExpression(source):
         else:
             return True;
             
+def createDirectory(filename):
+    dirname, fname = os.path.split(filename);
+    if not os.path.exists(dirname):
+        os.makedirs(dirname);
+    
 
 def pointFileNameToType(filename):
     """Finds type of a point file"""
@@ -304,10 +309,16 @@ def toMultiChannelData(*args):
 
 def sagittalToCoronalData(source, sink = None):
     """Change from saggital to coronal orientation"""
-    
+      
     source = self.readData(source);
-    source = source.transpose([2,0,1]);
-    source = source[::-1,:,:];
+    d = source.ndim;
+    if d < 3:
+        raise RuntimeError('sagittalToCoronalData: 3d image requited!');
+    
+    tp = range(d);
+    tp[0:3] = [2,0,1];
+    source = source.transpose(tp);
+    source = source[::-1];
     #source = source[::-1,:,:];
     return self.writeData(sink, source);
 

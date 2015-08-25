@@ -34,51 +34,15 @@ g1.shape
 g2.shape
 
 
-pvals = stat.tTest(g1.astype('float'), g2.astype('float'), signed = True);
-
-pi = numpy.isnan(pvals);
-pvals2 = pvals.copy();
-pvals2[pi] = 1.0;
-
-pcutoff = 0.05;
-
-piplus = pvals2 > pcutoff;
-pvals2[pi] = pcutoff;
-piminus = pvals2 < - pcutoff;
-pvals2[pi] = - pcutoff;
-
-pvalsplus = numpy.ones(pvals.shape, dtype = pvals2.dtype) * pcutoff;
-pvalsplus[piminus] = pcutoff;
-
-pvalsminus = numpy.ones(pvals.shape, dtype = pvals2.dtype) * pcutoff;
-pvalsminus[piplus] = pcutoff;
-
-io.writeData(os.path.join(baseDirectory, 'pvalues_plus.raw'), pvalsplus);
-io.writeData(os.path.join(baseDirectory, 'pvalues_minus.raw'), pvalsminus);
+pvals, psign = stat.tTest(g1.astype('float'), g2.astype('float'), signed = True, pcutoff = 0.05);
+#pvals2 = stat.cutoffPValues(pvals, pcutoff = 0.05);
 
 
+pvalsc = stat.colorPValues(pvals, psign, positive = [1,0], negative = [0,1]);
+
+io.writeData(os.path.join(baseDirectory, 'pvalues_allcells.tif'), io.sagittalToCoronalData(pvalsc.astype('float32')));
 
 
-io.writeData(os.path.join(baseDirectory, 'pvalues_allcells.raw'), io.sagittalToCoronalData(numpy.abs(pvals2)));
-
-
-pi = pvals2 > pcutoff;
-pvals2[pi] = pcutoff;
-pi = pvals2 < - pcutoff;
-pvals2[pi] = - pcutoff;
-
-
-
-
-pvalsColor = stat.colorPValues(1 / pvals2 * pcutoff, positive = [1,0,0], negative = [0,1,0]);
-pvalsColor = pvalsColor[:,:,:,0:2];
-pvalsColor = 255*255 * pvalsColor;
-#pvalsColor = pvalsColor.astype('int32');
-pvalsColor = pvalsColor.astype('float32');
-pvalsColor.max()
-pvalsColor.min();
-
-io.writeData(os.path.join(baseDirectory, 'pvalues.tif'), pvalsColor);
 
 
 #annotationFile = '/home/mtllab/Documents/warping/annotation_25_right.tif';

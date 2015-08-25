@@ -18,15 +18,16 @@ from iDISCO.ImageProcessing.CellDetection import detectCells
 from iDISCO.Alignment.Resampling import resamplePoints, resamplePointsInverse
 from iDISCO.Analysis.Label import countPointsInRegions
 from iDISCO.Analysis.Voxelization import voxelize
-
+from iDISCO.Analysis.Statistics import thresholdPoints
 from iDISCO.Utils.ParameterTools import joinParameter
+
 
 ######################### Data parameters
 
 BaseDirectory = '/home/mtllab/Documents/Haloperidol/1267';
    
 cFosFile      = '/home/mtllab/Documents/Haloperidol/1267/150818_0_8X-cfos_17-14-34/17-14-34_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
+#cFosFileRange = {'x' : (500,900), 'y' : (1000, 1500), 'z' : (800,1000)};
 cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
 
 
@@ -57,16 +58,27 @@ SpotDetectionParameter = {
     "hMax" : 20,
     
     # intensity detection   
-    #"intensityMethod"  : 'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
-    #"intensitySize"    : (3,3,3),  # size of box in (x,y,z) to include in intensity determination
+    "intensityMethod"  : 'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
+    "intensitySize"    : (3,3,3),  # size of box in (x,y,z) to include in intensity determination
     
-    # threshold for min intensity at center to be counted as cell (should be similar to the h max)
-    "threshold" : 20,
-        
+    # threshold for min intensity at center to be counted as cell, for saving ('None' will save everything )
+    "threshold" : None,
+      
+    # write cell mask to disk i fnot None
+    #"cellMaskFile" : os.path.join(BaseDirectory, 'cell_mask/cell_mask_Z\d{4}.ome.tif')
+    "cellMaskFile" : None
+    
     #some debug / quality check output
     #"verbose" : True,
     #"processMethod" : "sequential"  #  plotting during image processing only in sequential mode !
     };
+
+      
+# Threshold for the points to be considered in the analysis
+minthreshold = 30; #remove points detected in the background, based on the filtered intensities
+maxthreshold = 40000; #remove staining artefacts (bright antibody clumps), based on the non-filtered original intensities 
+
+     
 
 #################### Heat map generation
 
@@ -99,15 +111,15 @@ AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
     #max number of parallel processes
-    "processes" : 5,
+    "processes" : 4,
    
     #chunk sizes
     "chunkSizeMax" : 100,
     "chunkSizeMin" : 30,
-    "cChunkOverlap" : 15,
+    "chunkOverlap" : 30,
 
     #optimize chunk size and number to number of processes
-    "chunkOptimization" : True,
+    "chunkOptimization" : False,
     
     #increase chunk size for optimizaition (True, False or all = automatic)
     "chunkOptimizationSize" : all
@@ -182,7 +194,7 @@ RegistrationAlignmentParameter["bSplineParameterFile"] = os.path.join(PathReg, '
 SpotDetectionParameter["source"] = cFosFile;
 SpotDetectionParameter = joinParameter(SpotDetectionParameter, cFosFileRange)
 
-SpotDetectionParameter["sink"] = (os.path.join(BaseDirectory, 'cells.csv'),  os.path.join(BaseDirectory,  'intensities.csv'));
+SpotDetectionParameter["sink"] = (os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy'));
 
 ImageProcessingParameter = joinParameter(StackProcessingParameter, SpotDetectionParameter)
 
@@ -193,7 +205,7 @@ ImageProcessingParameter = joinParameter(StackProcessingParameter, SpotDetection
 # downscale points to referenece image size
 
 CorrectionResamplingPointsParameter = CorrectionResamplingParameterCfos.copy();
-CorrectionResamplingPointsParameter["source"] = SpotDetectionParameter["sink"][0];
+CorrectionResamplingPointsParameter["source"] = os.path.join(BaseDirectory, 'cells.npy');
 CorrectionResamplingPointsParameter["dataSize"] = cFosFile;
 CorrectionResamplingPointsParameter["sink"]  = None;
 
@@ -247,6 +259,12 @@ print "Aligned cfos with autofluo: result directory: %s" % resultDirectory
 
 detectCells(**ImageProcessingParameter);
 
+## Save spot retained as legitimate cells, based on intensities:
+
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
+points, intensities = thresholdPoints(points, intensities, threshold = (minthreshold, maxthreshold), row = (1,0));
+
+io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
 
 
 ### Transform points from Original c-Fos position to autofluorescence
@@ -274,7 +292,7 @@ points = resamplePoints(**RegistrationResamplingPointParameter);
 # transform points
 points = transformPoints(points, transformDirectory = RegistrationAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
 
-TransformedCellFile = os.path.join(BaseDirectory, 'cells_transformed_to_Atlas.csv')
+TransformedCellFile = os.path.join(BaseDirectory, 'cells_transformed_to_Atlas.npy')
 
 io.writePoints(TransformedCellFile, points);
 

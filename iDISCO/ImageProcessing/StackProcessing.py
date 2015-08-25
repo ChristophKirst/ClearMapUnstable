@@ -27,6 +27,7 @@ from iDISCO.Utils.Timer import Timer;
    
 def printSubStackInfo(subStack, out = sys.stdout):
     writeParameter(head = "Sub Stack: ", out = out, **subStack);
+    out.write('\n');
 
 
 #define the subroutine for the processing
@@ -215,7 +216,7 @@ def calculateSubStacks(source, z = all, x = all, y = all, **args):
     nz = zr[1] - zr[0];
     
     #calculate optimal chunk sizes
-    nchunks, zranges, zcenters = self.calculateChunkSize(nz, );
+    nchunks, zranges, zcenters = self.calculateChunkSize(nz, **args);
     
     #adjust for the zrange
     zcenters = [c + zr[0] for c in zcenters];
@@ -228,16 +229,18 @@ def calculateSubStacks(source, z = all, x = all, y = all, **args):
     for i in range(nchunks):
         
         indexhi = int(round(zcenters[i+1]));
-        if indexhi > zr[1] or i == nchunks:
+        if indexhi > zr[1] or i == nchunks - 1:
             indexhi = zr[1];
+        
+        zs = zranges[i][1] - zranges[i][0];
         
         subStacks.append({"stackId" : i, "nStacks" : nchunks, 
                           "source" : source, "x" : x, "y" : y, "z" : zranges[i], 
                           "zCenters" : (zcenters[i], zcenters[i+1]),
                           "zCenterIndices" : (indexlo, indexhi),
-                          "zSubStackCenterIndices" : (indexlo - zr[0], indexhi - zr[0])});
+                          "zSubStackCenterIndices" : (indexlo - zranges[i][0], zs - (zranges[i][1] - indexhi))});
         
-        indexlo = indexhi + 1;
+        indexlo = indexhi; # + 1;
     
     return subStacks;
         
@@ -256,8 +259,8 @@ def parallelProcessStack(source, x = all, y = all, z = all, sink = None,
     nSubStacks = len(subStacks);
     print "Number of SubStacks: %d" % nSubStacks;
                                        
-    for i in range(nSubStacks):
-        self.printSubStackInfo(subStacks[i]);
+    #for i in range(nSubStacks):
+    #    self.printSubStackInfo(subStacks[i]);
     
     argdata = [];
     for i in range(nSubStacks):

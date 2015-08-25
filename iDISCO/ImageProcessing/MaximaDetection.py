@@ -77,10 +77,9 @@ def findExtendedMaxima(img, hMax = 10, threshold = 0, verbose = False, out = sys
     timer.reset(); 
     imgmax = hMaxTransform(img, hMax);
     imgmax = regionalMax(imgmax);
-    
+        
     if not threshold is None:
-        imgmax = imgmax.astype('float32') * img;
-        imgmax = imgmax >= threshold;
+        imgmax = numpy.logical_and(imgmax, img >= threshold);
     
     if verbose:
         #plotTiling(img)
@@ -92,7 +91,7 @@ def findExtendedMaxima(img, hMax = 10, threshold = 0, verbose = False, out = sys
 
 
 
-def findCenterOfMaxima(img, imgmax, labelFile = None, subStack = None, verbose = False, out = sys.stdout, **parameter):
+def findCenterOfMaxima(img, imgmax, cellMaskFile = None, subStack = None, verbose = False, out = sys.stdout, **parameter):
     """Find center of the maxima step in Spot Detection Algorithm"""  
     timer = Timer(); 
 
@@ -100,12 +99,17 @@ def findCenterOfMaxima(img, imgmax, labelFile = None, subStack = None, verbose =
     timer.reset();
     imglab, nlab = label(imgmax);  
     
-    if not labelFile is None:
+    if not cellMaskFile is None:
         if not subStack is None:
-            si = subStack["zSubStackCenterIndices"][0];
+            ii = subStack["zSubStackCenterIndices"][0];
+            ee = subStack["zSubStackCenterIndices"][1];
+            si = subStack["zCenterIndices"][0];
         else:
-            si = 0; 
-        io.writeData(labelFile, imglab, startIndex = si);
+            si = 0;
+            ii = 0;
+            ee = -1;
+        
+        io.writeData(cellMaskFile, imglab[:,:,ii:ee], startIndex = si );
         
     if nlab > 0:
         centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
