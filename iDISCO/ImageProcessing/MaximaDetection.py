@@ -36,6 +36,8 @@ from iDISCO.Utils.Timer import Timer
 from iDISCO.Utils.ParameterTools import writeParameter;
 from iDISCO.Visualization.Plot import plotOverlayLabel
 
+import iDISCO.IO.IO as io
+
 
 ##############################################################################
 # Basic Transforms
@@ -90,13 +92,20 @@ def findExtendedMaxima(img, hMax = 10, threshold = 0, verbose = False, out = sys
 
 
 
-def findCenterOfMaxima(img, imgmax, writeLabel = False, verbose = False, out = sys.stdout, **parameter):
+def findCenterOfMaxima(img, imgmax, labelFile = None, subStack = None, verbose = False, out = sys.stdout, **parameter):
     """Find center of the maxima step in Spot Detection Algorithm"""  
-    timer = Timer();    
+    timer = Timer(); 
 
     #center of maxima
     timer.reset();
-    imglab, nlab = label(imgmax);
+    imglab, nlab = label(imgmax);  
+    
+    if not labelFile is None:
+        if not subStack is None:
+            si = subStack["zSubStackCenterIndices"][0];
+        else:
+            si = 0; 
+        io.writeData(labelFile, imglab, startIndex = si);
         
     if nlab > 0:
         centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    

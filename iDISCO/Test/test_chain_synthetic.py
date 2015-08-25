@@ -120,9 +120,9 @@ stackProcessingParameter = {
     "processes" : 4,
    
     #chunk sizes
-    "chunkSizeMax" : 100,
-    "chunkSizeMin" : 30,
-    "cChunkOverlap" : 15,
+    "chunkSizeMax" : 25,
+    "chunkSizeMin" : 20,
+    "chunkOverlap" : 10,
 
     #optimize chunk size and number to number of processes
     "chunkOptimization" : True,
@@ -160,6 +160,10 @@ spotDetectionParameter = {
     "sink" : (os.path.join(baseDirectory, 'Synthetic/cells.csv'), os.path.join(baseDirectory, 'Synthetic/intensities.csv')),
     #"sink" : (None,  None),
     
+    
+    #write labeled image:
+    "labelFile" :   os.path.join(baseDirectory, 'Data/Synthetic/label_iDISCO_\d{3}.tif'),   
+    
     #some debug / quality check output
     #"verbose" : True,
     #"processMethod" : "sequential"  #  plotting during image processing only in sequential mode !
@@ -179,9 +183,10 @@ if verbose:
     import iDISCO.Visualization.Plot as plot   
     
     dataraw = io.readData(spotDetectionParameter["source"]);
+    dataraw[dataraw > 50] = 50;
+    dataraw = dataraw.astype('float') / dataraw.max();
     points  = io.readPoints(spotDetectionParameter["sink"][0]);
-    plot.plotOverlayPoints(dataraw, points);
-
+    plot.plotOverlayPoints(dataraw, points, pointColor = [1,0,0]);
 
 
 

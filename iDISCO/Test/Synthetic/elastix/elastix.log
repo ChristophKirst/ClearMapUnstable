@@ -1,15 +1,15 @@
 
-elastix is started at Fri Aug 21 21:38:26 2015.
+elastix is started at Tue Aug 25 13:04:20 2015.
 
-which elastix:   /usr/local/elastix/bin/elastix
-elastix runs at: mtllab-Ubuntu
-  Linux 3.16.0-41-generic (x64), #57-Ubuntu SMP Thu Jun 18 08:44:16 UTC 2015
-  with 128845 MB memory, and 6 cores @ 1399 MHz.
+which elastix:   /home/ckirst/programs/elastix/bin/elastix
+elastix runs at: kagalaska.nld
+  Linux 4.1.0-rc2-1.ga32d077-desktop (x64), #1 SMP PREEMPT Mon May 4 15:21:54 UTC 2015 (a32d077)
+  with 7867 MB memory, and 2 cores @ 2632 MHz.
 -------------------------------------------------------------------------
 
-Running elastix with parameter file 0: "/home/mtllab/Programs/idisco/iDISCO/Test/Synthetic/elastix/ElastixParameterAffine.txt".
+Running elastix with parameter file 0: "/home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/elastix/ElastixParameterAffine.txt".
 
-Current time: Fri Aug 21 21:38:26 2015.
+Current time: Tue Aug 25 13:04:20 2015.
 Reading the elastix parameters from file ...
 
 Installing all components.
@@ -17,12 +17,12 @@ InstallingComponents was successful.
 
 ELASTIX version: 4.700
 Command line options from ElastixBase:
--f        /home/mtllab/Programs/idisco/iDISCO/Test/Synthetic/test_iDISCO_resample.tif
--m        /home/mtllab/Programs/idisco/iDISCO/Test/Synthetic/test_iDISCO_reference.tif
+-f        /home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/test_iDISCO_resample.tif
+-m        /home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/test_iDISCO_reference.tif
 -fMask    unspecified, so no fixed mask used
 -mMask    unspecified, so no moving mask used
--out      /home/mtllab/Programs/idisco/iDISCO/Test/Synthetic/elastix/
--p        /home/mtllab/Programs/idisco/iDISCO/Test/Synthetic/elastix/ElastixParameterAffine.txt
+-out      /home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/elastix/
+-p        /home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/elastix/ElastixParameterAffine.txt
 -threads  16
 WARNING: The parameter "UseDirectionCosines", requested at entry number 0, does not exist at all.
   The default value "false" is used instead.
@@ -34,7 +34,7 @@ http://elastix.isi.uu.nl/whatsnew_04_3.php for more information.
 Command line options from TransformBase:
 -t0       unspecified, so no initial transform used
 
-=============== start of ParameterFile: /home/mtllab/Programs/idisco/iDISCO/Test/Synthetic/elastix/ElastixParameterAffine.txt ===============
+=============== start of ParameterFile: /home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/elastix/ElastixParameterAffine.txt ===============
 //Affine Transformation - updated May 2012
 
 // Description: affine, MI, ASGD
@@ -104,11 +104,11 @@ Command line options from TransformBase:
 
 
 
-=============== end of ParameterFile: /home/mtllab/Programs/idisco/iDISCO/Test/Synthetic/elastix/ElastixParameterAffine.txt ===============
+=============== end of ParameterFile: /home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/elastix/ElastixParameterAffine.txt ===============
 
 
 Reading images...
-Reading images took 3 ms.
+Reading images took 4 ms.
 
 WARNING: the fixed pyramid schedule is not fully specified!
   A default pyramid schedule is used.
@@ -119,8 +119,8 @@ WARNING: The parameter "AutomaticTransformInitializationMethod", requested at en
 Transform parameters are initialized as: [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6.5, 0]
 Scales are estimated automatically.
 Scales for transform parameters are: [481, 242.66666666666666, 47.916666666666664, 481, 242.66666666666666, 47.916666666666664, 481, 242.66666666666666, 47.916666666666664, 1, 1, 1]
-Initialization of all components (before registration) took: 7 ms.
-Preparation of the image pyramids took: 44 ms.
+Initialization of all components (before registration) took: 14 ms.
+Preparation of the image pyramids took: 33 ms.
 
 Resolution: 0
 Setting the fixed masks took: 0 ms.
@@ -162,7 +162,7 @@ WARNING: The parameter "NumberOfSamplesForExactGradient", requested at entry num
 WARNING: The parameter "SigmoidScaleFactor", requested at entry number 0, does not exist at all.
   The default value "0.1" is used instead.
 Elastix initialization of all components (for this resolution) took: 0 ms.
-Initialization of AdvancedMattesMutualInformation metric took: 6 ms.
+Initialization of AdvancedMattesMutualInformation metric took: 12 ms.
 Starting automatic parameter estimation for AdaptiveStochasticGradientDescent ...
 WARNING: The parameter "ASGDParameterEstimationMethod", requested at entry number 0, does not exist at all.
   The default value "Original" is used instead.
@@ -173,12 +173,12 @@ WARNING: The parameter "ASGDParameterEstimationMethod", requested at entry numbe
   Sampling the gradients took 1 Seconds
 Automatic parameter estimation took 1 Seconds
 1:ItNr	2:Metric	3a:Time	3b:StepSize	4:||Gradient||	Time[ms]
-0	-1.885689	0.000000	2.777173	0.136634	292
-1	-1.932173	0.000000	2.777173	0.082017	6
-2	-1.940201	0.000000	2.777173	0.047719	5
-3	-1.949076	0.000000	2.777173	0.038919	5
-4	-1.946226	0.000000	2.777173	0.035567	11
-Time spent in resolution 0 (ITK initialisation and iterating): 0.322 s.
+0	-1.885689	0.000000	2.777173	0.136634	758
+1	-1.932173	0.000000	2.777173	0.082017	13
+2	-1.940201	0.000000	2.777173	0.047719	12
+3	-1.949076	0.000000	2.777173	0.038919	11
+4	-1.946226	0.000000	2.777173	0.035567	15
+Time spent in resolution 0 (ITK initialisation and iterating): 0.812 s.
 Applying transform this resolution ...
   Applying transform took 0 s.
 Stopping condition: Maximum number of iterations has been reached.
@@ -231,7 +231,7 @@ WARNING: The parameter "NumberOfSamplesForExactGradient", requested at entry num
 WARNING: The parameter "SigmoidScaleFactor", requested at entry number 1, does not exist at all.
   The default value "0.1" is used instead.
 Elastix initialization of all components (for this resolution) took: 0 ms.
-Initialization of AdvancedMattesMutualInformation metric took: 5 ms.
+Initialization of AdvancedMattesMutualInformation metric took: 7 ms.
 Starting automatic parameter estimation for AdaptiveStochasticGradientDescent ...
 WARNING: The parameter "ASGDParameterEstimationMethod", requested at entry number 0, does not exist at all.
   The default value "Original" is used instead.
@@ -239,15 +239,15 @@ WARNING: The parameter "ASGDParameterEstimationMethod", requested at entry numbe
   Computing the Jacobian terms took 0 Seconds
   NumberOfGradientMeasurements to estimate sigma_i: 3
   Sampling gradients ...
-  Sampling the gradients took 0 Seconds
-Automatic parameter estimation took 0 Seconds
+  Sampling the gradients took 1 Seconds
+Automatic parameter estimation took 1 Seconds
 1:ItNr	2:Metric	3a:Time	3b:StepSize	4:||Gradient||	Time[ms]
-0	-1.941456	0.000000	7.284170	0.039655	256
-1	-1.956829	0.000000	7.284170	0.036050	9
-2	-1.963944	0.000000	7.284170	0.034385	6
-3	-1.951331	0.000000	7.284170	0.033237	5
-4	-1.979975	0.000000	7.284170	0.032876	9
-Time spent in resolution 1 (ITK initialisation and iterating): 0.288 s.
+0	-1.941456	0.000000	7.284170	0.039655	690
+1	-1.956829	0.000000	7.284170	0.036050	11
+2	-1.963944	0.000000	7.284170	0.034385	12
+3	-1.951331	0.000000	7.284170	0.033237	14
+4	-1.979975	0.000000	7.284170	0.032876	12
+Time spent in resolution 1 (ITK initialisation and iterating): 0.742 s.
 Applying transform this resolution ...
   Applying transform took 0 s.
 Stopping condition: Maximum number of iterations has been reached.
@@ -300,7 +300,7 @@ WARNING: The parameter "NumberOfSamplesForExactGradient", requested at entry num
 WARNING: The parameter "SigmoidScaleFactor", requested at entry number 2, does not exist at all.
   The default value "0.1" is used instead.
 Elastix initialization of all components (for this resolution) took: 0 ms.
-Initialization of AdvancedMattesMutualInformation metric took: 5 ms.
+Initialization of AdvancedMattesMutualInformation metric took: 8 ms.
 Starting automatic parameter estimation for AdaptiveStochasticGradientDescent ...
 WARNING: The parameter "ASGDParameterEstimationMethod", requested at entry number 0, does not exist at all.
   The default value "Original" is used instead.
@@ -308,15 +308,15 @@ WARNING: The parameter "ASGDParameterEstimationMethod", requested at entry numbe
   Computing the Jacobian terms took 0 Seconds
   NumberOfGradientMeasurements to estimate sigma_i: 3
   Sampling gradients ...
-  Sampling the gradients took 0 Seconds
-Automatic parameter estimation took 0 Seconds
+  Sampling the gradients took 1 Seconds
+Automatic parameter estimation took 1 Seconds
 1:ItNr	2:Metric	3a:Time	3b:StepSize	4:||Gradient||	Time[ms]
-0	-1.933209	0.000000	8.315349	0.036735	262
-1	-1.929225	0.000000	8.315349	0.035925	5
-2	-1.941862	0.000000	8.315349	0.037737	6
-3	-1.955506	0.000000	8.315349	0.032290	5
-4	-1.961804	0.000000	8.315349	0.037403	6
-Time spent in resolution 2 (ITK initialisation and iterating): 0.286 s.
+0	-1.933209	0.000000	8.315349	0.036735	695
+1	-1.929225	0.000000	8.315349	0.035925	15
+2	-1.941862	0.000000	8.315349	0.037737	11
+3	-1.955506	0.000000	8.315349	0.032290	12
+4	-1.961804	0.000000	8.315349	0.037403	12
+Time spent in resolution 2 (ITK initialisation and iterating): 0.748 s.
 Applying transform this resolution ...
   Applying transform took 0 s.
 Stopping condition: Maximum number of iterations has been reached.
@@ -369,7 +369,7 @@ WARNING: The parameter "NumberOfSamplesForExactGradient", requested at entry num
 WARNING: The parameter "SigmoidScaleFactor", requested at entry number 3, does not exist at all.
   The default value "0.1" is used instead.
 Elastix initialization of all components (for this resolution) took: 0 ms.
-Initialization of AdvancedMattesMutualInformation metric took: 6 ms.
+Initialization of AdvancedMattesMutualInformation metric took: 8 ms.
 Starting automatic parameter estimation for AdaptiveStochasticGradientDescent ...
 WARNING: The parameter "ASGDParameterEstimationMethod", requested at entry number 0, does not exist at all.
   The default value "Original" is used instead.
@@ -380,12 +380,12 @@ WARNING: The parameter "ASGDParameterEstimationMethod", requested at entry numbe
   Sampling the gradients took 1 Seconds
 Automatic parameter estimation took 1 Seconds
 1:ItNr	2:Metric	3a:Time	3b:StepSize	4:||Gradient||	Time[ms]
-0	-1.537395	0.000000	6.086413	0.043539	247
-1	-1.544857	0.000000	6.086413	0.044208	6
-2	-1.544749	0.000000	6.086413	0.041821	6
-3	-1.554601	0.000000	6.086413	0.066510	5
-4	-1.552925	0.000000	6.086413	0.047147	4
-Time spent in resolution 3 (ITK initialisation and iterating): 0.271 s.
+0	-1.537395	0.000000	6.086413	0.043539	693
+1	-1.544857	0.000000	6.086413	0.044208	10
+2	-1.544749	0.000000	6.086413	0.041821	12
+3	-1.554601	0.000000	6.086413	0.066510	11
+4	-1.552925	0.000000	6.086413	0.047147	10
+Time spent in resolution 3 (ITK initialisation and iterating): 0.740 s.
 Applying transform this resolution ...
   Applying transform took 0 s.
 Stopping condition: Maximum number of iterations has been reached.
@@ -447,14 +447,14 @@ Settings of AdaptiveStochasticGradientDescent for all resolutions:
 ( SigmoidMin -0.011005 -0.012910 -0.089874 -0.406273 )
 ( SigmoidScale 0.000001 0.000000 0.000005 0.000031 )
 
-Time spent on saving the results, applying the final transform etc.: 0 ms.
-Running elastix with parameter file 0: "/home/mtllab/Programs/idisco/iDISCO/Test/Synthetic/elastix/ElastixParameterAffine.txt", has finished.
+Time spent on saving the results, applying the final transform etc.: 1 ms.
+Running elastix with parameter file 0: "/home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Synthetic/elastix/ElastixParameterAffine.txt", has finished.
 
 
-Current time: Fri Aug 21 21:38:28 2015.
-Time used for running elastix with this parameter file: 2 Seconds.
+Current time: Tue Aug 25 13:04:24 2015.
+Time used for running elastix with this parameter file: 4 Seconds.
 
 -------------------------------------------------------------------------
 
-Total time elapsed: 2 Seconds.
+Total time elapsed: 4 Seconds.
 

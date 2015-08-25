@@ -141,7 +141,7 @@ def overlayPoints(dataSource, pointSource, x = all, y = all, z = all, pointColor
         if data.ndim == 2:
             for p in points: # faster version using voxelize ?
                 cimage[p[0], p[1], :] = pointColor;
-        elif data.ndim == 2:
+        elif data.ndim == 3:
             for p in points: # faster version using voxelize ?
                 cimage[p[0], p[1], p[2], :] = pointColor;
         else:

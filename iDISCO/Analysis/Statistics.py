@@ -88,6 +88,23 @@ def thresholdPoints(points, intensities, threshold = 0, row = 0):
     return (points[iids, :], intensities[iids, :]);
 
 
+def colorPValues(pvals, positive = [1,0,0], negative = [0,1,0]):
+    d = len(positive);
+    ds = pvals.shape + (d,);
+    pvc = numpy.zeros(ds);
+    
+    ids = pvals > 0;
+    pvalsi = pvals[ids];
+    for i in range(d):
+        pvc[ids, i] = pvalsi * positive[i];
+    
+    ids = pvals < 0;
+    pvalsi = pvals[ids];
+    for i in range(d):
+        pvc[ids, i] = - pvalsi * negative[i];
+        
+    return pvc;
+
 
 def weightsFromPrecentiles(intensities, percentiles = [25,50,75,100]):
     perc = numpy.percentiles(intensities, percentiles);
@@ -99,37 +116,32 @@ def weightsFromPrecentiles(intensities, percentiles = [25,50,75,100]):
     return weights;
         
 
-def colorPValues(pvals, positive = [1,0,0], negative = [0,1,0]):
-    ds = pvals.shape + (3,);
-    pvc = numpy.zeros(ds);
-    
-    ids = pvals > 0;
-    pvalsi = pvals[ids];
-    for i in range(3):
-        pvc[ids, i] = pvalsi * positive[i];
-    
-    ids = pvals < 0;
-    pvalsi = pvals[ids];
-    for i in range(3):
-        pvc[ids, i] = -pvalsi * negative[i];
-        
-    return pvc;
 
 
 def test():
     """Test the statistics array"""
-    #import iDISCO.Analysis.Statistics as self
-    # reload(self)
+    import iDISCO.Analysis.Statistics as self
+    reload(self)
+    import numpy
     #x = stats.norm.rvs(loc=5,scale=1,size=1500)
     #y = stats.norm.rvs(loc=-5,scale=1,size=1500)
-    x = numpy.random.rand(4,3,20);
-    y = numpy.random.rand(5, 3,20) + 0.5;
+    s = numpy.ones((5,4,20));
+    s[:, 0:3, :] = - 1;
     
-    print stats.ttest_ind(x,y, axis = 0, equal_var = False);
+    x = numpy.random.rand(4,4,20);
+    y = numpy.random.rand(5,4,20) + s;
+    
+    #print stats.ttest_ind(x,y, axis = 0, equal_var = False);
     
     pvals = self.tTest(x,y);
     
     print pvals
+    
+    pvals = self.tTest(x,y, signed = True);
+    pvalscol = self.colorPValues(pvals)
+    
+    import iDISCO.Visualization.Plot as plt
+    plt.plotTiling(1/pvalscol)
     
     
 if __name__ == "__main__":

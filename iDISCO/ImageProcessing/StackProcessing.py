@@ -19,44 +19,89 @@ import iDISCO.IO.IO as io
 
 from iDISCO.ImageProcessing.SpotDetection import detectCells;
 
+
+from iDISCO.Utils.ParameterTools import writeParameter
 from iDISCO.Utils.ProcessWriter import ProcessWriter;
 from iDISCO.Utils.Timer import Timer;
 
-#define the subroutine for the processing
+   
+def printSubStackInfo(subStack, out = sys.stdout):
+    writeParameter(head = "Sub Stack: ", out = out, **subStack);
 
+
+#define the subroutine for the processing
 def processSubStack(dsr):
     """Helper to process stack in parallel"""
+
+    sf  = dsr[0];
+    pp  = dsr[1];
+    sub = dsr[2];
     
-    fn = dsr[0];
-    sf = dsr[1];
-    pp = dsr[2];
-    zr = dsr[3];
-    xr = dsr[4];
-    yr = dsr[5];
-    ii = dsr[6];
-    n  = dsr[7];
-    
-    pw = ProcessWriter(ii);
+    pw = ProcessWriter(sub["stackId"]);
     timer = Timer();
     
-    pw.write("processing chunk " + str(ii) + "/" + str(n));
-    pw.write("file          = " + fn);
+    pw.write("processing chunk " + str(sub["stackId"]) + "/" + str(sub["nStacks"]));
+    pw.write("file          = " + sub["source"]);
     pw.write("segmentation  = " + str(sf));
-    pw.write("ranges: x,y,z = " + str(xr) +  "," + str(yr) + "," + str(zr)); 
+    pw.write("ranges: x,y,z = " + str(sub["x"]) +  "," + str(sub["y"]) + "," + str(sub["z"])); 
     
     timer.reset();    
-    img = io.readData(fn, z = zr, x = xr, y = yr); 
+    img = io.readData(sub["source"], x = sub["x"], y = sub["y"], z = sub["z"]); 
     pw.write(timer.elapsedTime(head = 'Reading data of size ' + str(img.shape)));
     
     timer.reset();
-    seg = sf(img, out = pw, **pp);
-    pw.write(timer.elapsedTime(head = 'Segmenting data of size ' + str(img.shape)));  
+    seg = sf(img, subStack = sub, out = pw, **pp);    
+    
+    pw.write(timer.elapsedTime(head = 'Segmenting data of size ' + str(img.shape)));
     
     return seg;
 
 
+def joinPoints(results, subStacks = None, shiftPoints = True, **args):
+    """Joins a list of points obtained from processing a stack in chunks"""
+    
+    nchunks = len(results);
+    pointlist = [results[i][0] for i in range(nchunks)];
+    intensities = [results[i][1] for i in range(nchunks)]; 
+    
+    results = [];
+    resultsi = [];
+    for i in range(nchunks):
+        cts = pointlist[i];
+        if not intensities is None:
+            cti = intensities[i];
+        
+        if cts.size > 0:
+            cts[:,2] += subStacks[i]["z"][0];
+            iid = numpy.logical_and(cts[:,2] < subStacks[i]["zCenters"][1], cts[:,2] >=  subStacks[i]["zCenters"][0]);
+            cts = cts[iid,:];
+            results.append(cts);
+            if not intensities is None:
+                cti = cti[iid];
+                resultsi.append(cti);
+            
+    if results == []:
+        if not intensities is None:
+            return (numpy.zeros((0,3)), numpy.zeros((0)));
+        else:
+            return numpy.zeros((0,3))
+    else:
+        points = numpy.concatenate(results);
+        
+        if shiftPoints:
+            points = points + io.pointShiftFromRange(io.dataSize(subStacks[0]["source"]), x = subStacks[0]["x"], y = subStacks[0]["y"], z = 0);
+        else:
+            points = points - io.pointShiftFromRange(io.dataSize(subStacks[0]["source"]), x = 0, y = 0, z = subStacks[0]["z"]); #absolute offset is added initially via zranges !
+            
+        if intensities is None:
+            return points;
+        else:
+            return (points, numpy.concatenate(resultsi));
+
+
+
 def calculateChunkSize(size, processes = 2, chunkSizeMax = 100, chunkSizeMin = 30, chunkOverlap = 15,  chunkOptimization = True, chunkOptimizationSize = all, verbose = True):
-    """Calculates the chunksize for parallel processing"""
+    """Calculates the chunksize and other info for parallel processing, returns list of SubStack objects"""
     
     pre = "ChunkSize: ";
     
@@ -153,7 +198,6 @@ def calculateChunkSize(size, processes = 2, chunkSizeMax = 100, chunkSizeMin = 3
         zcenters.append((zhiold - zlo) / 2. + zlo); 
         
     zcenters.append(size);
-          
     
     if verbose:    
         print pre + "final chunks : " + str(zranges);
@@ -162,81 +206,73 @@ def calculateChunkSize(size, processes = 2, chunkSizeMax = 100, chunkSizeMin = 3
     return nchunks, zranges, zcenters;
 
 
-
-def joinPoints(pointlist, zranges, zcenters, intensities = None, dataSize = None, x = all, y = all, z = all, shiftPoints = True, **args):
-    """Joins a list of points obtained from processing a stack in chunks"""
-    
-    nchunks = len(pointlist);
-    results = [];
-    resultsi = [];
-    for i in range(nchunks):
-        cts = pointlist[i];
-        if not intensities is None:
-            cti = intensities[i];
-        
-        if cts.size > 0:
-            cts[:,2] += zranges[i][0];
-            iid = numpy.logical_and(cts[:,2] < zcenters[i+1], cts[:,2] >= zcenters[i]);
-            cts = cts[iid,:];
-            results.append(cts);
-            if not intensities is None:
-                cti = cti[iid];
-                resultsi.append(cti);
-            
-    if results == []:
-        if not intensities is None:
-            return (numpy.zeros((0,3)), numpy.zeros((0)));
-        else:
-            return numpy.zeros((0,3))
-    else:
-        points = numpy.concatenate(results);
-        
-        if shiftPoints:
-            points = points + io.pointShiftFromRange(dataSize, x = x, y = y, z = 0);
-        else:
-            points = points - io.pointShiftFromRange(dataSize, x = 0, y = 0, z = z); #absolute offset is added initially via zranges !
-            
-        if intensities is None:
-            return points;
-        else:
-            return (points, numpy.concatenate(resultsi));
-
-
-def parallelProcessStack(source, x = all, y = all, z = all, sink = None,
-                         processes = 2, chunkSizeMax = 100, chunkSizeMin = 30, chunkOverlap = 15,
-                         chunkOptimization = True, chunkOptimizationSize = all, 
-                         function = detectCells, join = self.joinPoints, **parameter):
-    """Parallel process a stack using"""
+def calculateSubStacks(source, z = all, x = all, y = all, **args):
     
     #determine z ranges
     fs = io.dataSize(source);
     zs = fs[2];
     zr = io.toDataRange(zs, r = z);
     nz = zr[1] - zr[0];
-    nchunks, zranges, zcenters = self.calculateChunkSize(nz, processes = processes, chunkSizeMax = chunkSizeMax, chunkSizeMin = chunkSizeMin, chunkOverlap = chunkOverlap, chunkOptimization = chunkOptimization, chunkOptimizationSize = chunkOptimizationSize);
-        
+    
+    #calculate optimal chunk sizes
+    nchunks, zranges, zcenters = self.calculateChunkSize(nz, );
+    
     #adjust for the zrange
-    zcenters = [xc + zr[0] for xc in zcenters];
+    zcenters = [c + zr[0] for c in zcenters];
     zranges = [(zc[0] + zr[0], zc[1] + zr[0]) for zc in zranges];
     
-    argdata = [];
+    #create substacks
+    subStacks = [];
+    indexlo = zr[0];
+    
     for i in range(nchunks):
-        argdata.append((source, function, parameter, zranges[i], x, y, i, nchunks));
         
+        indexhi = int(round(zcenters[i+1]));
+        if indexhi > zr[1] or i == nchunks:
+            indexhi = zr[1];
+        
+        subStacks.append({"stackId" : i, "nStacks" : nchunks, 
+                          "source" : source, "x" : x, "y" : y, "z" : zranges[i], 
+                          "zCenters" : (zcenters[i], zcenters[i+1]),
+                          "zCenterIndices" : (indexlo, indexhi),
+                          "zSubStackCenterIndices" : (indexlo - zr[0], indexhi - zr[0])});
+        
+        indexlo = indexhi + 1;
+    
+    return subStacks;
+        
+
+
+def parallelProcessStack(source, x = all, y = all, z = all, sink = None,
+                         processes = 2, chunkSizeMax = 100, chunkSizeMin = 30, chunkOverlap = 15,
+                         chunkOptimization = True, chunkOptimizationSize = all, 
+                         function = detectCells, join = self.joinPoints, **parameter):
+    """Parallel process a stack"""
+    
+    subStacks = calculateSubStacks(source, x = x, y = y, z = z, 
+                                   processes = processes, chunkSizeMax = chunkSizeMax, chunkSizeMin = chunkSizeMin, chunkOverlap = chunkOverlap,
+                                   chunkOptimization = chunkOptimization, chunkOptimizationSize = chunkOptimizationSize, verbose = True);
+                                   
+    nSubStacks = len(subStacks);
+    print "Number of SubStacks: %d" % nSubStacks;
+                                       
+    for i in range(nSubStacks):
+        self.printSubStackInfo(subStacks[i]);
+    
+    argdata = [];
+    for i in range(nSubStacks):
+        argdata.append((function, parameter, subStacks[i]));    
     #print argdata
     
     # process in parallel
-    pool = Pool(processes = processes);
-    #print processes
-    
-    resultsseg = pool.map(processSubStack, argdata);
+    pool = Pool(processes = processes);    
+    results = pool.map(processSubStack, argdata);
     
     #print '=========== results';
-    #print resultsseg;
-    #print nchunks
+    #print results;
         
-    #join the results: extension: make this a join function and pass as argument 
-    results = join([resultsseg[i][0] for i in range(nchunks)], zranges, zcenters, [resultsseg[i][1] for i in range(nchunks)], dataSize = fs, x = x, y = y, z = z, **parameter);
+    #join the results
+    results = join(results, subStacks = subStacks, **parameter);
     
     #write / or return 
     return io.writePoints(sink, results);
@@ -247,30 +283,86 @@ def sequentiallyProcessStack(source, x = all, y = all, z = all, sink = None,
                              function = detectCells, join = self.joinPoints, **parameter):
     """Sequential image processing on a stack"""
     
-    #determine z ranges
-    fs = io.dataSize(source);
-    zs = fs[2];
-    zr = io.toDataRange(zs, r = z);
-    nz = zr[1] - zr[0];
-    nchunks, zranges, zcenters = self.calculateChunkSize(nz, processes = 1, chunkSizeMax = chunkSizeMax, chunkSizeMin = chunkSizeMin, chunkOverlap = chunkOverlap, chunkOptimization = False, chunkOptimizationSize = False);
-        
-    #adjust for the zrange
-    zcenters = [xc + zr[0] for xc in zcenters];
-    zranges = [(zc[0] + zr[0], zc[1] + zr[0]) for zc in zranges];
+    #determine z ranges      
+    subStacks = calculateSubStacks(source, x = x, y = y, z = z, 
+                                   processes = 1, chunkSizeMax = chunkSizeMax, chunkSizeMin = chunkSizeMin, chunkOverlap = chunkOverlap,  
+                                   chunkOptimization = False, verbose = True);
     
+    nSubStacks = len(subStacks);
     argdata = [];
-    for i in range(nchunks):
-        argdata.append((source, function, parameter, zranges[i], x, y, i, nchunks));
-        
+    for i in range(nSubStacks):
+        argdata.append((function, parameter, subStacks[i]));    
+    
     #run sequentially
-    resultsseg = [];
-    for i in range(nchunks):
-        resultsseg.append(processSubStack(argdata[i]));
-            
-    #join the results  
-    #join the results: extension: make this a join function and pass as argument 
-    results = join([resultsseg[i][0] for i in range(nchunks)], zranges, zcenters, [resultsseg[i][1] for i in range(nchunks)], dataSize = fs, x = x, y = y, z = z, **parameter);
-
+    results = [];
+    for i in range(nSubStacks):
+        results.append(processSubStack(argdata[i]));
+    
+    #join the results
+    results = join(results, subStacks = subStacks, **parameter);
+    
     #write / or return 
     return io.writePoints(sink, results);
 
+
+
+
+
+
+
+
+
+
+
+
+### Pickle does not like classes:
+
+## sub stack information
+#class SubStack(object):
+#    """Class containing all info of a sub stack usefull for the image processing and result joining functions"""
+#    
+#    # sub stack id
+#    stackId = None;
+#    
+#    # number of stacks
+#    nStacks = None;
+#    
+#    # tuple of x,y,z range of this sub stack
+#    z = all; 
+#    x = all;
+#    y = all;
+#    
+#    #original source
+#    source = None;    
+#    
+#    # tuple of center point of the overlaping regions
+#    zCenters = None;
+#    
+#    # tuple of z indices that would generate full image without overlaps
+#    zCenterIndices = None;
+#    
+#    # tuple of z indices in the sub image as returned by readData that would generate full image without overlaps
+#    zSubCenterIndices = None;
+#    
+#    
+#    def __init__(slf, stackId = 0, nStacks = 1, source = None, x = all, y = all, z = all, zCenters = all, zCenterIndices = all):
+#        slf.stackId = stackId;
+#        slf.nStacks = nStacks;
+#        slf.source = source; 
+#        slf.x = x;
+#        slf.y = y;
+#        slf.z = z;
+#        slf.zCenters = zCenters;
+#        slf.zCenterIndices = zCenterIndices;
+#        if not zCenterIndices is all and not z is all:
+#            slf.zSubCenterIndices = (c - z[0] for c in zCenterIndices);
+#        else:
+#            slf.zSubCenterIndices = all;
+#       
+#    
+#def printSubStackInfo(slf, out = sys.stdout):
+#    out.write("Sub Stack: %d / %d\n" % (slf.stackId, slf.nStacks));
+#    out.write("source:         %s\n" %       slf.source);
+#    out.write("x,y,z:          %s, %s, %s\n" % (str(slf.x), str(slf.y), str(slf.z)));
+#    out.write("zCenters:       %s\n" %       str(slf.zCenters));   
+#    out.write("zCenterIndices: %s\n" %       str(slf.zCenterIndices));
