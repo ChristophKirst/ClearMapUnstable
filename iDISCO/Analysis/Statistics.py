@@ -63,6 +63,32 @@ def var(group, **args):
     return g.var(axis = 0);    
     
 
+
+
+    
+def thresholdPoints(points, intensities, threshold = 0, row = 0):
+    """Threshold points by intensities"""
+    
+    points, intensities = io.readPoints((points, intensities));   
+    
+    if intensities.ndim > 1:
+        i = intensities[:,row];
+    else:
+        i = intensities;
+        
+    if not isinstance(threshold, tuple):
+        threshold = (threshold, all);    
+    
+    iids = numpy.ones(i.shape, dtype = 'bool');
+    if not threshold[0] is all:
+        iids = numpy.logical_and(iids, i >= threshold[0]);
+    if not threshold[1] is all:
+        iids = numpy.logical_and(iids, i <= threshold[1]);
+    
+    return (points[iids, :], intensities[iids, :]);
+
+
+
 def weightsFromPrecentiles(intensities, percentiles = [25,50,75,100]):
     perc = numpy.percentiles(intensities, percentiles);
     weights = numpy.zeros(intensities.shape);

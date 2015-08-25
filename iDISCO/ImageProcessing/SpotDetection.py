@@ -14,6 +14,8 @@ Created on Thu Jun  4 14:37:06 2015
 import sys
 self = sys.modules[__name__];
 
+import numpy
+
 from scipy.ndimage.filters import correlate
 #from scipy.signal import fftconvolve
 
@@ -75,7 +77,8 @@ def detectCells(img, verbose = False, out = sys.stdout, **parameter):
     
     
     # background subtraction in each slice
-    img = removeBackground(img, verbose = verbose, out = out, **parameter)   
+    img2 = img.copy();
+    img2 = removeBackground(img2, verbose = verbose, out = out, **parameter)   
     
     # mask
     #timer.reset();
@@ -86,7 +89,7 @@ def detectCells(img, verbose = False, out = sys.stdout, **parameter):
     #out.write(timer.elapsedTime(head = 'Mask'));    
     
     #DoG filter
-    img = dogFilter(img, verbose = verbose, out = out, **parameter);
+    img3 = dogFilter(img2, verbose = verbose, out = out, **parameter);
     
     # normalize    
     #    imax = img.max();
@@ -95,15 +98,22 @@ def detectCells(img, verbose = False, out = sys.stdout, **parameter):
     #    img /= imax;
     
     # extended maxima
-    imgmax = findExtendedMaxima(img, verbose = verbose, out = out, **parameter);
+    imgmax = findExtendedMaxima(img3, verbose = verbose, out = out, **parameter);
     
     #center of maxima
     centers = findCenterOfMaxima(img, imgmax, verbose = verbose, out = out, **parameter);
     
     #intensity of cells
     cintensity = findIntensity(img, centers, verbose = verbose, out = out, **parameter);
+
+    #intensity of cells in filtered image
+    cintensity2 = findIntensity(img2, centers, verbose = verbose, out = out, **parameter);
     
-    return ( centers, cintensity );
+    #intensity of cells in filtered image
+    cintensity3 = findIntensity(img3, centers, verbose = verbose, out = out, **parameter);
+
+    
+    return ( centers, numpy.vstack((cintensity, cintensity3, cintensity2)).transpose());
         
 
 

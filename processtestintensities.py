@@ -23,11 +23,13 @@ from iDISCO.Utils.ParameterTools import joinParameter
 
 ######################### Data parameters
 
-BaseDirectory = '/home/mtllab/Documents/Haloperidol/1267';
+BaseDirectory = '/home/mtllab/Documents/Haloperidol/1267test';
    
 cFosFile      = '/home/mtllab/Documents/Haloperidol/1267/150818_0_8X-cfos_17-14-34/17-14-34_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 #cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
-cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
+
+cFosFileRange = {'x' : (815, 1000), 'y' : (1000, 1300), 'z' : (600, 800)};
+#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
 
 
 AutofluoFile  = '/home/mtllab/Documents/Haloperidol/1267/150818_0_8X-autofluo_18-15-14/18-15-14_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
@@ -60,8 +62,8 @@ SpotDetectionParameter = {
     #"intensityMethod"  : 'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
     #"intensitySize"    : (3,3,3),  # size of box in (x,y,z) to include in intensity determination
     
-    # threshold for min intensity at center to be counted as cell (should be similar to the h max)
-    "threshold" : 20,
+    # threshold for min intensity in hmax transform to be counted as cell (should be similar to the hMax)
+    "threshold" : None,
         
     #some debug / quality check output
     #"verbose" : True,
@@ -99,7 +101,7 @@ AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
     #max number of parallel processes
-    "processes" : 5,
+    "processes" : 8,
    
     #chunk sizes
     "chunkSizeMax" : 100,
@@ -206,6 +208,7 @@ CorrectionResamplingPointsInverseParameter["sink"]  = None;
 RegistrationResamplingPointParameter = RegistrationResamplingParameter.copy();
 RegistrationResamplingPointParameter["dataSize"] = cFosFile;
 RegistrationResamplingPointParameter["sink"]  = None;
+
 
 
 

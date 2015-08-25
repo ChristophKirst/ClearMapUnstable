@@ -75,8 +75,10 @@ def findExtendedMaxima(img, hMax = 10, threshold = 0, verbose = False, out = sys
     timer.reset(); 
     imgmax = hMaxTransform(img, hMax);
     imgmax = regionalMax(imgmax);
-    imgmax = imgmax.astype('float32') * img;
-    imgmax = imgmax >= threshold;
+    
+    if not threshold is None:
+        imgmax = imgmax.astype('float32') * img;
+        imgmax = imgmax >= threshold;
     
     if verbose:
         #plotTiling(img)
@@ -95,7 +97,7 @@ def findCenterOfMaxima(img, imgmax, writeLabel = False, verbose = False, out = s
     #center of maxima
     timer.reset();
     imglab, nlab = label(imgmax);
-    
+        
     if nlab > 0:
         centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
         out.write(timer.elapsedTime(head = 'Cell Centers') + '\n');
@@ -117,7 +119,7 @@ def findCenterOfMaxima(img, imgmax, writeLabel = False, verbose = False, out = s
         return centers;
         
     else:
-        out.wrtie('Cell Centers: No Cells found !');
+        out.write('Cell Centers: No Cells found !');
         #return ( numpy.zeros((0,3)), numpy.zeros(0) );
         return numpy.zeros((0,3));
 
@@ -175,4 +177,5 @@ def findIntensity(img, centers, intensityMethod = 'Max', intensitySize = (3,3,3)
     out.write(timer.elapsedTime(head = 'Cell Intensities'));
     return intensities;
 
+    
     
