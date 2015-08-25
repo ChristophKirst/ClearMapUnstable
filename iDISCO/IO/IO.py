@@ -25,11 +25,11 @@ import numpy
 import importlib
 import shutil
 
-pointFileExtensions = ["csv", "txt", "vtk", "ims"];
+pointFileExtensions = ["csv", "txt", "npy", "vtk", "ims"];
 
-pointFileTypes = ["CSV", "VTK", "Imaris"];
+pointFileTypes = ["CSV", "NPY", "VTK", "Imaris"];
 
-pointFileExtensionToType = {"csv" : "CSV", "txt" : "CSV", "vtk" : "VTK", "ims" : "Imaris"};
+pointFileExtensionToType = {"csv" : "CSV", "txt" : "CSV", "npy" : "NPY", "vtk" : "VTK", "ims" : "Imaris"};
 
 dataFileExtensions = ["tif", "tiff", "mhd", "raw", "ims", "nrrd"]
 

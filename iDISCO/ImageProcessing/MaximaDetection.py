@@ -88,7 +88,7 @@ def findExtendedMaxima(img, hMax = 10, threshold = 0, verbose = False, out = sys
 
 
 
-def findCenterOfMaxima(img, imgmax, verbose = False, out = sys.stdout, **parameter):
+def findCenterOfMaxima(img, imgmax, writeLabel = False, verbose = False, out = sys.stdout, **parameter):
     """Find center of the maxima step in Spot Detection Algorithm"""  
     timer = Timer();    
 

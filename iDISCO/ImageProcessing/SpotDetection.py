@@ -98,7 +98,7 @@ def detectCells(img, verbose = False, out = sys.stdout, **parameter):
     imgmax = findExtendedMaxima(img, verbose = verbose, out = out, **parameter);
     
     #center of maxima
-    centers = findCenterOfMaxima(img, imgmax, verbose = verbose, out = out);
+    centers = findCenterOfMaxima(img, imgmax, verbose = verbose, out = out, **parameter);
     
     #intensity of cells
     cintensity = findIntensity(img, centers, verbose = verbose, out = out, **parameter);

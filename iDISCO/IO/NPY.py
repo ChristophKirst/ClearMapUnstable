@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Interface to write csv files of cell coordinates
+Interface to write binary files of cell coordinates
 
 Created on Thu Jun  4 14:37:06 2015
 
@@ -15,22 +15,23 @@ self = sys.modules[__name__];
 import iDISCO.IO.IO as io;
 
 def writePoints(filename, points, **args):
-    numpy.savetxt(filename, points, delimiter=',', newline='\n', fmt='%.5e')
+    numpy.save(filename, points)
     return filename
 
 
 def readPoints(filename, **args):
-    points = numpy.loadtxt(filename, delimiter=',');
+    points = numpy.load(filename);
     return io.pointsToRange(points, **args);
 
 
 def test():    
-    """Test CSV module"""
+    """Test NPY module"""
     
-    import os
+    import os, numpy
+    import iDISCO.IO.NPY as self
     
     fn = os.path.split(self.__file__);
-    fn = os.path.join(fn[0], '../Test/ImageProcessing/points.txt');
+    fn = os.path.join(fn[0], '../Test/Data/NPY/points.npy');
     
     points = numpy.random.rand(5,3);
     self.writePoints(fn, points);  

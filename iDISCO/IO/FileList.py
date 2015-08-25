@@ -115,7 +115,7 @@ def splitFileExpression(filename):
 
 
 
-def writeData(filename, data):
+def writeData(filename, data, startIndex = 0):
     """Write image stack to single or multiple image files"""
     #check for the \d{xx} part of the regular expression -> if not assume file header
 
@@ -123,12 +123,12 @@ def writeData(filename, data):
 
     d = len(data.shape);
     if d == 2:
-        fname = fileheader + (digitfrmt % 0) + fileext;
+        fname = fileheader + (digitfrmt % startIndex) + fileext;
         io.writeData(fname, data);
         return fname;
     else:
         nz = data.shape[2];
-        for i in range(nz):
+        for i in range(startIndex, startIndex + nz):
             fname = fileheader + (digitfrmt % i) + fileext;
             io.writeData(fname, data[:,:,i]);
         return filename;
