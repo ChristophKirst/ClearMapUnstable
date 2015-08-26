@@ -64,7 +64,7 @@ SpotDetectionParameter = {
     # threshold for min intensity at center to be counted as cell, for saving ('None' will save everything )
     "threshold" : None,
       
-    # write cell mask to disk i fnot None
+    # write cell mask to disk (to check cell detection accuracy), if not None
     #"cellMaskFile" : os.path.join(BaseDirectory, 'cell_mask/cell_mask_Z\d{4}.ome.tif')
     "cellMaskFile" : None
     
@@ -89,13 +89,12 @@ VoxelizationParameter = {
     #Method to voxelize
     "voxelizationMethod" : 'Spherical', # Spherical,'Rectangular, Gaussian'
        
-    # Define bounds of the volume to be voxelized
+    # Define bounds of the volume to be voxelized in pixels
     "voxelizationSize" : (15,15,15),  
 
     # Voxelization weigths (e/g intensities)
     "voxelizationWeights" : None
     };
-
 
 
 ############################ Config parameters
@@ -233,23 +232,23 @@ RegistrationResamplingPointParameter["sink"]  = None;
 
 ### Resample Fluorescent and CFos images
    
-resampleData(**CorrectionResamplingParameterCfos);
+#resampleData(**CorrectionResamplingParameterCfos);
 
-resampleData(**CorrectionResamplingParameterAutoFluo);
+#resampleData(**CorrectionResamplingParameterAutoFluo);
 
-resampleData(**RegistrationResamplingParameter);
+#resampleData(**RegistrationResamplingParameter);
 
 
 ### Align cFos and Autofluo
 
-resultDirectory  = alignData(**CorrectionAlignmentParameter);
-print "Aligned cfos with autofluo: result directory: %s" % resultDirectory
+#resultDirectory  = alignData(**CorrectionAlignmentParameter);
+#print "Aligned cfos with autofluo: result directory: %s" % resultDirectory
 
 
 ### Align Autofluo and Atlas
 
-resultDirectory  = alignData(**RegistrationAlignmentParameter);
-print "Aligned cfos with autofluo: result directory: %s" % resultDirectory
+#resultDirectory  = alignData(**RegistrationAlignmentParameter);
+#print "Aligned cfos with autofluo: result directory: %s" % resultDirectory
 
 
 
@@ -272,7 +271,7 @@ io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirec
 ## Transform points from original to corrected
 # downscale points to referenece image size
 
-points = io.readPoints(CorrectionResamplingPointsParameter["source"]);
+#points = io.readPoints(CorrectionResamplingPointsParameter["source"]);
 
 
 points = resamplePoints(**CorrectionResamplingPointsParameter);
@@ -304,6 +303,9 @@ io.writePoints(TransformedCellFile, points);
 vox = voxelize(points, AtlasFile, **VoxelizationParameter);
 io.writeData(os.path.join(BaseDirectory, 'cells_heatmap.tif'), vox.astype('int32'));
 
+VoxelizationParameter["voxelizationWeights"] = intensities[:,0].astype(float);
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap_weighted.tif'), vox.astype('int32'));
 
 ##################### Label points by anatomical regions
 

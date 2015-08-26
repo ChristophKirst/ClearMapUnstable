@@ -175,30 +175,27 @@ def weightsFromPrecentiles(intensities, percentiles = [25,50,75,100]):
 
 def countPointsGroupInRegions(pointGroup, withIds = True, labeledImage = lbl.DefaultLabeledImageFile):
      "Generates a table of counts for the various point datasets in pointGroup"""
-     
-     counts = [lbl.countPointsInRegions(p, labeledImage = labeledImage, sort = True, allIds = True) for p in pointGroup];
+ 
+     counts = [lbl.countPointsInRegions(p, labeledImage = labeledImage, sort = True, allIds = True, withIds = False) for p in pointGroup];
          
      if withIds:
-         ids = counts[0][:,0];
-         ids.shape = (1,) + ids.shape;
-         counts = numpy.vstack((c[:,1] for c in counts)).T;
-         return numpy.concatenate((ids.T,counts), axis = 1)
+         ids = numpy.sort(lbl.Label.ids);
+         #ids.shape = (1,) + ids.shape;
+         counts = numpy.vstack((c for c in counts)).T;
+         #return numpy.concatenate((ids.T,counts), axis = 1)
+         return ids, counts
      else:
-         return numpy.vstack((c[:,1] for c in counts)).T;
+         return numpy.vstack((c for c in counts)).T;
          
 
-def tTestPointsInRegions(pointGroup1, pointGroup2, labeledImage = lbl.DefaultLabeledImageFile, withIds = True, signed = False, removeNaN = True, pcutoff = None):
+def tTestPointsInRegions(pointCounts1, pointCounts2, labeledImage = lbl.DefaultLabeledImageFile, signed = False, removeNaN = True, pcutoff = None):
     """t-Test on differences in counts of points in labeled regions"""
     
-    p1 = countPointsGroupInRegions(pointGroup1, labeledImage = labeledImage);
-    ids = p1[:,0];
+    #ids, p1 = countPointsGroupInRegions(pointGroup1, labeledImage = labeledImage, withIds = True);
+    #p2 = countPointsGroupInRegions(pointGroup2,  labeledImage = labeledImage, withIds = False);   
     
-    p1  = p1[:,1::];
-     
-    p2 = countPointsGroupInRegions(pointGroup1,  labeledImage = labeledImage, withIds = False);   
+    tvals, pvals = stats.ttest_ind(pointCounts1, pointCounts2, axis = 1, equal_var = False);
     
-    tvals, pvals = stats.ttest_ind(p1, p2, axis = 1, equal_var = False);
-
     #remove nans
     if removeNaN: 
         pi = numpy.isnan(pvals);
@@ -206,19 +203,18 @@ def tTestPointsInRegions(pointGroup1, pointGroup2, labeledImage = lbl.DefaultLab
         tvals[pi] = 0;
 
     pvals = self.cutoffPValues(pvals, pcutoff = pcutoff);
-
-    if withIds:
-        pvals.shape = (1,) + pvals.shape;
-        ids.shape = (1,) + ids.shape;
-        pvals = numpy.concatenate((ids.T, pvals.T), axis = 1);
-        
-    #return
+    
+    #pvals.shape = (1,) + pvals.shape;
+    #ids.shape = (1,) + ids.shape;
+    #pvals = numpy.concatenate((ids.T, pvals.T), axis = 1);
+    
     if signed:
         return pvals, numpy.sign(tvals);
     else:
         return pvals;
 
     
+
 
 
 def test():

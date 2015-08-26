@@ -22,7 +22,7 @@ import collections
 
 LabelRecord = collections.namedtuple('LabelRecord', 'id, name, acronym, color, parent');
 
-DefaultLabeledImageFile = os.path.join(IDISCOPath, 'Test/Data/Annotation/annotation_25_right.nrrd');
+DefaultLabeledImageFile = os.path.join(IDISCOPath, 'Test/Data/Annotation/annotation_25_right.tif');
 DefaultAnnotationFile   = os.path.join(IDISCOPath, 'Data/ARA2_annotation_info.csv');
 
 
@@ -147,7 +147,7 @@ def labelPoints(points, labeledImage = DefaultLabeledImageFile, level = None):
 
 
  
-def countPointsInRegions(points, labeledImage, level= None, allIds = False, sort = True):
+def countPointsInRegions(points, labeledImage, level= None, allIds = False, sort = True, withIds = True):
     global Label;
     
     points = io.readPoints(points);
@@ -161,12 +161,17 @@ def countPointsInRegions(points, labeledImage, level= None, allIds = False, sort
         ll  = numpy.hstack((ll, lla));
         cc  = numpy.hstack((cc, numpy.zeros(lla.shape, dtype = cc.dtype)));
         
-    cc = numpy.vstack((ll,cc)).T;
-    
+    #cc = numpy.vstack((ll,cc)).T;
+        
     if sort:
-        cc = numpy.sort(cc, axis = 0);
+        ii = numpy.argsort(ll);
+        cc = cc[ii];
+        ll = ll[ii];
 
-    return cc;
+    if withIds:
+        return ll, cc
+    else:
+        return cc;
 
     
 def labelToName(label):
