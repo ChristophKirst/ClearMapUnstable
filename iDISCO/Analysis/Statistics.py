@@ -16,9 +16,11 @@ from scipy import stats
 
 import iDISCO.IO.IO as io
 
+import iDISCO.Analysis.Label as lbl
 
-def readGroup(filenames, **args):
-    """Turn a list of filenames into a numpy stack"""
+
+def readDataGroup(filenames, combine = True, **args):
+    """Turn a list of filenames for data into a numpy stack"""
     
     #check if stack already:
     if isinstance(filenames, numpy.ndarray):
@@ -31,14 +33,35 @@ def readGroup(filenames, **args):
         data = numpy.reshape(data, (1,) + data.shape);
         group.append(data);
     
-    return numpy.vstack(group);
+    if combine:
+        return numpy.vstack(group);
+    else:
+        return group;
 
 
-def tTest(group1, group2, signed = False, removeNaN = True, pcutoff = None):
+def readPointsGroup(filenames, **args):
+    """Turn a list of filenames for points into a numpy stack"""
+    
+    #check if stack already:
+    if isinstance(filenames, numpy.ndarray):
+        return filenames;
+    
+    #read the individual files
+    group = [];
+    for f in filenames:
+        data = io.readPoints(f, **args);
+        #data = numpy.reshape(data, (1,) + data.shape);
+        group.append(data);
+    
+    return group
+    #return numpy.vstack(group);
+
+
+def tTestVoxelization(group1, group2, signed = False, removeNaN = True, pcutoff = None):
     """t-Test on differences between the individual voxels in group1 and group2, group is a array of voxelizations"""
     
-    g1 = self.readGroup(group1);  
-    g2 = self.readGroup(group2);  
+    g1 = self.readDataGroup(group1);  
+    g2 = self.readDataGroup(group2);  
     
     tvals, pvals = stats.ttest_ind(g1, g2, axis = 0, equal_var = False);
 
@@ -55,6 +78,7 @@ def tTest(group1, group2, signed = False, removeNaN = True, pcutoff = None):
         return pvals, numpy.sign(tvals);
     else:
         return pvals;
+
         
 def cutoffPValues(pvals, pcutoff = 0.05):
     if pcutoff is None:
@@ -149,13 +173,59 @@ def weightsFromPrecentiles(intensities, percentiles = [25,50,75,100]):
     return weights;
         
 
+def countPointsGroupInRegions(pointGroup, withIds = True, labeledImage = lbl.DefaultLabeledImageFile):
+     "Generates a table of counts for the various point datasets in pointGroup"""
+     
+     counts = [lbl.countPointsInRegions(p, labeledImage = labeledImage, sort = True, allIds = True) for p in pointGroup];
+         
+     if withIds:
+         ids = counts[0][:,0];
+         ids.shape = (1,) + ids.shape;
+         counts = numpy.vstack((c[:,1] for c in counts)).T;
+         return numpy.concatenate((ids.T,counts), axis = 1)
+     else:
+         return numpy.vstack((c[:,1] for c in counts)).T;
+         
+
+def tTestPointsInRegions(pointGroup1, pointGroup2, labeledImage = lbl.DefaultLabeledImageFile, withIds = True, signed = False, removeNaN = True, pcutoff = None):
+    """t-Test on differences in counts of points in labeled regions"""
+    
+    p1 = countPointsGroupInRegions(pointGroup1, labeledImage = labeledImage);
+    ids = p1[:,0];
+    
+    p1  = p1[:,1::];
+     
+    p2 = countPointsGroupInRegions(pointGroup1,  labeledImage = labeledImage, withIds = False);   
+    
+    tvals, pvals = stats.ttest_ind(p1, p2, axis = 1, equal_var = False);
+
+    #remove nans
+    if removeNaN: 
+        pi = numpy.isnan(pvals);
+        pvals[pi] = 1.0;
+        tvals[pi] = 0;
+
+    pvals = self.cutoffPValues(pvals, pcutoff = pcutoff);
+
+    if withIds:
+        pvals.shape = (1,) + pvals.shape;
+        ids.shape = (1,) + ids.shape;
+        pvals = numpy.concatenate((ids.T, pvals.T), axis = 1);
+        
+    #return
+    if signed:
+        return pvals, numpy.sign(tvals);
+    else:
+        return pvals;
+
+    
 
 
 def test():
     """Test the statistics array"""
     import iDISCO.Analysis.Statistics as self
     reload(self)
-    import numpy
+    import numpy, os
     #x = stats.norm.rvs(loc=5,scale=1,size=1500)
     #y = stats.norm.rvs(loc=-5,scale=1,size=1500)
     s = numpy.ones((5,4,20));
@@ -164,17 +234,24 @@ def test():
     x = numpy.random.rand(4,4,20);
     y = numpy.random.rand(5,4,20) + s;
     
-    #print stats.ttest_ind(x,y, axis = 0, equal_var = False);
-    
-    pvals = self.tTest(x,y);
-    
+    # print stats.ttest_ind(x,y, axis = 0, equal_var = False);
+    pvals, psign = self.tTestVoxelization(x,y, signed = True);
     print pvals
     
-    pvals = self.tTest(x,y, signed = True);
-    pvalscol = self.colorPValues(pvals)
+    pvalscol = self.colorPValues(pvals, psign, positive = [255,0,0], negative = [0,255,0])
     
     import iDISCO.Visualization.Plot as plt
-    plt.plotTiling(1/pvalscol)
+    plt.plotTiling(pvalscol)
+    
+    # test points
+    import iDISCO.Settings as settings
+    pf = os.path.join(settings.IDISCOPath, 'Test/Synthetic/cells_transformed_to_reference.csv');
+    
+    pg = (pf,pf);
+    
+    pc = self.countPointsGroupInRegions(pg);
+        
+    pvals, tvals = self.tTestPointsInRegions(pg, pg, signed = True);
     
     
 if __name__ == "__main__":

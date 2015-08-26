@@ -16,21 +16,22 @@ self = sys.modules[__name__];
 import os
 import csv
 
-from iDISCO.Settings import iDISCOPath
+from iDISCO.Settings import IDISCOPath
+
+import collections
+
+LabelRecord = collections.namedtuple('LabelRecord', 'id, name, acronym, color, parent');
+
+DefaultLabeledImageFile = os.path.join(IDISCOPath, 'Test/Data/Annotation/annotation_25_right.nrrd');
+DefaultAnnotationFile   = os.path.join(IDISCOPath, 'Data/ARA2_annotation_info.csv');
 
 
-def toInt(txt):
+
+def labelToInt(txt):
     if txt == '':
         return -1;
     else:
         return int(txt);
-    
-import collections
-LabelRecord = collections.namedtuple('LabelRecord', 'id, name, acronym, color, parent');
-
-
-defaultLabeledImage = os.path.join(iDISCOPath(), 'Test/Data/Annotation/annotation_25_right.nrrd');
-
 
 class LabelInfo(object):
     ids = None;
@@ -40,14 +41,16 @@ class LabelInfo(object):
     parents = None;
     levels = None;
     
-    def initialize(slf):
-        datafile = os.path.join(iDISCOPath(), 'Data/ARA2_annotation_info.csv');
+    def __init__(slf, annotationFile = DefaultAnnotationFile):
+        slf.initialize(annotationFile = annotationFile);
+    
+    def initialize(slf, annotationFile = DefaultAnnotationFile):
         
-        with open(datafile) as dfile:
+        with open(annotationFile) as dfile:
             reader = csv.reader(dfile);
             #skip header
             reader.next();
-            labels = [LabelRecord._make((int(row[0]), row[1], row[2], [int(row[3]), int(row[4]), int(row[5])], toInt(row[7]))) for row in reader];
+            labels = [LabelRecord._make((int(row[0]), row[1], row[2], [int(row[3]), int(row[4]), int(row[5])], labelToInt(row[7]))) for row in reader];
             
             dfile.close();
         
@@ -97,37 +100,9 @@ class LabelInfo(object):
             
 
 Label = LabelInfo();
-Label.initialize();
 
-
-def labelPoints(points, labelimage, level = None):
-    
-    #points are (y,x,z) -> which is also the way the labeled image is read in
-    #x = points[:,1];
-    #y = points[:,0];
-    #z = points[:,2];
-
-    x = points[:,0];
-    y = points[:,1];
-    z = points[:,2]; 
-    
-    nPoint = x.size;    
-    
-    pointLabels = numpy.zeros(nPoint, 'int32');
-    if isinstance(labelimage, basestring):
-        labelImage = io.readData(labelimage);
-        print labelImage.shape
-                  
-    dsize = labelImage.shape;
-    for i in range(nPoint):
-        #if y[i] >= 0 and y[i] < dsize[0] and x[i] >= 0 and x[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
-        #     pointLabels[i] = labelImage[y[i], x[i], z[i]];
-        if x[i] >= 0 and x[i] < dsize[0] and y[i] >= 0 and y[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
-             pointLabels[i] = labelImage[x[i], y[i], z[i]];
-    
-    pointLabels = self.labelAtLevel(pointLabels, level);
-    
-    return pointLabels;
+def initialize(annotationFile = DefaultAnnotationFile):
+    Label.initialize(annotationFile);
 
 
 def labelAtLevel(label, level):
@@ -141,13 +116,58 @@ def labelAtLevel(label, level):
         else:
             return Label.toLabelAtLevel(label, level);
 
- 
-def countPointsInRegions(points, labelimage, level= None):
-    pointLabels = self.labelPoints(points, labelimage, level = level); 
-    cc = numpy.bincount(pointLabels);
-    ii = numpy.nonzero(cc)[0];
-    return numpy.vstack((ii,cc[ii])).T;
+
+def labelPoints(points, labeledImage = DefaultLabeledImageFile, level = None):
     
+    #points are (y,x,z) -> which is also the way the labeled image is read in
+    #x = points[:,1];
+    #y = points[:,0];
+    #z = points[:,2];
+
+    x = points[:,0];
+    y = points[:,1];
+    z = points[:,2]; 
+    
+    nPoint = x.size;    
+    
+    pointLabels = numpy.zeros(nPoint, 'int32');
+    
+    labelImage = io.readData(labeledImage);
+                  
+    dsize = labelImage.shape;
+    for i in range(nPoint):
+        #if y[i] >= 0 and y[i] < dsize[0] and x[i] >= 0 and x[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
+        #     pointLabels[i] = labelImage[y[i], x[i], z[i]];
+        if x[i] >= 0 and x[i] < dsize[0] and y[i] >= 0 and y[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
+             pointLabels[i] = labelImage[x[i], y[i], z[i]];
+    
+    pointLabels = self.labelAtLevel(pointLabels, level);
+    
+    return pointLabels;
+
+
+ 
+def countPointsInRegions(points, labeledImage, level= None, allIds = False, sort = True):
+    global Label;
+    
+    points = io.readPoints(points);
+    
+    pointLabels = self.labelPoints(points, labeledImage, level = level); 
+    
+    ll, cc = numpy.unique(pointLabels, return_counts = True);
+    
+    if allIds:
+        lla = numpy.setdiff1d(Label.ids, ll);
+        ll  = numpy.hstack((ll, lla));
+        cc  = numpy.hstack((cc, numpy.zeros(lla.shape, dtype = cc.dtype)));
+        
+    cc = numpy.vstack((ll,cc)).T;
+    
+    if sort:
+        cc = numpy.sort(cc, axis = 0);
+
+    return cc;
+
     
 def labelToName(label):
     global Label;
@@ -208,11 +228,11 @@ def makeColorPalette(filename = None):
         return colarray;
             
 
-def makeColorAnnotations(filename, labeledimage = None):
-    if labeledimage is None:
-        labeledimage = defaultLabeledImage;
+def makeColorAnnotations(filename, labeledImage = None):
+    if labeledImage is None:
+        labeledImage = DefaultLabeledImageFile;
     
-    li = io.readData(labeledimage);
+    li = io.readData(labeledImage);
     dsize = li.shape;
     
     lr = numpy.zeros(dsize, dtype = numpy.uint8);
