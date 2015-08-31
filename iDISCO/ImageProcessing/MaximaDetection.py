@@ -61,7 +61,8 @@ def extendedMax(img, hMax = 0):
     """Calculates extened h maxima of an image."""
 
     #h max transformimport scipy
-    img = hMaxTransform(img, hMax);
+    if hMax > 0:
+        img = hMaxTransform(img, hMax);
         
     #regional max
     return regionalMax(img);
