@@ -173,7 +173,7 @@ def weightsFromPrecentiles(intensities, percentiles = [25,50,75,100]):
     return weights;
         
 
-def countPointsGroupInRegions(pointGroup, withIds = True, labeledImage = lbl.DefaultLabeledImageFile):
+def countPointsGroupInRegions(pointGroup, withIds = True, labeledImage = lbl.DefaultLabeledImageFile, intensityGroup = None):
      "Generates a table of counts for the various point datasets in pointGroup"""
  
      counts = [lbl.countPointsInRegions(p, labeledImage = labeledImage, sort = True, allIds = True, withIds = False) for p in pointGroup];

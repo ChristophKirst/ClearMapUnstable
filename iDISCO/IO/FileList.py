@@ -90,7 +90,6 @@ def readData(filename, **args):
 
 
 def splitFileExpression(filename):
-    
     searchRegex = re.compile('.*\\\\d\{(?P<digit>\d)\}.*').search
     m = searchRegex(filename); 
     
@@ -113,6 +112,10 @@ def splitFileExpression(filename):
         
     return (fileheader, fileext, digitfrmt);
 
+
+def fileExperssionToFileName(fileexpression, z):
+    (fileheader, fileext, digitfrmt) = self.splitFileExpression(fileexpression);
+    return fileheader + (digitfrmt % z) + fileext;
 
 
 def writeData(filename, data, startIndex = 0):

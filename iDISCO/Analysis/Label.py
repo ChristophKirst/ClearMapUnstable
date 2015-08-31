@@ -147,14 +147,21 @@ def labelPoints(points, labeledImage = DefaultLabeledImageFile, level = None):
 
 
  
-def countPointsInRegions(points, labeledImage, level= None, allIds = False, sort = True, withIds = True):
+def countPointsInRegions(points, intensities = None, labeledImage = DefaultLabeledImageFile, level= None, allIds = False, sort = True, withIds = True):
     global Label;
     
     points = io.readPoints(points);
+    intensities = io.readPoints(intensities);
     
     pointLabels = self.labelPoints(points, labeledImage, level = level); 
     
-    ll, cc = numpy.unique(pointLabels, return_counts = True);
+    if intensities is None:
+        ll, cc = numpy.unique(pointLabels, return_counts = True);
+    else:
+        ll, ii = numpy.unique(pointLabels, return_inverse = True);
+        cc = numpy.zeros(ll.shape);
+        for i in range(ii.shape[0]):
+            cc[ii[i]] += intensities[i];
     
     if allIds:
         lla = numpy.setdiff1d(Label.ids, ll);
@@ -261,4 +268,19 @@ def makeColorAnnotations(filename, labeledImage = None):
     io.writeData(filename + "_b.tif", lb);
     
     return (lr,lg,lb);
+
+
+def test():
+    """Test Label module"""
+
+    import iDISCO.Analysis.Label as self
+    import numpy
+    points = numpy.array([[162, 200, 138], [246, 486, 138], [246, 486, 138]]);
+    intensities = numpy.array([1,2,3]);
     
+    ll, cc = self.countPointsInRegions(points, intensities, withIds = True);
+    
+
+
+if __name__ == '__main__':
+    test();
