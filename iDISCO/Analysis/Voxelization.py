@@ -61,12 +61,12 @@ def voxelizePixel(points,  dataSize = None, weights = None):
         vox = numpy.zeros(dataSize, dtype=numpy.int16);
         for i in range(points.shape[0]):
             if points[i,0] > 0 and points[i,0] < dataSize[0] and points[i,1] > 0 and points[i,1] < dataSize[1] and points[i,2] > 0 and points[i,2] < dataSize[2]:
-                vox[points[i,0], points[i,1], points[i,2]] = 1;
+                vox[points[i,0], points[i,1], points[i,2]] += 1;
     else:
         vox = numpy.zeros(dataSize, dtype=weights.dtype);
         for i in range(points.shape[0]):
             if points[i,0] > 0 and points[i,0] < dataSize[0] and points[i,1] > 0 and points[i,1] < dataSize[1] and points[i,2] > 0 and points[i,2] < dataSize[2]:
-                vox[points[i,0], points[i,1], points[i,2]] = weights[i];
+                vox[points[i,0], points[i,1], points[i,2]] += weights[i];
     
     return  vox;
 

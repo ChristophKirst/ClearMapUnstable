@@ -212,19 +212,19 @@ ImageProcessingParameter = joinParameter(StackProcessingParameter, SpotDetection
 # downscale points to referenece image size
 
 CorrectionResamplingPointsParameter = CorrectionResamplingParameterCfos.copy();
-CorrectionResamplingPointsParameter["source"] = os.path.join(BaseDirectory, 'cells.npy');
-CorrectionResamplingPointsParameter["dataSize"] = cFosFile;
-CorrectionResamplingPointsParameter["sink"]  = None;
+CorrectionResamplingPointsParameter["pointSource"] = os.path.join(BaseDirectory, 'cells.npy');
+CorrectionResamplingPointsParameter["dataSizeSource"] = cFosFile;
+CorrectionResamplingPointsParameter["pointSink"]  = None;
 
 CorrectionResamplingPointsInverseParameter = CorrectionResamplingPointsParameter.copy();
-CorrectionResamplingPointsInverseParameter["dataSize"] = cFosFile;
-CorrectionResamplingPointsInverseParameter["sink"]  = None;
+CorrectionResamplingPointsInverseParameter["dataSizeSource"] = cFosFile;
+CorrectionResamplingPointsInverseParameter["pointSink"]  = None;
 
 ## Transform points from corrected to registered
 # downscale points to referenece image size
 RegistrationResamplingPointParameter = RegistrationResamplingParameter.copy();
-RegistrationResamplingPointParameter["dataSize"] = cFosFile;
-RegistrationResamplingPointParameter["sink"]  = None;
+RegistrationResamplingPointParameter["dataSizeSource"] = cFosFile;
+RegistrationResamplingPointParameter["pointSink"]  = None;
 
 
 
@@ -275,7 +275,7 @@ io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirec
 ## Transform points from original to corrected
 # downscale points to reference image size
 
-points = io.readPoints(CorrectionResamplingPointsParameter["source"]);
+points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
 
 
 points = resamplePoints(**CorrectionResamplingPointsParameter);
@@ -284,12 +284,12 @@ points = resamplePoints(**CorrectionResamplingPointsParameter);
 points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
 
 # resmaple back to original
-CorrectionResamplingPointsInverseParameter["source"] = points;
+CorrectionResamplingPointsInverseParameter["pointSource"] = points;
 points = resamplePointsInverse(**CorrectionResamplingPointsInverseParameter);
 
 ## Transform points from corrected to registered
 # downscale points to reference image size
-RegistrationResamplingPointParameter["source"] = points;
+RegistrationResamplingPointParameter["pointSource"] = points;
 points = resamplePoints(**RegistrationResamplingPointParameter);
     
 # transform points
@@ -314,14 +314,14 @@ io.writeData(os.path.join(BaseDirectory, 'cells_heatmap_weighted.tif'), vox.asty
 ##################### Label points by anatomical regions
 
 #points = io.readPoints(TransformedCellFile);
-ids, counts = countPointsInRegions(points, AnnotationFile);
+ids, counts = countPointsInRegions(points, labeledImage = AnnotationFile, intensities = intensities, intensityRow = 0);
 
 table = numpy.zeros(ids.shape, dtype=[('id','int64'),('counts','f8'),('name', 'a256')])
 table["id"] = ids;
 table["counts"] = counts;
 table["name"] = labelToName(ids);
 
-with open(os.path.join(BaseDirectory, 'Annotated_counts_5000unfiltered.csv'),'w') as f:
+with open(os.path.join(BaseDirectory, 'Annotated_counts_intensities.csv'),'w') as f:
     for sublist in table:
         f.write(', '.join([str(item) for item in sublist]));
         f.write('\n');
@@ -545,19 +545,19 @@ ImageProcessingParameter = joinParameter(StackProcessingParameter, SpotDetection
 # downscale points to referenece image size
 
 CorrectionResamplingPointsParameter = CorrectionResamplingParameterCfos.copy();
-CorrectionResamplingPointsParameter["source"] = os.path.join(BaseDirectory, 'cells.npy');
-CorrectionResamplingPointsParameter["dataSize"] = cFosFile;
-CorrectionResamplingPointsParameter["sink"]  = None;
+CorrectionResamplingPointsParameter["pointSource"] = os.path.join(BaseDirectory, 'cells.npy');
+CorrectionResamplingPointsParameter["dataSizeSource"] = cFosFile;
+CorrectionResamplingPointsParameter["pointSink"]  = None;
 
 CorrectionResamplingPointsInverseParameter = CorrectionResamplingPointsParameter.copy();
-CorrectionResamplingPointsInverseParameter["dataSize"] = cFosFile;
-CorrectionResamplingPointsInverseParameter["sink"]  = None;
+CorrectionResamplingPointsInverseParameter["dataSizeSource"] = cFosFile;
+CorrectionResamplingPointsInverseParameter["pointSink"]  = None;
 
 ## Transform points from corrected to registered
 # downscale points to referenece image size
 RegistrationResamplingPointParameter = RegistrationResamplingParameter.copy();
-RegistrationResamplingPointParameter["dataSize"] = cFosFile;
-RegistrationResamplingPointParameter["sink"]  = None;
+RegistrationResamplingPointParameter["dataSizeSource"] = cFosFile;
+RegistrationResamplingPointParameter["pointSink"]  = None;
 
 
 
@@ -584,11 +584,9 @@ RegistrationResamplingPointParameter["sink"]  = None;
 
 #resultDirectory  = alignData(**CorrectionAlignmentParameter);
 
-
 ### Align Autofluo and Atlas
 
 #resultDirectory  = alignData(**RegistrationAlignmentParameter);
-
 
 
 ### Detect Cells
@@ -610,7 +608,7 @@ io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirec
 ## Transform points from original to corrected
 # downscale points to reference image size
 
-points = io.readPoints(CorrectionResamplingPointsParameter["source"]);
+points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
 
 
 points = resamplePoints(**CorrectionResamplingPointsParameter);
@@ -619,12 +617,12 @@ points = resamplePoints(**CorrectionResamplingPointsParameter);
 points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
 
 # resmaple back to original
-CorrectionResamplingPointsInverseParameter["source"] = points;
+CorrectionResamplingPointsInverseParameter["pointSource"] = points;
 points = resamplePointsInverse(**CorrectionResamplingPointsInverseParameter);
 
 ## Transform points from corrected to registered
 # downscale points to reference image size
-RegistrationResamplingPointParameter["source"] = points;
+RegistrationResamplingPointParameter["pointSource"] = points;
 points = resamplePoints(**RegistrationResamplingPointParameter);
     
 # transform points
@@ -649,14 +647,14 @@ io.writeData(os.path.join(BaseDirectory, 'cells_heatmap_weighted.tif'), vox.asty
 ##################### Label points by anatomical regions
 
 #points = io.readPoints(TransformedCellFile);
-ids, counts = countPointsInRegions(points, AnnotationFile);
+ids, counts = countPointsInRegions(points, labeledImage = AnnotationFile, intensities = intensities, intensityRow = 0);
 
 table = numpy.zeros(ids.shape, dtype=[('id','int64'),('counts','f8'),('name', 'a256')])
 table["id"] = ids;
 table["counts"] = counts;
 table["name"] = labelToName(ids);
 
-with open(os.path.join(BaseDirectory, 'Annotated_counts_5000unfiltered.csv'),'w') as f:
+with open(os.path.join(BaseDirectory, 'Annotated_counts_intensities.csv'),'w') as f:
     for sublist in table:
         f.write(', '.join([str(item) for item in sublist]));
         f.write('\n');

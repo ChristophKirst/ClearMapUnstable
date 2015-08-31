@@ -147,26 +147,33 @@ def labelPoints(points, labeledImage = DefaultLabeledImageFile, level = None):
 
 
  
-def countPointsInRegions(points, intensities = None, labeledImage = DefaultLabeledImageFile, level= None, allIds = False, sort = True, withIds = True):
+def countPointsInRegions(points, labeledImage = DefaultLabeledImageFile, intensities = None, intensityRow = 0, level= None, allIds = False, sort = True, withIds = True, withCounts = False):
     global Label;
     
     points = io.readPoints(points);
     intensities = io.readPoints(intensities);
+    if intensities.ndim > 1:
+        intensities = intensities[:,intensityRow];
     
     pointLabels = self.labelPoints(points, labeledImage, level = level); 
     
     if intensities is None:
         ll, cc = numpy.unique(pointLabels, return_counts = True);
+        cci = None;
     else:
-        ll, ii = numpy.unique(pointLabels, return_inverse = True);
-        cc = numpy.zeros(ll.shape);
+        ll, ii, cc = numpy.unique(pointLabels, return_counts = True, return_inverse = True);
+        cci = numpy.zeros(ll.shape);
         for i in range(ii.shape[0]):
-            cc[ii[i]] += intensities[i];
+            cci[ii[i]] += intensities[i];
     
     if allIds:
         lla = numpy.setdiff1d(Label.ids, ll);
         ll  = numpy.hstack((ll, lla));
         cc  = numpy.hstack((cc, numpy.zeros(lla.shape, dtype = cc.dtype)));
+        if not cci is None:
+            cci = numpy.hstack((cci, numpy.zeros(lla.shape, dtype = cc.dtype)));
+        
+        
         
     #cc = numpy.vstack((ll,cc)).T;
         
@@ -174,11 +181,25 @@ def countPointsInRegions(points, intensities = None, labeledImage = DefaultLabel
         ii = numpy.argsort(ll);
         cc = cc[ii];
         ll = ll[ii];
+        if not cci is None:
+            cci = cci[ii];
 
     if withIds:
-        return ll, cc
+        if cci is None:
+            return ll, cc
+        else:
+            if withCounts:
+                return ll, cc, cci;
+            else:
+                return ll, cci
     else:
-        return cc;
+        if cci is None:
+            return cc;
+        else:
+            if withCounts:
+                return cc, cci;
+            else:
+                return cci;
 
     
 def labelToName(label):

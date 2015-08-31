@@ -149,7 +149,18 @@ def resampleDataSize(dataSizeSource, dataSizeSink = None, resolutionSource = Non
 
 
 
-def resampleXY(source, dataSizeSink, sink = None, out = sys.stdout):
+
+def fixInterpolation(interpolation):
+    if interpolation == 'nn' or interpolation is None or interpolation == cv2.INTER_NEAREST:
+        interpolation = cv2.INTER_NEAREST;
+    else:
+        interpolation = cv2.INTER_LINEAR;
+        
+    return interpolation;
+        
+
+
+def resampleXY(source, dataSizeSink, sink = None, interpolation = 'linear', out = sys.stdout):
     """Resample a 2d image"""   
     
     #out.write("Input: %s Output: " % (inputFile, soutputFile))
@@ -167,7 +178,8 @@ def resampleXY(source, dataSizeSink, sink = None, out = sys.stdout):
     #out.write(("resampleData: Imagesize: %d, %d " % dataSize) + ("Resampled Imagesize: %d, %d" % (outputSize[1], outputSize[0])))
     
     # note: cv2.resize reverses x-Y axes
-    sinkData = cv2.resize(data,  (dataSizeSink[1], dataSizeSink[0]));
+    interpolation = fixInterpolation(interpolation)
+    sinkData = cv2.resize(data,  (dataSizeSink[1], dataSizeSink[0]), interpolation = interpolation);
     #sinkData = cv2.resize(data,  outputSize);
     #sinkData = scipy.misc.imresize(sagittalImage, outputImageSize, interp = 'bilinear'); #normalizes images -> not usefull for stacks !
     
@@ -182,18 +194,21 @@ def resampleXYParallel(arg):
     fileSource = arg[0];
     fileSink = arg[1];
     dataSizeSink = arg[2];
-    ii = arg[3];
-    nn = arg[4];
+    interpolation = arg[3];
+    ii = arg[4];
+    nn = arg[5];
     
     pw = ProcessWriter(ii);
     pw.write("resampleData: resampling in XY: image %d / %d" % (ii, nn))
     
     data = numpy.squeeze(io.readData(fileSource, z = ii));
-    self.resampleXY(data, sink = fileSink, dataSizeSink = dataSizeSink, out = pw);
+    self.resampleXY(data, sink = fileSink, dataSizeSink = dataSizeSink, interpolation = interpolation, out = pw);
+
+
 
 
 def resampleData(source, sink = None,  orientation = None, dataSizeSink = None, resolutionSource = (4.0625, 4.0625, 3), resolutionSink = (25, 25, 25), 
-                 processingDirectory = None, processes = 1, cleanup = True, verbose = True, **args):
+                 processingDirectory = None, processes = 1, cleanup = True, verbose = True, interpolation = 'linear', **args):
     """Resample data in source in resolution and orientation"""   
     """Notes: resolutions are assumed to be given for the axes of the intrinsic orientation of the data and reference as when viewed by matplotlib or ImageJ,
               orientation: permuation of 1,2,3 with potential sign, indicating which axes map onto the reference axes, 
@@ -202,6 +217,9 @@ def resampleData(source, sink = None,  orientation = None, dataSizeSink = None, 
         
     orientation = fixOrientation(orientation);
     
+    if isinstance(dataSizeSink, basestring):
+        dataSizeSink = io.dataSize(dataSizeSink);
+
     #orient actual resolutions onto reference resolution    
     dataSizeSource = io.dataSize(source);
         
@@ -216,13 +234,15 @@ def resampleData(source, sink = None,  orientation = None, dataSizeSink = None, 
     #rescale in x y in parallel
     if processingDirectory == None:
         processingDirectory = tempfile.mkdtemp();     
+        
+    interpolation = fixInterpolation(interpolation);
      
     nZ = dataSizeSource[2];
     pool = multiprocessing.Pool(processes=processes);
     argdata = [];
     for i in range(nZ):
-        argdata.append( (source, os.path.join(processingDirectory, 'resample_%04d.tif' % i), dataSizeSinkI, i, nZ) );  
-        print argdata[i]
+        argdata.append( (source, os.path.join(processingDirectory, 'resample_%04d.tif' % i), dataSizeSinkI, interpolation, i, nZ) );  
+        #print argdata[i]
     pool.map(self.resampleXYParallel, argdata);
     
     #rescale in z
@@ -243,7 +263,7 @@ def resampleData(source, sink = None,  orientation = None, dataSizeSink = None, 
             print "resampleData: processing %d/%d" % (i, dataSizeSinkI[0])
         #resampledImage[:, iImage ,:] =  scipy.misc.imresize(zImage[:,iImage,:], [resizedZAxisSize, sagittalImageSize[1]] , interp = 'bilinear'); 
         #cv2.resize takes reverse order of sizes !
-        resampledData[i ,:, :] =  cv2.resize(zImage[i,:,:], (dataSizeSinkI[2], dataSizeSinkI[1]));
+        resampledData[i ,:, :] =  cv2.resize(zImage[i,:,:], (dataSizeSinkI[2], dataSizeSinkI[1]), interpolation = interpolation);
         #resampledData[i ,:, :] =  cv2.resize(zImage[i,:, :], (dataSize[1], resizedZSize));
     
 
@@ -289,7 +309,7 @@ def resampleData(source, sink = None,  orientation = None, dataSizeSink = None, 
 
 
 def resampleDataInverse(sink, source = None, dataSizeSource = None, orientation = None, resolutionSource = (4.0625, 4.0625, 3), resolutionSink = (25, 25, 25), 
-                        processingDirectory = None, processes = 1, cleanup = True, verbose = True, **args):
+                        processingDirectory = None, processes = 1, cleanup = True, verbose = True, interpolation = 'linear', **args):
     """Resample data inversely to resampleData routine"""
     
     #orientation
@@ -327,6 +347,8 @@ def resampleDataInverse(sink, source = None, dataSizeSource = None, orientation 
         resampledData = resampledData.transpose(peri);
     
     # upscale in z
+    interpolation = fixInterpolation(interpolation);
+    
     resampledDataXY = numpy.zeros((dataSizeSinkI[0], dataSizeSinkI[1], dataSizeSource[2]), dtype = resampledData.dtype);    
     
     for i in range(dataSizeSinkI[0]):
@@ -334,7 +356,7 @@ def resampleDataInverse(sink, source = None, dataSizeSource = None, orientation 
             print "resampleDataInverse: processing %d/%d" % (i, dataSizeSinkI[0])
 
         #cv2.resize takes reverse order of sizes !
-        resampledDataXY[i ,:, :] =  cv2.resize(resampledData[i,:,:], (dataSizeSource[2], dataSizeSinkI[1]));
+        resampledDataXY[i ,:, :] =  cv2.resize(resampledData[i,:,:], (dataSizeSource[2], dataSizeSinkI[1]), interpolation = interpolation);
 
     # upscale x, y in parallel
     
@@ -351,7 +373,7 @@ def resampleDataInverse(sink, source = None, dataSizeSource = None, orientation 
     pool = multiprocessing.Pool(processes=processes);
     argdata = [];
     for i in range(nZ):
-        argdata.append( (source, fl.fileExperssionToFileName(files, i), dataSizeSource, i, nZ) );  
+        argdata.append( (source, fl.fileExperssionToFileName(files, i), dataSizeSource, interpolation, i, nZ) );  
     pool.map(self.resampleXYParallel, argdata);
     
     if io.isFileExpression(source):
@@ -389,7 +411,7 @@ def resamplePoints(pointSource, pointSink = None, dataSizeSource = None, dataSiz
         
     #scaling factors
     scale = [float(dataSizeSource[i]) / float(dataSizeSinkI[i]) for i in range(3)];
-    print scale
+    #print scale
     
     repoints = points.copy();
     for i in range(3):    
@@ -427,7 +449,7 @@ def resamplePointsInverse(pointSource, pointSink = None, dataSizeSource = None, 
         
     #scaling factors
     scale = [float(dataSizeSource[i]) / float(dataSizeSinkI[i]) for i in range(3)];
-    print scale
+    #print scale
 
     rpoints = points.copy();    
     
