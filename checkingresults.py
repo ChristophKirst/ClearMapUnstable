@@ -9,14 +9,14 @@ import iDISCO.Visualization.Plot as plt;
 import iDISCO.IO.IO as io;
 
 dataSource =  '/home/mtllab/Documents/Haloperidol/1strun/Haloperidol/150630_0_8X-cfos_18-32-28/18-32-28_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif'
-pointSource= '/home/mtllab/Documents/Haloperidol/1strun/Haloperidol/cells.npy';
+pointSource= '/home/mtllab/Documents/Haloperidol/1strun/Haloperidol/cells-new.npy';
 x = (1000,1500);
 y = (700,1200);
 z = (580,1080);
 
 
 data = plt.overlayPoints(dataSource, pointSource, x = x, y = y, z = z, pointColor = None);
-io.writeData('/home/mtllab/Documents/Haloperidol/1strun/Haloperidol/checkpoints_20_filteredI.tif', data)
+io.writeData('/home/mtllab/Documents/Haloperidol/1strun/Haloperidol/checkpoints_0_filteredI.tif', data)
 
 
 ########################################
@@ -36,21 +36,17 @@ psaline, isaline = io.readPoints((('/home/mtllab/Documents/Haloperidol/1strun/sa
 
 lblpointsS = lbl.labelPoints(psaline, annotationFile);
 
-
+#matpp.hist(ihalop[:,1], bins = 2000, range = (0,50), histtype="step")
 
 i = ihalop[lblpointsH==672];
-matpp.hist(i[:,0], bins=1000, histtype="step");
-
-
+#matpp.hist(i[:,0], bins=1000, histtype="step");
 sortedi = np.sort(i[:,0]);
 ii = np.arange(sortedi.size);
 matpp.step(sortedi,ii);
 
 
 i = isaline[lblpointsS==672];
-matpp.hist(i[:,0], bins=1000, histtype="step");
-
-
+#matpp.hist(i[:,0], bins=1000, histtype="step");
 sortedi = np.sort(i[:,0]);
 ii = np.arange(sortedi.size);
 matpp.step(sortedi,ii);

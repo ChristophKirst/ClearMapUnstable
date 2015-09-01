@@ -129,6 +129,7 @@ stackProcessingParameter = {
     
     #increase chunk size for optimizaition (True, False or all = automatic)
     "chunkOptimizationSize" : all
+      
     };
 
 
@@ -138,7 +139,8 @@ spotDetectionParameter = {
     "backgroundSize" : (20,20),
     
     # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
-    "dogSize" : (8, 8, 6),
+    #"dogSize" : (8, 8, 6),
+    'dogSize' : None,
     
     # h of h-max transform
     "hMax" : 0.15,
@@ -162,7 +164,7 @@ spotDetectionParameter = {
     
     
     #write labeled image:
-    "labelFile" :   os.path.join(baseDirectory, 'Data/Synthetic/label_iDISCO_\d{3}.tif'),   
+    "cellMaskFile" :   os.path.join(baseDirectory, 'Synthetic/Label/label_iDISCO_\d{3}.tif'),   
     
     #some debug / quality check output
     #"verbose" : True,
@@ -171,8 +173,8 @@ spotDetectionParameter = {
 
 
 
-allParameter = joinParameter(stackProcessingParameter, spotDetectionParameter, {'x' : (100,160), 'y' : (10,140), 'z' : all})
-
+allParameter = joinParameter(stackProcessingParameter, spotDetectionParameter, {'x' : (100,160), 'y' : (10,140), 'z' : (2,38)})
+#allParameter = joinParameter(stackProcessingParameter, spotDetectionParameter, {'x' : all, 'y' : all, 'z' : all})
 
 result = detectCells(**allParameter);
 print result
@@ -189,6 +191,8 @@ if verbose:
     plot.plotOverlayPoints(dataraw, points, pointColor = [1,0,0]);
 
 
+dataraw = io.readData(spotDetectionParameter["source"], x = (100,160), y = (10,140), z =  (2,38));
+io.writeData( os.path.join(baseDirectory, 'Synthetic/raw.tif'), dataraw)
 
 ##############################################################################
 # Test Resample Points

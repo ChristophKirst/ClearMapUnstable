@@ -69,3 +69,9 @@ io.writeData('/home/mtllab/Documents/MRI/distance.mhd', distance)
 
 tf = elx.getTransformParameterFile(AffineAlignmentParameter["resultDirectory"]);
 
+#################################################3
+
+import matplotlib.pyplot as matpp
+distance = io.readData('/home/mtllab/Documents/MRI/distance.mhd');
+d = distance[60:200,60:210,150:270];
+matpp.hist(d.flatten(), bins=1000, histtype="step");

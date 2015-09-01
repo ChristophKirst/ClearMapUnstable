@@ -23,7 +23,9 @@ from scipy.ndimage.measurements import label, center_of_mass
 #import scipy
 #from skimage.filter.rank import tophat
 #from skimage.measure import regionprops
-from mahotas import regmin
+#from mahotas import regmin
+#from mahotas import locmax
+from scipy.ndimage.filters import maximum_filter
 
 
 #own routines save memory and use faster data types
@@ -48,14 +50,35 @@ def hMaxTransform(img, h):
     """Calculates h maximum transformation of an image."""
     #seed = img.copy();
     #seed[seed < h] = h; # catch errors for uint subtraction !
-    #img = img.astype('float16'); # float32 ?
-    return reconstruction(img - h, img);
+    #img = img.astype('float16'); # float32 ? 
+    if not h is None:
+        return reconstruction(img - h, img);
+    else:
+        return img;
 
 
-def regionalMax(img):
-    """Calculates regional maxima of an image."""
-    return regmin(-img);
+
+def localMax(img, localMaxSize = 5):
+    """Calculates local maxima of an image."""
     
+    
+    if localMaxSize is None:
+        localMaxSize = 5;
+    
+    if not isinstance(localMaxSize, tuple):
+       localMaxSize = (localMaxSize, localMaxSize, localMaxSize);
+
+        
+    #return regmin(-img, regionalMaxStructureElement);
+    #return (maximum_filter(img, footprint = regionalMaxStructureElement) == img);
+    return (maximum_filter(img, size = localMaxSize) == img)
+    
+      
+#def regionalMax(img, regionalMaxStructureElement = numpy.ones((3,3,3), dtype = bool)):
+#    """Calculates regional maxima of an image."""
+#   
+#    return regmin(-img, regionalMaxStructureElement);
+
     
 def extendedMax(img, hMax = 0):
     """Calculates extened h maxima of an image."""
@@ -64,20 +87,36 @@ def extendedMax(img, hMax = 0):
     if hMax > 0:
         img = hMaxTransform(img, hMax);
         
-    #regional max
-    return regionalMax(img);
+    #max
+    #return regionalMax(img);
+    return localMax(img);
 
 
 
-def findExtendedMaxima(img, hMax = 10, threshold = 0, verbose = False, out = sys.stdout, **parameter):
+def findExtendedMaxima(img, hMax = 10, threshold = 0, localMaxSize = 5,  hMaxFile = None, subStack = None, verbose = False, out = sys.stdout, **parameter):
     """Find extended maxima of step in Spot Detection Algorithm"""  
     timer = Timer();
-    writeParameter(out = out, head = 'Extended Max:', hMax = hMax, threshold = threshold);
+    writeParameter(out = out, head = 'Extended Max:', hMax = hMax, threshold = threshold, localMaxSize =  localMaxSize);
     
     # extended maxima
-    timer.reset(); 
+    timer.reset();
+    
     imgmax = hMaxTransform(img, hMax);
-    imgmax = regionalMax(imgmax);
+    
+    if not hMaxFile is None:
+        if not subStack is None:
+            ii = subStack["zSubStackCenterIndices"][0];
+            ee = subStack["zSubStackCenterIndices"][1];
+            si = subStack["zCenterIndices"][0];
+        else:
+            si = 0;
+            ii = 0;
+            ee = -1;
+        
+        io.writeData(hMaxFile, imgmax[:,:,ii:ee].astype('int16'), startIndex = si );
+    
+    #imgmax = regionalMax(imgmax, regionalMaxStructureElement);
+    imgmax = localMax(imgmax, localMaxSize);
         
     if not threshold is None:
         imgmax = numpy.logical_and(imgmax, img >= threshold);
@@ -114,7 +153,6 @@ def findCenterOfMaxima(img, imgmax, cellMaskFile = None, subStack = None, verbos
         
     if nlab > 0:
         centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
-        out.write(timer.elapsedTime(head = 'Cell Centers') + '\n');
     
         if verbose:        
             #plotOverlayLabel(img * 0.01, imglab, alpha = False);
@@ -136,8 +174,31 @@ def findCenterOfMaxima(img, imgmax, cellMaskFile = None, subStack = None, verbos
         out.write('Cell Centers: No Cells found !');
         #return ( numpy.zeros((0,3)), numpy.zeros(0) );
         return numpy.zeros((0,3));
-
-
+        
+        
+        
+def findPixelCoordinates(imgmax, cellMaskFile = None, subStack = None, verbose = False, out = sys.stdout, **parameter):
+    """Find center of the maxima step in Spot Detection Algorithm"""  
+    timer = Timer(); 
+        
+    if not cellMaskFile is None:
+        if not subStack is None:
+            ii = subStack["zSubStackCenterIndices"][0];
+            ee = subStack["zSubStackCenterIndices"][1];
+            si = subStack["zCenterIndices"][0];
+        else:
+            si = 0;
+            ii = 0;
+            ee = -1;
+        
+        io.writeData(cellMaskFile, imgmax[:,:,ii:ee], startIndex = si );
+        
+    centers = numpy.nonzero(imgmax);
+    centers = numpy.vstack(centers).T;
+    
+    out.write(timer.elapsedTime(head = 'Cell Centers') + '\n');
+    return centers;
+    
 
 def findIntensity(img, centers, intensityMethod = 'Max', intensitySize = (3,3,3), verbose = False, out = sys.stdout, **parameter):
     """Find instensity value around centers in the image img using a box"""

@@ -16,12 +16,14 @@ self = sys.modules[__name__];
 
 import numpy
 
+import iDISCO.IO.IO as io
+
 from scipy.ndimage.filters import correlate
 #from scipy.signal import fftconvolve
 
 from iDISCO.ImageProcessing.Filter.FilterKernel import filterKernel
 from iDISCO.ImageProcessing.BackgroundRemoval import removeBackground
-from iDISCO.ImageProcessing.MaximaDetection import findExtendedMaxima, findCenterOfMaxima, findIntensity
+from iDISCO.ImageProcessing.MaximaDetection import findExtendedMaxima, findPixelCoordinates, findIntensity, findCenterOfMaxima
 
 from iDISCO.Utils.Timer import Timer
 from iDISCO.Utils.ParameterTools import writeParameter
@@ -33,24 +35,39 @@ from iDISCO.Visualization.Plot import plotTiling
 ##############################################################################
 
 
-def dogFilter(img, dogSize = (7,7,11), verbose = False, out = sys.stdout, **parameter):
+def dogFilter(img, dogSize = (7,7,11), dogFile = None, subStack = None, verbose = False, out = sys.stdout, **parameter):
     """Difference of Gaussians filter step of Spot Detection Algorithm"""
     timer = Timer();
     writeParameter(out = out, head = 'DoG:', dogSize = dogSize);
-    
+
     #DoG filter
-    timer.reset();
-    fdog = filterKernel(ftype = 'DoG', size = dogSize);
-    fdog = fdog.astype('float32');
-    img = img.astype('float32');
-    #img = correlate(img, fdog);
-    #img = scipy.signal.correlate(img, fdog);
-    img = correlate(img, fdog);
-    #img = convolve(img, fdog, mode = 'same');
-    img[img < 0] = 0;
+    img = img.astype('float32'); # always convert to float for downstream processing
+        
+    if not dogSize is None:
+        timer.reset();
+        fdog = filterKernel(ftype = 'DoG', size = dogSize);
+        fdog = fdog.astype('float32');
+        #img = correlate(img, fdog);
+        #img = scipy.signal.correlate(img, fdog);
+        img = correlate(img, fdog);
+        #img = convolve(img, fdog, mode = 'same');
+        img[img < 0] = 0;
     
     if verbose:
         plotTiling(img);
+        
+        
+    if not dogFile is None:
+        if not subStack is None:
+            ii = subStack["zSubStackCenterIndices"][0];
+            ee = subStack["zSubStackCenterIndices"][1];
+            si = subStack["zCenterIndices"][0];
+        else:
+            si = 0;
+            ii = 0;
+            ee = -1;
+        
+        io.writeData(dogFile, img[:,:,ii:ee], startIndex = si );    
         
     out.write(timer.elapsedTime(head = 'DoG') + '\n');    
     return img
@@ -60,7 +77,7 @@ def dogFilter(img, dogSize = (7,7,11), verbose = False, out = sys.stdout, **para
 # Spot detection
 ##############################################################################
 
-def detectCells(img, verbose = False, out = sys.stdout, **parameter):
+def detectCells(img, hMax = None, verbose = False, out = sys.stdout, **parameter):
     """Detect Cells in 3d grayscale image using DoG filtering and maxima detection"""
     # effectively removeBackground ->  dogFilter -> hHmax -> trheshold
     # processing steps are done in place to save memory  
@@ -89,7 +106,7 @@ def detectCells(img, verbose = False, out = sys.stdout, **parameter):
     #out.write(timer.elapsedTime(head = 'Mask'));    
     
     #DoG filter
-    img3 = dogFilter(img2, verbose = verbose, out = out, **parameter);
+    img3 = dogFilter(img2, verbose = verbose, out = out, **parameter);    
     
     # normalize    
     #    imax = img.max();
@@ -98,10 +115,13 @@ def detectCells(img, verbose = False, out = sys.stdout, **parameter):
     #    img /= imax;
     
     # extended maxima
-    imgmax = findExtendedMaxima(img3, verbose = verbose, out = out, **parameter);
+    imgmax = findExtendedMaxima(img3, hMax = hMax, verbose = verbose, out = out, **parameter);
     
     #center of maxima
-    centers = findCenterOfMaxima(img, imgmax, verbose = verbose, out = out, **parameter);
+    if not hMax is None:
+        centers = findCenterOfMaxima(img, imgmax, verbose = verbose, out = out, **parameter);
+    else:
+        centers = findPixelCoordinates(imgmax, verbose = verbose, out = out, **parameter);
     
     #intensity of cells
     cintensity = findIntensity(img, centers, verbose = verbose, out = out, **parameter);

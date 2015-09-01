@@ -14,6 +14,8 @@ import sys
 
 import cv2 
 
+import iDISCO.IO.IO as io
+
 from iDISCO.ImageProcessing.Filter.StructureElement import structureElement
 
 from iDISCO.Utils.Timer import Timer
@@ -22,7 +24,7 @@ from iDISCO.Utils.ParameterTools import writeParameter
 from iDISCO.Visualization.Plot import plotTiling
 
 
-def removeBackground(img, backgroundSize = (15,15), verbose = False, out = sys.stdout, **parameter):
+def removeBackground(img, backgroundSize = (15,15), backgroundFile = None, subStack = None, verbose = False, out = sys.stdout, **parameter):
     """Remove Background step of Spot Detection Algorithm"""
     timer = Timer();
     writeParameter(out = out, head = 'Background:', backgroundSize = backgroundSize);
@@ -33,7 +35,21 @@ def removeBackground(img, backgroundSize = (15,15), verbose = False, out = sys.s
          #img[:,:,z] = img[:,:,z] - grey_opening(img[:,:,z], structure = structureElement('Disk', (30,30)));
          #img[:,:,z] = img[:,:,z] - morph.grey_opening(img[:,:,z], structure = self.structureELement('Disk', (150,150)));
          img[:,:,z] = img[:,:,z] - cv2.morphologyEx(img[:,:,z], cv2.MORPH_OPEN, se)
+     
+     
+    if not backgroundFile is None:
+        if not subStack is None:
+            ii = subStack["zSubStackCenterIndices"][0];
+            ee = subStack["zSubStackCenterIndices"][1];
+            si = subStack["zCenterIndices"][0];
+        else:
+            si = 0;
+            ii = 0;
+            ee = -1;
         
+        io.writeData(backgroundFile, img[:,:,ii:ee], startIndex = si );     
+     
+     
     if verbose:
         plotTiling(10*img);
 

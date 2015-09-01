@@ -41,7 +41,7 @@ def processSubStack(dsr):
     pw = ProcessWriter(sub["stackId"]);
     timer = Timer();
     
-    pw.write("processing chunk " + str(sub["stackId"]) + "/" + str(sub["nStacks"]));
+    pw.write("processing substack " + str(sub["stackId"]) + "/" + str(sub["nStacks"]));
     pw.write("file          = " + sub["source"]);
     pw.write("segmentation  = " + str(sf));
     pw.write("ranges: x,y,z = " + str(sub["x"]) +  "," + str(sub["y"]) + "," + str(sub["z"])); 
@@ -52,8 +52,7 @@ def processSubStack(dsr):
     
     timer.reset();
     seg = sf(img, subStack = sub, out = pw, **pp);    
-    
-    pw.write(timer.elapsedTime(head = 'Segmenting data of size ' + str(img.shape)));
+    pw.write(timer.elapsedTime(head = 'Processing substack of size ' + str(img.shape)));
     
     return seg;
 
@@ -74,7 +73,7 @@ def joinPoints(results, subStacks = None, shiftPoints = True, **args):
         
         if cts.size > 0:
             cts[:,2] += subStacks[i]["z"][0];
-            iid = numpy.logical_and(cts[:,2] < subStacks[i]["zCenters"][1], cts[:,2] >=  subStacks[i]["zCenters"][0]);
+            iid = numpy.logical_and(subStacks[i]["zCenters"][0] <= cts[:,2] , cts[:,2] < subStacks[i]["zCenters"][1]);
             cts = cts[iid,:];
             results.append(cts);
             if not intensities is None:
