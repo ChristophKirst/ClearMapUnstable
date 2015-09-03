@@ -63,7 +63,7 @@ def tTestVoxelization(group1, group2, signed = False, removeNaN = True, pcutoff 
     g1 = self.readDataGroup(group1);  
     g2 = self.readDataGroup(group2);  
     
-    tvals, pvals = stats.ttest_ind(g1, g2, axis = 0, equal_var = False);
+    tvals, pvals = stats.ttest_ind(g1, g2, axis = 0, equal_var = True);
 
     #remove nans
     if removeNaN: 
@@ -173,40 +173,39 @@ def weightsFromPrecentiles(intensities, percentiles = [25,50,75,100]):
     return weights;
         
 
-def countPointsGroupInRegions(pointGroup, withIds = True, labeledImage = lbl.DefaultLabeledImageFile, intensityGroup = None, intensityRow = 0, withCounts = False):
-     "Generates a table of counts for the various point datasets in pointGroup"""
+def countPointsGroupInRegions(pointGroup, labeledImage = lbl.DefaultLabeledImageFile, intensityGroup = None, intensityRow = 0, returnIds = True, returnCounts = False):
+     """Generates a table of counts for the various point datasets in pointGroup"""
  
      if intensityGroup is None: 
-         counts = [lbl.countPointsInRegions(p, labeledImage = labeledImage, sort = True, allIds = True, withIds = False, withCounts = withCounts) for p in pointGroup];
+         counts = [lbl.countPointsInRegions(pointGroup[i], labeledImage = labeledImage, sort = True, allIds = True, returnIds = False, returnCounts = returnCounts, intensities = None) for i in range(len(pointGroup))];
      else:
-         counts = [lbl.countPointsInRegions(pointGroup[i], labeledImage = labeledImage, sort = True, allIds = True, withIds = False, withCounts = withCounts,
+         counts = [lbl.countPointsInRegions(pointGroup[i], labeledImage = labeledImage, sort = True, allIds = True, returnIds = False, returnCounts = returnCounts,
                                             intensities = intensityGroup[i], intensityRow = intensityRow) for i in range(len(pointGroup))];
      
-     if withCounts:
+     if returnCounts and not intensityGroup is None:
          countsi = (c[1] for c in counts);
          counts  = (c[0] for c in counts);
      else:
          countsi = None;
          
-     
      counts = numpy.vstack((c for c in counts)).T;
      if not countsi is None:
          countsi =  numpy.vstack((c for c in countsi)).T;
      
-     if withIds:
+     if returnIds:
          ids = numpy.sort(lbl.Label.ids);
          #ids.shape = (1,) + ids.shape;
          
          #return numpy.concatenate((ids.T,counts), axis = 1
-         if not countsi is None:
-             return ids, counts, countsi
-         else:
+         if countsi is None:
              return ids, counts
-     else:
-         if not countsi is None:
-             return counts, countsi
          else:
+             return ids, counts, countsi      
+     else:
+         if countsi is None:
              return counts
+         else:
+             return counts, countsi
          
 
 def tTestPointsInRegions(pointCounts1, pointCounts2, labeledImage = lbl.DefaultLabeledImageFile, signed = False, removeNaN = True, pcutoff = None, equal_var = False):

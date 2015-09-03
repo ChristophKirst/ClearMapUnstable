@@ -8,15 +8,15 @@ Created on Mon Aug 24 16:03:57 2015
 import iDISCO.Visualization.Plot as plt;
 import iDISCO.IO.IO as io;
 
-dataSource =  '/home/mtllab/Documents/Haloperidol/1strun/Haloperidol/150630_0_8X-cfos_18-32-28/18-32-28_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif'
-pointSource= '/home/mtllab/Documents/Haloperidol/1strun/Haloperidol/cells-new.npy';
-x = (1000,1500);
-y = (700,1200);
-z = (580,1080);
+dataSource =  '/home/mtllab/Documents/Haloperidol/1268/150819_0_8X-cfos_14-22-33/14-22-33_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif'
+pointSource= '/home/mtllab/Documents/Haloperidol/1268/cells.npy';
+x = (0,600);
+y = (1100,1900);
+z = (600,1300);
 
 
 data = plt.overlayPoints(dataSource, pointSource, x = x, y = y, z = z, pointColor = None);
-io.writeData('/home/mtllab/Documents/Haloperidol/1strun/Haloperidol/checkpoints_0_filteredI.tif', data)
+io.writeData('/home/mtllab/Documents/Haloperidol/1268/cells_check_cortex.tif', data)
 
 
 ########################################

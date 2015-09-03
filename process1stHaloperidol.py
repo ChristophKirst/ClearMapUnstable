@@ -13,7 +13,11 @@ Created on Sat Aug  8 14:58:07 2015
 @author: mtllab"""
 
 
-from parameter1stHaloperidol import *
+#from parameter1stHaloperidol import *
+
+execfile('parameter1stHaloperidol.py')
+
+
 import iDISCO.Visualization.Plot as plt
 
 ################
@@ -22,9 +26,9 @@ import iDISCO.Visualization.Plot as plt
 #io.writeData(os.path.join(BaseDirectory, 'raw.tif'), data)
 
 dataSource = cFosFile;
-x = (100,2000);
-y = (200,2000);
-z = (50,1500);
+x = (400,1000);
+y = (400,1000);
+z = (500,1500);
 
 
 points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-new.npy'),  os.path.join(BaseDirectory,  'intensities-new.npy')));

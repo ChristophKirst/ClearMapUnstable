@@ -14,69 +14,79 @@ import numpy
 
 
 
-annotationFile = '/home/mtllab/Documents/warping/annotation_25_right.tif';
+annotationFile = '/home/mtllab/Documents/warping/annotation_25_right_reslice.tif';
 label = io.readData(annotationFile);
 label = label.astype('int32');
 
 labelids = numpy.unique(label);
 
 outside = label == 0;
+#for l in labelids:
+#    if not lbl.labelAtLevel(l, 3) == 688: # remove everything except cortex
+#        outside = numpy.logical_or(outside, label == l);
+#for l in labelids:
+#    if lbl.labelAtLevel(l, 5) == 1089: # remove hippocampus
+#        outside = numpy.logical_or(outside, label == l);
+#        
 for l in labelids:
-    if not lbl.labelAtLevel(l, 3) == 688: # remove everything except cortex
+    if not lbl.labelAtLevel(l, 5) == 315: # remove everything except cortex
         outside = numpy.logical_or(outside, label == l);
-for l in labelids:
-    if lbl.labelAtLevel(l, 5) == 1089: # remove hippocampus
-        outside = numpy.logical_or(outside, label == l);
-        
+
+
+
 
 ############ These are to remove the structures curved around the lateral cortical plate        
+#        
+#for l in labelids:
+#    if lbl.labelAtLevel(l, 6) == 31: # remove cingulate cortex
+#        outside = numpy.logical_or(outside, label == l);
+#        
+#for l in labelids:
+#    if lbl.labelAtLevel(l, 6) == 254: # remove retrosplenial cortex
+#        outside = numpy.logical_or(outside, label == l);
+#        
+#for l in labelids:
+#    if lbl.labelAtLevel(l, 6) == 631: # remove cortical Amygdala
+#        outside = numpy.logical_or(outside, label == l);
+#        
+#for l in labelids:
+#    if lbl.labelAtLevel(l, 5) == 698: # remove olfactory areas
+#        outside = numpy.logical_or(outside, label == l);        
+#
+#for l in labelids:
+#    if lbl.labelAtLevel(l, 4) == 703: # remove cortical subplate - amygdala
+#        outside = numpy.logical_or(outside, label == l);       
+#
+#for l in labelids:
+#    if lbl.labelAtLevel(l, 6) == 972: # remove prelimbic cortex
+#        outside = numpy.logical_or(outside, label == l);    
         
-for l in labelids:
-    if lbl.labelAtLevel(l, 6) == 31: # remove cingulate cortex
-        outside = numpy.logical_or(outside, label == l);
-        
-for l in labelids:
-    if lbl.labelAtLevel(l, 6) == 254: # remove retrosplenial cortex
-        outside = numpy.logical_or(outside, label == l);
-        
-for l in labelids:
-    if lbl.labelAtLevel(l, 6) == 631: # remove cortical Amygdala
-        outside = numpy.logical_or(outside, label == l);
-        
-for l in labelids:
-    if lbl.labelAtLevel(l, 5) == 698: # remove olfactory areas
-        outside = numpy.logical_or(outside, label == l);        
+#for l in labelids:
+#    if not lbl.labelAtLevel(l, 6) == 453 : #somatosensory areas
+#        outside = numpy.logical_or(outside, label == l);        
+#for l in labelids:
+#    if not lbl.labelAtLevel(l, 6) == 95: # keep insula
+#        outside = numpy.logical_or(outside, label == l);
+#    
+#for l in labelids:
+#    if not lbl.labelAtLevel(l, 6) == 961: # keep Piriform 
+#        outside = numpy.logical_or(outside, label == l);
+#
+#for l in labelids:
+#    if not lbl.labelAtLevel(l, 6) == 247: # keep auditory
+#        outside = numpy.logical_or(outside, label == l);
 
-for l in labelids:
-    if lbl.labelAtLevel(l, 4) == 703: # remove cortical subplate - amygdala
-        outside = numpy.logical_or(outside, label == l);       
 
-for l in labelids:
-    if lbl.labelAtLevel(l, 6) == 972: # remove prelimbic cortex
-        outside = numpy.logical_or(outside, label == l);    
-        
-for l in labelids:
-    if not lbl.labelAtLevel(l, 6) == 453 : #somatosensory areas
-        outside = numpy.logical_or(outside, label == l);        
-        
-        
-heatmap = io.readData('/home/mtllab/Documents/whiskers/IEG/arc/cells_heatmap.tif');
+cortex = label;
+cortex[outside] = 0
+
+io.writeData('/home/mtllab/Documents/cortex.mhd', cortex);
+
+
+
+      
+heatmap = io.readData('/home/mtllab/Documents/whiskers/exploration/mean_intact_allcells.mhd');
 
 heatmap[outside] = 0;
 
-io.writeData('/home/mtllab/Documents/whiskers/IEG/arc/cells_heatmap_l4.tif', heatmap);
-
-     
-heatmap = io.readData('/home/mtllab/Documents/whiskers/IEG/egr1/cells_heatmap.tif');
-
-heatmap[outside] = 0;
-
-io.writeData('/home/mtllab/Documents/whiskers/IEG/egr1/cells_heatmap_l4.tif', heatmap);
-
-     
-heatmap = io.readData('/home/mtllab/Documents/whiskers/IEG/pS6/cells_heatmap.tif');
-
-heatmap[outside] = 0;
-
-io.writeData('/home/mtllab/Documents/whiskers/IEG/pS6/cells_heatmap_l4.tif', heatmap);
-
+io.writeData('/home/mtllab/Documents/whiskers/exploration/mean_intact_allcells_auditory.mhd', heatmap);

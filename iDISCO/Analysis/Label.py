@@ -147,24 +147,24 @@ def labelPoints(points, labeledImage = DefaultLabeledImageFile, level = None):
 
 
  
-def countPointsInRegions(points, labeledImage = DefaultLabeledImageFile, intensities = None, intensityRow = 0, level= None, allIds = False, sort = True, withIds = True, withCounts = False):
+def countPointsInRegions(points, labeledImage = DefaultLabeledImageFile, intensities = None, intensityRow = 0, level= None, allIds = False, sort = True, returnIds = True, returnCounts = False):
     global Label;
     
     points = io.readPoints(points);
     intensities = io.readPoints(intensities);
-    if intensities.ndim > 1:
-        intensities = intensities[:,intensityRow];
-    
     pointLabels = self.labelPoints(points, labeledImage, level = level); 
     
     if intensities is None:
         ll, cc = numpy.unique(pointLabels, return_counts = True);
         cci = None;
     else:
+        if intensities.ndim > 1:
+            intensities = intensities[:,intensityRow];
+   
         ll, ii, cc = numpy.unique(pointLabels, return_counts = True, return_inverse = True);
         cci = numpy.zeros(ll.shape);
         for i in range(ii.shape[0]):
-            cci[ii[i]] += intensities[i];
+             cci[ii[i]] += intensities[i];
     
     if allIds:
         lla = numpy.setdiff1d(Label.ids, ll);
@@ -173,10 +173,8 @@ def countPointsInRegions(points, labeledImage = DefaultLabeledImageFile, intensi
         if not cci is None:
             cci = numpy.hstack((cci, numpy.zeros(lla.shape, dtype = cc.dtype)));
         
-        
-        
+    
     #cc = numpy.vstack((ll,cc)).T;
-        
     if sort:
         ii = numpy.argsort(ll);
         cc = cc[ii];
@@ -184,11 +182,11 @@ def countPointsInRegions(points, labeledImage = DefaultLabeledImageFile, intensi
         if not cci is None:
             cci = cci[ii];
 
-    if withIds:
+    if returnIds:
         if cci is None:
             return ll, cc
         else:
-            if withCounts:
+            if returnCounts:
                 return ll, cc, cci;
             else:
                 return ll, cci
@@ -196,7 +194,7 @@ def countPointsInRegions(points, labeledImage = DefaultLabeledImageFile, intensi
         if cci is None:
             return cc;
         else:
-            if withCounts:
+            if returnCounts:
                 return cc, cci;
             else:
                 return cci;
