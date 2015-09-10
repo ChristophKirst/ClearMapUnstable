@@ -352,7 +352,7 @@ def readHeader(filename):
     return header
 
 
-def readData(filename):
+def readData(filename, **args):
     """Read a nrrd file and return data, header"""
     with open(filename,'rb') as filehandle:
         header = readHeader(filehandle)
@@ -360,6 +360,7 @@ def readData(filename):
         data = _read_data(header, filehandle, filename)
         #return (data, header)
         #return data.transpose([1,0,2]);
+        data = io.readData(data, **args);
         return data;
 
 

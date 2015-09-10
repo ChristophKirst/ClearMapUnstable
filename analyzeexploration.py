@@ -51,11 +51,11 @@ label = label.astype('int32');
 labelids = numpy.unique(label);
 
 outside = label == 0;
-
-for l in labelids:
-    if lbl.labelAtLevel(l, 1) == 73: # remove ventricles
-        outside = numpy.logical_or(outside, label == l);
-
+#
+#for l in labelids:
+#    if lbl.labelAtLevel(l, 1) == 73: # remove ventricles
+#        outside = numpy.logical_or(outside, label == l);
+#
 pvalsc[outside]=0;
 
 io.writeData(os.path.join(baseDirectory, 'pvalues_allcells.tif'), io.sagittalToCoronalData(pvalsc.astype('float32')));
@@ -66,7 +66,7 @@ g1s = numpy.std(g1,axis = 0);
 
 g2a = numpy.mean(g2,axis = 0);
 g2s = numpy.std(g2,axis = 0);
-
+#
 g1a[outside] = 0;
 g1s[outside] = 0;
 g2a[outside] = 0;

@@ -8,15 +8,15 @@ Created on Mon Aug 24 16:03:57 2015
 import iDISCO.Visualization.Plot as plt;
 import iDISCO.IO.IO as io;
 
-dataSource =  '/home/mtllab/Documents/Haloperidol/1268/150819_0_8X-cfos_14-22-33/14-22-33_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif'
-pointSource= '/home/mtllab/Documents/Haloperidol/1268/cells.npy';
-x = (0,600);
+dataSource =  '/home/mtllab/Documents/npas4/10min/150828_0-8xs3-npas420HFcont_00-23-43/00-23-43_0-8xs3-npas420HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif'
+pointSource= '/home/mtllab/Documents/npas4/10min/cells.npy';
+x = (1200,1700);
 y = (1100,1900);
-z = (600,1300);
+z = (300,800);
 
 
 data = plt.overlayPoints(dataSource, pointSource, x = x, y = y, z = z, pointColor = None);
-io.writeData('/home/mtllab/Documents/Haloperidol/1268/cells_check_cortex.tif', data)
+io.writeData('/home/mtllab/Documents/npas4/10min/cells_check_cortex.tif', data)
 
 
 ########################################
@@ -28,42 +28,53 @@ import iDISCO.Analysis.Label as lbl;
 
 annotationFile = '/home/mtllab/Documents/warping/annotation_25_right.tif';
 
-phalop, ihalop = io.readPoints((('/home/mtllab/Documents/Haloperidol/1strun/Haloperidol/cells_transformed_to_Atlas.npy'),  ('/home/mtllab/Documents/Haloperidol/1strun/Haloperidol/intensities.npy')));
+phalop, ihalop = io.readPoints((('/home/mtllab/Documents/Haloperidol/1strun/Haloperidol/oldrun/cells_transformed_to_Atlas.npy'),  ('/home/mtllab/Documents/Haloperidol/1strun/Haloperidol/oldrun/intensities-allpoints.npy')));
 
 lblpointsH = lbl.labelPoints(phalop, annotationFile);
 
-psaline, isaline = io.readPoints((('/home/mtllab/Documents/Haloperidol/1strun/saline/cells_transformed_to_Atlas.npy'),  ('/home/mtllab/Documents/Haloperidol/1strun/saline/intensities.npy')));
+psaline, isaline = io.readPoints((('/home/mtllab/Documents/Haloperidol/1strun/saline/oldcounts/cells_transformed_to_Atlas.npy'),  ('/home/mtllab/Documents/Haloperidol/1strun/saline/oldcounts/intensities.npy')));
 
 lblpointsS = lbl.labelPoints(psaline, annotationFile);
 
-#matpp.hist(ihalop[:,1], bins = 2000, range = (0,50), histtype="step")
 
-i = ihalop[lblpointsH==672];
+
+
+
+i = ihalop #[lblpointsH==672];
+matpp.hist(i[:,1], bins=1000, range=(10,100), histtype="step", linewidth=3);
+sortedi = np.sort(i[:,0]);
+ii = np.arange(sortedi.size);
+halopgraph = np.vstack([sortedi, ii]).T
+matpp.step(sortedi,ii);
+np.savetxt('/home/mtllab/Documents/Haloperidol/1strun/CumulativeI_filtered_all_haloperidol.csv', halopgraph, delimiter=',', newline='\n', fmt='%.5e');
+
+
+i = isaline #[lblpointsS==672];
 #matpp.hist(i[:,0], bins=1000, histtype="step");
 sortedi = np.sort(i[:,0]);
 ii = np.arange(sortedi.size);
+salinegraph = np.vstack([sortedi, ii]).T
 matpp.step(sortedi,ii);
-
-
-i = isaline[lblpointsS==672];
-#matpp.hist(i[:,0], bins=1000, histtype="step");
-sortedi = np.sort(i[:,0]);
-ii = np.arange(sortedi.size);
-matpp.step(sortedi,ii);
-
-
+np.savetxt('/home/mtllab/Documents/Haloperidol/1strun/CumulativeI_filtered_all_saline.csv', salinegraph, delimiter=',', newline='\n', fmt='%.5e');
 
 
 i = ihalop[lblpointsH==1031];
+#matpp.hist(i[:,0], bins=1000, histtype="step");
 sortedi = np.sort(i[:,0]);
 ii = np.arange(sortedi.size);
+halopgraph = np.vstack([sortedi, ii]).T
 matpp.step(sortedi,ii);
+np.savetxt('/home/mtllab/Documents/Haloperidol/1strun/CumulativeI_filtered_GPI_haloperidol.csv', halopgraph, delimiter=',', newline='\n', fmt='%.5e');
 
 
 i = isaline[lblpointsS==1031];
+#matpp.hist(i[:,0], bins=1000, histtype="step");
 sortedi = np.sort(i[:,0]);
 ii = np.arange(sortedi.size);
+salinegraph = np.vstack([sortedi, ii]).T
 matpp.step(sortedi,ii);
+np.savetxt('/home/mtllab/Documents/Haloperidol/1strun/CumulativeI_filtered_GPI_saline.csv', salinegraph, delimiter=',', newline='\n', fmt='%.5e');
+
 
 
 
