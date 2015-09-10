@@ -45,10 +45,9 @@ def readDataSet(h5file, resolution = 0, channel = 0, timepoint = 0):
 def dataSize(filename, resolution = 0, channel = 0, timepoint = 0, **args):
     f = self.openFile(filename);
     
-    #todo: read array size not full data !
-    ds = self.readDataSet(f, resolution = 0, channel = 0, timepoint = 0);
+    ds = self.readDataSet(f, resolution = resolution, channel = channel, timepoint = timepoint);
     dims = list(ds.shape);
-    #dims = (dims[1], dims[2], dims[0]);
+    dims = (dims[2], dims[1], dims[0]);
     
     return io.dataSizeFromDataRange(dims, **args);
 
@@ -77,19 +76,60 @@ def readData(filename, x = all, y = all, z = all, resolution = 0, channel = 0, t
     return data;
 
    
+def getDataSize(h5file):
+    """Get the actual data size in pixel"""
+    
+    pn = '/DataSetInfo/Image';
+    ia = h5file.get(pn).attrs;
+    
+    x = int(''.join(ia["X"]));
+    y = int(''.join(ia["Y"]));
+    z = int(''.join(ia["Z"]));
+    
+    return numpy.array([x,y,z]);
+    
 
-def transformToImaris(points, scale = (4.0625, 4.0625, 3)):
+def getDataExtent(h5file):
+    """Get the spatial extent of data"""
+
+    pn = '/DataSetInfo/Image';
+    ia = h5file.get(pn).attrs;
+    
+    x1 = float(''.join(ia["ExtMin0"]));
+    y1 = float(''.join(ia["ExtMin1"]));
+    z1 = float(''.join(ia["ExtMin2"]));
+   
+    x2 = float(''.join(ia["ExtMax0"]));
+    y2 = float(''.join(ia["ExtMax1"]));
+    z2 = float(''.join(ia["ExtMax2"])); 
+    
+    return numpy.array([[x1,y1,z1], [x2,y2,z2]]);
+
+
+def getScaleAndOffset(h5file):
+    """Determine scale and offset to transform pixel to spatial coordinates as used by imaris"""
+    
+    ds = getDataSize(h5file);
+    de = getDataExtent(h5file);
+    
+    sc = de[1,:] - de[0,:];
+    sc = sc / ds;
+    
+    return (sc, de[0,:]);
+
+
+def transformPointsToImaris(points, scale = (4.0625, 4.0625, 3), offset = (0,0,0)):
     """Transform pixel coordinates of cell centers to work in Imaris"""
     if len(scale) == 1:
         scale = (scale, scale, scale);    
     
     for i in range(3):
-        points[:,i] = points[:,i] * scale[i];
+        points[:,i] = points[:,i] * scale[i] + offset[i];
         
     return points
 
 
-def writePoints(filename, points, mode = "o", radius = 0.5):
+def writePoints(filename, points, mode = "o", radius = 0.5, scale = all, offset = None):
     """Write points to Imaris file"""
     
     if isinstance(filename, basestring):
@@ -114,7 +154,7 @@ def writePoints(filename, points, mode = "o", radius = 0.5):
     #write points
     if mode == "a":  # add points -> need to test further
         
-        #update number of points
+        #update number of points(4.0625, 4.0625, 3)
         np = np + 1;
         ca["NumberOfPoints"] = np;
         
@@ -155,8 +195,21 @@ def writePoints(filename, points, mode = "o", radius = 0.5):
     if points.shape[1] != 3:
         raise StandardError("Points shape is not (n,3)!");
     
-    points = points[:,[1,0,2]]; # todo: check exchange of coordinates
-    pts = numpy.c_[points, radius * numpy.ones(npts)];
+    #points = points[:,[0,1,2]]; # todo: check exchange of coordinates
+    
+    #scale points frfom pixel to     
+    if scale is all: # automatically determine scaling for points    
+        (scale, offset) = getScaleAndOffset(h5file);
+    
+    if offset is None:
+        offset = numpy.array([0,0,0]);
+     
+    pointsS = points.copy();
+    pointsS = transformPointsToImaris(pointsS, scale = scale, offset = offset);
+    
+    print pointsS    
+    
+    pts = numpy.c_[pointsS, radius * numpy.ones(npts)];
     ts =  numpy.zeros(npts);
     
     # write points
@@ -174,6 +227,9 @@ def writePoints(filename, points, mode = "o", radius = 0.5):
     
     if isinstance(filename, basestring):
         h5file.close();
+    
+    return filename;
+    
 
 
 def writeData(filename, **args):
