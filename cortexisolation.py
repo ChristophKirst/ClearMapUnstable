@@ -14,7 +14,7 @@ import numpy
 
 
 
-annotationFile = '/home/mtllab/Documents/warping/annotation_25_right_reslice.tif';
+annotationFile = lbl.DefaultLabeledImageFile;
 label = io.readData(annotationFile);
 label = label.astype('int32');
 
@@ -28,12 +28,15 @@ outside = label == 0;
 #    if lbl.labelAtLevel(l, 5) == 1089: # remove hippocampus
 #        outside = numpy.logical_or(outside, label == l);
 #        
+#for l in labelids:
+#    if not lbl.labelAtLevel(l, 5) == 315: # remove everything except cortex
+#        outside = numpy.logical_or(outside, label == l);
+
+
 for l in labelids:
-    if not lbl.labelAtLevel(l, 5) == 315: # remove everything except cortex
+    if not (lbl.labelAtLevel(l, 5) == 315): #or (lbl.labelAtLevel(l, 4) == 703) or (lbl.labelAtLevel(l, 5) == 698)):
         outside = numpy.logical_or(outside, label == l);
-
-
-
+        
 
 ############ These are to remove the structures curved around the lateral cortical plate        
 #        
@@ -78,9 +81,12 @@ for l in labelids:
 
 
 cortex = label;
-cortex[outside] = 0
+cortex[outside] = 0;
 
-io.writeData('/home/mtllab/Documents/cortex.mhd', cortex);
+cortexbin = cortex > 0;
+cortexbin = cortexbin.astype('int32') * 100;
+
+io.writeData('/home/ckirst/Desktop/cortex.mhd', cortexbin);
 
 
 
