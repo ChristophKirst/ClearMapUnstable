@@ -63,21 +63,21 @@ VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 
 SpotDetectionParameter = {
     # background correctoin: None or (x,y) which is size of disk for gray scale opening
-    "backgroundSize" : (15,15),
+    "backgroundSize" : (7,7),
     
     # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
     #"dogSize" : (7, 7, 11),
-    'dogSize' : None,
+    'dogSize' : (4,4,6),
     
     # h of h-max transform
-    "hMax" : None,
+    "hMax" : 20,
     
     # intensity detection   
     "intensityMethod"  : None, #'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
     "intensitySize"    : (3,3,3),  # size of box in (x,y,z) to include in intensity determination
     
     # threshold for min intensityNone at center to be counted as cell, for saving ('None' will save everything )
-    "threshold" : 1000,
+    "threshold" : None,
       
     # write cell mask to disk (to check cell detection accuracy), if not None
     #"cellMaskFile"   : os.path.join(BaseDirectory, 'cell_mask_new/cell_mask_Z\d{4}.ome.tif'),
@@ -128,10 +128,10 @@ AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
     #max number of parallel processes
-    "processes" : 12,
+    "processes" : 4,
    
     #chunk sizes
-    "chunkSizeMax" : 200,
+    "chunkSizeMax" : 100,
     "chunkSizeMin" : 50,
     "chunkOverlap" : 32,
 

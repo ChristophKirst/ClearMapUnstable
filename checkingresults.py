@@ -286,3 +286,25 @@ phalop73, ihalop73 = io.readPoints((('/home/mtllab/Documents/Haloperidol/1273/ce
 phalop74, ihalop74 = io.readPoints((('/home/mtllab/Documents/Haloperidol/1274/cells-allpoints.npy'),  ('/home/mtllab/Documents/Haloperidol/1274/intensities-allpoints.npy')));
 phalop75, ihalop75 = io.readPoints((('/home/mtllab/Documents/Haloperidol/1275/cells-allpoints.npy'),  ('/home/mtllab/Documents/Haloperidol/1275/intensities-allpoints.npy')));
 
+############################################
+############################################
+
+
+
+BaseDirectory = '/home/mtllab/Documents/whiskers/exploration/1/oldcounts';
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
+points, intensities = thresholdPoints(points, intensities, threshold = (50, 65000), row = (1,0));
+io.writePoints((os.path.join(BaseDirectory, 'cells-50.npy'), os.path.join(BaseDirectory,  'intensities-50.npy')), (points, intensities));
+
+
+dataSource =  '/home/mtllab/Documents/whiskers/exploration/1/150709_0_8X-cfos_18-29-28/18-29-28_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif'
+pointSource= os.path.join(BaseDirectory, 'cells-50.npy');
+x = (1200,1700);
+y = (1100,1900);
+z = (300,800);
+
+
+data = plt.overlayPoints(dataSource, pointSource, x = x, y = y, z = z, pointColor = None);
+io.writeData(os.path.join(BaseDirectory, 'cells-50.tif'), data)
+
+matpp.hist(intensities[:,1], histtype = 'step', bins = 500, range = (10,150))

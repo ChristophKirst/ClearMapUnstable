@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Sep  1 19:23:37 2015
-
-@author: mtllab
-"""
-
-# -*- coding: utf-8 -*-
-"""
 Created on Tue Sep  1 19:19:35 2015
 
 @author: mtllab
@@ -38,12 +31,12 @@ from iDISCO.Analysis.Label import labelToName
 
 ######################### Data parameters
 
-BaseDirectory = '/home/mtllab/Documents/Haloperidol/1269';
-   
-cFosFile = '/home/mtllab/Documents/Haloperidol/1269/150819_0_8X-cfos_16-55-11/16-55-11_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-AutofluoFile = '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-autofluo_15-48-40/15-48-40_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
-#cFosFileRange = {'x' : (1000,1500), 'y' : (700,1200), 'z' : (500,1080)};
+BaseDirectory = '/home/mtllab/Documents/lightexposure/suture1R';
+
+cFosFile = '/home/mtllab/Documents/lightexposure/suture1R/150817_0-8xs3-cfos-20HFcont_15-52-48/15-52-48_0-8xs3-cfos-20HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+AutofluoFile = '/home/mtllab/Documents/lightexposure/suture1R/150817_0-8xs3-autofluor_16-57-48/16-57-48_0-8xs3-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
+cFosFileRange = {'x' : (500,1000), 'y' : (1200,1700), 'z' : (500,1000)};
 
 
 #Resolution of the Data (in um / pixel)
@@ -73,17 +66,17 @@ SpotDetectionParameter = {
     "hMax" : 20,
     
     # intensity detection   
-    "intensityMethod"  : None, #'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
+    "intensityMethod"  : 'Max', #'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
     "intensitySize"    : (3,3,3),  # size of box in (x,y,z) to include in intensity determination
     
     # threshold for min intensityNone at center to be counted as cell, for saving ('None' will save everything )
     "threshold" : None,
       
     # write cell mask to disk (to check cell detection accuracy), if not None
-    #"cellMaskFile"   : os.path.join(BaseDirectory, 'cell_mask_new/cell_mask_Z\d{4}.ome.tif'),
-    #"backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
+    "cellMaskFile"   : os.path.join(BaseDirectory, 'cell_mask_new/cell_mask_Z\d{4}.ome.tif'),
+    "backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
     #"hMaxFile"       : os.path.join(BaseDirectory, 'hmax/hmax_Z\d{4}.ome.tif'),
-    #"dogFile" : os.path.join(BaseDirectory, 'dog/dog_Z\d{4}.ome.tif')
+    "dogFile" : os.path.join(BaseDirectory, 'dog/dog_Z\d{4}.ome.tif')
     #"cellMaskFile" : None
     
     #some debug / quality check output
@@ -91,10 +84,6 @@ SpotDetectionParameter = {
     #"processMethod" : "sequential"  #  plotting during image processing only in sequential mode !
     };
 
-      
-# Threshold for the points to be considered in the analysis
-#minthreshold = 20; #remove points detected in the background, based on the filtered intensities
-#maxthreshold = 40000; #remove staining artefacts (bright antibody clumps), based on the non-filtered original intensities 
 
      
 
@@ -128,7 +117,7 @@ AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
     #max number of parallel processes
-    "processes" : 4,
+    "processes" : 5,
    
     #chunk sizes
     "chunkSizeMax" : 100,

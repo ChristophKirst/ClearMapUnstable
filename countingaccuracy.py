@@ -24,9 +24,14 @@ import iDISCO.Analysis.Label as lbl
 
 ######################### Data parameters
 
-BaseDirectory = '/home/mtllab/Documents/countingaccuracy';
-   
-cFosFile = '/home/mtllab/Documents/countingaccuracy/countingaccuracy.tif';
+#BaseDirectory = '/home/mtllab/Documents/countingaccuracy/cortex';
+
+BaseDirectory = '/home/mtllab/Documents/countingaccuracy/cortex';
+  
+  
+#cFosFile = '/home/mtllab/Documents/countingaccuracy/cortex/data.tif';
+cFosFile =  '/home/mtllab/Documents/countingaccuracy/cortex/data.tif'
+
 cFosFileRange = {'x' : all, 'y' : all, 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
 #cFosFileRange = {'x' : (815,1000), 'y' : (1078,1271), 'z' : (667,742)};
 
@@ -39,13 +44,13 @@ OriginalResolution = (4.0625, 4.0625, 3);
 
 SpotDetectionParameter = {
     # background correctoin: None or (x,y) which is size of disk for gray scale opening
-    "backgroundSize" : (15,15),
+    "backgroundSize" : (7,7),
     
     # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
-    "dogSize" : (7,7,11),
+    "dogSize" : None,
     
     # h of h-max transform
-    "hMax" : 20,
+    "hMax" : None,
     
     # intensity detection   
     "intensityMethod"  : 'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
@@ -93,7 +98,7 @@ StackProcessingParameter = {
 SpotDetectionParameter["source"] = cFosFile;
 SpotDetectionParameter = joinParameter(SpotDetectionParameter, cFosFileRange)
 
-SpotDetectionParameter["sink"] = (os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy'));
+SpotDetectionParameter["sink"] = (os.path.join(BaseDirectory, 'cells_unfiltered-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities_unfiltered-allpoints.npy'));
 
 ImageProcessingParameter = joinParameter(StackProcessingParameter, SpotDetectionParameter)
 
@@ -117,14 +122,14 @@ VoxelizationParameter = {
 ######################################################
 
 detectCells(**ImageProcessingParameter);
-points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells_unfiltered-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities_unfiltered-allpoints.npy')));
 
 
 ######################################################
 ######################################################
 ######################################################
 
-label = io.readData('/home/mtllab/Documents/countingaccuracy/eliza.tif');
+label = io.readData('/home/mtllab/Documents/countingaccuracy/cortex/nico.nrrd');
 label = label.astype('int32');
 humanpoint = label == 1;
 check = [0,0,0];
@@ -142,30 +147,30 @@ for t in range(np.max(intensities[:,0]).astype(int)):
 
 
 
-io.writePoints('/home/mtllab/Documents/countingaccuracy/nicocheckfiltered.csv', check);
+io.writePoints('/home/mtllab/Documents/countingaccuracy/cortex/nicocheck_dog.csv', check);
 pp.plot(check[:,0],check[:,1]);
 
 
 ######################################################
 ######################################################
 ######################################################
-
-pointT, intensitiesT = thresholdPoints(points, intensities, threshold = (2200, 65000), row = (0,0));
-io.writePoints('/home/mtllab/Documents/countingaccuracy/cells-2200_fast_unfiltered.npy', pointT)
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells_unfiltered-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities_unfiltered-allpoints.npy')));
+pointT, intensitiesT = thresholdPoints(points, intensities, threshold = (700, 65000), row = (1,0));
+io.writePoints('/home/mtllab/Documents/countingaccuracy/cortex/cells_unfiltered700.npy', pointT)
 
 ######################################################
 ######################################################
 ######################################################
 
 
-dataSource =  '/home/mtllab/Documents/countingaccuracy/countingaccuracy.tif'
-pointSource= '/home/mtllab/Documents/countingaccuracy/cells-2200_fast_unfiltered.npy';
+dataSource =  '/home/mtllab/Documents/countingaccuracy/cortex/data.tif'
+pointSource= '/home/mtllab/Documents/countingaccuracy/cortex/cells_unfiltered700.npy';
 x = all;
 y = all;
 z = all;
 
 vox = voxelize(pointSource, dataSource, **VoxelizationParameter);
-io.writeData('/home/mtllab/Documents/countingaccuracy/countingaccuracy-2200_fast_unfiltered.tif', vox.astype('int32'));
+io.writeData('/home/mtllab/Documents/countingaccuracy/cortex/cells_unfiltered700.tif', vox.astype('int32'));
 
 ######################################################
 ######################################################

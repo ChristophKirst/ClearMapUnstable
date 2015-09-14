@@ -1,4 +1,5 @@
 id,name,acronym,red,green,blue,structure_order,parent_id,parent_acronym
+0,background,background,0,0,0,0,,
 997,root,root,255,255,255,0,,
 8,Basic cell groups and regions,grey,176,255,255,100,997,root
 567,Cerebrum,CH,176,240,255,200,8,grey
