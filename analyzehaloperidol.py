@@ -102,11 +102,11 @@ g1s = numpy.std(g1,axis = 0);
 g2a = numpy.mean(g2,axis = 0);
 g2s = numpy.std(g2,axis = 0);
 
-io.writeData(os.path.join(baseDirectory, 'mean_haloperidol_weighted5.raw'), io.sagittalToCoronalData(g1a));
-io.writeData(os.path.join(baseDirectory, 'std_haloperidol_weighted5.raw'), io.sagittalToCoronalData(g1s));
+io.writeData(os.path.join(baseDirectory, 'mean_haloperidol_weighted.raw'), io.sagittalToCoronalData(g1a));
+io.writeData(os.path.join(baseDirectory, 'std_haloperidol_weighted.raw'), io.sagittalToCoronalData(g1s));
 
-io.writeData(os.path.join(baseDirectory, 'mean_saline_weighted5.raw'), io.sagittalToCoronalData(g2a));
-io.writeData(os.path.join(baseDirectory, 'std_saline_weighted5.raw'), io.sagittalToCoronalData(g2s));
+io.writeData(os.path.join(baseDirectory, 'mean_saline_weighted.raw'), io.sagittalToCoronalData(g2a));
+io.writeData(os.path.join(baseDirectory, 'std_saline_weighted.raw'), io.sagittalToCoronalData(g2s));
 
 
 ###################################################################################
@@ -144,8 +144,8 @@ group2i = [fn.replace('cells_transformed_to_Atlas', 'intensities') for fn in gro
 #ids, pc1, pc1i = stat.countPointsGroupInRegions(group1, intensityGroup = group1i, withIds = True, labeledImage = lbl.DefaultLabeledImageFile, withCounts = True);
 #pc2, pc2i = stat.countPointsGroupInRegions(group2, intensityGroup = group2i, withIds = False, labeledImage = lbl.DefaultLabeledImageFile, withCounts = True);
 
-ids, pc1 = stat.countPointsGroupInRegions(group1, intensityGroup = None, withIds = True, labeledImage = annotationFile, withCounts = False);
-pc2 = stat.countPointsGroupInRegions(group2, intensityGroup = None, withIds = False, labeledImage = annotationFile, withCounts = False);
+ids, pc1, pc1i = stat.countPointsGroupInRegions(group1, intensityGroup = group1i, returnIds = True, labeledImage = annotationFile, returnCounts = True);
+pc2, pc2i = stat.countPointsGroupInRegions(group2, intensityGroup = group2i, returnIds = False, labeledImage = annotationFile, returnCounts = True);
 
 
 pvals, psign = stat.tTestPointsInRegions(pc1, pc2, pcutoff = None, signed = True, equal_var = True);
@@ -181,7 +181,7 @@ ii = numpy.argsort(pvalsi);
 tableSorted = table.copy();
 tableSorted = tableSorted[ii];
 
-with open(os.path.join(baseDirectory, 'pvalues-counts.csv'),'w') as f:
+with open(os.path.join(baseDirectory, 'pvalues-intensities.csv'),'w') as f:
     f.write(', '.join([str(item) for item in table.dtype.names]));
     f.write('\n');
     for sublist in tableSorted:

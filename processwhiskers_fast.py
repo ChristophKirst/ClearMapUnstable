@@ -7,7 +7,7 @@ maxT = 40000
 ########################
 ########################
 
-execfile('1whiskers.py')
+execfile('suture1R.py')
 
 #resampleData(**CorrectionResamplingParameterCfos);
 #resampleData(**CorrectionResamplingParameterAutoFluo);
@@ -18,7 +18,7 @@ execfile('1whiskers.py')
 detectCells(**ImageProcessingParameter);
 
 points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
-points, intensities = thresholdPoints(points, intensities, threshold = (minT, maxT), row = (1,0));
+points, intensities = thresholdPoints(points, intensities, threshold = (1000, 50000), row = (0,0));
 io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
 points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
 points = resamplePoints(**CorrectionResamplingPointsParameter);

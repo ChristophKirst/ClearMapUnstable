@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Sep  1 19:23:37 2015
-
-@author: mtllab
-"""
-
-# -*- coding: utf-8 -*-
-"""
 Created on Tue Sep  1 19:19:35 2015
 
 @author: mtllab
@@ -38,10 +31,10 @@ from iDISCO.Analysis.Label import labelToName
 
 ######################### Data parameters
 
-BaseDirectory = '/home/mtllab/Documents/Haloperidol/1269';
-   
-cFosFile = '/home/mtllab/Documents/Haloperidol/1269/150819_0_8X-cfos_16-55-11/16-55-11_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-AutofluoFile = '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-autofluo_15-48-40/15-48-40_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+BaseDirectory = '/home/mtllab/Documents/npas4/10min';
+
+cFosFile = '/home/mtllab/Documents/npas4/10min/150828_0-8xs3-npas420HFcont_00-23-43/00-23-43_0-8xs3-npas420HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+AutofluoFile = '/home/mtllab/Documents/npas4/10min/150828_0-8xs3-autofluor_01-35-58/01-35-58_0-8xs3-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
 #cFosFileRange = {'x' : (1000,1500), 'y' : (700,1200), 'z' : (500,1080)};
 
@@ -53,7 +46,7 @@ OriginalResolution = (4.0625, 4.0625, 3);
 AtlasResolution = (25, 25, 25);
 
 #Orientation
-FinalOrientation = (1,2,3);
+FinalOrientation = (-1,2,3);
 
 VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 
@@ -63,17 +56,18 @@ VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 
 SpotDetectionParameter = {
     # background correctoin: None or (x,y) which is size of disk for gray scale opening
-    "backgroundSize" : (7,7),
+    "backgroundSize" : (15,15),
     
     # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
-    #"dogSize" : (7, 7, 11),
-    'dogSize' : (4,4,6),
+    "dogSize" : (7, 7, 11),
+    #'dogSize' : None,
     
     # h of h-max transform
     "hMax" : 20,
+    #"hMax" : None,
     
     # intensity detection   
-    "intensityMethod"  : None, #'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
+    "intensityMethod"  : 'Max', #'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
     "intensitySize"    : (3,3,3),  # size of box in (x,y,z) to include in intensity determination
     
     # threshold for min intensityNone at center to be counted as cell, for saving ('None' will save everything )
@@ -93,10 +87,9 @@ SpotDetectionParameter = {
 
       
 # Threshold for the points to be considered in the analysis
-#minthreshold = 20; #remove points detected in the background, based on the filtered intensities
-#maxthreshold = 40000; #remove staining artefacts (bright antibody clumps), based on the non-filtered original intensities 
+minthreshold = 30; #remove points detected in the background, based on the filtered intensities
+maxthreshold = 50000; #remove staining artefacts (bright antibody clumps), based on the non-filtered original intensities 
 
-     
 
 #################### Heat map generation
 
@@ -123,13 +116,16 @@ ResamplingParameter = { "processes": 12 };
 #Path to registration parameters and atlases
 PathReg        = '/home/mtllab/Documents/warping';
 AtlasFile      = os.path.join(PathReg, 'half_template_25_right.tif');
+#AtlasFile      = os.path.join(PathReg, 'half_template_25_right_fullWD.tif');
 AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
+#AnnotationFile = os.path.join(PathReg, 'annotation_25_right_fullWD.tif');
 
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
     #max number of parallel processes
     "processes" : 4,
-   
+ #  "processes" : 4,
+  
     #chunk sizes
     "chunkSizeMax" : 100,
     "chunkSizeMin" : 50,

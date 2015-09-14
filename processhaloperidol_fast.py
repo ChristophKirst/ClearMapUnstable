@@ -13,49 +13,32 @@ Created on Sat Aug  8 14:58:07 2015
 @author: mtllab"""
 
 
-#from parameter1stHaloperidol import *
-
-execfile('1stSaline.py')
+execfile('1266.py')
 
 #resampleData(**CorrectionResamplingParameterCfos);
-
 #resampleData(**CorrectionResamplingParameterAutoFluo);
-
 #resampleData(**RegistrationResamplingParameter);
-
 #resultDirectory  = alignData(**CorrectionAlignmentParameter);
-
 #resultDirectory  = alignData(**RegistrationAlignmentParameter);
 
 detectCells(**ImageProcessingParameter);
 
 points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
-points, intensities = thresholdPoints(points, intensities, threshold = (2500, 50000), row = (1,0));
+points, intensities = thresholdPoints(points, intensities, threshold = (40, 55000), row = (1,0));
 io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
-
 points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
-
 points = resamplePoints(**CorrectionResamplingPointsParameter);
-    
 points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
-
 CorrectionResamplingPointsInverseParameter["pointSource"] = points;
-
 points = resamplePointsInverse(**CorrectionResamplingPointsInverseParameter);
-
 RegistrationResamplingPointParameter["pointSource"] = points;
-
 points = resamplePoints(**RegistrationResamplingPointParameter);
-
 points = transformPoints(points, transformDirectory = RegistrationAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
-
 TransformedCellFile = os.path.join(BaseDirectory, 'cells_transformed_to_Atlas.npy')
-
 io.writePoints(TransformedCellFile, points);
 
 #################### Heat map generation
 
-#points = io.readPoints(TransformedCellFile);
 vox = voxelize(points, AtlasFile, **VoxelizationParameter);
 io.writeData(os.path.join(BaseDirectory, 'cells_heatmap.tif'), vox.astype('int32'));
 
@@ -63,69 +46,274 @@ VoxelizationParameter["voxelizationWeights"] = intensities[:,0].astype(float);
 vox = voxelize(points, AtlasFile, **VoxelizationParameter);
 io.writeData(os.path.join(BaseDirectory, 'cells_heatmap_weighted.tif'), vox.astype('int32'));
 
-##################### Label points by anatomical regions
+#####################
+#####################
+#####################
+#####################
+#####################
+#####################
+#
 
-#points = io.readPoints(TransformedCellFile);
-ids, counts = countPointsInRegions(points, labeledImage = AnnotationFile, intensities = intensities, intensityRow = 0);
+execfile('1267.py')
 
-table = numpy.zeros(ids.shape, dtype=[('id','int64'),('counts','f8'),('name', 'a256')])
-table["id"] = ids;
-table["counts"] = counts;
-table["name"] = labelToName(ids);
+#resampleData(**CorrectionResamplingParameterCfos);
+#resampleData(**CorrectionResamplingParameterAutoFluo);
+#resampleData(**RegistrationResamplingParameter);
+#resultDirectory  = alignData(**CorrectionAlignmentParameter);
+#resultDirectory  = alignData(**RegistrationAlignmentParameter);
 
-with open(os.path.join(BaseDirectory, 'Annotated_counts_intensities.csv'),'w') as f:
-    for sublist in table:
-        f.write(', '.join([str(item) for item in sublist]));
-        f.write('\n');
-    f.close();
+detectCells(**ImageProcessingParameter);
 
-ids, counts = countPointsInRegions(points, labeledImage = AnnotationFile, intensities = None);
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
+points, intensities = thresholdPoints(points, intensities, threshold = (40, 55000), row = (1,0));
+io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
+points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
+points = resamplePoints(**CorrectionResamplingPointsParameter);
+points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+CorrectionResamplingPointsInverseParameter["pointSource"] = points;
+points = resamplePointsInverse(**CorrectionResamplingPointsInverseParameter);
+RegistrationResamplingPointParameter["pointSource"] = points;
+points = resamplePoints(**RegistrationResamplingPointParameter);
+points = transformPoints(points, transformDirectory = RegistrationAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+TransformedCellFile = os.path.join(BaseDirectory, 'cells_transformed_to_Atlas.npy')
+io.writePoints(TransformedCellFile, points);
 
-table = numpy.zeros(ids.shape, dtype=[('id','int64'),('counts','f8'),('name', 'a256')])
-table["id"] = ids;
-table["counts"] = counts;
-table["name"] = labelToName(ids);
+#################### Heat map generation
 
-with open(os.path.join(BaseDirectory, 'Annotated_counts.csv'),'w') as f:
-    for sublist in table:
-        f.write(', '.join([str(item) for item in sublist]));
-        f.write('\n');
-    f.close();
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap.tif'), vox.astype('int32'));
 
+VoxelizationParameter["voxelizationWeights"] = intensities[:,0].astype(float);
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap_weighted.tif'), vox.astype('int32'));
 
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
-#####################
+execfile('1268.py')
+
+#resampleData(**CorrectionResamplingParameterCfos);
+#resampleData(**CorrectionResamplingParameterAutoFluo);
+#resampleData(**RegistrationResamplingParameter);
+#resultDirectory  = alignData(**CorrectionAlignmentParameter);
+#resultDirectory  = alignData(**RegistrationAlignmentParameter);
+
+detectCells(**ImageProcessingParameter);
+
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
+points, intensities = thresholdPoints(points, intensities, threshold = (40, 55000), row = (1,0));
+io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
+points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
+points = resamplePoints(**CorrectionResamplingPointsParameter);
+points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+CorrectionResamplingPointsInverseParameter["pointSource"] = points;
+points = resamplePointsInverse(**CorrectionResamplingPointsInverseParameter);
+RegistrationResamplingPointParameter["pointSource"] = points;
+points = resamplePoints(**RegistrationResamplingPointParameter);
+points = transformPoints(points, transformDirectory = RegistrationAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+TransformedCellFile = os.path.join(BaseDirectory, 'cells_transformed_to_Atlas.npy')
+io.writePoints(TransformedCellFile, points);
+
+#################### Heat map generation
+
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap.tif'), vox.astype('int32'));
+
+VoxelizationParameter["voxelizationWeights"] = intensities[:,0].astype(float);
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap_weighted.tif'), vox.astype('int32'));
+
+execfile('1269.py')
+
+#resampleData(**CorrectionResamplingParameterCfos);
+#resampleData(**CorrectionResamplingParameterAutoFluo);
+#resampleData(**RegistrationResamplingParameter);
+#resultDirectory  = alignData(**CorrectionAlignmentParameter);
+#resultDirectory  = alignData(**RegistrationAlignmentParameter);
+
+detectCells(**ImageProcessingParameter);
+
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
+points, intensities = thresholdPoints(points, intensities, threshold = (40, 55000), row = (1,0));
+io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
+points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
+points = resamplePoints(**CorrectionResamplingPointsParameter);
+points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+CorrectionResamplingPointsInverseParameter["pointSource"] = points;
+points = resamplePointsInverse(**CorrectionResamplingPointsInverseParameter);
+RegistrationResamplingPointParameter["pointSource"] = points;
+points = resamplePoints(**RegistrationResamplingPointParameter);
+points = transformPoints(points, transformDirectory = RegistrationAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+TransformedCellFile = os.path.join(BaseDirectory, 'cells_transformed_to_Atlas.npy')
+io.writePoints(TransformedCellFile, points);
+
+#################### Heat map generation
+
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap.tif'), vox.astype('int32'));
+
+VoxelizationParameter["voxelizationWeights"] = intensities[:,0].astype(float);
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap_weighted.tif'), vox.astype('int32'));
+
+execfile('1271.py')
+
+#resampleData(**CorrectionResamplingParameterCfos);
+#resampleData(**CorrectionResamplingParameterAutoFluo);
+#resampleData(**RegistrationResamplingParameter);
+#resultDirectory  = alignData(**CorrectionAlignmentParameter);
+#resultDirectory  = alignData(**RegistrationAlignmentParameter);
+
+detectCells(**ImageProcessingParameter);
+
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
+points, intensities = thresholdPoints(points, intensities, threshold = (40, 55000), row = (1,0));
+io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
+points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
+points = resamplePoints(**CorrectionResamplingPointsParameter);
+points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+CorrectionResamplingPointsInverseParameter["pointSource"] = points;
+points = resamplePointsInverse(**CorrectionResamplingPointsInverseParameter);
+RegistrationResamplingPointParameter["pointSource"] = points;
+points = resamplePoints(**RegistrationResamplingPointParameter);
+points = transformPoints(points, transformDirectory = RegistrationAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+TransformedCellFile = os.path.join(BaseDirectory, 'cells_transformed_to_Atlas.npy')
+io.writePoints(TransformedCellFile, points);
+
+#################### Heat map generation
+
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap.tif'), vox.astype('int32'));
+
+VoxelizationParameter["voxelizationWeights"] = intensities[:,0].astype(float);
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap_weighted.tif'), vox.astype('int32'));
+
+execfile('1272.py')
+
+#resampleData(**CorrectionResamplingParameterCfos);
+#resampleData(**CorrectionResamplingParameterAutoFluo);
+#resampleData(**RegistrationResamplingParameter);
+#resultDirectory  = alignData(**CorrectionAlignmentParameter);
+#resultDirectory  = alignData(**RegistrationAlignmentParameter);
+
+detectCells(**ImageProcessingParameter);
+
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
+points, intensities = thresholdPoints(points, intensities, threshold = (40, 55000), row = (1,0));
+io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
+points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
+points = resamplePoints(**CorrectionResamplingPointsParameter);
+points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+CorrectionResamplingPointsInverseParameter["pointSource"] = points;
+points = resamplePointsInverse(**CorrectionResamplingPointsInverseParameter);
+RegistrationResamplingPointParameter["pointSource"] = points;
+points = resamplePoints(**RegistrationResamplingPointParameter);
+points = transformPoints(points, transformDirectory = RegistrationAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+TransformedCellFile = os.path.join(BaseDirectory, 'cells_transformed_to_Atlas.npy')
+io.writePoints(TransformedCellFile, points);
+
+#################### Heat map generation
+
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap.tif'), vox.astype('int32'));
+
+VoxelizationParameter["voxelizationWeights"] = intensities[:,0].astype(float);
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap_weighted.tif'), vox.astype('int32'));
+
+execfile('1273.py')
+
+#resampleData(**CorrectionResamplingParameterCfos);
+#resampleData(**CorrectionResamplingParameterAutoFluo);
+#resampleData(**RegistrationResamplingParameter);
+#resultDirectory  = alignData(**CorrectionAlignmentParameter);
+#resultDirectory  = alignData(**RegistrationAlignmentParameter);
+
+detectCells(**ImageProcessingParameter);
+
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
+points, intensities = thresholdPoints(points, intensities, threshold = (40, 55000), row = (1,0));
+io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
+points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
+points = resamplePoints(**CorrectionResamplingPointsParameter);
+points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+CorrectionResamplingPointsInverseParameter["pointSource"] = points;
+points = resamplePointsInverse(**CorrectionResamplingPointsInverseParameter);
+RegistrationResamplingPointParameter["pointSource"] = points;
+points = resamplePoints(**RegistrationResamplingPointParameter);
+points = transformPoints(points, transformDirectory = RegistrationAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+TransformedCellFile = os.path.join(BaseDirectory, 'cells_transformed_to_Atlas.npy')
+io.writePoints(TransformedCellFile, points);
+
+#################### Heat map generation
+
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap.tif'), vox.astype('int32'));
+
+VoxelizationParameter["voxelizationWeights"] = intensities[:,0].astype(float);
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap_weighted.tif'), vox.astype('int32'));
+
+execfile('1274.py')
+
+#resampleData(**CorrectionResamplingParameterCfos);
+#resampleData(**CorrectionResamplingParameterAutoFluo);
+#resampleData(**RegistrationResamplingParameter);
+#resultDirectory  = alignData(**CorrectionAlignmentParameter);
+#resultDirectory  = alignData(**RegistrationAlignmentParameter);
+
+detectCells(**ImageProcessingParameter);
+
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
+points, intensities = thresholdPoints(points, intensities, threshold = (40, 55000), row = (1,0));
+io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
+points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
+points = resamplePoints(**CorrectionResamplingPointsParameter);
+points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+CorrectionResamplingPointsInverseParameter["pointSource"] = points;
+points = resamplePointsInverse(**CorrectionResamplingPointsInverseParameter);
+RegistrationResamplingPointParameter["pointSource"] = points;
+points = resamplePoints(**RegistrationResamplingPointParameter);
+points = transformPoints(points, transformDirectory = RegistrationAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+TransformedCellFile = os.path.join(BaseDirectory, 'cells_transformed_to_Atlas.npy')
+io.writePoints(TransformedCellFile, points);
+
+#################### Heat map generation
+
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap.tif'), vox.astype('int32'));
+
+VoxelizationParameter["voxelizationWeights"] = intensities[:,0].astype(float);
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap_weighted.tif'), vox.astype('int32'));
+
+execfile('1275.py')
+
+#resampleData(**CorrectionResamplingParameterCfos);
+#resampleData(**CorrectionResamplingParameterAutoFluo);
+#resampleData(**RegistrationResamplingParameter);
+#resultDirectory  = alignData(**CorrectionAlignmentParameter);
+#resultDirectory  = alignData(**RegistrationAlignmentParameter);
+
+detectCells(**ImageProcessingParameter);
+
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
+points, intensities = thresholdPoints(points, intensities, threshold = (40, 55000), row = (1,0));
+io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
+points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
+points = resamplePoints(**CorrectionResamplingPointsParameter);
+points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+CorrectionResamplingPointsInverseParameter["pointSource"] = points;
+points = resamplePointsInverse(**CorrectionResamplingPointsInverseParameter);
+RegistrationResamplingPointParameter["pointSource"] = points;
+points = resamplePoints(**RegistrationResamplingPointParameter);
+points = transformPoints(points, transformDirectory = RegistrationAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+TransformedCellFile = os.path.join(BaseDirectory, 'cells_transformed_to_Atlas.npy')
+io.writePoints(TransformedCellFile, points);
+
+#################### Heat map generation
+
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap.tif'), vox.astype('int32'));
+
+VoxelizationParameter["voxelizationWeights"] = intensities[:,0].astype(float);
+vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+io.writeData(os.path.join(BaseDirectory, 'cells_heatmap_weighted.tif'), vox.astype('int32'));
