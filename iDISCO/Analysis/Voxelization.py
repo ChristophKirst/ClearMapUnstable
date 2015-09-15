@@ -73,7 +73,7 @@ def voxelizePixel(points,  dataSize = None, weights = None):
 
 
 def test():
-    """Test vioxelization Module"""
+    """Test voxelization Module"""
     #import iDISCO.Analysis.Voxelization as self
     
     import iDISCO.Analysis.VoxelizationCode as vox

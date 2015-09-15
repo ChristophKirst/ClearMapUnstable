@@ -25,7 +25,7 @@ def writeParameter(head = None, out = None, **args):
     if out is None:
         return '\n'.join(s)
     else:
-        out.write('\n'.join(s));
+        out.write('\n'.join(s) + '\n');
 
     
 def joinParameter(*args):

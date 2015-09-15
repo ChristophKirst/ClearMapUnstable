@@ -24,6 +24,8 @@ from scipy.ndimage.filters import correlate
 from iDISCO.ImageProcessing.Filter.FilterKernel import filterKernel
 from iDISCO.ImageProcessing.BackgroundRemoval import removeBackground
 from iDISCO.ImageProcessing.MaximaDetection import findExtendedMaxima, findPixelCoordinates, findIntensity, findCenterOfMaxima
+from iDISCO.ImageProcessing.CellSizeDetection import detectCellShape, findCellSize, findCellIntensity
+
 
 from iDISCO.Utils.Timer import Timer
 from iDISCO.Utils.ParameterTools import writeParameter
@@ -77,7 +79,7 @@ def dogFilter(img, dogSize = (7,7,11), dogFile = None, subStack = None, verbose 
 # Spot detection
 ##############################################################################
 
-def detectCells(img, hMax = None, verbose = False, out = sys.stdout, **parameter):
+def detectCells(img, hMax = None, cellShapeThreshold = None, verbose = False, out = sys.stdout, **parameter):
     """Detect Cells in 3d grayscale image using DoG filtering and maxima detection"""
     # effectively removeBackground ->  dogFilter -> hHmax -> trheshold
     # processing steps are done in place to save memory  
@@ -123,45 +125,66 @@ def detectCells(img, hMax = None, verbose = False, out = sys.stdout, **parameter
     else:
         centers = findPixelCoordinates(imgmax, verbose = verbose, out = out, **parameter);
     
-    #intensity of cells
-    cintensity = findIntensity(img, centers, verbose = verbose, out = out, **parameter);
-
-    #intensity of cells in filtered image
-    cintensity2 = findIntensity(img2, centers, verbose = verbose, out = out, **parameter);
     
-    #intensity of cells in filtered image
-    cintensity3 = findIntensity(img3, centers, verbose = verbose, out = out, **parameter);
-
-    
-    return ( centers, numpy.vstack((cintensity, cintensity3, cintensity2)).transpose());
+    #cell size detection
+    if not cellShapeThreshold is None:
+        imgshape = detectCellShape(img2, centers, cellShapeThreshold = cellShapeThreshold, verbose = verbose, out = out, **parameter);
         
+        #size of cells        
+        csize = findCellSize(imgshape, out = out, **parameter);
+        
+        #intensity of cells
+        cintensity = findCellIntensity(img, imgshape, verbose = verbose, out = out, **parameter);
 
+        #intensity of cells in filtered image
+        cintensity2 = findCellIntensity(img2, imgshape, verbose = verbose, out = out, **parameter);
+    
+        #intensity of cells in filtered image
+        cintensity3 = findCellIntensity(img3, imgshape, verbose = verbose, out = out, **parameter);
+        
+        return ( centers, numpy.vstack((cintensity, cintensity3, cintensity2, csize)).transpose());        
+        
+    
+    else:
+        #intensity of cells
+        cintensity = findIntensity(img, centers, verbose = verbose, out = out, **parameter);
+
+        #intensity of cells in filtered image
+        cintensity2 = findIntensity(img2, centers, verbose = verbose, out = out, **parameter);
+    
+        #intensity of cells in filtered image
+        cintensity3 = findIntensity(img3, centers, verbose = verbose, out = out, **parameter);
+
+    
+        return ( centers, numpy.vstack((cintensity, cintensity3, cintensity2)).transpose());
+        
 
 
 
 def test():
     """Test Spot Detection Module"""
     import iDISCO.ImageProcessing.SpotDetection as self
-    import iDISCO.IO.Imaris as io  
+    import iDISCO.IO.IO as io  
     
-    fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+    #fn = '/home/ckirst/Science/Projects/BrainActivityMap/Data/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
+    fn = '/home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Data/Synthetic/label_iDISCO_\d{3}.tif'
+    fn = '/home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Data/OME/16-17-27_0_8X-s3-20HF_UltraII_C00_xyz-Table Z\d{4}.ome.tif'
     #fn = '/run/media/ckirst/ChristophsBackuk4TB/iDISCO_2015_06/Adult cfos C row 20HF 150524.ims';
     #fn = '/home/nicolas/Windows/Nico/cfosRegistrations/Adult cfos C row 20HF 150524 - Copy.ims';
     #fn = '/home/ckirst/Science/Projects/BrainActivityMap/iDISCO_2015_04/test for spots added spot.ims'
-    
-    
-    
-    f = io.openFile(fn);
-    dataset = io.readData(f, resolution=0);
+
+    img = io.readData(fn);
     #img = dataset[0:500,0:500,1000:1008];
     #img = dataset[600:1000,1600:1800,800:830];
-    img = dataset[500:1500,500:1500,800:809];    
-    f.close();
+    #img = dataset[500:1500,500:1500,800:809]; 
+    img = img.astype('int16');
     
     #m = sys.modules['iDISCO.ImageProcessing.SpotDetection']
-    c = detectCells(img);
+    #c = self.detectCells(img);
     
-    print 'done, found %d cells !' % c.shape[0]
+    c = self.detectCells(img, dogSize = None, cellShapeThreshold = 1, cellShapeFile = '/home/ckirst/Science/Projects/BrainActivityMap/Analysis/iDISCO/Test/Data/CellShape/cellshape_\d{3}.tif');
+    
+    print 'done, found %d cells !' % c[0].shape[0]
 
 
     #test intensities:
@@ -170,6 +193,7 @@ def test():
     centers = numpy.array([[0,0,0], [29,29,9]]);
     i = self.findIntensity(x, centers, boxSize = (1,1,1));
     print i
+
 
 if __name__ == '__main__':
     test();
