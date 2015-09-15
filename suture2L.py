@@ -1,13 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Sep  1 19:19:35 2015
-
-@author: mtllab
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Sep  1 14:50:08 2015
+Created on Mon Sep 14 20:25:15 2015
 
 @author: mtllab
 """
@@ -31,12 +24,12 @@ from iDISCO.Analysis.Label import labelToName
 
 ######################### Data parameters
 
-BaseDirectory = '/home/mtllab/Documents/Haloperidol/1266';
-   
-cFosFile = '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-fos_14-44-03/14-44-03_0_8X-fos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-AutofluoFile = '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-autofluo_15-48-40/15-48-40_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
-cFosFileRange = {'x' : (1200,1700), 'y' : (1100,1900), 'z' : (300,800)};
+BaseDirectory = '/home/mtllab/Documents/lightexposure/suture2L';
+
+cFosFile = '/home/mtllab/Documents/lightexposure/suture2L/150817_0-8xs3-cfos20HF_19-12-45/19-12-45_0-8xs3-cfos20HF_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+AutofluoFile = '/home/mtllab/Documents/lightexposure/suture2L/150818_0-8xs3-autofluor_20-23-47/20-23-47_0-8xs3-autofluor_UltraII_C00_xyz-Table Z0000.ome.tif';
+cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
+#cFosFileRange = {'x' : (1000,1500), 'y' : (700,1200), 'z' : (500,1080)};
 
 
 #Resolution of the Data (in um / pixel)
@@ -46,7 +39,7 @@ OriginalResolution = (4.0625, 4.0625, 3);
 AtlasResolution = (25, 25, 25);
 
 #Orientation
-FinalOrientation = (1,2,3);
+FinalOrientation = (-1,2,3);
 
 VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 
@@ -56,18 +49,14 @@ VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 
 SpotDetectionParameter = {
     # background correctoin: None or (x,y) which is size of disk for gray scale opening
-    "backgroundSize" : (7,7),
+    "backgroundSize" : (15,15),
     
     # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
     #"dogSize" : (7, 7, 11),
-    #'dogSize' : (4,4,6),
-    "dogSize" : None,
+    'dogSize' : None,
     
     # h of h-max transform
-    #"hMax" : 20,
-    
-    # cell size detection
-    "cellShapeThreshold" : 700,
+    "hMax" : None,
     
     # intensity detection   
     "intensityMethod"  : None, #'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
@@ -78,23 +67,17 @@ SpotDetectionParameter = {
       
     # write cell mask to disk (to check cell detection accuracy), if not None
     #"cellMaskFile"   : os.path.join(BaseDirectory, 'cell_mask_new/cell_mask_Z\d{4}.ome.tif'),
-    "backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
+    #"backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
     #"hMaxFile"       : os.path.join(BaseDirectory, 'hmax/hmax_Z\d{4}.ome.tif'),
     #"dogFile" : os.path.join(BaseDirectory, 'dog/dog_Z\d{4}.ome.tif')
-    #"cellMaskFile" :  os.path.join(BaseDirectory, 'cells/cells_Z\d{4}.tif'),
-    "cellShapeFile" :  os.path.join(BaseDirectory, 'shape/shape_Z\d{4}.tif'),
+    #"cellMaskFile" : None
     
     #some debug / quality check output
     #"verbose" : True,
     #"processMethod" : "sequential"  #  plotting during image processing only in sequential mode !
     };
 
-      
-# Threshold for the points to be considered in the analysis
-minthreshold = 1000; #remove points detected in the background, based on the filtered intensities
-maxthreshold = 50000; #remove staining artefacts (bright antibody clumps), based on the non-filtered original intensities 
 
-     
 
 #################### Heat map generation
 
@@ -126,7 +109,7 @@ AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
     #max number of parallel processes
-    "processes" : 8,
+    "processes" : 12,
    
     #chunk sizes
     "chunkSizeMax" : 100,

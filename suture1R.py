@@ -12,7 +12,6 @@ Created on Tue Sep  1 14:50:08 2015
 @author: mtllab
 """
 
-
 import os, numpy, math
 
 import iDISCO.Settings as settings
@@ -35,8 +34,8 @@ BaseDirectory = '/home/mtllab/Documents/lightexposure/suture1R';
 
 cFosFile = '/home/mtllab/Documents/lightexposure/suture1R/150817_0-8xs3-cfos-20HFcont_15-52-48/15-52-48_0-8xs3-cfos-20HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 AutofluoFile = '/home/mtllab/Documents/lightexposure/suture1R/150817_0-8xs3-autofluor_16-57-48/16-57-48_0-8xs3-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
-cFosFileRange = {'x' : (500,1000), 'y' : (1200,1700), 'z' : (500,1000)};
+cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
+#cFosFileRange = {'x' : (1000,1500), 'y' : (700,1200), 'z' : (500,1080)};
 
 
 #Resolution of the Data (in um / pixel)
@@ -56,27 +55,27 @@ VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 
 SpotDetectionParameter = {
     # background correctoin: None or (x,y) which is size of disk for gray scale opening
-    "backgroundSize" : (7,7),
+    "backgroundSize" : (15,15),
     
     # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
     #"dogSize" : (7, 7, 11),
-    'dogSize' : (4,4,6),
+    'dogSize' : None,
     
     # h of h-max transform
-    "hMax" : 20,
+    "hMax" : None,
     
     # intensity detection   
-    "intensityMethod"  : 'Max', #'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
+    "intensityMethod"  : None, #'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
     "intensitySize"    : (3,3,3),  # size of box in (x,y,z) to include in intensity determination
     
     # threshold for min intensityNone at center to be counted as cell, for saving ('None' will save everything )
     "threshold" : None,
       
     # write cell mask to disk (to check cell detection accuracy), if not None
-    "cellMaskFile"   : os.path.join(BaseDirectory, 'cell_mask_new/cell_mask_Z\d{4}.ome.tif'),
-    "backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
+    #"cellMaskFile"   : os.path.join(BaseDirectory, 'cell_mask_new/cell_mask_Z\d{4}.ome.tif'),
+    #"backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
     #"hMaxFile"       : os.path.join(BaseDirectory, 'hmax/hmax_Z\d{4}.ome.tif'),
-    "dogFile" : os.path.join(BaseDirectory, 'dog/dog_Z\d{4}.ome.tif')
+    #"dogFile" : os.path.join(BaseDirectory, 'dog/dog_Z\d{4}.ome.tif')
     #"cellMaskFile" : None
     
     #some debug / quality check output
@@ -85,7 +84,6 @@ SpotDetectionParameter = {
     };
 
 
-     
 
 #################### Heat map generation
 
@@ -117,7 +115,7 @@ AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
     #max number of parallel processes
-    "processes" : 5,
+    "processes" : 12,
    
     #chunk sizes
     "chunkSizeMax" : 100,

@@ -79,7 +79,7 @@ def dogFilter(img, dogSize = (7,7,11), dogFile = None, subStack = None, verbose 
 # Spot detection
 ##############################################################################
 
-def detectCells(img, hMax = None, cellShapeThreshold = None, verbose = False, out = sys.stdout, **parameter):
+def detectCells(img, hMax = None, cellShapeThreshold = None, dogSize = None, verbose = False, out = sys.stdout, **parameter):
     """Detect Cells in 3d grayscale image using DoG filtering and maxima detection"""
     # effectively removeBackground ->  dogFilter -> hHmax -> trheshold
     # processing steps are done in place to save memory  
@@ -108,7 +108,7 @@ def detectCells(img, hMax = None, cellShapeThreshold = None, verbose = False, ou
     #out.write(timer.elapsedTime(head = 'Mask'));    
     
     #DoG filter
-    img3 = dogFilter(img2, verbose = verbose, out = out, **parameter);    
+    img3 = dogFilter(img2, dogSize = dogSize, verbose = verbose, out = out, **parameter);    
     
     # normalize    
     #    imax = img.max();
@@ -125,22 +125,26 @@ def detectCells(img, hMax = None, cellShapeThreshold = None, verbose = False, ou
     else:
         centers = findPixelCoordinates(imgmax, verbose = verbose, out = out, **parameter);
     
-    
     #cell size detection
     if not cellShapeThreshold is None:
+        
+        # cell shape via watershed
         imgshape = detectCellShape(img2, centers, cellShapeThreshold = cellShapeThreshold, verbose = verbose, out = out, **parameter);
         
         #size of cells        
-        csize = findCellSize(imgshape, out = out, **parameter);
+        csize = findCellSize(imgshape, maxLabel = centers.shape[0], out = out, **parameter);
         
         #intensity of cells
-        cintensity = findCellIntensity(img, imgshape, verbose = verbose, out = out, **parameter);
+        cintensity = findCellIntensity(img, imgshape,  maxLabel = centers.shape[0], verbose = verbose, out = out, **parameter);
 
-        #intensity of cells in filtered image
-        cintensity2 = findCellIntensity(img2, imgshape, verbose = verbose, out = out, **parameter);
+        #intensity of cells in background image
+        cintensity2 = findCellIntensity(img2, imgshape,  maxLabel = centers.shape[0], verbose = verbose, out = out, **parameter);
     
-        #intensity of cells in filtered image
-        cintensity3 = findCellIntensity(img3, imgshape, verbose = verbose, out = out, **parameter);
+        #intensity of cells in dog filtered image
+        if dogSize is None:
+            cintensity3 = cintensity2;
+        else:
+            cintensity3 = findCellIntensity(img3, imgshape,  maxLabel = centers.shape[0], verbose = verbose, out = out, **parameter);
         
         return ( centers, numpy.vstack((cintensity, cintensity3, cintensity2, csize)).transpose());        
         
@@ -149,11 +153,14 @@ def detectCells(img, hMax = None, cellShapeThreshold = None, verbose = False, ou
         #intensity of cells
         cintensity = findIntensity(img, centers, verbose = verbose, out = out, **parameter);
 
-        #intensity of cells in filtered image
+        #intensity of cells in background image
         cintensity2 = findIntensity(img2, centers, verbose = verbose, out = out, **parameter);
     
-        #intensity of cells in filtered image
-        cintensity3 = findIntensity(img3, centers, verbose = verbose, out = out, **parameter);
+        #intensity of cells in dog filtered image
+        if dogSize is None:
+            cintensity3 = cintensity2;
+        else:
+            cintensity3 = findIntensity(img3, centers, verbose = verbose, out = out, **parameter);
 
     
         return ( centers, numpy.vstack((cintensity, cintensity3, cintensity2)).transpose());

@@ -16,20 +16,17 @@ self = sys.modules[__name__];
 
 import numpy
 
-from scipy.ndimage.measurements import watershed_ift
-#from skimage.morphology import watershed
-from iDISCO.Analysis.Voxelization import voxelizePixel
+#from scipy.ndimage.measurements import watershed_ift
+from skimage.morphology import watershed
 
 #from skimage.measure import regionprops
 import scipy.ndimage.measurements
 
-
+from iDISCO.Analysis.Voxelization import voxelizePixel
 
 from iDISCO.Utils.Timer import Timer
 from iDISCO.Utils.ParameterTools import writeParameter;
 from iDISCO.Visualization.Plot import plotOverlayLabel
-
-
 
 import iDISCO.IO.IO as io
 
@@ -39,7 +36,7 @@ import iDISCO.IO.IO as io
 ##############################################################################
 
 
-def detectCellShape(img, peaks, cellShapeThreshold = 0, cellShapeFile = None, subStack = None, verbose = False, out = sys.stdout, **parameter):
+def detectCellShape(img, peaks, cellShapeThreshold = None, cellShapeFile = None, subStack = None, verbose = False, out = sys.stdout, **parameter):
     """Find cell shapes as labeled image"""  
     timer = Timer();cellShapeThreshold
     writeParameter(out = out, head = 'Cell Shape:', cellShapeThreshold = cellShapeThreshold);
@@ -54,9 +51,9 @@ def detectCellShape(img, peaks, cellShapeThreshold = 0, cellShapeFile = None, su
     
     imgpeaks = voxelizePixel(peaks, dataSize = img.shape, weights = numpy.arange(1, peaks.shape[0]+1));
     
-    #imgws = watershed(img, imgpeaks, mask = imgmask);
-    imgws = watershed_ift(img.astype('uint16'), imgpeaks);
-    imgws[numpy.logical_not(imgmask)] = 0;
+    imgws = watershed(-img, imgpeaks, mask = imgmask);
+    #imgws = watershed_ift(-img.astype('uint16'), imgpeaks);
+    #imgws[numpy.logical_not(imgmask)] = 0;
     
     if not cellShapeFile is None:
         if not subStack is None:
@@ -80,30 +77,36 @@ def detectCellShape(img, peaks, cellShapeThreshold = 0, cellShapeFile = None, su
     return imgws
 
 
-def findCellSize(imglabel, out = sys.stdout, **parameter):
+def findCellSize(imglabel, maxLabel = None, out = sys.stdout, **parameter):
     """Find cell size given cell shapes as labled image"""  
     timer = Timer();
     #writeParameter(out = out, head = 'Cell Size:');
-        
-    size = scipy.ndimage.measurements.sum(numpy.ones(imglabel.shape, dtype = bool), labels = imglabel, index = numpy.arange(1,imglabel.max() + 1));
+     
+    if maxLabel is None:
+        maxLabel = imglabel.max();
+     
+    size = scipy.ndimage.measurements.sum(numpy.ones(imglabel.shape, dtype = bool), labels = imglabel, index = numpy.arange(1, maxLabel + 1));
         
     out.write(timer.elapsedTime(head = 'Cell Size:') + '\n');
     return size
 
 
-def findCellIntensity(img, imglabel, cellIntensityMethod = 'Sum', out = sys.stdout, **parameter):
+def findCellIntensity(img, imglabel, maxLabel = None, cellIntensityMethod = 'Max', out = sys.stdout, **parameter):
     """Find integrated cell intensity given cell shapes as labled image"""  
     timer = Timer();
     writeParameter(out = out, head = 'Cell Intensity:', cellIntensityMethod = cellIntensityMethod);
     
+    if maxLabel is None:
+        maxLabel = imglabel.max();    
+    
     if cellIntensityMethod == 'Sum':
-        i = scipy.ndimage.measurements.sum(img, labels = imglabel, index = numpy.arange(1,imglabel.max() + 1));
+        i = scipy.ndimage.measurements.sum(img, labels = imglabel, index = numpy.arange(1, maxLabel + 1));
     elif cellIntensityMethod == 'Mean':
-        i = scipy.ndimage.measurements.mean(img, labels = imglabel, index = numpy.arange(1,imglabel.max() + 1));
+        i = scipy.ndimage.measurements.mean(img, labels = imglabel, index = numpy.arange(1, maxLabel + 1));
     elif cellIntensityMethod == 'Max':
-        i = scipy.ndimage.measurements.maximum(img, labels = imglabel, index = numpy.arange(1,imglabel.max() + 1));
+        i = scipy.ndimage.measurements.maximum(img, labels = imglabel, index = numpy.arange(1, maxLabel + 1));
     elif cellIntensityMethod == 'Min':
-        i = scipy.ndimage.measurements.minimum(img, labels = imglabel, index = numpy.arange(1,imglabel.max() + 1));
+        i = scipy.ndimage.measurements.minimum(img, labels = imglabel, index = numpy.arange(1, maxLabel + 1));
     else:
         raise RuntimeError('cellIntensity: unkown method %s!' % cellIntensityMethod);
         

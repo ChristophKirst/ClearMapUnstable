@@ -24,7 +24,7 @@ execfile('1266.py')
 detectCells(**ImageProcessingParameter);
 
 points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
-points, intensities = thresholdPoints(points, intensities, threshold = (40, 55000), row = (1,0));
+points, intensities = thresholdPoints(points, intensities, threshold = (20, 1000), row = (3,3));
 io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
 points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
 points = resamplePoints(**CorrectionResamplingPointsParameter);

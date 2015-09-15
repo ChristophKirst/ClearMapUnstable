@@ -68,15 +68,14 @@ def joinPoints(results, subStacks = None, shiftPoints = True, **args):
     resultsi = [];
     for i in range(nchunks):
         cts = pointlist[i];
-        if not intensities is None:
-            cti = intensities[i];
-        
+        cti = intensities[i];
+
         if cts.size > 0:
             cts[:,2] += subStacks[i]["z"][0];
             iid = numpy.logical_and(subStacks[i]["zCenters"][0] <= cts[:,2] , cts[:,2] < subStacks[i]["zCenters"][1]);
             cts = cts[iid,:];
             results.append(cts);
-            if not intensities is None:
+            if not cti is None:
                 cti = cti[iid];
                 resultsi.append(cti);
             
