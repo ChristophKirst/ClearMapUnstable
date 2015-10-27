@@ -52,11 +52,17 @@ def testCramerVonMises2Sample(x, y):
     j = rankdata(y)
     #Anderson et al. Eqn 10
     U = N*np.sum((ri - i)**2) + M*np.sum((sj - j)**2)
+    #print U
+    
     #Anderson et al. Eqn 9
     T = U/(N * M * (N + M)) - (4 * M * N - 1)/(6 * (M + N))
-    Texpected = 1/6 + 1/(6 * (M + N))
-    Tvariance = 1/45 * (M + N + 1)/(M + N)**2 * (4 * M * N * (M+N) - 3*(M**2 + N**2) - 2*M*N)/(4 * M * N)
+    #print T
+    
+    Texpected = 1./6 + 1./(6 * (M + N))
+    Tvariance = 1./45 * (M + N + 1)/(M + N)**2 * (4 * M * N * (M+N) - 3*(M**2 + N**2) - 2*M*N)/(4 * M * N)
+    
     zscore = np.abs(T - Texpected) / np.sqrt(Tvariance)
+    #print zscore
     
     return T, 2*distributions.norm.sf(zscore)
 

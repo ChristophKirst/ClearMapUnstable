@@ -240,7 +240,7 @@ def tTestPointsInRegions(pointCounts1, pointCounts2, labeledImage = lbl.DefaultL
     
 
 
-def testCompletedCumulatives(data, method = 'AndersonDarling'):
+def testCompletedCumulatives(data, method = 'AndersonDarling', offset = None):
     """Test if data sets have the same number / intensity distribution by adding max intensity counts to the smaller sized data sets and performing a distribution comparison test"""
     
     #idea: fill up data points to the same numbers at the high intensity values and use KS test
@@ -253,11 +253,16 @@ def testCompletedCumulatives(data, method = 'AndersonDarling'):
     mm = m.max();
     k = n.size;
     #print nm, mm, k
+    
+    if offset is None:
+        #assume data starts at 0 !
+        offset = mm / nm; #ideall for all statistics this should be mm + eps to have as little influence as possible.
+    
 
     datac = [x.copy() for x in data];
     for i in range(m.size):
         if n[i] < nm:
-            datac[i] = numpy.concatenate((datac[i], numpy.ones(nm-n[i], dtype = datac[i].dtype) * (mm+1)));
+            datac[i] = numpy.concatenate((datac[i], numpy.ones(nm-n[i], dtype = datac[i].dtype) * (mm + offset)));
          
     #test by plotting
     import matplotlib.pyplot as plt;
