@@ -5,6 +5,8 @@ in voxelized and labeled data
 
 Created on Mon Aug 10 16:04:25 2015
 
+TODO; cleanup / make generic
+
 @author: ckirst
 """
 
@@ -15,9 +17,8 @@ import numpy
 from scipy import stats
 
 import iDISCO.IO.IO as io
-
 import iDISCO.Analysis.Label as lbl
-
+import iDISCO.Analysis.StatisticsUtils as stats2
 
 def readDataGroup(filenames, combine = True, **args):
     """Turn a list of filenames for data into a numpy stack"""
@@ -173,6 +174,7 @@ def weightsFromPrecentiles(intensities, percentiles = [25,50,75,100]):
     return weights;
         
 
+# needs clean up
 def countPointsGroupInRegions(pointGroup, labeledImage = lbl.DefaultLabeledImageFile, intensityGroup = None, intensityRow = 0, returnIds = True, returnCounts = False):
      """Generates a table of counts for the various point datasets in pointGroup"""
  
@@ -208,6 +210,8 @@ def countPointsGroupInRegions(pointGroup, labeledImage = lbl.DefaultLabeledImage
              return counts, countsi
          
 
+
+# needs clean up
 def tTestPointsInRegions(pointCounts1, pointCounts2, labeledImage = lbl.DefaultLabeledImageFile, signed = False, removeNaN = True, pcutoff = None, equal_var = False):
     """t-Test on differences in counts of points in labeled regions"""
     
@@ -235,6 +239,89 @@ def tTestPointsInRegions(pointCounts1, pointCounts2, labeledImage = lbl.DefaultL
 
     
 
+
+def testCompletedCumulatives(data, method = 'AndersonDarling'):
+    """Test if data sets have the same number / intensity distribution by adding max intensity counts to the smaller sized data sets and performing a distribution comparison test"""
+    
+    #idea: fill up data points to the same numbers at the high intensity values and use KS test
+    #cf. work in progress on thoouroghly testing the differences in histograms
+    
+    #fill up the low count data
+    n = numpy.array([x.size for x in data]);
+    nm = n.max();
+    m = numpy.array([x.max() for x in data]);
+    mm = m.max();
+    k = n.size;
+    #print nm, mm, k
+
+    datac = [x.copy() for x in data];
+    for i in range(m.size):
+        if n[i] < nm:
+            datac[i] = numpy.concatenate((datac[i], numpy.ones(nm-n[i], dtype = datac[i].dtype) * (mm+1)));
+         
+    #test by plotting
+    import matplotlib.pyplot as plt;
+    for i in range(m.size):
+        datac[i].sort();
+        plt.step(datac[i], numpy.arange(datac[i].size));
+    
+    #perfomr the tests
+    if method == 'KolmogorovSmirnov' or method == 'KS':
+        if k == 2:
+            (s, p) = stats.ks_2samp(datac[0], datac[1]);
+        else:
+            raise RuntimeError('KolmogorovSmirnov only for 2 samples not %d' % k);
+        
+    elif method == 'CramervonMises' or method == 'CM':
+        if k == 2:
+            (s,p) = stats2.testCramerVonMises2Sample(datac[0], datac[1]);
+        else:
+            raise RuntimeError('CramervonMises only for 2 samples not %d' % k);
+      
+    elif method == 'AndersonDarling' or method == 'AD':
+        (s,a,p) = stats.anderson_ksamp(datac);
+
+    return (p,s);
+
+
+
+def testCompletedCumulativesInSpheres(points1, points2, dataSize = lbl.DefaultLabeledImageFile, radius = 100, method = 'AndresonDarling'):
+    """Performs completed cumulative distribution tests for each pixel using points in a ball centered at that cooridnates, returns 4 arrays p value, statistic value, number in each group"""
+    
+    #TODO: sinple implementation -> slow -> speed up
+    dataSize = io.dataSize(dataSize);
+    if len(dataSize) != 3:
+        raise RuntimeError('dataSize expected to be 3d');
+    
+    # distances^2 to origin
+    x1= points1[:,0]; y1 = points1[:,1]; z1 = points1[:,2]; i1 = points1[:,3];
+    d1 = x1 * x1 + y1 * y1 + z1 * z1;
+    
+    x2 = points2[:,0]; y2 = points2[:,1]; z2 = points2[:,2]; i2 = points2[:,3];
+    d2 = x2 * x2 + y2 * y2 + z2 * z2;
+        
+    r2 = radius * radius; # TODO: inhomogenous in 3d !
+    
+    p = numpy.zeros(dataSize);
+    s = numpy.zeros(dataSize);
+    n1 = numpy.zeros(dataSize, dtype = 'int');
+    n2 = numpy.zeros(dataSize, dtype = 'int');
+    
+    for x in range(dataSize[0]):
+        for y in range(dataSize[1]):
+            for z in range(dataSize[2]):
+                d11 = d1 - 2 (x * x1 + y * y1 + z * z1) + (x*x + y*y + z*z);
+                d22 = d2 - 2 (x * x2 + y * y2 + z * z2) + (x*x + y*y + z*z);
+                
+                ii1 = d11 < r2;
+                ii2 = d22 < r2;
+                
+                (p[x,y,z], s[x,y,z]) = self.testCompletedCumulatives((i1[ii1], i2[ii2]), method = method);
+                n1[x,y,z] = ii1.sum();
+                n2[x,y,z] = ii2.sum();
+    
+    return (p,s,n1,n2);
+        
 
 
 def test():
