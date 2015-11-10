@@ -143,9 +143,11 @@ def dataSize(source, x = all, y = all, z = all, **args):
         mod = self.dataFileNameToModule(source);
         return mod.dataSize(source, x = x, y = y, z = z, **args);
     elif isinstance(source, numpy.ndarray):
-        return source.shape;
+        return dataSizeFromDataRange(source.shape, x = x, y = y, z = z);
+    elif isinstance(source, tuple):
+        return dataSizeFromDataRange(source, x = x, y = y, z = z);
     else:
-        raise RuntimeError("dataSize: argument not a string or array!");
+        raise RuntimeError("dataSize: argument not a string, tuple or array!");
             
     
 def dataZSize(source, z = all, **args):
@@ -158,9 +160,14 @@ def dataZSize(source, z = all, **args):
         if len(source.shape) > 2: 
             return self.toDataSize(source.shape[2], r = z);
         else:
-            return None;   
+            return None;
+    elif isinstance(source, tuple):
+        if len(source) > 2: 
+            return self.toDataSize(source[2], r = z);
+        else:
+            return None;
     else:
-        raise RuntimeError("dataZSize: argument not a string or array!");        
+        raise RuntimeError("dataZSize: argument not a string, tuple or array!");        
 
 
 def toDataRange(size, r = all):
