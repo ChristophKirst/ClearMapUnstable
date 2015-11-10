@@ -240,7 +240,7 @@ def tTestPointsInRegions(pointCounts1, pointCounts2, labeledImage = lbl.DefaultL
     
 
 
-def testCompletedCumulatives(data, method = 'AndersonDarling', offset = None):
+def testCompletedCumulatives(data, method = 'AndersonDarling', offset = None, plot = False):
     """Test if data sets have the same number / intensity distribution by adding max intensity counts to the smaller sized data sets and performing a distribution comparison test"""
     
     #idea: fill up data points to the same numbers at the high intensity values and use KS test
@@ -262,13 +262,14 @@ def testCompletedCumulatives(data, method = 'AndersonDarling', offset = None):
     datac = [x.copy() for x in data];
     for i in range(m.size):
         if n[i] < nm:
-            datac[i] = numpy.concatenate((datac[i], numpy.ones(nm-n[i], dtype = datac[i].dtype) * (mm + offset)));
+            datac[i] = numpy.concatenate((datac[i], numpy.ones(nm-n[i], dtype = datac[i].dtype) * (mm + offset))); # + 10E-5 * numpy.random.rand(nm-n[i])));
          
     #test by plotting
-    import matplotlib.pyplot as plt;
-    for i in range(m.size):
-        datac[i].sort();
-        plt.step(datac[i], numpy.arange(datac[i].size));
+    if plot is True:
+        import matplotlib.pyplot as plt;
+        for i in range(m.size):
+            datac[i].sort();
+            plt.step(datac[i], numpy.arange(datac[i].size));
     
     #perfomr the tests
     if method == 'KolmogorovSmirnov' or method == 'KS':
@@ -290,7 +291,100 @@ def testCompletedCumulatives(data, method = 'AndersonDarling', offset = None):
 
 
 
-def testCompletedCumulativesInSpheres(points1, points2, dataSize = lbl.DefaultLabeledImageFile, radius = 100, method = 'AndresonDarling'):
+
+
+
+
+
+
+
+
+
+def testCompletedInvertedCumulatives(data, method = 'AndersonDarling', offset = None, plot = False):
+    """Test if data sets have the same number / intensity distribution by adding zero intensity counts to the smaller sized data sets and performing a distribution comparison test on the reversed cumulative distribution"""
+    
+    #idea: fill up data points to the same numbers at the high intensity values and use KS test
+    #cf. work in progress on thoouroghly testing the differences in histograms
+    
+    #fill up the low count data
+    n = numpy.array([x.size for x in data]);
+    nm = n.max();
+    m = numpy.array([x.max() for x in data]);
+    mm = m.max();
+    k = n.size;
+    #print nm, mm, k
+    
+    if offset is None:
+        #assume data starts at 0 !
+        offset = mm / nm; #ideall for all statistics this should be mm + eps to have as little influence as possible.
+    
+
+    datac = [x.copy() for x in data];
+    for i in range(m.size):
+        if n[i] < nm:
+            datac[i] = numpy.concatenate((-datac[i], numpy.ones(nm-n[i], dtype = datac[i].dtype) * (offset))); # + 10E-5 * numpy.random.rand(nm-n[i])));
+        else:
+            datac[i] = -datac[i];
+         
+    #test by plotting
+    if plot is True:
+        import matplotlib.pyplot as plt;
+        for i in range(m.size):
+            datac[i].sort();
+            plt.step(datac[i], numpy.arange(datac[i].size));
+    
+    #perfomr the tests
+    if method == 'KolmogorovSmirnov' or method == 'KS':
+        if k == 2:
+            (s, p) = stats.ks_2samp(datac[0], datac[1]);
+        else:
+            raise RuntimeError('KolmogorovSmirnov only for 2 samples not %d' % k);
+        
+    elif method == 'CramervonMises' or method == 'CM':
+        if k == 2:
+            (s,p) = stats2.testCramerVonMises2Sample(datac[0], datac[1]);
+        else:
+            raise RuntimeError('CramervonMises only for 2 samples not %d' % k);
+      
+    elif method == 'AndersonDarling' or method == 'AD':
+        (s,a,p) = stats.anderson_ksamp(datac);
+
+    return (p,s);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def testCompletedCumulativesInSpheres(points1, intensities1, points2, intensities2, dataSize = lbl.DefaultLabeledImageFile, radius = 100, method = 'AndresonDarling'):
     """Performs completed cumulative distribution tests for each pixel using points in a ball centered at that cooridnates, returns 4 arrays p value, statistic value, number in each group"""
     
     #TODO: sinple implementation -> slow -> speed up
@@ -299,10 +393,10 @@ def testCompletedCumulativesInSpheres(points1, points2, dataSize = lbl.DefaultLa
         raise RuntimeError('dataSize expected to be 3d');
     
     # distances^2 to origin
-    x1= points1[:,0]; y1 = points1[:,1]; z1 = points1[:,2]; i1 = points1[:,3];
+    x1= points1[:,0]; y1 = points1[:,1]; z1 = points1[:,2]; i1 = intensities1;
     d1 = x1 * x1 + y1 * y1 + z1 * z1;
     
-    x2 = points2[:,0]; y2 = points2[:,1]; z2 = points2[:,2]; i2 = points2[:,3];
+    x2 = points2[:,0]; y2 = points2[:,1]; z2 = points2[:,2]; i2 = intensities2;
     d2 = x2 * x2 + y2 * y2 + z2 * z2;
         
     r2 = radius * radius; # TODO: inhomogenous in 3d !
@@ -313,17 +407,28 @@ def testCompletedCumulativesInSpheres(points1, points2, dataSize = lbl.DefaultLa
     n2 = numpy.zeros(dataSize, dtype = 'int');
     
     for x in range(dataSize[0]):
+    #print x
         for y in range(dataSize[1]):
+            #print y
             for z in range(dataSize[2]):
-                d11 = d1 - 2 (x * x1 + y * y1 + z * z1) + (x*x + y*y + z*z);
-                d22 = d2 - 2 (x * x2 + y * y2 + z * z2) + (x*x + y*y + z*z);
+                #print z
+                d11 = d1 - 2 * (x * x1 + y * y1 + z * z1) + (x*x + y*y + z*z);
+                d22 = d2 - 2 * (x * x2 + y * y2 + z * z2) + (x*x + y*y + z*z);
                 
                 ii1 = d11 < r2;
                 ii2 = d22 < r2;
-                
-                (p[x,y,z], s[x,y,z]) = self.testCompletedCumulatives((i1[ii1], i2[ii2]), method = method);
+
                 n1[x,y,z] = ii1.sum();
                 n2[x,y,z] = ii2.sum();
+                
+                if n1[x,y,z] > 0 and n2[x,y,z] > 0:
+                    (pp, ss) = self.testCompletedCumulatives((i1[ii1], i2[ii2]), method = method);
+                else:
+                    pp = 0; ss = 0;
+                
+                p[x,y,z] = pp; 
+                s[x,y,z] = ss;
+                
     
     return (p,s,n1,n2);
         

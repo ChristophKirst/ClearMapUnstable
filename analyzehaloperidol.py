@@ -19,10 +19,10 @@ group1 = ['/home/mtllab/Documents/Haloperidol/1266/cells_heatmap.tif',
           '/home/mtllab/Documents/Haloperidol/1267/cells_heatmap.tif',
           '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap.tif',
           '/home/mtllab/Documents/Haloperidol/1269/cells_heatmap.tif']
-#          '/home/mtllab/Documents/Haloperidol/1270/cells_heatmap.tif'];
+#         '/home/mtllab/Documents/Haloperidol/1270/cells_heatmap.tif'];
           
                   
-group2 = ['/home/mtllab/Documents/Haloperidol/1271/cells_heatmap.tif',
+group2 = [#'/home/mtllab/Documents/Haloperidol/1271/cells_heatmap.tif',
           '/home/mtllab/Documents/Haloperidol/1272/cells_heatmap.tif',
           '/home/mtllab/Documents/Haloperidol/1273/cells_heatmap.tif',
           '/home/mtllab/Documents/Haloperidol/1274/cells_heatmap.tif',
@@ -71,10 +71,10 @@ group1 = ['/home/mtllab/Documents/Haloperidol/1266/cells_heatmap_weighted.tif',
           '/home/mtllab/Documents/Haloperidol/1267/cells_heatmap_weighted.tif',
           '/home/mtllab/Documents/Haloperidol/1268/cells_heatmap_weighted.tif',
           '/home/mtllab/Documents/Haloperidol/1269/cells_heatmap_weighted.tif']
-       #   '/home/mtllab/Documents/Haloperidol/1270/cells_heatmap_weighted.tif'];
+    #      '/home/mtllab/Documents/Haloperidol/1270/cells_heatmap_weighted.tif'];
           
                   
-group2 = ['/home/mtllab/Documents/Haloperidol/1271/cells_heatmap_weighted.tif',
+group2 = [#'/home/mtllab/Documents/Haloperidol/1271/cells_heatmap_weighted.tif',
           '/home/mtllab/Documents/Haloperidol/1272/cells_heatmap_weighted.tif',
           '/home/mtllab/Documents/Haloperidol/1273/cells_heatmap_weighted.tif',
           '/home/mtllab/Documents/Haloperidol/1274/cells_heatmap_weighted.tif',
@@ -127,11 +127,11 @@ group1 = ['/home/mtllab/Documents/Haloperidol/1266/cells_transformed_to_Atlas.np
           '/home/mtllab/Documents/Haloperidol/1267/cells_transformed_to_Atlas.npy',
           '/home/mtllab/Documents/Haloperidol/1268/cells_transformed_to_Atlas.npy',
           '/home/mtllab/Documents/Haloperidol/1269/cells_transformed_to_Atlas.npy']
-          #'/home/mtllab/Documents/Haloperidol/1270/cells_transformed_to_Atlas.npy'];
+    #      '/home/mtllab/Documents/Haloperidol/1270/cells_transformed_to_Atlas.npy'];
 group1i = [fn.replace('cells_transformed_to_Atlas', 'intensities') for fn in group1];
        
                   
-group2 = ['/home/mtllab/Documents/Haloperidol/1271/cells_transformed_to_Atlas.npy',
+group2 = [#'/home/mtllab/Documents/Haloperidol/1271/cells_transformed_to_Atlas.npy',
           '/home/mtllab/Documents/Haloperidol/1272/cells_transformed_to_Atlas.npy',
           '/home/mtllab/Documents/Haloperidol/1273/cells_transformed_to_Atlas.npy',
           '/home/mtllab/Documents/Haloperidol/1274/cells_transformed_to_Atlas.npy',

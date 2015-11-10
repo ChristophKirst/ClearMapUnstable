@@ -26,15 +26,13 @@ import iDISCO.Analysis.Label as lbl
 
 #BaseDirectory = '/home/mtllab/Documents/countingaccuracy/cortex';
 
-BaseDirectory = '/home/mtllab/Documents/countingaccuracy/cortex';
+BaseDirectory = '/home/mtllab/Documents/countingaccuracy/';
   
   
 #cFosFile = '/home/mtllab/Documents/countingaccuracy/cortex/data.tif';
-cFosFile =  '/home/mtllab/Documents/countingaccuracy/cortex/data.tif'
+cFosFile =  '/home/mtllab/Documents/countingaccuracy/countingaccuracy.tif'
 
-cFosFileRange = {'x' : all, 'y' : all, 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
-#cFosFileRange = {'x' : (815,1000), 'y' : (1078,1271), 'z' : (667,742)};
-
+cFosFileRange = {'x' : all, 'y' : all, 'z' : all};
 
 #Resolution of the Data (in um / pixel)
 OriginalResolution = (4.0625, 4.0625, 3);
@@ -44,7 +42,7 @@ OriginalResolution = (4.0625, 4.0625, 3);
 
 SpotDetectionParameter = {
     # background correctoin: None or (x,y) which is size of disk for gray scale opening
-    "backgroundSize" : (7,7),
+    "backgroundSize" : (15,15),
     
     # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
     "dogSize" : None,
@@ -58,7 +56,10 @@ SpotDetectionParameter = {
     
     # threshold for min intensity at center to be counted as cell, for saving ('None' will save everything )
     "threshold" : None,
-      
+     
+    # cell size detection
+    "cellShapeThreshold" : 700,
+     
     # write cell mask to disk (to check cell detection accuracy), if not None
     #"cellMaskFile" : os.path.join(BaseDirectory, 'cell_mask/cell_mask_Z\d{4}.ome.tif')
     "cellMaskFile" : None
@@ -98,7 +99,7 @@ StackProcessingParameter = {
 SpotDetectionParameter["source"] = cFosFile;
 SpotDetectionParameter = joinParameter(SpotDetectionParameter, cFosFileRange)
 
-SpotDetectionParameter["sink"] = (os.path.join(BaseDirectory, 'cells_unfiltered-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities_unfiltered-allpoints.npy'));
+SpotDetectionParameter["sink"] = (os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy'));
 
 ImageProcessingParameter = joinParameter(StackProcessingParameter, SpotDetectionParameter)
 
@@ -122,20 +123,20 @@ VoxelizationParameter = {
 ######################################################
 
 detectCells(**ImageProcessingParameter);
-points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells_unfiltered-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities_unfiltered-allpoints.npy')));
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
 
 
 ######################################################
 ######################################################
 ######################################################
 
-label = io.readData('/home/mtllab/Documents/countingaccuracy/cortex/nico.nrrd');
+label = io.readData('/home/mtllab/Documents/countingaccuracy/nico.nrrd');
 label = label.astype('int32');
 humanpoint = label == 1;
 check = [0,0,0];
 
-for t in range(np.max(intensities[:,0]).astype(int)):
-    pointT, intensitiesT = thresholdPoints(points, intensities, threshold = (t, 65000), row = (1,0));
+for t in range(70): #range(np.max(intensities[:,3]).astype(int)):
+    pointT, intensitiesT = thresholdPoints(points, intensities, threshold = (t, 900), row = (3,3));
     counts = lbl.countPointsInRegions(pointT, label);
     match = float(counts[1][1])/len(pointT);    
     check =  np.vstack([check,[t,float(match),len(pointT)]]);
@@ -154,9 +155,9 @@ pp.plot(check[:,0],check[:,1]);
 ######################################################
 ######################################################
 ######################################################
-points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells_unfiltered-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities_unfiltered-allpoints.npy')));
-pointT, intensitiesT = thresholdPoints(points, intensities, threshold = (700, 65000), row = (1,0));
-io.writePoints('/home/mtllab/Documents/countingaccuracy/cortex/cells_unfiltered700.npy', pointT)
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
+pointT, intensitiesT = thresholdPoints(points, intensities, threshold = (1, 65000), row = (3,0));
+io.writePoints('/home/mtllab/Documents/countingaccuracy/cortex/cells_filtered1.npy', pointT)
 
 ######################################################
 ######################################################
@@ -164,13 +165,13 @@ io.writePoints('/home/mtllab/Documents/countingaccuracy/cortex/cells_unfiltered7
 
 
 dataSource =  '/home/mtllab/Documents/countingaccuracy/cortex/data.tif'
-pointSource= '/home/mtllab/Documents/countingaccuracy/cortex/cells_unfiltered700.npy';
+pointSource= '/home/mtllab/Documents/countingaccuracy/cortex/cells_filtered1.npy';
 x = all;
 y = all;
 z = all;
 
 vox = voxelize(pointSource, dataSource, **VoxelizationParameter);
-io.writeData('/home/mtllab/Documents/countingaccuracy/cortex/cells_unfiltered700.tif', vox.astype('int32'));
+io.writeData('/home/mtllab/Documents/countingaccuracy/cortex/cells_filtered1.tif', vox.astype('int32'));
 
 ######################################################
 ######################################################

@@ -27,8 +27,8 @@ from iDISCO.Analysis.Voxelization import voxelize
 from scipy.ndimage.morphology import binary_dilation
 
 
-annotationFiles = ['/home/mtllab/Documents/countingaccuracy/cortex/nico.nrrd',
-              '/home/mtllab/Documents/countingaccuracy/cortex/eliza.nrrd'];
+annotationFiles = ['/home/mtllab/Documents/countingaccuracy/nico.nrrd',
+              '/home/mtllab/Documents/countingaccuracy/eliza.tif'];
 
 #annotationData = [io.readData(l, y = (50, 151)) for l in annotationFiles];
 annotationData = [io.readData(l) for l in annotationFiles];
@@ -184,10 +184,10 @@ print "#pairs:%d,  multiple overlap1:%d,  no overlap1 %d, multiple overlap2: %d,
 
 BaseDirectory = '/home/mtllab/Documents/countingaccuracy/';
    
-points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells_dog-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities_dog-allpoints.npy')));
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
 
-annotationFiles = ['/home/mtllab/Documents/countingaccuracy/nico.nrrd']
-            #  '/home/mtllab/Documents/countingaccuracy/nico.nrrd'];
+annotationFiles = ['/home/mtllab/Documents/countingaccuracy/nico.nrrd',
+              '/home/mtllab/Documents/countingaccuracy/nico.nrrd'];
 
 #annotationData = [io.readData(l, y = (50, 151)) for l in annotationFiles];
 annotationData = [io.readData(l) for l in annotationFiles];
@@ -217,11 +217,11 @@ VoxelizationParameter = {
     };
 check = [0,0,0,0,0];
 
-for t in range(0,150):
+for t in range(0,20):
     correspondence = [];
     multipleOverlap1 = [];
     noOverlap1 = [];    
-    pointT, intensitiesT = thresholdPoints(points, intensities, threshold = (t, 65000), row = (1,0));
+    pointT, intensitiesT = thresholdPoints(points, intensities, threshold = (t, 65000), row = (3,0));
     annotationCode = voxelize(pointT, dataSource, **VoxelizationParameter);
     annotationCodeD = binary_dilation(annotationCode, numpy.ones((3,3,3), dtype = bool));
     annotationCodeD = annotationCodeD.astype('int32');
@@ -259,7 +259,7 @@ for t in range(0,150):
     check =  numpy.vstack([check,[t,annotationNLabel[0],annotationLabelCodeN,len(correspondence),noOverlap2.shape[0]]]);
 
 
-io.writePoints('/home/mtllab/Documents/countingaccuracy/nicocheck_dog446.csv', check);
+io.writePoints('/home/mtllab/Documents/countingaccuracy/nicocheck.csv', check);
 
 
 
@@ -267,11 +267,11 @@ io.writePoints('/home/mtllab/Documents/countingaccuracy/nicocheck_dog446.csv', c
 
 
 
-BaseDirectory = '/home/mtllab/Documents/countingaccuracy/';
+BaseDirectory = '/home/mtllab/Documents/countingaccuracy/cortex';
    
-points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells_dog-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities_dog-allpoints.npy')));
+points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
 
-annotationFiles = ['/home/mtllab/Documents/countingaccuracy/nico.nrrd']
+annotationFiles = ['/home/mtllab/Documents/countingaccuracy/cortex/nico.nrrd']
             #  '/home/mtllab/Documents/countingaccuracy/nico.nrrd'];
 
 #annotationData = [io.readData(l, y = (50, 151)) for l in annotationFiles];
@@ -287,7 +287,7 @@ correspondence = [];
 multipleOverlap1 = [];
 noOverlap1 = [];
 
-dataSource =  '/home/mtllab/Documents/countingaccuracy/countingaccuracy.tif'
+dataSource =  '/home/mtllab/Documents/countingaccuracy/cortex/data.tif'
 
 ## Parameter to calculate density voxelization
 VoxelizationParameter = {
@@ -302,11 +302,11 @@ VoxelizationParameter = {
     };
 check = [0,0,0,0,0];
 
-for t in range(0,60):
+for t in range(0,70):
     correspondence = [];
     multipleOverlap1 = [];
     noOverlap1 = [];    
-    pointT, intensitiesT = thresholdPoints(points, intensities, threshold = (t, 65000), row = (1,0));
+    pointT, intensitiesT = thresholdPoints(points, intensities, threshold = (t, 65000), row = (3,0));
     annotationCode = voxelize(pointT, dataSource, **VoxelizationParameter);
     annotationCodeD = binary_dilation(annotationCode, numpy.ones((3,3,3), dtype = bool));
     annotationCodeD = annotationCodeD.astype('int32');

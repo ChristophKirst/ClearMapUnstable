@@ -40,7 +40,9 @@ from iDISCO.Analysis.Label import labelToName
 
 BaseDirectory = '/home/mtllab/Documents/Haloperidol/1271';
    
-cFosFile = '/home/mtllab/Documents/Haloperidol/1271/150818_0_8X-cfos_16-00-17/16-00-17_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+#cFosFile = '/home/mtllab/Documents/Haloperidol/1271/150818_0_8X-cfos_16-00-17/16-00-17_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+
+cFosFile = '/home/mtllab/Data/Nico/150820/Haloperidol/1271/150818_0_8X-cfos_16-00-17/16-00-17_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 AutofluoFile = '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-autofluo_15-48-40/15-48-40_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
 #cFosFileRange = {'x' : (1000,1500), 'y' : (700,1200), 'z' : (500,1080)};
@@ -67,10 +69,14 @@ SpotDetectionParameter = {
     
     # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
     #"dogSize" : (7, 7, 11),
-    'dogSize' : (4,4,6),
+    #'dogSize' : (4,4,6),
+    "dogSize" : None,
     
     # h of h-max transform
-    "hMax" : 20,
+    #"hMax" : 20,
+    
+    # cell size detection
+    "cellShapeThreshold" : 700,
     
     # intensity detection   
     "intensityMethod"  : None, #'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
@@ -84,19 +90,15 @@ SpotDetectionParameter = {
     #"backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
     #"hMaxFile"       : os.path.join(BaseDirectory, 'hmax/hmax_Z\d{4}.ome.tif'),
     #"dogFile" : os.path.join(BaseDirectory, 'dog/dog_Z\d{4}.ome.tif')
-    #"cellMaskFile" : None
+    #"cellMaskFile" :  os.path.join(BaseDirectory, 'cells/cells_Z\d{4}.tif'),
+    #"cellShapeFile" :  os.path.join(BaseDirectory, 'shape/shape_Z\d{4}.tif'),
     
     #some debug / quality check output
     #"verbose" : True,
     #"processMethod" : "sequential"  #  plotting during image processing only in sequential mode !
     };
 
-      
-# Threshold for the points to be considered in the analysis
-#minthreshold = 20; #remove points detected in the background, based on the filtered intensities
-#maxthreshold = 40000; #remove staining artefacts (bright antibody clumps), based on the non-filtered original intensities 
-
-     
+   
 
 #################### Heat map generation
 
@@ -128,7 +130,7 @@ AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
     #max number of parallel processes
-    "processes" : 4,
+    "processes" : 6,
    
     #chunk sizes
     "chunkSizeMax" : 100,
@@ -143,6 +145,7 @@ StackProcessingParameter = {
     };
 
 ResolutionAffineCFosAutoFluo =  (16, 16, 16);
+
 
 
 

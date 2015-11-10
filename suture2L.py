@@ -27,7 +27,7 @@ from iDISCO.Analysis.Label import labelToName
 BaseDirectory = '/home/mtllab/Documents/lightexposure/suture2L';
 
 cFosFile = '/home/mtllab/Documents/lightexposure/suture2L/150817_0-8xs3-cfos20HF_19-12-45/19-12-45_0-8xs3-cfos20HF_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-AutofluoFile = '/home/mtllab/Documents/lightexposure/suture2L/150818_0-8xs3-autofluor_20-23-47/20-23-47_0-8xs3-autofluor_UltraII_C00_xyz-Table Z0000.ome.tif';
+AutofluoFile = '/home/mtllab/Documents/lightexposure/suture2L/150818_0-8xs3-autofluor_20-23-47/20-23-47_0-8xs3-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
 #cFosFileRange = {'x' : (1000,1500), 'y' : (700,1200), 'z' : (500,1080)};
 

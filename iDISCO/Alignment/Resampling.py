@@ -31,7 +31,7 @@ import iDISCO.IO.FileList as fl
 
 
 def fixOrientation(orientation):
-    """Substitue Orientation Strings"""
+    """Substitue Orientation Strings with number sequence"""
     
     if orientation is None:
         return None;
@@ -46,7 +46,7 @@ def fixOrientation(orientation):
 
 
 def inverseOrientation(orientation):
-    """Returns the inverse permuation of the permutation per taking axis inversions into account"""
+    """Returns the inverse permuation of the permutation orientation taking axis inversions into account"""
     if orientation is None:
         return None;
     
@@ -107,9 +107,10 @@ def resampleDataSize(dataSizeSource, dataSizeSink = None, resolutionSource = Non
         
         #orient resolution of source to resolution of sink to get sink data size
         resolutionSourceO = orientResolution(resolutionSource, orientation);
+        dataSizeSourceO = orientDataSize(dataSizeSource, orientation);
         
         #calculate scaling factor
-        dataSizeSink = tuple([int(math.ceil(dataSizeSource[i] *  resolutionSourceO[i]/resolutionSink[i])) for i in range(len(dataSizeSource))]);        
+        dataSizeSink = tuple([int(math.ceil(dataSizeSourceO[i] *  resolutionSourceO[i]/resolutionSink[i])) for i in range(len(dataSizeSource))]);        
         
     #print dataSizeSink, "ds sink"
     
@@ -121,7 +122,7 @@ def resampleDataSize(dataSizeSource, dataSizeSink = None, resolutionSource = Non
         resolutionSourceO = orientResolution(resolutionSource, orientation);
         
         #calculate source data size
-        dataSizeSource = tuple([int(math.ceil(dataSizeSink[i] *  resolutionSink[i]/resolutionSource[i])) for i in range(len(dataSizeSink))]);  
+        dataSizeSource = tuple([int(math.ceil(dataSizeSink[i] *  resolutionSink[i]/resolutionSourceO[i])) for i in range(len(dataSizeSink))]);  
         dataSizeSource = orientDataSizeInverse(dataSizeSource);
         
     #print dataSizeSource, "ds source"
@@ -141,7 +142,7 @@ def resampleDataSize(dataSizeSource, dataSizeSink = None, resolutionSource = Non
     
     
     resolutionSourceO = orientResolution(resolutionSource, orientation);
-    resolutionSink = tuple(float(dataSizeSourceO[i]) / float(dataSizeSink[i]) * resolutionSource[i] for i in range(len(dataSizeSource)));
+    resolutionSink = tuple(float(dataSizeSourceO[i]) / float(dataSizeSink[i]) * resolutionSourceO[i] for i in range(len(dataSizeSource)));
     
     #print dataSizeSource, dataSizeSink, resolutionSource, resolutionSink 
     

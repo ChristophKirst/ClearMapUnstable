@@ -18,8 +18,8 @@ baseDirectory = '/home/mtllab/Documents/whiskers/exploration/'
 ###########################################################################
 ################ Heat maps ################################################
 
-group1 = ['/home/mtllab/Documents/whiskers/exploration/1/cells_heatmap.tif',
-          '/home/mtllab/Documents/whiskers/exploration/2/cells_heatmap.tif',
+group1 = [#'/home/mtllab/Documents/whiskers/exploration/1/cells_heatmap.tif',
+          #'/home/mtllab/Documents/whiskers/exploration/2/cells_heatmap.tif',
           '/home/mtllab/Documents/whiskers/exploration/3/cells_heatmap.tif',
           '/home/mtllab/Documents/whiskers/exploration/4/cells_heatmap.tif',
           '/home/mtllab/Documents/whiskers/exploration/5/cells_heatmap.tif'];
@@ -41,7 +41,7 @@ pvals, psign = stat.tTestVoxelization(g1.astype('float'), g2.astype('float'), si
 #pvals2 = stat.cutoffPValues(pvals, pcutoff = 0.05);
 
 
-pvalsc = stat.colorPValues(pvals, psign, positive = [1,0], negative = [0,1]);
+pvalsc = stat.colorPValues(pvals, psign, positive = [0,1], negative = [1,0]);
 
 
 annotationFile = '/home/mtllab/Documents/warping/annotation_25_right.tif';
@@ -83,8 +83,8 @@ io.writeData(os.path.join(baseDirectory, 'std_intact_allcells.raw'), io.sagittal
 ########## weighted Heat maps ################################################
 
 
-group1 = ['/home/mtllab/Documents/whiskers/exploration/1/cells_heatmap_weighted.tif',
-          '/home/mtllab/Documents/whiskers/exploration/2/cells_heatmap_weighted.tif',
+group1 = [#'/home/mtllab/Documents/whiskers/exploration/1/cells_heatmap_weighted.tif',
+          #'/home/mtllab/Documents/whiskers/exploration/2/cells_heatmap_weighted.tif',
           '/home/mtllab/Documents/whiskers/exploration/3/cells_heatmap_weighted.tif',
           '/home/mtllab/Documents/whiskers/exploration/4/cells_heatmap_weighted.tif',
           '/home/mtllab/Documents/whiskers/exploration/5/cells_heatmap_weighted.tif'];
@@ -120,7 +120,7 @@ for l in labelids:
 pvalsc[outside]=0;
 
 
-pvalsc = stat.colorPValues(pvals, psign, positive = [1,0], negative = [0,1]);
+pvalsc = stat.colorPValues(pvals, psign, positive = [0,1], negative = [1,0]);
 
 io.writeData(os.path.join(baseDirectory, 'pvalues_weighted.tif'), io.sagittalToCoronalData(pvalsc.astype('float32')));
 
@@ -144,8 +144,8 @@ io.writeData(os.path.join(baseDirectory, 'std_intact_weighted.raw'), io.sagittal
 ################# Cell counting per regions #######################################
 
 
-group1 = ['/home/mtllab/Documents/whiskers/exploration/1/cells_transformed_to_Atlas.npy',
-          '/home/mtllab/Documents/whiskers/exploration/2/cells_transformed_to_Atlas.npy',
+group1 = [#'/home/mtllab/Documents/whiskers/exploration/1/cells_transformed_to_Atlas.npy',
+          #'/home/mtllab/Documents/whiskers/exploration/2/cells_transformed_to_Atlas.npy',
           '/home/mtllab/Documents/whiskers/exploration/3/cells_transformed_to_Atlas.npy',
           '/home/mtllab/Documents/whiskers/exploration/4/cells_transformed_to_Atlas.npy',
           '/home/mtllab/Documents/whiskers/exploration/5/cells_transformed_to_Atlas.npy'];

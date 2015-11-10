@@ -33,10 +33,12 @@ from iDISCO.Analysis.Label import labelToName
 
 BaseDirectory = '/home/mtllab/Documents/Haloperidol/1266';
    
-cFosFile = '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-fos_14-44-03/14-44-03_0_8X-fos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-AutofluoFile = '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-autofluo_15-48-40/15-48-40_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
-cFosFileRange = {'x' : (1200,1700), 'y' : (1100,1900), 'z' : (300,800)};
+#cFosFile = '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-fos_14-44-03/14-44-03_0_8X-fos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+#AutofluoFile = '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-autofluo_15-48-40/15-48-40_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+cFosFile = '/home/mtllab/Data/Nico/150820/Haloperidol/1266/150818_0_8X-fos_14-44-03/14-44-03_0_8X-fos_UltraII_C00_xyz-Table Z\d{4}.ome.tif'
+AutofluoFile = '/home/mtllab/Data/Nico/150820/Haloperidol/1266/150818_0_8X-autofluo_15-48-40/15-48-40_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
+#cFosFileRange = {'x' : (1200,1700), 'y' : (1100,1900), 'z' : (300,800)};
 
 
 #Resolution of the Data (in um / pixel)
@@ -78,23 +80,18 @@ SpotDetectionParameter = {
       
     # write cell mask to disk (to check cell detection accuracy), if not None
     #"cellMaskFile"   : os.path.join(BaseDirectory, 'cell_mask_new/cell_mask_Z\d{4}.ome.tif'),
-    "backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
+    #"backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
     #"hMaxFile"       : os.path.join(BaseDirectory, 'hmax/hmax_Z\d{4}.ome.tif'),
     #"dogFile" : os.path.join(BaseDirectory, 'dog/dog_Z\d{4}.ome.tif')
     #"cellMaskFile" :  os.path.join(BaseDirectory, 'cells/cells_Z\d{4}.tif'),
-    "cellShapeFile" :  os.path.join(BaseDirectory, 'shape/shape_Z\d{4}.tif'),
+    #"cellShapeFile" :  os.path.join(BaseDirectory, 'shape/shape_Z\d{4}.tif'),
     
     #some debug / quality check output
     #"verbose" : True,
     #"processMethod" : "sequential"  #  plotting during image processing only in sequential mode !
     };
 
-      
-# Threshold for the points to be considered in the analysis
-minthreshold = 1000; #remove points detected in the background, based on the filtered intensities
-maxthreshold = 50000; #remove staining artefacts (bright antibody clumps), based on the non-filtered original intensities 
-
-     
+   
 
 #################### Heat map generation
 
@@ -126,7 +123,7 @@ AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
     #max number of parallel processes
-    "processes" : 8,
+    "processes" : 6,
    
     #chunk sizes
     "chunkSizeMax" : 100,

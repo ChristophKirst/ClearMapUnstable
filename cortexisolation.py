@@ -15,8 +15,8 @@ import numpy
 
 
 
-annotationFile = lbl.DefaultLabeledImageFile;
-#annotationFile = '/home/mtllab/Documents/warping/annotation_25_right.tif';
+#annotationFile = lbl.DefaultLabeledImageFile;
+annotationFile = '/home/mtllab/Documents/warping/annotation_25_right.tif';
 
 label = io.readData(annotationFile);
 label = label.astype('int32');
@@ -24,16 +24,16 @@ label = label.astype('int32');
 labelids = numpy.unique(label);
 
 
-#for l in labelids:
-#    if not lbl.labelAtLevel(l, 3) == 688: # remove everything except cortex
-#        outside = numpy.logical_or(outside, label == l);
-#for l in labelids:
-#    if lbl.labelAtLevel(l, 5) == 1089: # remove hippocampus
-#        outside = numpy.logical_or(outside, label == l);
-#        
-#for l in labelids:
-#    if not lbl.labelAtLevel(l, 5) == 315: # remove everything except cortex
-#        outside = numpy.logical_or(outside, label == l);
+for l in labelids:
+    if not lbl.labelAtLevel(l, 3) == 688: # remove everything except cortex
+        outside = numpy.logical_or(outside, label == l);
+for l in labelids:
+    if lbl.labelAtLevel(l, 5) == 1089: # remove hippocampus
+        outside = numpy.logical_or(outside, label == l);
+        
+for l in labelids:
+    if not lbl.labelAtLevel(l, 5) == 315: # remove everything except cortex
+        outside = numpy.logical_or(outside, label == l);
 
 
 outside = numpy.zeros(label.shape, dtype = bool);
@@ -86,7 +86,12 @@ for l in labelids:
         
 for l in labelids:
     if not lbl.labelAtLevel(l, 6) == 453 : #somatosensory areas
+        outside = numpy.logical_or(outside, label == l);     
+        
+for l in labelids:
+    if not lbl.labelAtLevel(l, 6) == 669 : #primary visual areas
         outside = numpy.logical_or(outside, label == l);        
+        
 
 for l in labelids:
     if not lbl.labelAtLevel(l, 8) == 329 : #barrel cortex
@@ -118,7 +123,7 @@ cortex[outside] = 0;
 cortexbin = cortex > 0;
 cortexbin = cortexbin.astype('int32') * 100;
 
-io.writeData('/home/ckirst/Desktop/cortex.mhd', cortexbin);
+io.writeData('/home/mtllab/Documents/cortex.mhd', cortexbin);
 
 
 #
@@ -130,8 +135,8 @@ io.writeData('/home/ckirst/Desktop/cortex.mhd', cortexbin);
 
 
       
-heatmap = io.readData('/home/mtllab/Documents/npas4/30min/cells_heatmap.tif');
+heatmap = io.readData('/home/mtllab/Documents/IEG maps/npas460_cells_heatmap.tif');
 
 heatmap[outside] = 0;
 
-io.writeData('/home/mtllab/Documents/npas4/30min/cells_heatmap_PMBSF2_3.tif', heatmap);
+io.writeData('/home/mtllab/Documents/IEG maps/npas460_cells_heatmap_L4.tif', heatmap);
