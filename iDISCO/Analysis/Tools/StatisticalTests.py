@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Some statistics functions not in standard packages
+Some statistics tests not in standard packages
 
 @author: ckirst
 """

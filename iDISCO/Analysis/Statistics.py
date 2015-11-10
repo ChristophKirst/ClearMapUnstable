@@ -18,7 +18,7 @@ from scipy import stats
 
 import iDISCO.IO.IO as io
 import iDISCO.Analysis.Label as lbl
-import iDISCO.Analysis.StatisticsUtils as stats2
+import iDISCO.Analysis.Tools.StatisticalTests as stats2
 
 def readDataGroup(filenames, combine = True, **args):
     """Turn a list of filenames for data into a numpy stack"""
