@@ -22,6 +22,7 @@ from scipy.ndimage.filters import correlate
 #from scipy.signal import fftconvolve
 
 from iDISCO.ImageProcessing.Filter.FilterKernel import filterKernel
+from iDISCO.ImageProcessing.IlluminationCorrection import correctIllumination
 from iDISCO.ImageProcessing.BackgroundRemoval import removeBackground
 from iDISCO.ImageProcessing.MaximaDetection import findExtendedMaxima, findPixelCoordinates, findIntensity, findCenterOfMaxima
 from iDISCO.ImageProcessing.CellSizeDetection import detectCellShape, findCellSize, findCellIntensity
@@ -94,10 +95,13 @@ def detectCells(img, hMax = None, cellShapeThreshold = None, dogSize = None, ver
     #img = dataset[600:1000,1600:1800,800:830];
     #img = dataset[600:1000,:,800:830];
     
-    
+    # correct illumination
+    img1 = img.copy();
+    img1 = correctIllumination(img1, verbose = verbose, out = out, **parameter)   
+
     # background subtraction in each slice
-    img2 = img.copy();
-    img2 = removeBackground(img2, verbose = verbose, out = out, **parameter)   
+    #img2 = img.copy();
+    img2 = removeBackground(img1, verbose = verbose, out = out, **parameter)   
     
     # mask
     #timer.reset();

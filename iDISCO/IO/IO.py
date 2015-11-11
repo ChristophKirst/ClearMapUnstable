@@ -85,12 +85,29 @@ def isFileExpression(source):
             return False;
         else:
             return True;
-            
+  
+
+def isPointFile(filename):
+    fext = self.fileExtension(filename);
+    if fext in pointFileExtensions:
+        return True;
+    else:
+        return False;
+
+        
+def isDataFile(filename):
+    fext = self.fileExtension(filename);
+    if fext in dataFileExtensions:
+        return True;
+    else:
+        return False;
+
+          
 def createDirectory(filename):
     dirname, fname = os.path.split(filename);
     if not os.path.exists(dirname):
         os.makedirs(dirname);
-    
+
 
 def pointFileNameToType(filename):
     """Finds type of a point file"""

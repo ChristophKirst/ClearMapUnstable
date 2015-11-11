@@ -21,6 +21,7 @@ modified by: ckirst
 """
 
 import scipy
+import scipy.interpolate
 
 def estimateQValues(pvalues, m = None, pi0 = None, verbose = False, lowMemory = False):
     """Estimates q-values from p-values
@@ -58,8 +59,8 @@ def estimateQValues(pvalues, m = None, pi0 = None, verbose = False, lowMemory = 
         pi0 = scipy.array(pi0)
 
         # fit natural cubic scipyline
-        tck = scipy.interpolate.scipylrep(lam, pi0, k = 3)
-        pi0 = scipy.interpolate.scipylev(lam[-1], tck)
+        tck = scipy.interpolate.splrep(lam, pi0, k = 3)
+        pi0 = scipy.interpolate.splev(lam[-1], tck)
         
         if pi0 > 1:
             if verbose:

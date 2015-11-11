@@ -127,36 +127,60 @@ pvals, psign = stat.tTestPointsInRegions(pc1, pc2, pcutoff = None, signed = True
 pvalsi, psigni = stat.tTestPointsInRegions(pc1i, pc2i, pcutoff = None, signed = True, equal_var = True);
 
 
+from iDISCO.Analysis.Tools.QValues import estimateQValues
+
+import iDISCO.Analysis.Tools.QValues as qv
+reload(qv)
+
+tc = pc1.sum(axis=1) + pc2.sum(axis=1);
+import matplotlib.pyplot as plt
+plt.hist(tc, bins = 256)
+
+
+iid = pvalsi < 1;
+
+ids0 = ids[iid];
+pc1i0 = pc1i[iid];
+pc2i0 = pc2i[iid];
+pc10 = pc1[iid];
+pc20 = pc2[iid];
+psigni0 = psigni[iid];
+pvalsi0 = pvalsi[iid];
+qvalsi0 = qv.estimateQValues(pvalsi0);
+
+
 #make table
 
-dtypes = [('id','int64'),('mean1','f8'),('std1','f8'),('mean2','f8'),('std2','f8'),('pvalue', 'f8'),('psign', 'int64')];
+dtypes = [('id','int64'),('mean1','f8'),('std1','f8'),('mean2','f8'),('std2','f8'),('pvalue', 'f8'),('qvalue', 'f8'),('psign', 'int64')];
 for i in range(len(group1)):
     dtypes.append(('count1_%d' % i, 'f8'));
 for i in range(len(group2)):
     dtypes.append(('count2_%d' % i, 'f8'));   
 dtypes.append(('name', 'a256'));
 
-table = numpy.zeros(ids.shape, dtype = dtypes)
-table["id"] = ids;
-table["mean1"] = pc1i.mean(axis = 1)/1000000;
-table["std1"] = pc1i.std(axis = 1)/1000000;
-table["mean2"] = pc2i.mean(axis = 1)/1000000;
-table["std2"] = pc2i.std(axis = 1)/1000000;
-table["pvalue"] = pvalsi;
-table["psign"] = psigni;
+table = numpy.zeros(ids0.shape, dtype = dtypes)
+table["id"] = ids0;
+table["mean1"] = pc1i0.mean(axis = 1)/1000000;
+table["std1"] = pc1i0.std(axis = 1)/1000000;
+table["mean2"] = pc2i0.mean(axis = 1)/1000000;
+table["std2"] = pc2i0.std(axis = 1)/1000000;
+table["pvalue"] = pvalsi0;
+table["qvalue"] = qvalsi0;
+
+table["psign"] = psigni0;
 for i in range(len(group1)):
-    table["count1_%d" % i] = pc1[:,i];
+    table["count1_%d" % i] = pc10[:,i];
 for i in range(len(group2)):
-    table["count2_%d" % i] = pc2[:,i];
-table["name"] = lbl.labelToName(ids);
+    table["count2_%d" % i] = pc20[:,i];
+table["name"] = lbl.labelToName(ids0);
 
 
-#sort by pvalue
-ii = numpy.argsort(pvalsi);
+#sort by qvalue
+ii = numpy.argsort(pvalsi0);
 tableSorted = table.copy();
 tableSorted = tableSorted[ii];
 
-with open(('/home/mtllab/Documents/parental/2ndrun/pvalues-intensities.csv'),'w') as f:
+with open(('/home/mtllab/Documents/parental/2ndrun/qvalues-intensities.csv'),'w') as f:
     f.write(', '.join([str(item) for item in table.dtype.names]));
     f.write('\n');
     for sublist in tableSorted:

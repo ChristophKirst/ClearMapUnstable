@@ -35,7 +35,7 @@ BaseDirectory = '/home/mtllab/Documents/parental/2ndrun/150825-1';
    
 cFosFile = '/home/mtllab/Documents/parental/2ndrun/150825-1/150915_0_8X-cfos_13-15-16/13-15-16_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 AutofluoFile = '/home/mtllab/Documents/parental/2ndrun/150825-1/150915_0_8X-autofluo_14-42-12/14-42-12_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
+cFosFileRange = {'x' : all, 'y' : (150, 550), 'z' : (500,610)};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
 #cFosFileRange = {'x' : (1200,1700), 'y' : (1100,1900), 'z' : (300,800)};
 
 
@@ -56,6 +56,11 @@ VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 ######################### Cell Detection Parameters using DoG
 
 SpotDetectionParameter = {
+
+    #illumination correction
+    "flatfield" : True,   # True = automatic 
+    "illuminationScaling"   : "mean", # mean = rescale with flatfield mean and convert back to original dtype, "max" same with max flatfield 
+
     # background correctoin: None or (x,y) which is size of disk for gray scale opening
     "backgroundSize" : (7,7),
     
@@ -78,12 +83,14 @@ SpotDetectionParameter = {
     "threshold" : None,
       
     # write cell mask to disk (to check cell detection accuracy), if not None
+    "correctedIlluminationFile" : os.path.join(BaseDirectory, 'correctedIllumination/CI_Z\d{4}.ome.tif'),
     #"cellMaskFile"   : os.path.join(BaseDirectory, 'cell_mask_new/cell_mask_Z\d{4}.ome.tif'),
     #"backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
     #"hMaxFile"       : os.path.join(BaseDirectory, 'hmax/hmax_Z\d{4}.ome.tif'),
     #"dogFile" : os.path.join(BaseDirectory, 'dog/dog_Z\d{4}.ome.tif')
     #"cellMaskFile" :  os.path.join(BaseDirectory, 'cells/cells_Z\d{4}.tif'),
     #"cellShapeFile" :  os.path.join(BaseDirectory, 'shape/shape_Z\d{4}.tif'),
+
     
     #some debug / quality check output
     #"verbose" : True,
@@ -119,6 +126,8 @@ AnnotationFile = os.path.join(PathReg, 'annotation_25_right_fullWD.tif');
 
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
+   # "processMethod" : 'sequential', 
+
     #max number of parallel processes
     "processes" : 6,
    

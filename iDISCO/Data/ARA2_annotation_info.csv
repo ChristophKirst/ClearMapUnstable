@@ -205,8 +205,8 @@ id,name,acronym,red,green,blue,structure_order,parent_id,parent_acronym
 588,"Anterior cingulate area, ventral part, layer 1",ACAv1,109,191,85,19600,48,ACAv
 296,"Anterior cingulate area, ventral part, layer 2/3",ACAv2/3,131,198,100,19700,48,ACAv
 772,"Anterior cingulate area, ventral part, layer 5",ACAv5,155,207,122,19800,48,ACAv
-810,"Anterior cingulate area, ventral part, 6a",ACAv6a,167,212,136,19900,48,ACAv
-819,"Anterior cingulate area, ventral part, 6b",ACAv6b,178,217,152,20000,48,ACAv
+810,"Anterior cingulate area, ventral part, layer 6a",ACAv6a,167,212,136,19900,48,ACAv
+819,"Anterior cingulate area, ventral part, layer 6b",ACAv6b,178,217,152,20000,48,ACAv
 972,Prelimbic area,PL,112,255,118,20100,315,Isocortex
 171,"Prelimbic area, layer 1",PL1,83,150,66,20200,972,PL
 195,"Prelimbic area, layer 2",PL2,101,156,78,20300,972,PL

@@ -54,6 +54,12 @@ VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 ######################### Cell Detection Parameters using DoG
 
 SpotDetectionParameter = {
+
+    #illumination correction
+    "flatfield" : True,   # True = automatic 
+    "illuminationScaling"   : "mean", # mean = rescale with flatfield mean and convert back to original dtype, "max" same with max flatfield 
+
+
     # background correctoin: None or (x,y) which is size of disk for gray scale opening
     "backgroundSize" : (7,7),
     
