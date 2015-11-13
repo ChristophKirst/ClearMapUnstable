@@ -20,18 +20,23 @@ from iDISCO.Settings import IDISCOPath
 
 import collections
 
-LabelRecord = collections.namedtuple('LabelRecord', 'id, name, acronym, color, parent');
+DefaultLabeledImageFile          = os.path.join(IDISCOPath, 'Test/Data/Annotation/annotation_25_right.tif');
+DefaultAnnotationFile            = os.path.join(IDISCOPath, 'Data/ARA2_annotation_info.csv');
+DefaultAnnotationFileCollapsed   = os.path.join(IDISCOPath, 'Data/ARA2_annotation_info_collapse.csv');
 
-DefaultLabeledImageFile = os.path.join(IDISCOPath, 'Test/Data/Annotation/annotation_25_right.tif');
-DefaultAnnotationFile   = os.path.join(IDISCOPath, 'Data/ARA2_annotation_info.csv');
 
+LabelRecord = collections.namedtuple('LabelRecord', 'id, name, acronym, color, parent, collapse');
 
 
 def labelToInt(txt):
     if txt == '':
         return -1;
     else:
-        return int(txt);
+        return int(txt);    
+    
+def collapseToBool(txt):
+    return not (txt == '');
+
 
 class LabelInfo(object):
     ids = None;
@@ -40,9 +45,11 @@ class LabelInfo(object):
     colors = None;
     parents = None;
     levels = None;
+    collapse = None;
     
     def __init__(slf, annotationFile = DefaultAnnotationFile):
         slf.initialize(annotationFile = annotationFile);
+    
     
     def initialize(slf, annotationFile = DefaultAnnotationFile):
         
@@ -50,7 +57,7 @@ class LabelInfo(object):
             reader = csv.reader(dfile);
             #skip header
             reader.next();
-            labels = [LabelRecord._make((int(row[0]), row[1], row[2], [int(row[3]), int(row[4]), int(row[5])], labelToInt(row[7]))) for row in reader];
+            labels = [LabelRecord._make((int(row[0]), row[1], row[2], [int(row[3]), int(row[4]), int(row[5])], labelToInt(row[7]), collapseToBool(row[8]))) for row in reader];
             
             dfile.close();
         
@@ -59,7 +66,8 @@ class LabelInfo(object):
         slf.acronyms = { x.id : x.acronym for x in labels};
         slf.colors = { x.id : x.color for x in labels};
         slf.parents = { x.id : x.parent for x in labels};
-        
+        slf.collapse = { x.id : x.collapse for x in labels};
+ 
         #calculate level:
         slf.levels = [0 for x in labels];
         for i in range(len(slf.ids)):
@@ -97,7 +105,18 @@ class LabelInfo(object):
             i = slf.parents[i];
             #print i, levels[i]
         return i;
-            
+        
+    def toLabelAtCollapse(slf, iid):
+        i = iid;
+        if not i in slf.ids:
+            return i;
+        
+        #print i, levels[i]
+        while slf.collapse[i] and slf.levels[i] > 0:
+            i = slf.parents[i];
+            #print i, levels[i]
+        return i;
+
 
 Label = LabelInfo();
 
@@ -117,7 +136,20 @@ def labelAtLevel(label, level):
             return Label.toLabelAtLevel(label, level);
 
 
-def labelPoints(points, labeledImage = DefaultLabeledImageFile, level = None):
+def labelAtCollapse(label):
+    global Label;
+    
+    if label is None:
+        return label;
+
+    if isinstance(label, numpy.ndarray):
+        return [Label.toLabelAtCollapse(x) for x in label];
+    else:
+        return Label.toLabelAtCollapse(label);
+
+
+
+def labelPoints(points, labeledImage = DefaultLabeledImageFile, level = None, collapse = None):
     
     #points are (y,x,z) -> which is also the way the labeled image is read in
     #x = points[:,1];
@@ -131,17 +163,20 @@ def labelPoints(points, labeledImage = DefaultLabeledImageFile, level = None):
     nPoint = x.size;    
     
     pointLabels = numpy.zeros(nPoint, 'int32');
-    
-    labelImage = io.readData(labeledImage);
-                  
+
+    labelImage = io.readData(labeledImage);    
     dsize = labelImage.shape;
+
     for i in range(nPoint):
         #if y[i] >= 0 and y[i] < dsize[0] and x[i] >= 0 and x[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
         #     pointLabels[i] = labelImage[y[i], x[i], z[i]];
         if x[i] >= 0 and x[i] < dsize[0] and y[i] >= 0 and y[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
-             pointLabels[i] = labelImage[x[i], y[i], z[i]];
+            pointLabels[i] = labelImage[x[i], y[i], z[i]];
     
-    pointLabels = self.labelAtLevel(pointLabels, level);
+    if collapse is None:
+        pointLabels = self.labelAtLevel(pointLabels, level);
+    else:
+        pointLabels = self.labelAtCollapse(pointLabels);
     
     return pointLabels;
 
