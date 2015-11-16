@@ -35,7 +35,7 @@ BaseDirectory = '/home/mtllab/Documents/parental/2ndrun/150825-1';
    
 cFosFile = '/home/mtllab/Documents/parental/2ndrun/150825-1/150915_0_8X-cfos_13-15-16/13-15-16_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 AutofluoFile = '/home/mtllab/Documents/parental/2ndrun/150825-1/150915_0_8X-autofluo_14-42-12/14-42-12_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-cFosFileRange = {'x' : all, 'y' : (150, 550), 'z' : (500,610)};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
+cFosFileRange = {'x' : all, 'y' : all, 'z' : (1000,1500)};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
 #cFosFileRange = {'x' : (1200,1700), 'y' : (1100,1900), 'z' : (300,800)};
 
 

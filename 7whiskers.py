@@ -57,8 +57,8 @@ VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 SpotDetectionParameter = {
 
     #illumination correction
-    "flatfield" : True,   # True = automatic 
-    "illuminationScaling"   : "mean", # mean = rescale with flatfield mean and convert back to original dtype, "max" same with max flatfield 
+    "flatfield" : None,   # True = automatic 
+    "illuminationScaling"   : None, #"mean", # mean = rescale with flatfield mean and convert back to original dtype, "max" same with max flatfield 
 
 
 

@@ -139,7 +139,6 @@ io.writeData(os.path.join(baseDirectory, 'std_intact_weighted.raw'), io.sagittal
 
 
 
-
 ###################################################################################
 ################# Cell counting per regions #######################################
 

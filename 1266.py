@@ -33,10 +33,10 @@ from iDISCO.Analysis.Label import labelToName
 
 BaseDirectory = '/home/mtllab/Documents/Haloperidol/1266';
    
-#cFosFile = '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-fos_14-44-03/14-44-03_0_8X-fos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-#AutofluoFile = '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-autofluo_15-48-40/15-48-40_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-cFosFile = '/home/mtllab/Data/Nico/150820/Haloperidol/1266/150818_0_8X-fos_14-44-03/14-44-03_0_8X-fos_UltraII_C00_xyz-Table Z\d{4}.ome.tif'
-AutofluoFile = '/home/mtllab/Data/Nico/150820/Haloperidol/1266/150818_0_8X-autofluo_15-48-40/15-48-40_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+cFosFile = '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-fos_14-44-03/14-44-03_0_8X-fos_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+AutofluoFile = '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-autofluo_15-48-40/15-48-40_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+#cFosFile = '/home/mtllab/Data/Nico/150820/Haloperidol/1266/150818_0_8X-fos_14-44-03/14-44-03_0_8X-fos_UltraII_C00_xyz-Table Z\d{4}.ome.tif'
+#AutofluoFile = '/home/mtllab/Data/Nico/150820/Haloperidol/1266/150818_0_8X-autofluo_15-48-40/15-48-40_0_8X-autofluo_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
 #cFosFileRange = {'x' : (1200,1700), 'y' : (1100,1900), 'z' : (300,800)};
 

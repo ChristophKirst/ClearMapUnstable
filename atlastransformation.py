@@ -17,7 +17,7 @@ PathReg        = '/home/mtllab/Documents/warping';
 AtlasFile      = os.path.join(PathReg, 'half_template_25_right.tif');
 AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 
-baseDirectory= '/home/mtllab/Documents/Haloperidol/1strun/Haloperidol'
+baseDirectory= '/home/mtllab/Documents/Haloperidol/1266/'
 
 
 
@@ -42,7 +42,7 @@ resultFile3 = os.path.join(baseDirectory, 'elastix_atlas_to_cfos_resampled/resul
 
 
 resultFile4 = rsp.resampleDataInverse(resultFile3, source = os.path.join(baseDirectory, 'atlas_to_cfos/Z\d{4}.tif'),  orientation = None, 
-                 dataSizeSource = os.path.join(baseDirectory, '150630_0_8X-cfos_18-32-28/18-32-28_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif'), interpolation = None, processes = 12)
+                 dataSizeSource = os.path.join(baseDirectory, '150818_0_8X-fos_14-44-03/14-44-03_0_8X-fos_UltraII_C00_xyz-Table Z\d{4}.ome.tif'), interpolation = None, processes = 12)
 
 
 import iDISCO.IO.IO as io

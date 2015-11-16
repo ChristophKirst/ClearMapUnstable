@@ -135,8 +135,16 @@ io.writeData('/home/mtllab/Documents/cortex.mhd', cortexbin);
 
 
       
-heatmap = io.readData('/home/mtllab/Documents/IEG maps/npas460_cells_heatmap.tif');
+heatmap = io.readData('/home/mtllab/Documents/whiskers/exploration/mean_intact_weighted.mhd');
 
 heatmap[outside] = 0;
 
-io.writeData('/home/mtllab/Documents/IEG maps/npas460_cells_heatmap_L4.tif', heatmap);
+io.writeData('/home/mtllab/Documents/whiskers/exploration/mean_shaved_intact_cortex.mhd', heatmap);
+
+
+####
+
+outsag = io.sagittalToCoronalData(outside)
+
+heatmap[outsag] = 0;
+

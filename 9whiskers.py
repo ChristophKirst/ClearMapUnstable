@@ -56,8 +56,8 @@ VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 SpotDetectionParameter = {
 
     #illumination correction
-    "flatfield" : True,   # True = automatic 
-    "illuminationScaling"   : "mean", # mean = rescale with flatfield mean and convert back to original dtype, "max" same with max flatfield 
+    "flatfield" : None, #True,   # True = automatic 
+    "illuminationScaling"   : None, #"mean", # mean = rescale with flatfield mean and convert back to original dtype, "max" same with max flatfield 
 
 
     # background correctoin: None or (x,y) which is size of disk for gray scale opening

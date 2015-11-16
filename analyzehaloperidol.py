@@ -120,12 +120,12 @@ import numpy, os
 
 baseDirectory = '/home/mtllab/Documents/Haloperidol'
 
-annotationFile = '/home/mtllab/Documents/warping/annotation_25_right.tif';
+ABAlabeledImage = '/home/mtllab/Documents/warping/annotation_25_right.tif';
 
 
 group1 = ['/home/mtllab/Documents/Haloperidol/1266/cells_transformed_to_Atlas.npy',
           '/home/mtllab/Documents/Haloperidol/1267/cells_transformed_to_Atlas.npy',
-         # '/home/mtllab/Documents/Haloperidol/1268/cells_transformed_to_Atlas.npy',
+          '/home/mtllab/Documents/Haloperidol/1268/cells_transformed_to_Atlas.npy',
           '/home/mtllab/Documents/Haloperidol/1269/cells_transformed_to_Atlas.npy']
         #  '/home/mtllab/Documents/Haloperidol/1270/cells_transformed_to_Atlas.npy'];
 group1i = [fn.replace('cells_transformed_to_Atlas', 'intensities') for fn in group1];
@@ -134,18 +134,16 @@ group1i = [fn.replace('cells_transformed_to_Atlas', 'intensities') for fn in gro
 group2 = [#'/home/mtllab/Documents/Haloperidol/1271/cells_transformed_to_Atlas.npy',
           '/home/mtllab/Documents/Haloperidol/1272/cells_transformed_to_Atlas.npy',
           '/home/mtllab/Documents/Haloperidol/1273/cells_transformed_to_Atlas.npy',
-          '/home/mtllab/Documents/Haloperidol/1274/cells_transformed_to_Atlas.npy']
-          #'/home/mtllab/Documents/Haloperidol/1275/cells_transformed_to_Atlas.npy'];
+          '/home/mtllab/Documents/Haloperidol/1274/cells_transformed_to_Atlas.npy',
+          '/home/mtllab/Documents/Haloperidol/1275/cells_transformed_to_Atlas.npy'];
 
 group2i = [fn.replace('cells_transformed_to_Atlas', 'intensities') for fn in group2];
 
 
 
-#ids, pc1, pc1i = stat.countPointsGroupInRegions(group1, intensityGroup = group1i, withIds = True, labeledImage = lbl.DefaultLabeledImageFile, withCounts = True);
-#pc2, pc2i = stat.countPointsGroupInRegions(group2, intensityGroup = group2i, withIds = False, labeledImage = lbl.DefaultLabeledImageFile, withCounts = True);
+ids, pc1, pc1i = stat.countPointsGroupInRegions(group1, intensityGroup = group1i, returnIds = True, labeledImage = ABAlabeledImage, returnCounts = True, collapse = 'yeah');
+pc2, pc2i = stat.countPointsGroupInRegions(group2, intensityGroup = group2i, returnIds = False, labeledImage = ABAlabeledImage, returnCounts = True, collapse = 'yeah');
 
-ids, pc1, pc1i = stat.countPointsGroupInRegions(group1, intensityGroup = group1i, returnIds = True, labeledImage = annotationFile, returnCounts = True);
-pc2, pc2i = stat.countPointsGroupInRegions(group2, intensityGroup = group2i, returnIds = False, labeledImage = annotationFile, returnCounts = True);
 
 
 pvals, psign = stat.tTestPointsInRegions(pc1, pc2, pcutoff = None, signed = True, equal_var = True);
@@ -158,7 +156,7 @@ from iDISCO.Analysis.Tools.QValues import estimateQValues
 import iDISCO.Analysis.Tools.QValues as qv
 
 lowcount = numpy.sum(pc1, axis=1) + numpy.sum(pc2, axis=1)
-iid = lowcount > 100;
+iid = lowcount > 200;
 
 ids0 = ids[iid];
 pc1i0 = pc1i[iid];
@@ -166,8 +164,11 @@ pc2i0 = pc2i[iid];
 pc10 = pc1[iid];
 pc20 = pc2[iid];
 psigni0 = psigni[iid];
+psign0 = psign[iid];
 pvalsi0 = pvalsi[iid];
+pvals0 = pvals[iid];
 qvalsi0 = qv.estimateQValues(pvalsi0);
+qvals0 = qv.estimateQValues(pvals0);
 
 
 #make table
@@ -181,10 +182,10 @@ dtypes.append(('name', 'a256'));
 
 table = numpy.zeros(ids0.shape, dtype = dtypes)
 table["id"] = ids0;
-table["mean1"] = pc1i0.mean(axis = 1)/1000000;
-table["std1"] = pc1i0.std(axis = 1)/1000000;
-table["mean2"] = pc2i0.mean(axis = 1)/1000000;
-table["std2"] = pc2i0.std(axis = 1)/1000000;
+table["mean1"] = pc1i0.mean(axis = 1)/1000;
+table["std1"] = pc1i0.std(axis = 1)/1000;
+table["mean2"] = pc2i0.mean(axis = 1)/1000;
+table["std2"] = pc2i0.std(axis = 1)/1000;
 table["pvalue"] = pvalsi0;
 table["qvalue"] = qvalsi0;
 
@@ -201,7 +202,7 @@ ii = numpy.argsort(pvalsi0);
 tableSorted = table.copy();
 tableSorted = tableSorted[ii];
 
-with open(('/home/mtllab/Documents/Haloperidol/qvalues.csv'),'w') as f:
+with open(('/home/mtllab/Documents/Haloperidol/qvalues_intensities_n4_collapsedregions_test.csv'),'w') as f:
     f.write(', '.join([str(item) for item in table.dtype.names]));
     f.write('\n');
     for sublist in tableSorted:
@@ -214,34 +215,35 @@ with open(('/home/mtllab/Documents/Haloperidol/qvalues.csv'),'w') as f:
 
 #make table
 
-dtypes = [('id','int64'),('mean1','f8'),('std1','f8'),('mean2','f8'),('std2','f8'),('pvalue', 'f8'),('psign', 'int64')];
+dtypes = [('id','int64'),('mean1','f8'),('std1','f8'),('mean2','f8'),('std2','f8'),('pvalue', 'f8'),('qvalue', 'f8'),('psign', 'int64')];
 for i in range(len(group1)):
     dtypes.append(('count1_%d' % i, 'f8'));
 for i in range(len(group2)):
     dtypes.append(('count2_%d' % i, 'f8'));   
 dtypes.append(('name', 'a256'));
 
-table = numpy.zeros(ids.shape, dtype = dtypes)
-table["id"] = ids;
-table["mean1"] = pc1.mean(axis = 1);
-table["std1"] = pc1.std(axis = 1);
-table["mean2"] = pc2.mean(axis = 1);
-table["std2"] = pc2.std(axis = 1);
-table["pvalue"] = pvals;
-table["psign"] = psign;
+table = numpy.zeros(ids0.shape, dtype = dtypes)
+table["id"] = ids0;
+table["mean1"] = pc10.mean(axis = 1);
+table["std1"] = pc10.std(axis = 1);
+table["mean2"] = pc20.mean(axis = 1);
+table["std2"] = pc20.std(axis = 1);
+table["pvalue"] = pvals0;
+table["qvalue"] = qvals0;
+table["psign"] = psign0;
 for i in range(len(group1)):
-    table["count1_%d" % i] = pc1[:,i];
+    table["count1_%d" % i] = pc10[:,i];
 for i in range(len(group2)):
-    table["count2_%d" % i] = pc2[:,i];
-table["name"] = lbl.labelToName(ids);
+    table["count2_%d" % i] = pc20[:,i];
+table["name"] = lbl.labelToName(ids0);
 
 
 #sort by pvalue
-ii = numpy.argsort(pvals);
+ii = numpy.argsort(pvals0);
 tableSorted = table.copy();
 tableSorted = tableSorted[ii];
 
-with open(os.path.join(baseDirectory, 'pvalues-counts.csv'),'w') as f:
+with open(os.path.join(baseDirectory, 'qvalues_counts_n4_collapsedregions_test.csv'),'w') as f:
     f.write(', '.join([str(item) for item in table.dtype.names]));
     f.write('\n');
     for sublist in tableSorted:

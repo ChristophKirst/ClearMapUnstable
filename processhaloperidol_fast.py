@@ -23,7 +23,7 @@ execfile('1266.py')
 detectCells(**ImageProcessingParameter);
 
 points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
-points, intensities = thresholdPoints(points, intensities, threshold = (15, 500), row = (3,3));
+points, intensities = thresholdPoints(points, intensities, threshold = (25, 500), row = (3,3));
 io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
 points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
 points = resamplePoints(**CorrectionResamplingPointsParameter);
@@ -155,7 +155,7 @@ resultDirectory  = alignData(**RegistrationAlignmentParameter);
 detectCells(**ImageProcessingParameter);
 
 points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
-points, intensities = thresholdPoints(points, intensities, threshold = (20, 900), row = (3,3));
+points, intensities = thresholdPoints(points, intensities, threshold = (5, 900), row = (3,3));
 io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
 points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
 points = resamplePoints(**CorrectionResamplingPointsParameter);

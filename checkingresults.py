@@ -10,15 +10,15 @@ import iDISCO.IO.IO as io;
 
 import numpy
 
-dataSource =  '/home/mtllab/Documents/Haloperidol/1266/150818_0_8X-fos_14-44-03/14-44-03_0_8X-fos_UltraII_C00_xyz-Table Z\d{4}.ome.tif'
-pointSource= '/home/mtllab/Documents/Haloperidol/1266/cells.npy';
-x = (1200,1700);
-y = (1100,1900);
-z = (300,800);
+dataSource =  '/home/mtllab/Documents/Haloperidol/1268/150819_0_8X-cfos_14-22-33/14-22-33_0_8X-cfos_UltraII_C00_xyz-Table Z\d{4}.ome.tif'
+pointSource= '/home/mtllab/Documents/Haloperidol/1268/cells.npy';
+x = (100,1000);
+y = (600,1500);
+z = (300,1200);
 
 
 data = plt.overlayPoints(dataSource, pointSource, x = x, y = y, z = z, pointColor = None);
-io.writeData('/home/mtllab/Documents/Haloperidol/1266/cells_check.tif', data)
+io.writeData('/home/mtllab/Documents/Haloperidol/1268/cells_check.tif', data)
 
 
 ########################################

@@ -1,11 +1,11 @@
 id,name,acronym,red,green,blue,structure_order,parent_id,parent_acronym,collapse
-0,background,background,0,0,0,0,,,
-997,root,root,255,255,255,0,,,
-8,Basic cell groups and regions,grey,176,255,255,100,997,root,
-567,Cerebrum,CH,176,240,255,200,8,grey,
-688,Cerebral cortex,CTX,176,255,184,300,567,CH,
-695,Cortical plate,CTXpl,112,255,112,400,688,CTX,
-315,Isocortex,Isocortex,112,255,113,500,695,CTXpl,
+0,background,background,0,0,0,0,,,x
+997,root,root,255,255,255,0,,,x
+8,Basic cell groups and regions,grey,176,255,255,100,997,root,x
+567,Cerebrum,CH,176,240,255,200,8,grey,x
+688,Cerebral cortex,CTX,176,255,184,300,567,CH,x
+695,Cortical plate,CTXpl,112,255,112,400,688,CTX,x
+315,Isocortex,Isocortex,112,255,113,500,695,CTXpl,x
 184,"Frontal pole, cerebral cortex",FRP,112,255,113,600,315,Isocortex,x
 68,"Frontal pole, layer 1",FRP1,121,161,59,700,184,FRP,
 667,"Frontal pole, layer 2/3",FRP2/3,132,165,74,800,184,FRP,

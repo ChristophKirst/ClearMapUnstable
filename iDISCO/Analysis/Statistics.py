@@ -175,14 +175,14 @@ def weightsFromPrecentiles(intensities, percentiles = [25,50,75,100]):
         
 
 # needs clean up
-def countPointsGroupInRegions(pointGroup, labeledImage = lbl.DefaultLabeledImageFile, intensityGroup = None, intensityRow = 0, returnIds = True, returnCounts = False):
+def countPointsGroupInRegions(pointGroup, labeledImage = lbl.DefaultLabeledImageFile, intensityGroup = None, intensityRow = 0, returnIds = True, returnCounts = False, collapse = None):
      """Generates a table of counts for the various point datasets in pointGroup"""
  
      if intensityGroup is None: 
-         counts = [lbl.countPointsInRegions(pointGroup[i], labeledImage = labeledImage, sort = True, allIds = True, returnIds = False, returnCounts = returnCounts, intensities = None) for i in range(len(pointGroup))];
+         counts = [lbl.countPointsInRegions(pointGroup[i], labeledImage = labeledImage, sort = True, allIds = True, returnIds = False, returnCounts = returnCounts, intensities = None, collapse = collapse) for i in range(len(pointGroup))];
      else:
          counts = [lbl.countPointsInRegions(pointGroup[i], labeledImage = labeledImage, sort = True, allIds = True, returnIds = False, returnCounts = returnCounts,
-                                            intensities = intensityGroup[i], intensityRow = intensityRow) for i in range(len(pointGroup))];
+                                            intensities = intensityGroup[i], intensityRow = intensityRow, collapse = collapse) for i in range(len(pointGroup))];
      
      if returnCounts and not intensityGroup is None:
          countsi = (c[1] for c in counts);
