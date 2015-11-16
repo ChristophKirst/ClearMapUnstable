@@ -1,25 +1,11 @@
 # -*- coding: utf-8 -*-
 """
-Q-Value estimation from p values
+Correction Metods for multiple comparison tests
 
-Created on Mon Nov  9 11:28:09 2015
-
-Source:
-    - https://github.com/nfusi/qvalue
-
-Reference:
-    - Storey and Tibshirani, 2003
-
-Note:
-    - The q-value of a particular feature can be described as the expected proportion of
-      false  positives  among  all  features  as  or  more  extreme  than  the observed one
-    
-    - The estimated q-values are increasing in the same order as the p-values
-
-
-modified by: ckirst
+@author: ckirst
 """
 
+import numpy
 import scipy
 import scipy.interpolate
 
@@ -27,7 +13,21 @@ def estimateQValues(pvalues, m = None, pi0 = None, verbose = False, lowMemory = 
     """Estimates q-values from p-values
 
     m: number of tests. if None, m = pvalues.size
-    pi0: is estimate of m_0 / m which is the (true null / total tests) ratio, if None estimation via cubic spline as in Storey and Tibshirani, 2003.
+    pi0: is estimate of m_0 / m which is the (true null / total tests) ratio, if None estimation via cubic spline.
+    
+    Q-Value estimation from p values
+
+    Source:
+        - https://github.com/nfusi/qvalue
+
+    Reference:
+        - Storey and Tibshirani, 2003
+
+    Note:
+        - The q-value of a particular feature can be described as the expected proportion of
+          false  positives  among  all  features  as  or  more  extreme  than  the observed one
+    
+        - The estimated q-values are increasing in the same order as the p-values    
     """
 
     if not (pvalues.min() >= 0 and pvalues.max() <= 1):
@@ -104,3 +104,47 @@ def estimateQValues(pvalues, m = None, pi0 = None, verbose = False, lowMemory = 
         qv = qv.reshape(original_shape)
         
     return qv
+    
+    
+    
+def correctPValues(pvalues, method = 'BH'):
+    """Corect p-values for multiple testing using various methods: BH = FDR = Benjamini-Hochberg, B = FWER = Bonferoni
+    
+       References: 
+            - Benjamini Hochberg, 1995
+            - R statistics package
+            - scikits.statsmodels.sandbox.stats.multicomp
+    """
+    
+    pvals = numpy.asarray(pvalues);
+
+    if method.lower() in ['bh', 'fdr']:
+        
+        pvals_sorted_ids = numpy.argsort(pvals);
+        pvals_sorted = pvals[pvals_sorted_ids]
+        sorted_ids_inv = pvals_sorted_ids.argsort()
+
+        n = len(pvals);
+        bhfactor = float(numpy.arange(1,n+1))/float(n);
+
+        pvals_corrected_raw = pvals_sorted / bhfactor;
+        pvals_corrected = numpy.minimum.accumulate(pvals_corrected_raw[::-1])[::-1]
+        pvals_corrected[pvals_corrected>1] = 1;
+    
+        return pvals_corrected[sorted_ids_inv];
+    
+    elif method.lower() in ['b', 'fwer']:
+        
+        n = len(pvals);        
+        
+        pvals_corrected = n * pvals;
+        pvals_corrected[pvals_corrected>1] = 1;\
+        
+        return pvals_corrected;
+        
+        
+        
+        
+    #return reject[pvals_sortind.argsort()]
+    
+
