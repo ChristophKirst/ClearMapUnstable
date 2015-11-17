@@ -90,28 +90,77 @@ def cutoffPValues(pvals, pcutoff = 0.05):
     return pvals2;
     
 
-def colorPValues(pvals, psign, positive = [1,0], negative = [0,1]):
-    #invert pvals    
-    pmax = pvals.max();
+def colorPValues(pvals, psign, positive = [1,0], negative = [0,1], pcutoff = None, positivetrend = [0,0,1,0], negativetrend = [0,0,0,1], pmax = None):
+    
     pvalsinv = pvals.copy();
-    pvalsinv = pmax - pvalsinv;
-        
-    d = len(positive);
-    ds = pvals.shape + (d,);
-    pvc = numpy.zeros(ds);
+    if pmax is None:
+        pmax = pvals.max();    
+    pvalsinv = pmax - pvalsinv;    
     
-    #color
-    ids = psign > 0;
-    pvalsi = pvalsinv[ids];
-    for i in range(d):
-        pvc[ids, i] = pvalsi * positive[i];
-    
-    ids = psign < 0;
-    pvalsi = pvalsinv[ids];
-    for i in range(d):
-        pvc[ids, i] = pvalsi * negative[i];
+    if pcutoff is None:  # color given p values
         
-    return pvc;
+        d = len(positive);
+        ds = pvals.shape + (d,);
+        pvc = numpy.zeros(ds);
+    
+        #color
+        ids = psign > 0;
+        pvalsi = pvalsinv[ids];
+        for i in range(d):
+            pvc[ids, i] = pvalsi * positive[i];
+    
+        ids = psign < 0;
+        pvalsi = pvalsinv[ids];
+        for i in range(d):
+            pvc[ids, i] = pvalsi * negative[i];
+        
+        return pvc;
+        
+    else:  # split pvalues according to cutoff
+    
+        d = len(positivetrend);
+        
+        if d != len(positive) or  d != len(negative) or  d != len(negativetrend) :
+            raise RuntimeError('colorPValues: postive, negative, postivetrend and negativetrend option must be equal length!');
+        
+        ds = pvals.shape + (d,);
+        pvc = numpy.zeros(ds);
+    
+        idc = pvals < pcutoff;
+        ids = psign > 0;
+
+        ##color 
+        # significant postive
+        ii = numpy.logical_and(ids, idc);
+        pvalsi = pvalsinv[ii];
+        w = positive;
+        for i in range(d):
+            pvc[ii, i] = pvalsi * w[i];
+    
+        #non significant postive
+        ii = numpy.logical_and(ids, numpy.negative(idc));
+        pvalsi = pvalsinv[ii];
+        w = positivetrend;
+        for i in range(d):
+            pvc[ii, i] = pvalsi * w[i];
+            
+         # significant negative
+        ii = numpy.logical_and(numpy.negative(ids), idc);
+        pvalsi = pvalsinv[ii];
+        w = negative;
+        for i in range(d):
+            pvc[ii, i] = pvalsi * w[i];
+    
+        #non significant postive
+        ii = numpy.logical_and(numpy.negative(ids), numpy.negative(idc))
+        pvalsi = pvalsinv[ii];
+        w = negativetrend;
+        for i in range(d):
+            pvc[ii, i] = pvalsi * w[i];
+        
+        return pvc;
+    
+
     
     
 def mean(group, **args):

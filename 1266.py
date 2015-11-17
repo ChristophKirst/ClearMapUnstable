@@ -190,7 +190,7 @@ CorrectionAlignmentParameter = {
 #directory of the alignment result
 RegistrationAlignmentParameter = CorrectionAlignmentParameter.copy();
 
-RegistrationAlignmentParameter["resultDirectory"] = os.path.join(BaseDirectory, 'elastix_auto_to_atlas');
+RegistrationAlignmentParameter["resultDirectory"] = os.path.join(BaseDirectory, 'elastix_auto_to_atlas_test');
     
 #moving and reference images
 RegistrationAlignmentParameter["movingImage"]  = AtlasFile;
@@ -198,7 +198,7 @@ RegistrationAlignmentParameter["fixedImage"]   = os.path.join(BaseDirectory, 'au
 
 #elastix parameter files for alignment
 RegistrationAlignmentParameter["affineParameterFile"]  = os.path.join(PathReg, 'Par0000affine.txt');
-RegistrationAlignmentParameter["bSplineParameterFile"] = os.path.join(PathReg, 'Par0000bspline.txt');
+RegistrationAlignmentParameter["bSplineParameterFile"] = os.path.join(PathReg, 'Par0000bspline_test.txt');
 
 
 

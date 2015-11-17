@@ -125,7 +125,7 @@ def correctPValues(pvalues, method = 'BH'):
         sorted_ids_inv = pvals_sorted_ids.argsort()
 
         n = len(pvals);
-        bhfactor = float(numpy.arange(1,n+1))/float(n);
+        bhfactor = numpy.arange(1,n+1)/float(n);
 
         pvals_corrected_raw = pvals_sorted / bhfactor;
         pvals_corrected = numpy.minimum.accumulate(pvals_corrected_raw[::-1])[::-1]

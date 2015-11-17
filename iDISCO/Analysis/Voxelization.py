@@ -30,15 +30,15 @@ def voxelize(points, dataSize = None, sink = None, voxelizationSize = (5,5,5), v
         
     if voxelizationMethod == 'Spherical':
         if voxelizationWeights is None:
-            data = vox.voxelizeSphere(points, dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2]);
+            data = vox.voxelizeSphere(points.astype('float'), dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2]);
         else:
-            data = vox.voxelizeSphereWithWeights(points, dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2], voxelizationWeights);
+            data = vox.voxelizeSphereWithWeights(points.astype('float'), dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2], voxelizationWeights);
            
     elif voxelizationMethod == 'Rectangular':
         if voxelizationWeights is None:
-            data = vox.voxelizeRectangle(points, dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2]);
+            data = vox.voxelizeRectangle(points.astype('float'), dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2]);
         else:
-            data = vox.voxelizeRectangleWithWeights(points, dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2], voxelizationWeights);
+            data = vox.voxelizeRectangleWithWeights(points.astype('float'), dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2], voxelizationWeights);
     
     elif voxelizationMethod == "Pixel":
         data = self.voxelizePixel(points, dataSize, voxelizationWeights);

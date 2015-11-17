@@ -6,7 +6,6 @@ Created on Tue Aug 11 23:16:28 2015
 """
 
 
-
 import iDISCO.Analysis.Statistics as stat
 import iDISCO.Analysis.Label as lbl
 import iDISCO.IO.IO as io
@@ -41,6 +40,19 @@ pvals, psign = stat.tTestVoxelization(g1.astype('float'), g2.astype('float'), si
 pvalsc = stat.colorPValues(pvals, psign, positive = [1,0], negative = [0,1]);
 
 io.writeData(os.path.join(baseDirectory, 'pvalues_allcells.tif'), io.sagittalToCoronalData(pvalsc.astype('float32')));
+
+
+
+
+
+pvals, psign = stat.tTestVoxelization(g1.astype('float'), g2.astype('float'), signed = True, pcutoff = None);
+
+pvalsc = stat.colorPValues(pvals, psign, positive = [1,0,0,0], negative = [0,0,1,0], positivetrend = [0,1,0,0], negativetrend = [0,0,0,1], pcutoff = 0.05);
+
+io.writeData(os.path.join(baseDirectory, 'pvalues_allcells_test.tif'), io.sagittalToCoronalData(pvalsc.astype('float32')));
+
+
+
 
 g1a = numpy.mean(g1,axis = 0);
 g1s = numpy.std(g1,axis = 0);
@@ -93,6 +105,19 @@ pvals, psign = stat.tTestVoxelization(g1.astype('float'), g2.astype('float'), si
 pvalsc = stat.colorPValues(pvals, psign, positive = [1,0], negative = [0,1]);
 
 io.writeData(os.path.join(baseDirectory, 'pvalues_weighted.tif'), io.sagittalToCoronalData(pvalsc.astype('float32')));
+
+
+
+
+
+
+pvals, psign = stat.tTestVoxelization(g1.astype('float'), g2.astype('float'), signed = True, pcutoff = None);
+
+pvalsc = stat.colorPValues(pvals, psign, positive = [1,0,0,0], negative = [0,0,1,0], positivetrend = [0,1,0,0], negativetrend = [0,0,0,1], pcutoff = 0.05);
+
+io.writeData(os.path.join(baseDirectory, 'pvalues_weighted_test.tif'), io.sagittalToCoronalData(pvalsc.astype('float32')));
+
+
 
 
 
@@ -151,9 +176,9 @@ pvalsi, psigni = stat.tTestPointsInRegions(pc1i, pc2i, pcutoff = None, signed = 
 
 
 
-from iDISCO.Analysis.Tools.QValues import estimateQValues
+#from iDISCO.Analysis.Tools.MutlipleComparisonCorrection import estimateQValues, correctPValues
 
-import iDISCO.Analysis.Tools.QValues as qv
+import iDISCO.Analysis.Tools.MultipleComparisonCorrection as mc
 
 lowcount = numpy.sum(pc1, axis=1) + numpy.sum(pc2, axis=1)
 iid = lowcount > 200;
@@ -167,13 +192,16 @@ psigni0 = psigni[iid];
 psign0 = psign[iid];
 pvalsi0 = pvalsi[iid];
 pvals0 = pvals[iid];
-qvalsi0 = qv.estimateQValues(pvalsi0);
-qvals0 = qv.estimateQValues(pvals0);
+qvalsi0 = mc.estimateQValues(pvalsi0);
+qvals0 = mc.estimateQValues(pvals0);
+
+pvalsiBH0 = mc.correctPValues(pvalsi0);
+pvalsBH0 = mc.correctPValues(pvals0);
 
 
 #make table
 
-dtypes = [('id','int64'),('mean1','f8'),('std1','f8'),('mean2','f8'),('std2','f8'),('pvalue', 'f8'),('qvalue', 'f8'),('psign', 'int64')];
+dtypes = [('id','int64'),('mean1','f8'),('std1','f8'),('mean2','f8'),('std2','f8'),('pvalue', 'f8'),('pvalue-BH', 'f8'),('qvalue', 'f8'),('psign', 'int64')];
 for i in range(len(group1)):
     dtypes.append(('count1_%d' % i, 'f8'));
 for i in range(len(group2)):
@@ -187,6 +215,7 @@ table["std1"] = pc1i0.std(axis = 1)/1000;
 table["mean2"] = pc2i0.mean(axis = 1)/1000;
 table["std2"] = pc2i0.std(axis = 1)/1000;
 table["pvalue"] = pvalsi0;
+table["pvalue-BH"] = pvalsiBH0;
 table["qvalue"] = qvalsi0;
 
 table["psign"] = psigni0;
@@ -215,7 +244,7 @@ with open(('/home/mtllab/Documents/Haloperidol/qvalues_intensities_n4_collapsedr
 
 #make table
 
-dtypes = [('id','int64'),('mean1','f8'),('std1','f8'),('mean2','f8'),('std2','f8'),('pvalue', 'f8'),('qvalue', 'f8'),('psign', 'int64')];
+dtypes = [('id','int64'),('mean1','f8'),('std1','f8'),('mean2','f8'),('std2','f8'),('pvalue', 'f8'),('pvalue-BH', 'f8'),('qvalue', 'f8'),('psign', 'int64')];
 for i in range(len(group1)):
     dtypes.append(('count1_%d' % i, 'f8'));
 for i in range(len(group2)):
@@ -229,6 +258,7 @@ table["std1"] = pc10.std(axis = 1);
 table["mean2"] = pc20.mean(axis = 1);
 table["std2"] = pc20.std(axis = 1);
 table["pvalue"] = pvals0;
+table["pvalue-BH"] = pvalsBH0;
 table["qvalue"] = qvals0;
 table["psign"] = psign0;
 for i in range(len(group1)):
