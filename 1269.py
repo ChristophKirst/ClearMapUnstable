@@ -169,7 +169,7 @@ CorrectionResamplingParameterAutoFluo["source"] = AutofluoFile;
 CorrectionResamplingParameterAutoFluo["sink"]   = os.path.join(BaseDirectory, 'autofluo_for_cfos_resampled.tif');
    
 #Files for Auto-fluorescence (Atlas Registration)
-RegistrationResamplingParameter = CorrectionResamplingParameterCfos.copy();
+RegistrationResamplingParameter = CorrectionResamplingParameterAutoFluo.copy();
 RegistrationResamplingParameter["sink"]            =  os.path.join(BaseDirectory, 'autofluo_resampled.tif');
 RegistrationResamplingParameter["resolutionSink"]  = AtlasResolution;
    

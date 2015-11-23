@@ -83,6 +83,15 @@ io.writeData(os.path.join(baseDirectory, 'std_intact_allcells.raw'), io.sagittal
 ########## weighted Heat maps ################################################
 
 
+import iDISCO.Analysis.Statistics as stat
+import iDISCO.Analysis.Label as lbl
+import iDISCO.IO.IO as io
+import numpy, os
+
+baseDirectory = '/home/mtllab/Documents/whiskers/exploration/'
+
+
+
 group1 = [#'/home/mtllab/Documents/whiskers/exploration/1/cells_heatmap_weighted.tif',
           #'/home/mtllab/Documents/whiskers/exploration/2/cells_heatmap_weighted.tif',
           '/home/mtllab/Documents/whiskers/exploration/3/cells_heatmap_weighted.tif',
@@ -143,6 +152,15 @@ io.writeData(os.path.join(baseDirectory, 'std_intact_weighted.raw'), io.sagittal
 ################# Cell counting per regions #######################################
 
 
+import iDISCO.Analysis.Statistics as stat
+import iDISCO.Analysis.Label as lbl
+import iDISCO.IO.IO as io
+import numpy, os
+
+baseDirectory = '/home/mtllab/Documents/whiskers/exploration/'
+
+
+
 group1 = [#'/home/mtllab/Documents/whiskers/exploration/1/cells_transformed_to_Atlas.npy',
           #'/home/mtllab/Documents/whiskers/exploration/2/cells_transformed_to_Atlas.npy',
           '/home/mtllab/Documents/whiskers/exploration/3/cells_transformed_to_Atlas.npy',
@@ -160,46 +178,72 @@ group1i = [fn.replace('cells_transformed_to_Atlas', 'intensities') for fn in gro
 
 group2i = [fn.replace('cells_transformed_to_Atlas', 'intensities') for fn in group2];
 
-annotationFile = '/home/mtllab/Documents/warping/annotation_25_right.tif';
+
+ABAlabeledImage = '/home/mtllab/Documents/warping/annotation_25_right.tif';
 
 
-ids, pc1, pc1i = stat.countPointsGroupInRegions(group1, intensityGroup = group1i, labeledImage = lbl.DefaultLabeledImageFile,  returnIds = True, returnCounts = True);
-pc2, pc2i = stat.countPointsGroupInRegions(group2, intensityGroup = group2i, labeledImage = lbl.DefaultLabeledImageFile, returnIds = False, returnCounts = True);
+ids, pc1, pc1i = stat.countPointsGroupInRegions(group1, intensityGroup = group1i, returnIds = True, labeledImage = ABAlabeledImage, returnCounts = True, collapse = 'yes');
+pc2, pc2i = stat.countPointsGroupInRegions(group2, intensityGroup = group2i, returnIds = False, labeledImage = ABAlabeledImage, returnCounts = True, collapse = 'yes');
+
 
 pvals, psign = stat.tTestPointsInRegions(pc1, pc2, pcutoff = None, signed = True, equal_var = True);
 pvalsi, psigni = stat.tTestPointsInRegions(pc1i, pc2i, pcutoff = None, signed = True, equal_var = True);
 
 
+import iDISCO.Analysis.Tools.MultipleComparisonCorrection as mc
+
+lowcount = numpy.sum(pc1, axis=1) + numpy.sum(pc2, axis=1)
+iid = lowcount > 200;
+
+ids0 = ids[iid];
+pc1i0 = pc1i[iid];
+pc2i0 = pc2i[iid];
+pc10 = pc1[iid];
+pc20 = pc2[iid];
+psigni0 = psigni[iid];
+psign0 = psign[iid];
+pvalsi0 = pvalsi[iid];
+pvals0 = pvals[iid];
+qvalsi0 = mc.estimateQValues(pvalsi0);
+qvals0 = mc.estimateQValues(pvals0);
+
+pvalsiBH0 = mc.correctPValues(pvalsi0);
+pvalsBH0 = mc.correctPValues(pvals0);
+
+
 #make table
 
-dtypes = [('id','int64'),('mean1','f8'),('std1','f8'),('mean2','f8'),('std2','f8'),('pvalue', 'f8'),('psign', 'int64')];
+dtypes = [('id','int64'),('mean1','f8'),('std1','f8'),('mean2','f8'),('std2','f8'),('pvalue', 'f8'),('pvalue-BH', 'f8'),('qvalue', 'f8'),('psign', 'int64')];
 for i in range(len(group1)):
     dtypes.append(('count1_%d' % i, 'f8'));
 for i in range(len(group2)):
     dtypes.append(('count2_%d' % i, 'f8'));   
 dtypes.append(('name', 'a256'));
 
-table = numpy.zeros(ids.shape, dtype = dtypes)
-table["id"] = ids;
-table["mean1"] = pc1i.mean(axis = 1)/1000000;
-table["std1"] = pc1i.std(axis = 1)/1000000;
-table["mean2"] = pc2i.mean(axis = 1)/1000000;
-table["std2"] = pc2i.std(axis = 1)/1000000;
-table["pvalue"] = pvalsi;
-table["psign"] = psigni;
+table = numpy.zeros(ids0.shape, dtype = dtypes)
+table["id"] = ids0;
+table["mean1"] = pc1i0.mean(axis = 1)/1000;
+table["std1"] = pc1i0.std(axis = 1)/1000;
+table["mean2"] = pc2i0.mean(axis = 1)/1000;
+table["std2"] = pc2i0.std(axis = 1)/1000;
+table["pvalue"] = pvalsi0;
+table["pvalue-BH"] = pvalsiBH0;
+table["qvalue"] = qvalsi0;
+
+table["psign"] = psigni0;
 for i in range(len(group1)):
-    table["count1_%d" % i] = pc1[:,i];
+    table["count1_%d" % i] = pc10[:,i];
 for i in range(len(group2)):
-    table["count2_%d" % i] = pc2[:,i];
-table["name"] = lbl.labelToName(ids);
+    table["count2_%d" % i] = pc20[:,i];
+table["name"] = lbl.labelToName(ids0);
 
 
 #sort by pvalue
-ii = numpy.argsort(pvalsi);
+ii = numpy.argsort(pvalsi0);
 tableSorted = table.copy();
 tableSorted = tableSorted[ii];
 
-with open(os.path.join(baseDirectory, 'pvalues-intensities.csv'),'w') as f:
+with open(os.path.join(baseDirectory, 'qvalues_intensities_n4_collapsedregions_test.csv'),'w') as f:
     f.write(', '.join([str(item) for item in table.dtype.names]));
     f.write('\n');
     for sublist in tableSorted:
@@ -208,41 +252,40 @@ with open(os.path.join(baseDirectory, 'pvalues-intensities.csv'),'w') as f:
     f.close();
 
 #############################
-#ids, pc1 = stat.countPointsGroupInRegions(group1, intensityGroup = None, withIds = True, labeledImage = annotationFile, withCounts = False);
-#pc2 = stat.countPointsGroupInRegions(group2, intensityGroup = None, withIds = False, labeledImage = annotationFile, withCounts = False);
-#pvals, psign = stat.tTestPointsInRegions(pc1, pc2, pcutoff = None, signed = True, equal_var = True);
 
 
 #make table
 
-dtypes = [('id','int64'),('mean1','f8'),('std1','f8'),('mean2','f8'),('std2','f8'),('pvalue', 'f8'),('psign', 'int64')];
+dtypes = [('id','int64'),('mean1','f8'),('std1','f8'),('mean2','f8'),('std2','f8'),('pvalue', 'f8'),('pvalue-BH', 'f8'),('qvalue', 'f8'),('psign', 'int64')];
 for i in range(len(group1)):
     dtypes.append(('count1_%d' % i, 'f8'));
 for i in range(len(group2)):
     dtypes.append(('count2_%d' % i, 'f8'));   
 dtypes.append(('name', 'a256'));
 
-table = numpy.zeros(ids.shape, dtype = dtypes)
-table["id"] = ids;
-table["mean1"] = pc1.mean(axis = 1);
-table["std1"] = pc1.std(axis = 1);
-table["mean2"] = pc2.mean(axis = 1);
-table["std2"] = pc2.std(axis = 1);
-table["pvalue"] = pvals;
-table["psign"] = psign;
+table = numpy.zeros(ids0.shape, dtype = dtypes)
+table["id"] = ids0;
+table["mean1"] = pc10.mean(axis = 1);
+table["std1"] = pc10.std(axis = 1);
+table["mean2"] = pc20.mean(axis = 1);
+table["std2"] = pc20.std(axis = 1);
+table["pvalue"] = pvals0;
+table["pvalue-BH"] = pvalsBH0;
+table["qvalue"] = qvals0;
+table["psign"] = psign0;
 for i in range(len(group1)):
-    table["count1_%d" % i] = pc1[:,i];
+    table["count1_%d" % i] = pc10[:,i];
 for i in range(len(group2)):
-    table["count2_%d" % i] = pc2[:,i];
-table["name"] = lbl.labelToName(ids);
+    table["count2_%d" % i] = pc20[:,i];
+table["name"] = lbl.labelToName(ids0);
 
 
 #sort by pvalue
-ii = numpy.argsort(pvals);
+ii = numpy.argsort(pvals0);
 tableSorted = table.copy();
 tableSorted = tableSorted[ii];
 
-with open(os.path.join(baseDirectory, 'pvalues-counts.csv'),'w') as f:
+with open(os.path.join(baseDirectory, 'qvalues_counts_n4_collapsedregions_test.csv'),'w') as f:
     f.write(', '.join([str(item) for item in table.dtype.names]));
     f.write('\n');
     for sublist in tableSorted:

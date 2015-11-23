@@ -55,41 +55,48 @@ VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 ######################### Cell Detection Parameters using DoG
 
 SpotDetectionParameter = {
+
+    #illumination correction
+    "flatfield" : True,   # True = automatic 
+    "illuminationScaling"   : 'mean', #"mean", # mean = rescale with flatfield mean and convert back to original dtype, "max" same with max flatfield 
+
+
     # background correctoin: None or (x,y) which is size of disk for gray scale opening
-    "backgroundSize" : (15,15),
+    "backgroundSize" : (7,7),
     
     # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
     #"dogSize" : (7, 7, 11),
-    'dogSize' : None,
+    #'dogSize' : (4,4,6),
+    "dogSize" : None,
     
     # h of h-max transform
-    "hMax" : None,
+    #"hMax" : 20,
+    
+    # cell size detection
+    "cellShapeThreshold" : 700,
     
     # intensity detection   
     "intensityMethod"  : None, #'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
     "intensitySize"    : (3,3,3),  # size of box in (x,y,z) to include in intensity determination
     
     # threshold for min intensityNone at center to be counted as cell, for saving ('None' will save everything )
-    "threshold" : 1000,
+    "threshold" : None,
       
     # write cell mask to disk (to check cell detection accuracy), if not None
     #"cellMaskFile"   : os.path.join(BaseDirectory, 'cell_mask_new/cell_mask_Z\d{4}.ome.tif'),
     #"backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
     #"hMaxFile"       : os.path.join(BaseDirectory, 'hmax/hmax_Z\d{4}.ome.tif'),
     #"dogFile" : os.path.join(BaseDirectory, 'dog/dog_Z\d{4}.ome.tif')
-    #"cellMaskFile" : None
+    #"cellMaskFile" :  os.path.join(BaseDirectory, 'cells/cells_Z\d{4}.tif'),
+    #"cellShapeFile" :  os.path.join(BaseDirectory, 'shape/shape_Z\d{4}.tif'),
     
     #some debug / quality check output
     #"verbose" : True,
     #"processMethod" : "sequential"  #  plotting during image processing only in sequential mode !
     };
 
+   
       
-# Threshold for the points to be considered in the analysis
-minthreshold = 1000; #remove points detected in the background, based on the filtered intensities
-maxthreshold = 50000; #remove staining artefacts (bright antibody clumps), based on the non-filtered original intensities 
-
-     
 
 #################### Heat map generation
 
@@ -162,7 +169,7 @@ CorrectionResamplingParameterAutoFluo["source"] = AutofluoFile;
 CorrectionResamplingParameterAutoFluo["sink"]   = os.path.join(BaseDirectory, 'autofluo_for_cfos_resampled.tif');
    
 #Files for Auto-fluorescence (Atlas Registration)
-RegistrationResamplingParameter = CorrectionResamplingParameterCfos.copy();
+RegistrationResamplingParameter = CorrectionResamplingParameterAutoFluo.copy();
 RegistrationResamplingParameter["sink"]            =  os.path.join(BaseDirectory, 'autofluo_resampled.tif');
 RegistrationResamplingParameter["resolutionSink"]  = AtlasResolution;
    

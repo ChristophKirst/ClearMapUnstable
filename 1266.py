@@ -19,7 +19,7 @@ import iDISCO.Settings as settings
 import iDISCO.IO.IO as io
 
 from iDISCO.Alignment.Resampling import resampleData;
-from iDISCO.Alignment.Elastix import alignData, transformPoints
+from iDISCO.Alignment.Elastix import alignData, transformPoints, transformData
 from iDISCO.ImageProcessing.CellDetection import detectCells
 from iDISCO.Alignment.Resampling import resamplePoints, resamplePointsInverse
 from iDISCO.Analysis.Label import countPointsInRegions
@@ -164,7 +164,7 @@ CorrectionResamplingParameterAutoFluo["source"] = AutofluoFile;
 CorrectionResamplingParameterAutoFluo["sink"]   = os.path.join(BaseDirectory, 'autofluo_for_cfos_resampled.tif');
    
 #Files for Auto-fluorescence (Atlas Registration)
-RegistrationResamplingParameter = CorrectionResamplingParameterCfos.copy();
+RegistrationResamplingParameter = CorrectionResamplingParameterAutoFluo.copy();
 RegistrationResamplingParameter["sink"]            =  os.path.join(BaseDirectory, 'autofluo_resampled.tif');
 RegistrationResamplingParameter["resolutionSink"]  = AtlasResolution;
    
@@ -190,7 +190,7 @@ CorrectionAlignmentParameter = {
 #directory of the alignment result
 RegistrationAlignmentParameter = CorrectionAlignmentParameter.copy();
 
-RegistrationAlignmentParameter["resultDirectory"] = os.path.join(BaseDirectory, 'elastix_auto_to_atlas_test');
+RegistrationAlignmentParameter["resultDirectory"] = os.path.join(BaseDirectory, 'elastix_auto_to_atlas');
     
 #moving and reference images
 RegistrationAlignmentParameter["movingImage"]  = AtlasFile;
@@ -198,7 +198,7 @@ RegistrationAlignmentParameter["fixedImage"]   = os.path.join(BaseDirectory, 'au
 
 #elastix parameter files for alignment
 RegistrationAlignmentParameter["affineParameterFile"]  = os.path.join(PathReg, 'Par0000affine.txt');
-RegistrationAlignmentParameter["bSplineParameterFile"] = os.path.join(PathReg, 'Par0000bspline_test.txt');
+RegistrationAlignmentParameter["bSplineParameterFile"] = os.path.join(PathReg, 'Par0000bspline.txt');
 
 
 

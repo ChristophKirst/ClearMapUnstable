@@ -166,8 +166,8 @@ group2i = [fn.replace('cells_transformed_to_Atlas', 'intensities') for fn in gro
 
 
 
-ids, pc1, pc1i = stat.countPointsGroupInRegions(group1, intensityGroup = group1i, returnIds = True, labeledImage = ABAlabeledImage, returnCounts = True, collapse = 'yeah');
-pc2, pc2i = stat.countPointsGroupInRegions(group2, intensityGroup = group2i, returnIds = False, labeledImage = ABAlabeledImage, returnCounts = True, collapse = 'yeah');
+ids, pc1, pc1i = stat.countPointsGroupInRegions(group1, intensityGroup = group1i, returnIds = True, labeledImage = ABAlabeledImage, returnCounts = True, collapse = None);
+pc2, pc2i = stat.countPointsGroupInRegions(group2, intensityGroup = group2i, returnIds = False, labeledImage = ABAlabeledImage, returnCounts = True, collapse = None);
 
 
 
@@ -231,7 +231,7 @@ ii = numpy.argsort(pvalsi0);
 tableSorted = table.copy();
 tableSorted = tableSorted[ii];
 
-with open(('/home/mtllab/Documents/Haloperidol/qvalues_intensities_n4_collapsedregions_test.csv'),'w') as f:
+with open(('/home/mtllab/Documents/Haloperidol/qvalues_intensities_n4_allregions_test.csv'),'w') as f:
     f.write(', '.join([str(item) for item in table.dtype.names]));
     f.write('\n');
     for sublist in tableSorted:
@@ -273,7 +273,7 @@ ii = numpy.argsort(pvals0);
 tableSorted = table.copy();
 tableSorted = tableSorted[ii];
 
-with open(os.path.join(baseDirectory, 'qvalues_counts_n4_collapsedregions_test.csv'),'w') as f:
+with open(os.path.join(baseDirectory, 'qvalues_counts_n4_allregions_test.csv'),'w') as f:
     f.write(', '.join([str(item) for item in table.dtype.names]));
     f.write('\n');
     for sublist in tableSorted:

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Sep  1 19:19:35 2015
+Created on Sun Nov 22 13:57:02 2015
 
 @author: mtllab
 """
 
 # -*- coding: utf-8 -*-
 """
-Created on Tue Sep  1 14:50:08 2015
+Created on Mon Sep 14 19:50:50 2015
 
 @author: mtllab
 """
@@ -31,10 +31,10 @@ from iDISCO.Analysis.Label import labelToName
 
 ######################### Data parameters
 
-BaseDirectory = '/home/mtllab/Documents/whiskers/exploration/4';
+BaseDirectory = '/home/mtllab/Documents/Mecp2KOPV/151030-1L';
 
-cFosFile = '/home/mtllab/Documents/whiskers/exploration/4/150716_0_8xs3-cfos-20HFcont_17-55-51/17-55-51_0_8xs3-cfos-20HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-AutofluoFile = '/home/mtllab/Documents/whiskers/exploration/4/150717_0_8xs3-auto_22-04-58/22-04-58_0_8xs3-auto_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+cFosFile = '/home/mtllab/Documents/Mecp2KOPV/151030-1L/151119_0-8xs3-PV20HFcont_15-20-25/15-20-25_0-8xs3-PV20HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+AutofluoFile = '/home/mtllab/Documents/Mecp2KOPV/151030-1L/151119_0-8xs3-autofluor_16-58-31/16-58-31_0-8xs3-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
 #cFosFileRange = {'x' : (1000,1500), 'y' : (700,1200), 'z' : (500,1080)};
 
@@ -46,7 +46,7 @@ OriginalResolution = (4.0625, 4.0625, 3);
 AtlasResolution = (25, 25, 25);
 
 #Orientation
-FinalOrientation = (1,2,3);
+FinalOrientation = (-1,2,3);
 
 VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 
@@ -55,25 +55,15 @@ VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 ######################### Cell Detection Parameters using DoG
 
 SpotDetectionParameter = {
-
-    #illumination correction
-    "flatfield" : True,   # True = automatic 
-    "illuminationScaling"   : "mean", # mean = rescale with flatfield mean and convert back to original dtype, "max" same with max flatfield 
-
-
     # background correctoin: None or (x,y) which is size of disk for gray scale opening
-    "backgroundSize" : (7,7),
+    "backgroundSize" : (15,15),
     
     # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
     #"dogSize" : (7, 7, 11),
-    #'dogSize' : (4,4,6),
-    "dogSize" : None,
+    'dogSize' : None,
     
     # h of h-max transform
-    #"hMax" : 20,
-    
-    # cell size detection
-    "cellShapeThreshold" : 700,
+    "hMax" : None,
     
     # intensity detection   
     "intensityMethod"  : None, #'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
@@ -87,15 +77,14 @@ SpotDetectionParameter = {
     #"backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
     #"hMaxFile"       : os.path.join(BaseDirectory, 'hmax/hmax_Z\d{4}.ome.tif'),
     #"dogFile" : os.path.join(BaseDirectory, 'dog/dog_Z\d{4}.ome.tif')
-    #"cellMaskFile" :  os.path.join(BaseDirectory, 'cells/cells_Z\d{4}.tif'),
-    #"cellShapeFile" :  os.path.join(BaseDirectory, 'shape/shape_Z\d{4}.tif'),
+    #"cellMaskFile" : None
     
     #some debug / quality check output
     #"verbose" : True,
     #"processMethod" : "sequential"  #  plotting during image processing only in sequential mode !
     };
 
-   
+
 
 #################### Heat map generation
 
@@ -127,7 +116,7 @@ AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
     #max number of parallel processes
-    "processes" : 6,
+    "processes" : 12,
    
     #chunk sizes
     "chunkSizeMax" : 100,
@@ -142,7 +131,6 @@ StackProcessingParameter = {
     };
 
 ResolutionAffineCFosAutoFluo =  (16, 16, 16);
-
 
 
 
@@ -169,7 +157,7 @@ CorrectionResamplingParameterAutoFluo["source"] = AutofluoFile;
 CorrectionResamplingParameterAutoFluo["sink"]   = os.path.join(BaseDirectory, 'autofluo_for_cfos_resampled.tif');
    
 #Files for Auto-fluorescence (Atlas Registration)
-RegistrationResamplingParameter = CorrectionResamplingParameterAutoFluo.copy();
+RegistrationResamplingParameter = CorrectionResamplingParameterCfos.copy();
 RegistrationResamplingParameter["sink"]            =  os.path.join(BaseDirectory, 'autofluo_resampled.tif');
 RegistrationResamplingParameter["resolutionSink"]  = AtlasResolution;
    

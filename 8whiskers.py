@@ -31,10 +31,10 @@ from iDISCO.Analysis.Label import labelToName
 
 ######################### Data parameters
 
-BaseDirectory = '/home/mtllab/Documents/whiskers/exploration/4';
+BaseDirectory = '/home/mtllab/Documents/whiskers/exploration/8';
 
-cFosFile = '/home/mtllab/Documents/whiskers/exploration/4/150716_0_8xs3-cfos-20HFcont_17-55-51/17-55-51_0_8xs3-cfos-20HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-AutofluoFile = '/home/mtllab/Documents/whiskers/exploration/4/150717_0_8xs3-auto_22-04-58/22-04-58_0_8xs3-auto_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+cFosFile = '/home/mtllab/Documents/whiskers/exploration/8/150810_0-8xs3-cfos-20HFcont_15-17-02/15-17-02_0-8xs3-cfos-20HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+AutofluoFile = '/home/mtllab/Documents/whiskers/exploration/8/150810_0-8xs3-autofluor_16-26-38/16-26-38_0-8xs3-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
 #cFosFileRange = {'x' : (1000,1500), 'y' : (700,1200), 'z' : (500,1080)};
 
@@ -58,7 +58,7 @@ SpotDetectionParameter = {
 
     #illumination correction
     "flatfield" : True,   # True = automatic 
-    "illuminationScaling"   : "mean", # mean = rescale with flatfield mean and convert back to original dtype, "max" same with max flatfield 
+    "illuminationScaling"   : 'mean', #"mean", # mean = rescale with flatfield mean and convert back to original dtype, "max" same with max flatfield 
 
 
     # background correctoin: None or (x,y) which is size of disk for gray scale opening
@@ -96,6 +96,7 @@ SpotDetectionParameter = {
     };
 
    
+      
 
 #################### Heat map generation
 
@@ -127,7 +128,7 @@ AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
     #max number of parallel processes
-    "processes" : 6,
+    "processes" : 12,
    
     #chunk sizes
     "chunkSizeMax" : 100,
@@ -142,7 +143,6 @@ StackProcessingParameter = {
     };
 
 ResolutionAffineCFosAutoFluo =  (16, 16, 16);
-
 
 
 
