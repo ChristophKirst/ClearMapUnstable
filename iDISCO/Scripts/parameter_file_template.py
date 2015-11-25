@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Mon Sep 14 19:50:50 2015
+Created on Tue Sep  1 19:19:35 2015
+
+@author: mtllab
+"""
+
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Sep  1 14:50:08 2015
 
 @author: mtllab
 """
@@ -24,10 +31,10 @@ from iDISCO.Analysis.Label import labelToName
 
 ######################### Data parameters
 
-BaseDirectory = '/home/mtllab/Documents/egr1/SutureRight';
+BaseDirectory = '/home/mtllab/Documents/whiskers/exploration/9';
 
-cFosFile = '/home/mtllab/Documents/egr1/SutureRight/150810_0-8xs3-egr1-20HFcont_08-35-38/08-35-38_0-8xs3-egr1-20HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-AutofluoFile = '/home/mtllab/Documents/egr1/SutureRight/150810_0-8xs3-autofluor_09-46-19/09-46-19_0-8xs3-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+cFosFile = '/home/mtllab/Documents/whiskers/exploration/9/150720_0_8xs3-cfos20HFcont_19-05-56/19-05-56_0_8xs3-cfos20HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
+AutofluoFile = '/home/mtllab/Documents/whiskers/exploration/9/150721_0_8xs3-autofluor_20-37-01/20-37-01_0_8xs3-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
 #cFosFileRange = {'x' : (1000,1500), 'y' : (700,1200), 'z' : (500,1080)};
 
@@ -44,19 +51,28 @@ FinalOrientation = (1,2,3);
 VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 
 
-
 ######################### Cell Detection Parameters using DoG
 
 SpotDetectionParameter = {
+
+    #illumination correction
+    "flatfield" : True,   # True = automatic 
+    "illuminationScaling"   : "mean", # mean = rescale with flatfield mean and convert back to original dtype, "max" same with max flatfield 
+
+
     # background correctoin: None or (x,y) which is size of disk for gray scale opening
-    "backgroundSize" : (15,15),
+    "backgroundSize" : (7,7),
     
     # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
     #"dogSize" : (7, 7, 11),
-    'dogSize' : None,
+    #'dogSize' : (4,4,6),
+    "dogSize" : None,
     
     # h of h-max transform
-    "hMax" : None,
+    #"hMax" : 20,
+    
+    # cell size detection
+    "cellShapeThreshold" : 700,
     
     # intensity detection   
     "intensityMethod"  : None, #'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
@@ -70,14 +86,15 @@ SpotDetectionParameter = {
     #"backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
     #"hMaxFile"       : os.path.join(BaseDirectory, 'hmax/hmax_Z\d{4}.ome.tif'),
     #"dogFile" : os.path.join(BaseDirectory, 'dog/dog_Z\d{4}.ome.tif')
-    #"cellMaskFile" : None
+    #"cellMaskFile" :  os.path.join(BaseDirectory, 'cells/cells_Z\d{4}.tif'),
+    #"cellShapeFile" :  os.path.join(BaseDirectory, 'shape/shape_Z\d{4}.tif'),
     
     #some debug / quality check output
     #"verbose" : True,
     #"processMethod" : "sequential"  #  plotting during image processing only in sequential mode !
     };
 
-
+   
 
 #################### Heat map generation
 
@@ -109,7 +126,7 @@ AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
     #max number of parallel processes
-    "processes" : 12,
+    "processes" : 6,
    
     #chunk sizes
     "chunkSizeMax" : 100,
@@ -124,6 +141,7 @@ StackProcessingParameter = {
     };
 
 ResolutionAffineCFosAutoFluo =  (16, 16, 16);
+
 
 
 
