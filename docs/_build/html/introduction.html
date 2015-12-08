@@ -1,0 +1,406 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction &mdash; ClearMap 0.9.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/clearmap.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/copybutton.js"></script>
+    <link rel="top" title="ClearMap 0.9.2 documentation" href="index.html" />
+    <link rel="next" title="ClearMap package" href="api/ClearMap.html" />
+    <link rel="prev" title="ClearMap" href="index.html" />
+ 
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+
+  </head>
+  <body role="document">
+<div style="background-color: #e2e8e9; text-align: left; padding: 10px 10px 15px 15px">
+<p style="font-size: 30px; color: color: #11557C"> <a href="index.html" style="color: #11557C; font-weight: bold">ClearMap iDISCO+ Toolbox Documentation</a></p>
+<a href="index.html"><img src="_static/brain_bw_small.jpg" height=50px width=150% border="0" alt="ClearMap"/></a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api/ClearMap.html" title="ClearMap package"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="ClearMap"
+             accesskey="P">previous</a> |</li>
+       <li><a href="index.html">home</a>|&nbsp;</li>
+       <li><a href="search.html">search</a>|&nbsp;</li>
+       <li><a href="api/ClearMap.html">documentation </a> &raquo;</li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#io">IO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#alignment">Alignment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#image-processing">Image Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analysis">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#idisco-clearing-method">iDISCO+ Clearing Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/ClearMap.html">ClearMap package</a></li>
+</ul>
+ 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">ClearMap</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="api/ClearMap.html"
+                        title="next chapter">ClearMap package</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/introduction.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="introduction">
+<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p><em>ClearMap</em> is a toolbox to analyze and register microscopy images of cleared
+tissue. It is targeted towards cleared brain tissue using the <a class="reference internal" href="#idisco-clearing-method">iDISCO+ Clearing Method</a>
+but can be used with any volumetric imaging data.</p>
+<p>The package consists of four main modules:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="#io">IO</a> for reading and writing images and data</li>
+<li><a class="reference internal" href="#alignment">Alignment</a> for resampling, reorientation and registration of images onto references</li>
+<li><a class="reference internal" href="#image-processing">Image Processing</a> for correcting and quantifying the image data</li>
+<li><a class="reference internal" href="#analysis">Analysis</a> for the statistical analysis of the data</li>
+</ul>
+</div></blockquote>
+<div class="section" id="io">
+<h2>IO<a class="headerlink" href="#io" title="Permalink to this headline">¶</a></h2>
+<p>ClearMap supports a wide range of image formats with focus on volumetric data:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="84%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Format</th>
+<th class="head">Descrition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>TIF</td>
+<td>tif images and stacks</td>
+</tr>
+<tr class="row-odd"><td>RAW / MHD</td>
+<td>raw image files with optional mhd header file</td>
+</tr>
+<tr class="row-even"><td>NRRD</td>
+<td>nearly raw raster data files</td>
+</tr>
+<tr class="row-odd"><td>IMS</td>
+<td>imaris image files</td>
+</tr>
+<tr class="row-even"><td>pattern</td>
+<td>folder, file list or file pattern of a stack of 2d images</td>
+</tr>
+</tbody>
+</table>
+<p>Images are represented internally as numpy arrays. CleaMap assumes images
+in arrays are aranged as [x,y], [x,y,z] or [x,y,z,c] where x,y,z correspond to
+the x,y,z coordinates as when viewed in an image viewer such as <a class="reference internal" href="#imagej" id="id1">[ImageJ]</a> and
+c to a possible color channel.</p>
+<p>ClearMap also supports several data formats storing data points, such as
+cell center coordinates or intensities</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="87%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Format</th>
+<th class="head">Descrition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>CSV</td>
+<td>comma separated values in text file</td>
+</tr>
+<tr class="row-odd"><td>NPY</td>
+<td>numpy binary file</td>
+</tr>
+<tr class="row-even"><td>VTK</td>
+<td>vtk point data file</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="alignment">
+<h2>Alignment<a class="headerlink" href="#alignment" title="Permalink to this headline">¶</a></h2>
+<p>The Alignment module provides tools to resample, reorient and register
+volumetric images in a fast parallel way.</p>
+<p>Image registration is done by interfacing to the <a class="reference internal" href="#elastix" id="id2">[Elastix]</a> software package.</p>
+<p>This package allows to align cleared mouse brains onto the Allan brain atlas <a class="reference internal" href="#aba" id="id3">[ABA]</a>.</p>
+</div>
+<div class="section" id="image-processing">
+<h2>Image Processing<a class="headerlink" href="#image-processing" title="Permalink to this headline">¶</a></h2>
+<p>ClearMap provides a number of image processing tools with focus on
+processing large 3d volumetric images in parallel.</p>
+<p>Main processing modules include:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="48%" />
+<col width="52%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Module</th>
+<th class="head">Descrition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.BackgroundRemoval" title="ClearMap.ImageProcessing.BackgroundRemoval"><code class="xref py py-mod docutils literal"><span class="pre">BackgroundRemoval</span></code></a></td>
+<td>Background estimation and removal via morphological opening</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.IlluminationCorrection" title="ClearMap.ImageProcessing.IlluminationCorrection"><code class="xref py py-mod docutils literal"><span class="pre">IlluminationCorrection</span></code></a></td>
+<td>Correction of vignetting and other illumination errors</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.Filter.html#module-ClearMap.ImageProcessing.Filter" title="ClearMap.ImageProcessing.Filter"><code class="xref py py-mod docutils literal"><span class="pre">Filter</span></code></a></td>
+<td>Filtering of the imagee via large set of filter kernels</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.GreyReconstruction" title="ClearMap.ImageProcessing.GreyReconstruction"><code class="xref py py-mod docutils literal"><span class="pre">GreyReconstruction</span></code></a></td>
+<td>Reconstruction of images</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.SpotDetection" title="ClearMap.ImageProcessing.SpotDetection"><code class="xref py py-mod docutils literal"><span class="pre">SpotDetection</span></code></a></td>
+<td>Detection of local peaks</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.CellDetection" title="ClearMap.ImageProcessing.CellDetection"><code class="xref py py-mod docutils literal"><span class="pre">CellDetection</span></code></a></td>
+<td>Detection of cell centers</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.CellSizeDetection" title="ClearMap.ImageProcessing.CellSizeDetection"><code class="xref py py-mod docutils literal"><span class="pre">CellSizeDetection</span></code></a></td>
+<td>Detection of cell shapes via watershed</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.IlastikClassification" title="ClearMap.ImageProcessing.IlastikClassification"><code class="xref py py-mod docutils literal"><span class="pre">IlastikClassification</span></code></a></td>
+<td>Classification of voxels via interface to <a class="reference internal" href="#ilastik" id="id4">[Ilastik]</a></td>
+</tr>
+</tbody>
+</table>
+<p>The modular structure of this sub-packages allows for fast and felxible integration of
+additional modules.</p>
+</div>
+<div class="section" id="analysis">
+<h2>Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h2>
+<p>This part of ClearMap provides a toolbox for the statistical analysis and
+visualization of detected cells or structures and region specific analysis
+of annoated data.</p>
+<p>For cleared mouse brains aligned to the <a class="reference internal" href="#aba" id="id5">[ABA]</a> a wide range of statistical
+analysis tools with respect to the anotated brain regions in the atlas is
+supported.</p>
+<p>Key moduls are</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Module</th>
+<th class="head">Descrition</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><a class="reference internal" href="api/ClearMap.Analysis.html#module-ClearMap.Analysis.Voxelization" title="ClearMap.Analysis.Voxelization"><code class="xref py py-mod docutils literal"><span class="pre">Voxelization</span></code></a></td>
+<td>Voxelization of cells for visualization and analysis</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api/ClearMap.Analysis.html#module-ClearMap.Analysis.Statistics" title="ClearMap.Analysis.Statistics"><code class="xref py py-mod docutils literal"><span class="pre">Statistics</span></code></a></td>
+<td>Statistical tools for the analysis of detected cells</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api/ClearMap.Analysis.html#module-ClearMap.Analysis.Label" title="ClearMap.Analysis.Label"><code class="xref py py-mod docutils literal"><span class="pre">Label</span></code></a></td>
+<td>Tools to analysise data with espect to annotated refereneces</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Examples can be found <code class="xref doc docutils literal"><span class="pre">here</span></code> and in the api documentation.</p>
+</div>
+<div class="section" id="idisco-clearing-method">
+<h2>iDISCO+ Clearing Method<a class="headerlink" href="#idisco-clearing-method" title="Permalink to this headline">¶</a></h2>
+<p>iDISCO stands for immunolabeling-enabled three-dimensional imaging
+of solvent-cleared organs. The iDISCO+ clearance method is
+decribed in <a class="reference internal" href="#renier2014" id="id6">[Renier2014]</a> and <a class="reference internal" href="#renier2015" id="id7">[Renier2015]</a>.</p>
+<p>iDISCO is modeled on classical histology techniques, facilitating translation
+of section staining assays to intact tissues, as evidenced by compatibility
+with 28 antibodies to both endogenous antigens and transgenic reporters
+like GFP. iDISCO enables facile volume imaging of immunolabeled structures
+in complex tissues</p>
+<dl class="docutils">
+<dt>See these videos</dt>
+<dd><ul class="first last simple">
+<li><a class="reference external" href="https://www.youtube.com/watch?v=-ctRUMQjizgvbLtLYkW6hI">Dopaminergic system in the embryonic mouse</a></li>
+<li><a class="reference external" href="https://www.youtube.com/watch?v=vbLtLYkW6hI">Cortical and hippocampal neurons in the adult mouse brain</a></li>
+</ul>
+</dd>
+</dl>
+<p>More info can be found on the <a class="reference internal" href="#idisco" id="id8">[iDISCO]</a> webpage.</p>
+</div>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<table class="docutils citation" frame="void" id="renier2014" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id6">[Renier2014]</a></td><td><a class="reference external" href="http://dx.doi.org/10.1016/j.cell.2014.10.010">iDISCO: A Simple, Rapid Method to Immunolabel Large Tissue Samples
+for Volume Imaging, N. Renier, et al. 2014</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="renier2015" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id7">[Renier2015]</a></td><td>&#8216;Mapping brain activity in the mouse at cellular resolution
+with volume imaging using immediate early genes, N. Renier, et al. in prep.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="idisco" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id8">[iDISCO]</a></td><td><a href="#id10"><span class="problematic" id="id11">`iDISCO webpage, http://idisco.info/ &lt; http://idisco.info/&gt;`_</span></a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="aba" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[ABA]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id5">2</a>)</em> <a class="reference external" href="http://www.brain-map.org/">Allan Brain Atlas, http://www.brain-map.org/.</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="elastix" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[Elastix]</a></td><td><a class="reference external" href="http://elastix.isi.uu.nl">Elastix toolbox for rigid and nonrigid registration of
+images, http://elastix.isi.uu.nl</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="ilastik" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4">[Ilastik]</a></td><td><a class="reference external" href="http://ilastik.org/">Ilastik the interactive learning and segmentation toolkit,
+http://ilastik.org/</a></td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="imagej" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[ImageJ]</td><td><a class="reference external" href="http://imagej.net/Welcome">ImageJ</a></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="api/ClearMap.html" title="ClearMap package"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="ClearMap"
+             >previous</a> |</li>
+       <li><a href="index.html">home</a>|&nbsp;</li>
+       <li><a href="search.html">search</a>|&nbsp;</li>
+       <li><a href="api/ClearMap.html">documentation </a> &raquo;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015 Christoph Kirst.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.2.
+    </div>
+  </body>
+</html>

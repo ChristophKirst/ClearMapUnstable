@@ -1,11 +1,11 @@
-git
-===
+ClearMap Git Help 
+=================
 
 
 Install
 -------
 
-plain user:
+For a plain user to use the toolbox:
 
  * in terminal execute: 
  
@@ -14,7 +14,7 @@ plain user:
     `git clone https://git.assembla.com/idisco.git`
 
 
-developer / programmer:
+For a developer / programmer:
 
   * create account at assembla
 
@@ -28,7 +28,7 @@ developer / programmer:
 	
   * configure remotes (named upstream)
         
-	`cd iDisco`
+	`cd ClearMap`
 
 	`git remote add upstream https://git.assembla.com/idisco.git`
 
@@ -38,9 +38,9 @@ developer / programmer:
 Backup
 ------
 
-to backup your version in case you followed the developer / proogrammer route:
+To backup your version in case you followed the developer / proogrammer route:
 
-  * in terminal in the iDisco directory execute:
+  * in terminal in the ClearMap directory execute:
 
       `git add -A`
 
@@ -52,14 +52,14 @@ to backup your version in case you followed the developer / proogrammer route:
 Update
 ------    
 
-plain user:
+Plain user:
 
   * in terminal in the iDisco directory execute
      
       `git pull`
 
 
-programmer: 
+Programmer: 
 
 in case you want to update your code from the upstream repository
 
@@ -83,26 +83,28 @@ in case you want to update your code from the upstream repository
 Submitting
 ----------
 
-in case you have something to contribute to the code:
+In case you have something to contribute to the code:
  
   * follow the steps in the Backup section first
 
   * got to [https://git.assembla.com/idisco.git](https://git.assembla.com/idisco.git and click pull request 
+  
+  * wait for us to accept the request
 
 
-Refs
-----
+References
+----------
 
-iDisco home:
+ClearMap home:
 
-  * [https://github.com/ChristophKirst/iDisco](https://github.com/ChristophKirst/iDisco)
+  * [https://github.com/ChristophKirst/ClearMap](https://github.com/ChristophKirst/ClearMap)
 
-A good source to get questions answered: 
+A good source to get questions answered about github: 
 
   * [https://help.github.com/](https://help.github.com)
   * [http://git-scm.com/documentation](http://git-scm.com/documentation)
 
-git home:
+Git home:
 
   * [http://git-scm.com](http://git-scm.com/)
 

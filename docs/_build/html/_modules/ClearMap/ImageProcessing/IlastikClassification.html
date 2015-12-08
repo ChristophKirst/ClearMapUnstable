@@ -1,0 +1,538 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ClearMap.ImageProcessing.IlastikClassification &mdash; ClearMap 0.9.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/clearmap.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.9.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/copybutton.js"></script>
+    <link rel="top" title="ClearMap 0.9.2 documentation" href="../../../index.html" />
+    <link rel="up" title="Module code" href="../../index.html" />
+ 
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+
+  </head>
+  <body role="document">
+<div style="background-color: #e2e8e9; text-align: left; padding: 10px 10px 15px 15px">
+<p style="font-size: 30px; color: color: #11557C"> <a href="../../../index.html" style="color: #11557C; font-weight: bold">ClearMap iDISCO+ Toolbox Documentation</a></p>
+<a href="../../../index.html"><img src="../../../_static/brain_bw_small.jpg" height=50px width=150% border="0" alt="ClearMap"/></a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+       <li><a href="../../../index.html">home</a>|&nbsp;</li>
+       <li><a href="../../../search.html">search</a>|&nbsp;</li>
+       <li><a href="../../../api/ClearMap.html">documentation </a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="../../../index.html">Table Of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/ClearMap.html">ClearMap package</a></li>
+</ul>
+ 
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for ClearMap.ImageProcessing.IlastikClassification</h1><div class="highlight"><pre>
+<span class="c"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Inteface to Illastik pixel classification</span>
+
+<span class="sd">This module allows to integrate ilastik pixel classification into the *ClearMap*</span>
+<span class="sd">pipeline. </span>
+
+<span class="sd">To train a classifier ilastik 0.5 should be used following these steps:</span>
+
+<span class="sd">    * genereate a classifier from illastik 0.5 </span>
+<span class="sd">    * press &#39;Train and classify&#39; button (eventhough the online traning is running) !</span>
+<span class="sd">    * save the classifier to a file</span>
+<span class="sd">    * use the classifiers file name in the ClearMap routine :func:`classifyPixel`</span>
+<span class="sd">    * try to avoid too many features in the classifier </span>
+<span class="sd">      as classification gets very memory intensive otherwise</span>
+<span class="sd">    </span>
+<span class="sd">Note:</span>
+<span class="sd">    Note that ilastik classification works in parallel, thus it is advised to </span>
+<span class="sd">    process the data sequentially, see </span>
+<span class="sd">    :fun:`~ClearMap.Imageprocessing.StackProcessing.sequentiallyProcessStack`  </span>
+
+<span class="sd">Note:</span>
+<span class="sd">    Ilastik 0.5 works for images in uint8 format !</span>
+
+<span class="sd">References:</span>
+<span class="sd">    `Ilastik &lt;http://ilastik.org/&gt;`_</span>
+<span class="sd">    </span>
+<span class="sd">Author</span>
+<span class="sd">&quot;&quot;&quot;</span><span class="s">&quot;&quot;&quot;</span>
+<span class="s">   - Based on the ilastik interface from `cell profiler &lt;http://www.cellprofiler.org/&gt;`_</span>
+<span class="s">   - Christoph Kirst, The Rockefeller University, New York City, 2015</span>
+<span class="s">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">h5py</span>
+<span class="kn">import</span> <span class="nn">math</span>
+
+<span class="kn">import</span> <span class="nn">ClearMap.Settings</span> <span class="kn">as</span> <span class="nn">settings</span>
+
+<span class="c">#from ClearMap.ImageProcessing.BackgroundRemoval import removeBackground</span>
+<span class="kn">from</span> <span class="nn">ClearMap.ImageProcessing.MaximaDetection</span> <span class="kn">import</span> <span class="n">findCenterOfMaxima</span><span class="p">,</span> <span class="n">findIntensity</span>
+<span class="kn">from</span> <span class="nn">ClearMap.ImageProcessing.StackProcessing</span> <span class="kn">import</span> <span class="n">writeSubStack</span>
+
+<span class="kn">from</span> <span class="nn">ClearMap.Utils.Timer</span> <span class="kn">import</span> <span class="n">Timer</span>
+<span class="kn">from</span> <span class="nn">ClearMap.Utils.ParameterTools</span> <span class="kn">import</span> <span class="n">getParameter</span><span class="p">,</span> <span class="n">writeParameter</span>
+
+<span class="kn">from</span> <span class="nn">ClearMap.Visualization.Plot</span> <span class="kn">import</span> <span class="n">plotTiling</span>
+
+
+<div class="viewcode-block" id="initializeIlastik"><a class="viewcode-back" href="../../../api/ClearMap.ImageProcessing.html#ClearMap.ImageProcessing.IlastikClassification.initializeIlastik">[docs]</a><span class="k">def</span> <span class="nf">initializeIlastik</span><span class="p">(</span><span class="n">path</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Set system path for illastik installation&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">path</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">IlastikPath</span><span class="p">;</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">path</span><span class="p">);</span></div>
+
+<span class="n">initializeIlastik</span><span class="p">();</span>
+
+<span class="n">Initialized</span> <span class="o">=</span> <span class="bp">False</span><span class="p">;</span>
+<span class="sd">&quot;&quot;&quot;bool: True if ilastik interface was sucessfully initialized .&quot;&quot;&quot;</span>
+
+
+<span class="c">#initialize ilastik</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c">#sys.stdout = sys.stderr = open(os.devnull, &quot;w&quot;)</span>
+    <span class="kn">from</span> <span class="nn">ilastik.core.dataMgr</span> <span class="kn">import</span> <span class="n">DataMgr</span><span class="p">,</span> <span class="n">DataItemImage</span>
+    <span class="kn">from</span> <span class="nn">ilastik.modules.classification.core.featureMgr</span> <span class="kn">import</span> <span class="n">FeatureMgr</span>
+    <span class="c">#from ilastik.modules.classification.core.classificationMgr import ClassificationMgr</span>
+    <span class="kn">from</span> <span class="nn">ilastik.modules.classification.core.features.featureBase</span> <span class="kn">import</span> <span class="n">FeatureBase</span>
+    <span class="kn">from</span> <span class="nn">ilastik.modules.classification.core.classifiers.classifierRandomForest</span> <span class="kn">import</span> <span class="n">ClassifierRandomForest</span>
+    <span class="kn">from</span> <span class="nn">ilastik.modules.classification.core.classificationMgr</span> <span class="kn">import</span> <span class="n">ClassifierPredictThread</span>
+    <span class="kn">from</span> <span class="nn">ilastik.core.volume</span> <span class="kn">import</span> <span class="n">DataAccessor</span>
+    
+    <span class="n">Initialized</span> <span class="o">=</span> <span class="bp">True</span><span class="p">;</span>
+    <span class="c">#sys.stdout = old_stdout</span>
+    
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="n">ilastikImport</span><span class="p">:</span>
+    <span class="c">#sys.stdout = old_stdout</span>
+    <span class="k">print</span> <span class="s">&quot;&quot;&quot;Ilastik import: failed to import the ilastik libraries, set path in ClraMap.Settings!&quot;&quot;&quot;</span>
+    <span class="c">#raise ilastikImport</span>
+    
+    
+
+<span class="k">class</span> <span class="nc">_IlastikClassifier</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Class to handle ilastik pixel classification</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        classifiers </span>
+<span class="sd">        features</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="c">#self.image_name = &#39;/home/ckirst/Science/Simulation/Matlab/StemCell3D/Test/Images/hESCells_DAPI.tif&#39;</span>
+        <span class="c">#self.classifier_name = &#39;/home/ckirst/Desktop/&#39; + &#39;classifier.h5&#39; </span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">classifiers</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="p">[];</span>        
+    
+    <span class="k">def</span> <span class="nf">loadRandomforest</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load a random forest classifier</span>
+<span class="sd">        </span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            filename (str): ilastik classifier file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c">#if filename is None:</span>
+        <span class="c">#   filename = self.classifier_name</span>
+        
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s">&#39;classifiers&#39;</span>
+        <span class="n">hf</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">prefix</span> <span class="ow">in</span> <span class="n">hf</span><span class="p">:</span>
+            <span class="n">cids</span> <span class="o">=</span> <span class="n">hf</span><span class="p">[</span><span class="n">prefix</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+            <span class="n">hf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">hf</span>
+            
+            <span class="n">classifiers</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">cid</span> <span class="ow">in</span> <span class="n">cids</span><span class="p">:</span>
+                <span class="n">classifiers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ClassifierRandomForest</span><span class="o">.</span><span class="n">loadRFfromFile</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">prefix</span> <span class="o">+</span> <span class="s">&#39;/&#39;</span> <span class="o">+</span> <span class="n">cid</span><span class="p">)))</span>   
+            <span class="bp">self</span><span class="o">.</span><span class="n">classifiers</span> <span class="o">=</span> <span class="n">classifiers</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ImportError</span><span class="p">(</span><span class="s">&#39;No Classifiers in prefix&#39;</span><span class="p">)</span>
+    
+    
+    <span class="k">def</span> <span class="nf">loadFeatures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load features</span>
+<span class="sd">        </span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            filename (str): ilastik classifier file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">featureItems</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">hf</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s">&#39;r&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">fgrp</span> <span class="ow">in</span> <span class="n">hf</span><span class="p">[</span><span class="s">&#39;features&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">featureItems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">FeatureBase</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">fgrp</span><span class="p">))</span>
+        <span class="n">hf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">del</span> <span class="n">hf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">featureItems</span>
+    
+               
+    <span class="k">def</span> <span class="nf">loadClassifier</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span> <span class="o">=</span> <span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Load a classifier </span>
+<span class="sd">        </span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            filename (str): ilastik classifier file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadRandomforest</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">loadFeatures</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        
+    
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Run ilastik classifier</span>
+<span class="sd">        </span>
+<span class="sd">        Arguments:</span>
+<span class="sd">            image (array):  image data</span>
+<span class="sd">            </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            array: probabilities of belonging to a class </span>
+<span class="sd">            (image.shape, number of classes)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c"># Transform input image to ilastik conventions</span>
+        <span class="c"># 3d = (time,x,y,z,channel) </span>
+        <span class="c"># 2d = (time,1,x,y,channel)</span>
+        <span class="n">ndim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">);</span>
+        <span class="k">if</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">image</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">image</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span> <span class="o">+</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&quot;Error: set image: failed: image must be 2 or 3d.&quot;</span><span class="p">);</span>
+        
+        <span class="c">#add singelton dim for channel</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+        
+        <span class="c"># Create ilastik dataMgr</span>
+        <span class="n">dataMgr</span> <span class="o">=</span> <span class="n">DataMgr</span><span class="p">()</span>
+        
+        <span class="n">di</span> <span class="o">=</span> <span class="n">DataItemImage</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">di</span><span class="o">.</span><span class="n">setDataVol</span><span class="p">(</span><span class="n">DataAccessor</span><span class="p">(</span><span class="n">image</span><span class="p">))</span>
+        <span class="n">dataMgr</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">di</span><span class="p">,</span> <span class="n">alreadyLoaded</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="n">dataMgr</span><span class="o">.</span><span class="n">module</span><span class="p">[</span><span class="s">&quot;Classification&quot;</span><span class="p">][</span><span class="s">&quot;classificationMgr&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">classifiers</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">classifiers</span>
+        
+          <span class="c"># Create FeatureMgr</span>
+        <span class="n">fm</span> <span class="o">=</span> <span class="n">FeatureMgr</span><span class="p">(</span><span class="n">dataMgr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">)</span>
+        <span class="n">fm</span><span class="o">.</span><span class="n">prepareCompute</span><span class="p">(</span><span class="n">dataMgr</span><span class="p">)</span>
+        <span class="n">fm</span><span class="o">.</span><span class="n">triggerCompute</span><span class="p">()</span>
+        <span class="n">fm</span><span class="o">.</span><span class="n">joinCompute</span><span class="p">(</span><span class="n">dataMgr</span><span class="p">)</span>
+      
+        <span class="c"># Predict with loaded classifier</span>
+        <span class="n">classificationPredict</span> <span class="o">=</span> <span class="n">ClassifierPredictThread</span><span class="p">(</span><span class="n">dataMgr</span><span class="p">)</span>
+        <span class="n">classificationPredict</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">classificationPredict</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">image</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">image</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span>
+        
+        
+        <span class="c">#del dataMgr</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">classificationPredict</span><span class="o">.</span><span class="n">_prediction</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="k">if</span> <span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pred</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,:,:,:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pred</span><span class="p">[</span><span class="mi">0</span><span class="p">,:,:,:,:]</span>
+
+
+<span class="k">def</span> <span class="nf">_checkIlastikInitialized</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Check if Ilastik is initialized&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">Initialized</span><span class="p">;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">Initialized</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Ilastik is not initialized, set path in Settings.py&#39;</span><span class="p">);</span>
+  
+
+
+  
+<div class="viewcode-block" id="rescaleToIlastik"><a class="viewcode-back" href="../../../api/ClearMap.ImageProcessing.html#ClearMap.ImageProcessing.IlastikClassification.rescaleToIlastik">[docs]</a><span class="k">def</span> <span class="nf">rescaleToIlastik</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">rescale</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Rescale image to achieve uint8 format used by ilasstik </span>
+<span class="sd">    </span>
+<span class="sd">    The function rescales the image and converts the image to uin8</span>
+<span class="sd">    to fit with the image representation used by ilastik.</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        img (array): image data</span>
+<span class="sd">        rescale (float or None): rescaling factor</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        array : uint8 version of the image </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">rescale</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;float32&#39;</span><span class="p">)</span> <span class="o">*</span>  <span class="n">rescale</span><span class="p">;</span>
+        <span class="n">img</span><span class="p">[</span><span class="n">img</span> <span class="o">&gt;</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;uint8&#39;</span><span class="p">);</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;uint8&#39;</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="n">img</span></div>
+
+
+
+<div class="viewcode-block" id="classifyPixel"><a class="viewcode-back" href="../../../api/ClearMap.ImageProcessing.html#ClearMap.ImageProcessing.IlastikClassification.classifyPixel">[docs]</a><span class="k">def</span> <span class="nf">classifyPixel</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">classifyPixelParameter</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">subStack</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Detect Cells Using a trained classifier in Ilastik</span>
+<span class="sd">    </span>
+<span class="sd">    Arguments:</span>
+<span class="sd">        img (array): image data</span>
+<span class="sd">        classifyPixelParameter (dict):</span>
+<span class="sd">            ============ ==================== ===========================================================</span>
+<span class="sd">            Name         Type                 Descritption</span>
+<span class="sd">            ============ ==================== ===========================================================</span>
+<span class="sd">            *classifier* (str or  None)       saves result of labeling the differnet maxima</span>
+<span class="sd">                                              if None dont correct image for illumination, if True the </span>
+<span class="sd">            *rescale*    (float or None)      optional rescaling of the image to fit uint8 format </span>
+<span class="sd">                                              used by ilastik</span>
+<span class="sd">            *save*       (str or None)        save the propabilities to belong to the classes to a file</span>
+<span class="sd">            *verbose*    (bool or int)        print / plot information about this step </span>
+<span class="sd">            ============ ==================== ===========================================================</span>
+<span class="sd">        subStack (dict or None): sub-stack information </span>
+<span class="sd">        verbose (bool): print progress info </span>
+<span class="sd">        out (object): object to write progress info to</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        array: probabilities for each pixel to belong to a class in the </span>
+<span class="sd">               classifier, shape is (img.shape, number of classes)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_checkIlastikInitialized</span><span class="p">();</span>
+    
+    <span class="n">classifier</span> <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">classifyPixelParameter</span><span class="p">,</span> <span class="s">&quot;classifier&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">);</span>
+    <span class="n">rescale</span>    <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">classifyPixelParameter</span><span class="p">,</span> <span class="s">&quot;rescale&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">);</span>    
+    <span class="n">save</span>       <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">classifyPixelParameter</span><span class="p">,</span> <span class="s">&quot;save&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">);</span>   
+     
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">writeParameter</span><span class="p">(</span><span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">,</span> <span class="n">head</span> <span class="o">=</span> <span class="s">&#39;Ilastik classification:&#39;</span><span class="p">,</span> <span class="n">classifier</span> <span class="o">=</span> <span class="n">classifier</span><span class="p">,</span> <span class="n">rescale</span> <span class="o">=</span> <span class="n">rescale</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="n">save</span><span class="p">);</span>        
+    
+    
+    <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">();</span> 
+    
+    <span class="c"># normalize data</span>
+    <span class="n">img2</span> <span class="o">=</span> <span class="n">rescaleToIlastik</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">);</span>
+    
+    <span class="c">#remove background</span>
+    <span class="c">#img2 = removeBackground(img, verbose = verbose, out = out, **parameter);</span>
+      
+    <span class="c">#classify image</span>
+
+    <span class="k">if</span> <span class="n">classifier</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>        
+        <span class="k">return</span> <span class="n">img2</span><span class="p">;</span>
+    
+    <span class="n">cls</span> <span class="o">=</span> <span class="n">_IlastikClassifier</span><span class="p">();</span>
+    <span class="n">cls</span><span class="o">.</span><span class="n">loadClassifier</span><span class="p">(</span><span class="n">classifier</span><span class="p">);</span>
+    <span class="n">imgclass</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">img2</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">save</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">imgclass</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">4</span><span class="p">]):</span>
+            <span class="n">fn</span> <span class="o">=</span> <span class="n">save</span><span class="p">[:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="s">&#39;_class_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="n">save</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:];</span>
+            <span class="n">writeSubStack</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="n">imgclass</span><span class="p">[:,:,:,</span><span class="n">i</span><span class="p">],</span> <span class="n">subStack</span> <span class="o">=</span> <span class="n">subStack</span><span class="p">)</span>
+      
+    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">imgclass</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">4</span><span class="p">]):</span>
+            <span class="n">plotTiling</span><span class="p">(</span><span class="n">imgclass</span><span class="p">[:,:,:,</span><span class="n">i</span><span class="p">]);</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">elapsedTime</span><span class="p">(</span><span class="n">head</span> <span class="o">=</span> <span class="s">&#39;Ilastik classification&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">);</span>    
+    
+    <span class="k">return</span> <span class="n">imgclass</span><span class="p">;</span></div>
+
+
+<div class="viewcode-block" id="classifyCells"><a class="viewcode-back" href="../../../api/ClearMap.ImageProcessing.html#ClearMap.ImageProcessing.IlastikClassification.classifyCells">[docs]</a><span class="k">def</span> <span class="nf">classifyCells</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">classifyCellsParameter</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">classifier</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">rescale</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
+                  <span class="n">subStack</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Detect Cells Using a trained classifier in Ilastik</span>
+<span class="sd">    </span>
+<span class="sd">    The routine assumes that the first class is identifying the cells.</span>
+<span class="sd">        </span>
+<span class="sd">    Arguments:    </span>
+<span class="sd">       img (array): image data</span>
+<span class="sd">        classifyPixelParameter (dict):</span>
+<span class="sd">            ============ ==================== ===========================================================</span>
+<span class="sd">            Name         Type                 Descritption</span>
+<span class="sd">            ============ ==================== ===========================================================</span>
+<span class="sd">            *classifier* (str or  None)       saves result of labeling the differnet maxima</span>
+<span class="sd">                                              if None dont correct image for illumination, if True the </span>
+<span class="sd">            *rescale*    (float or None)      optional rescaling of the image to fit uint8 format </span>
+<span class="sd">                                              used by ilastik</span>
+<span class="sd">            *save*       (str or None)        save the detected cell pixel to a file</span>
+<span class="sd">            *verbose*    (bool or int)        print / plot information about this step </span>
+<span class="sd">            ============ ==================== ===========================================================</span>
+<span class="sd">        subStack (dict or None): sub-stack information </span>
+<span class="sd">        verbose (bool): print progress info </span>
+<span class="sd">        out (object): object to write progress info to</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        tuple: centers of the cells, intensity measurments</span>
+<span class="sd">        </span>
+<span class="sd">    Note:    </span>
+<span class="sd">        The routine could be poteNtially refined to make use of background </span>
+<span class="sd">        detected by ilastik</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_checkIlastikInitialized</span><span class="p">();</span>
+    
+    <span class="n">classifier</span> <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">classifyCellsParameter</span><span class="p">,</span> <span class="s">&quot;classifier&quot;</span><span class="p">,</span> <span class="n">classifier</span><span class="p">);</span>
+    <span class="n">rescale</span>    <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">classifyCellsParameter</span><span class="p">,</span> <span class="s">&quot;rescale&quot;</span><span class="p">,</span> <span class="n">rescale</span><span class="p">);</span>    
+    <span class="n">save</span>       <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">classifyCellsParameter</span><span class="p">,</span> <span class="s">&quot;save&quot;</span><span class="p">,</span> <span class="n">save</span><span class="p">);</span>   
+    <span class="n">verbose</span>    <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">classifyCellsParameter</span><span class="p">,</span> <span class="s">&quot;verbose&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">);</span>
+     
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">writeParameter</span><span class="p">(</span><span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">,</span> <span class="n">head</span> <span class="o">=</span> <span class="s">&#39;Ilastik cell detection:&#39;</span><span class="p">,</span> <span class="n">classifier</span> <span class="o">=</span> <span class="n">classifier</span><span class="p">,</span> <span class="n">rescale</span> <span class="o">=</span> <span class="n">rescale</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="n">save</span><span class="p">);</span>        
+
+    <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">();</span> 
+
+    <span class="n">_checkIlastikInitialized</span><span class="p">();</span>
+    
+    <span class="c"># normalize data</span>
+    <span class="n">img2</span> <span class="o">=</span> <span class="n">rescaleToIlastik</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">);</span>
+    
+    <span class="c">#remove background</span>
+    <span class="c">#img2 = removeBackground(img, verbose = verbose, out = out, **parameter);</span>
+      
+    <span class="c">#classify image / assume class 1 are the cells !  </span>
+    <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">();</span>  
+    
+    <span class="n">cls</span> <span class="o">=</span> <span class="n">_IlastikClassifier</span><span class="p">();</span>
+    <span class="n">cls</span><span class="o">.</span><span class="n">loadClassifier</span><span class="p">(</span><span class="n">classifier</span><span class="p">);</span>
+    <span class="n">imgmax</span> <span class="o">=</span> <span class="n">cls</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">img2</span><span class="p">);</span>
+    <span class="c">#print imgmax.shape</span>
+    <span class="c">#max probability gives final class</span>
+    <span class="n">imgmax</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">imgmax</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    
+    <span class="c"># class 1 is used as cells </span>
+    <span class="n">imgmax</span> <span class="o">=</span> <span class="n">imgmax</span> <span class="o">==</span> <span class="mi">1</span><span class="p">;</span> <span class="c"># class 1 is used as cells </span>
+    
+    <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
+        <span class="n">writeSubStack</span><span class="p">(</span><span class="n">save</span><span class="p">,</span> <span class="n">imgmax</span><span class="p">,</span> <span class="n">subStack</span> <span class="o">=</span> <span class="n">subStack</span><span class="p">)</span>
+      
+    <span class="k">if</span> <span class="n">verbose</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">plotTiling</span><span class="p">(</span><span class="n">imgmax</span><span class="p">);</span>
+        
+    <span class="c">#center of maxima</span>
+    <span class="n">centers</span> <span class="o">=</span> <span class="n">findCenterOfMaxima</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span> <span class="n">imgmax</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">);</span>
+    
+    <span class="c">#intensity of cells</span>
+    <span class="n">cintensity</span> <span class="o">=</span> <span class="n">findIntensity</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">);</span>
+
+    <span class="c">#intensity of cells in filtered image</span>
+    <span class="n">cintensity2</span> <span class="o">=</span> <span class="n">findIntensity</span><span class="p">(</span><span class="n">img2</span><span class="p">,</span> <span class="n">centers</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">elapsedTime</span><span class="p">(</span><span class="n">head</span> <span class="o">=</span> <span class="s">&#39;Ilastik cell detection&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">);</span>    
+    
+    <span class="k">return</span> <span class="p">(</span> <span class="n">centers</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">cintensity</span><span class="p">,</span> <span class="n">cintensity2</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span> <span class="p">);</span>    </div>
+    
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+       <li><a href="../../../index.html">home</a>|&nbsp;</li>
+       <li><a href="../../../search.html">search</a>|&nbsp;</li>
+       <li><a href="../../../api/ClearMap.html">documentation </a> &raquo;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015 Christoph Kirst.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.2.
+    </div>
+  </body>
+</html>
