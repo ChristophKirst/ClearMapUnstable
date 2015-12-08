@@ -16,5 +16,5 @@ Thumbs.db
 *.pyc
 
 # data files
-iDISCO/Test/Data
-!iDISCO/Test/Data/Synthetic/*
+ClearMap/Test/Data
+!ClearMap/Test/Data/Synthetic/*
