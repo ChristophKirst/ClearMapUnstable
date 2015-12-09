@@ -6,11 +6,10 @@ This module defines default parameter used by various sub-packages.
 
 See Also:
    :mod:`~ClearMap.Settings`
-
-Author
-""""""
-   Christoph Kirst, The Rockefeller University, 2015
 """
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
+
 
 import os
 import ClearMap.Settings as settings
@@ -21,37 +20,61 @@ import ClearMap.Settings as settings
 # Image Processing
 ##############################################################################
 
+correctIlluminationParameter = {
+    "flatfield" : True,  # (str, True or None)  flat field intensities, if None d onot correct image for illumination, if True the 
+    "background" : None, # (str, None or array) background image as file name or array, if None background is assumed to be zero
+    "scaling" :  "Mean", # (str or None)        scale the corrected result by this factor, if 'max'/'mean' scale to keep max/mean invariant
+    "save" : None,       # (str or None)        save the corrected image to file
+    "verbose" : False    # (bool or int)        print / plot information about this step 
+}
+
+removeBackgroundParameter = {
+    "size" : (15,15),  # size for the structure element of the morphological opening
+    "save" : None,     # file name to save result of this operation
+    "verbose" : False  # print / plot information about this step       
+}
+
+
+filterDoGParameter = {
+    "size" :  (7, 7, 11),  # (tuple or None)      size for the DoG filter if None, do not correct for any background
+    "sigma" : None,        # (tuple or None)      std of outer Guassian, if None autmatically determined from size
+    "sigma2": None,        # (tuple or None)      std of inner Guassian, if None autmatically determined from size
+    "save"  : None,        # (str or None)        file name to save result of this operation if None dont save to file 
+    "verbose" : False      # (bool or int)        print / plot information about this step
+}
+
+findExtendedMaximaParameter = {
+    "hMax" : 20,            # (float or None)     h parameter for the initial h-Max transform, if None, do not perform a h-max transform
+    "size" : 5,             # (tuple)             size for the structure element for the local maxima filter
+    "threshold" : 0,        # (float or None)     include only maxima larger than a threshold, if None keep all localmaxima
+    "save"  : None,         # (str or None)       file name to save result of this operation if None dont save to file 
+    "verbose" : False       # (bool or int)       print / plot information about this step
+}
+
+findIntensityParameter = {
+    "method" : 'Max',       # (str, func, None)   method to use to determine intensity (e.g. "Max" or "Mean") if None take intensities at the given pixels
+    "size" :  (3,3,3)       # (tuple)             size of the box on which to perform the *method*
+}
+
+detectCellShapeParameter = {
+    "threshold" : 700,     # (float or None)      threshold to determine mask, pixel below this are background if None no mask is generated
+    "save"  : None,        # (str or None)        file name to save result of this operation if None dont save to file 
+    "verbose" : False      # (bool or int)        print / plot information about this step if None take intensities at the given pixels
+}
+
 ## Paramters for cell detection using spot detection algorithm 
-SpotDetectionParameter = {
-    # Background correctoin: None or (y,x) which is size of disk for gray scale opening
-    "backgroundSize" : (15,15),
-    
-    # Spot Detection via Difference of Gaussians (DoG) filter: (y,x,z) size
-    "dogSize" : (7, 7, 11),
-    
-    #h of h-max transform
-    "hMax" : 20,
-    
-    #intensity detection   
-    "intensityMethod"  : 'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
-    "intensitySize"    : (3,3,3),  # size of box in (y,x,z) to include in intensity determination
-    
-    #Threshold for min intensity at center to be counted as cell (should be similar to the h max)
-    "threshold" : 20
-    };
+detectCellParameter = {
+    "correctIlluminationParameter" : correctIlluminationParameter,
+    "removeBackgroundParameter"    : removeBackgroundParameter,
+    "filterDoGParameter"           : filterDoGParameter,
+    "findExtendedMaximaParameter"  : findExtendedMaximaParameter,
+    "findIntensityParameter"       : findIntensityParameter,
+    "detectCellShapeParameter"     : detectCellShapeParameter
+}
+
+
 """
 dict: Paramters for cell detection using the spot detection algorithm
-
-   * "backgroundSize" : Background correctoin: None or (y,x) which is size of disk for gray scale opening
-    
-   * "dogSize" : Spot Detection via Difference of Gaussians (DoG) filter: (y,x,z) size
-
-   * "hMax" : h of h-max transform
-
-   * "intensityMethod"  : None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
-   * "intensitySize"    : size of box in (y,x,z) to include in intensity determination    
-  
-   * "threshold" : Threshold for min intensity at center to be counted as cell (should be similar to the h max)
    
 See Also:
    :const:`IlastikParameter`, :const:`StackProcessingParameter`
@@ -82,7 +105,7 @@ See Also:
 """
 
 ## Parameter for processing a stack in parallel
-StackProcessingParameter = {
+processStackParameter = {
     #max number of parallel processes
     "processes" : 2,
    

@@ -1,32 +1,23 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Sep  1 19:19:35 2015
-
-@author: mtllab
-"""
-
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Sep  1 14:50:08 2015
-
-@author: mtllab
+Example script to set up the parameters for the image processing pipeline
 """
 
 
 import os, numpy, math
 
-import iDISCO.Settings as settings
-import iDISCO.IO.IO as io
+import ClearMap.Settings as settings
+import ClearMap.IO as io
 
-from iDISCO.Alignment.Resampling import resampleData;
-from iDISCO.Alignment.Elastix import alignData, transformPoints
-from iDISCO.ImageProcessing.CellDetection import detectCells
-from iDISCO.Alignment.Resampling import resamplePoints, resamplePointsInverse
-from iDISCO.Analysis.Label import countPointsInRegions
-from iDISCO.Analysis.Voxelization import voxelize
-from iDISCO.Analysis.Statistics import thresholdPoints
-from iDISCO.Utils.ParameterTools import joinParameter
-from iDISCO.Analysis.Label import labelToName
+from ClearMap.Alignment.Resampling import resampleData;
+from ClearMap.Alignment.Elastix import alignData, transformPoints
+from ClearMap.ImageProcessing.CellDetection import detectCells
+from ClearMap.Alignment.Resampling import resamplePoints, resamplePointsInverse
+from ClearMap.Analysis.Label import countPointsInRegions
+from ClearMap.Analysis.Voxelization import voxelize
+from ClearMap.Analysis.Statistics import thresholdPoints
+from ClearMap.Utils.ParameterTools import joinParameter
+from ClearMap.Analysis.Label import labelToName
 
 
 ######################### Data parameters
@@ -35,15 +26,11 @@ BaseDirectory = '/home/mtllab/Documents/whiskers/exploration/9';
 
 cFosFile = '/home/mtllab/Documents/whiskers/exploration/9/150720_0_8xs3-cfos20HFcont_19-05-56/19-05-56_0_8xs3-cfos20HFcont_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
 AutofluoFile = '/home/mtllab/Documents/whiskers/exploration/9/150721_0_8xs3-autofluor_20-37-01/20-37-01_0_8xs3-autofluor_UltraII_C00_xyz-Table Z\d{4}.ome.tif';
-cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
-#cFosFileRange = {'x' : (1000,1500), 'y' : (700,1200), 'z' : (500,1080)};
-
+#cFosFileRange = {'x' : all, 'y' : (180, 2560), 'z' : all};
+cFosFileRange = {'x' : (500,1000), 'y' : (900, 1400), 'z' : (500,1000)};
 
 #Resolution of the Data (in um / pixel)
 OriginalResolution = (4.0625, 4.0625, 3);
-
-#Resolution of the Atlas (in um/ pixel)
-AtlasResolution = (25, 25, 25);
 
 #Orientation
 FinalOrientation = (1,2,3);
@@ -51,77 +38,101 @@ FinalOrientation = (1,2,3);
 VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 
 
-######################### Cell Detection Parameters using DoG
+#Resolution of the Atlas (in um/ pixel)
+AtlasResolution = (25, 25, 25);
 
-SpotDetectionParameter = {
+#
+ResolutionAffineCFosAutoFluo =  (16, 16, 16);
 
-    #illumination correction
-    "flatfield" : True,   # True = automatic 
-    "illuminationScaling"   : "mean", # mean = rescale with flatfield mean and convert back to original dtype, "max" same with max flatfield 
+#Path to registration parameters and atlases
+PathReg        = '/home/mtllab/Documents/warping';
+AtlasFile      = os.path.join(PathReg, 'half_template_25_right.tif');
+AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
+
+#ImageProcessingMethod = "SpotDetection";
+
+######################### Cell Detection Parameters using custom filters
+
+correctIlluminationParameter = {
+    "flatfield" : None,  # (str, True or None)  flat field intensities, if None d onot correct image for illumination, if True the 
+    "background" : None, # (str, None or array) background image as file name or array, if None background is assumed to be zero
+    "scaling" :  "Mean", # (str or None)        scale the corrected result by this factor, if 'max'/'mean' scale to keep max/mean invariant
+    "save" : None,       # (str or None)        save the corrected image to file
+    "verbose" : True    # (bool or int)        print / plot information about this step 
+}
+
+removeBackgroundParameter = {
+    "size" : (7,7),  # size for the structure element of the morphological opening
+    "save" : None,     # file name to save result of this operation
+    "verbose" : True  # print / plot information about this step       
+}
 
 
-    # background correctoin: None or (x,y) which is size of disk for gray scale opening
-    "backgroundSize" : (7,7),
-    
-    # spot Detection via Difference of Gaussians (DoG) filter: (x,y,z) size
-    #"dogSize" : (7, 7, 11),
-    #'dogSize' : (4,4,6),
-    "dogSize" : None,
-    
-    # h of h-max transform
-    #"hMax" : 20,
-    
-    # cell size detection
-    "cellShapeThreshold" : 700,
-    
-    # intensity detection   
-    "intensityMethod"  : None, #'Max',  #None -> intensity of pixel of center, alternatively string of numpy array method that returns a single number
-    "intensitySize"    : (3,3,3),  # size of box in (x,y,z) to include in intensity determination
-    
-    # threshold for min intensityNone at center to be counted as cell, for saving ('None' will save everything )
-    "threshold" : None,
-      
-    # write cell mask to disk (to check cell detection accuracy), if not None
-    #"cellMaskFile"   : os.path.join(BaseDirectory, 'cell_mask_new/cell_mask_Z\d{4}.ome.tif'),
-    #"backgroundFile" : os.path.join(BaseDirectory, 'background/background_Z\d{4}.ome.tif'),
-    #"hMaxFile"       : os.path.join(BaseDirectory, 'hmax/hmax_Z\d{4}.ome.tif'),
-    #"dogFile" : os.path.join(BaseDirectory, 'dog/dog_Z\d{4}.ome.tif')
-    #"cellMaskFile" :  os.path.join(BaseDirectory, 'cells/cells_Z\d{4}.tif'),
-    #"cellShapeFile" :  os.path.join(BaseDirectory, 'shape/shape_Z\d{4}.tif'),
-    
-    #some debug / quality check output
-    #"verbose" : True,
-    #"processMethod" : "sequential"  #  plotting during image processing only in sequential mode !
-    };
+filterDoGParameter = {
+    "size" :  None,        # (tuple or None)      size for the DoG filter if None, do not correct for any background
+    "sigma" : None,        # (tuple or None)      std of outer Guassian, if None autmatically determined from size
+    "sigma2": None,        # (tuple or None)      std of inner Guassian, if None autmatically determined from size
+    "save"  : None,        # (str or None)        file name to save result of this operation if None dont save to file 
+    "verbose" : True      # (bool or int)        print / plot information about this step
+}
 
-   
+findExtendedMaximaParameter = {
+    "hMax" : None,            # (float or None)     h parameter for the initial h-Max transform, if None, do not perform a h-max transform
+    "size" : 5,             # (tuple)             size for the structure element for the local maxima filter
+    "threshold" : 0,        # (float or None)     include only maxima larger than a threshold, if None keep all localmaxima
+    "save"  : None,         # (str or None)       file name to save result of this operation if None dont save to file 
+    "verbose" : True       # (bool or int)       print / plot information about this step
+}
+
+findIntensityParameter = {
+    "method" : 'Max',       # (str, func, None)   method to use to determine intensity (e.g. "Max" or "Mean") if None take intensities at the given pixels
+    "size" :  (3,3,3)       # (tuple)             size of the box on which to perform the *method*
+}
+
+detectCellShapeParameter = {
+    "threshold" : 700,     # (float or None)      threshold to determine mask, pixel below this are background if None no mask is generated
+    "save"  : None,        # (str or None)        file name to save result of this operation if None dont save to file 
+    "verbose" : True      # (bool or int)        print / plot information about this step if None take intensities at the given pixels
+}
+
+## Paramters for cell detection using spot detection algorithm 
+detectSpotsParameter = {
+    "correctIlluminationParameter" : correctIlluminationParameter,
+    "removeBackgroundParameter"    : removeBackgroundParameter,
+    "filterDoGParameter"           : filterDoGParameter,
+    "findExtendedMaximaParameter"  : findExtendedMaximaParameter,
+    "findIntensityParameter"       : findIntensityParameter,
+    "detectCellShapeParameter"     : detectCellShapeParameter
+}
+
 
 #################### Heat map generation
 
 ##Voxelization
 
 ## Parameter to calculate density voxelization
-VoxelizationParameter = {
+voxelizeParameter = {
     #Method to voxelize
-    "voxelizationMethod" : 'Spherical', # Spherical,'Rectangular, Gaussian'
+    "method" : 'Spherical', # Spherical,'Rectangular, Gaussian'
        
     # Define bounds of the volume to be voxelized in pixels
-    "voxelizationSize" : (15,15,15),  
+    "size" : (15,15,15),  
 
     # Voxelization weigths (e/g intensities)
-    "voxelizationWeights" : None
-    };
+    "weights" : None
+};
+
+
+
 
 
 ############################ Config parameters
 
 #Processes to use for Resampling
-ResamplingParameter = { "processes": 12 };
+ResamplingParameter = {
+    "processes": 12 
+};
 
-#Path to registration parameters and atlases
-PathReg        = '/home/mtllab/Documents/warping';
-AtlasFile      = os.path.join(PathReg, 'half_template_25_right.tif');
-AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 
 #Stack Processing Parameter for cell detection
 StackProcessingParameter = {
@@ -137,10 +148,11 @@ StackProcessingParameter = {
     "chunkOptimization" : True,
     
     #increase chunk size for optimization (True, False or all = automatic)
-    "chunkOptimizationSize" : all
-    };
+    "chunkOptimizationSize" : all,
+   
+    "processMethod" : "parallel"   
+   };
 
-ResolutionAffineCFosAutoFluo =  (16, 16, 16);
 
 
 
@@ -207,13 +219,18 @@ RegistrationAlignmentParameter["bSplineParameterFile"] = os.path.join(PathReg, '
 
 
 # result files for cell coordinates (csv, vtk or ims)
-SpotDetectionParameter["source"] = cFosFile;
+SpotDetectionParameter = {
+    "source" : cFosFile,
+    "sink"   : (os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')),
+    "detectSpotsParameter" : detectSpotsParameter
+};
 SpotDetectionParameter = joinParameter(SpotDetectionParameter, cFosFileRange)
 
-SpotDetectionParameter["sink"] = (os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy'));
+ImageProcessingParameter = joinParameter(StackProcessingParameter, SpotDetectionParameter);
 
-ImageProcessingParameter = joinParameter(StackProcessingParameter, SpotDetectionParameter)
+FilteredCellsFile = (os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy'));
 
+TransformedCellsFile = os.path.join(BaseDirectory, 'cells_transformed_to_Atlas.npy')
 
 ### Transform points from Original c-Fos position to autofluorescence
 

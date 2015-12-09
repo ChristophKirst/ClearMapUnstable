@@ -30,7 +30,8 @@ from ClearMap.Visualization.Plot import plotOverlayLabel
 ##############################################################################
 
 
-def detectCellShape(img, peaks, detectCellShapeParameter = None, subStack = None, verbose = False, out = sys.stdout, **parameter):
+def detectCellShape(img, peaks, detectCellShapeParameter = None, threshold = None, save = None, verbose = False, 
+                    subStack = None, out = sys.stdout, **parameter):
     """Find cell shapes as labeled image
     
     Arguments:
@@ -40,8 +41,8 @@ def detectCellShape(img, peaks, detectCellShapeParameter = None, subStack = None
             ============ =================== ===========================================================
             Name         Type                Descritption
             ============ =================== ===========================================================
-            *threshold*  (float or None)     method to use to determine intensity (e.g. "Max" or "Mean")
-                                             if None take intensities at the given pixels
+            *threshold*  (float or None)     threshold to determine mask, pixel below this are background
+                                             if None no mask is generated
             *save*       (tuple)             size of the box on which to perform the *method*
             *verbose*    (bool or int)       print / plot information about this step 
             ============ =================== ===========================================================
@@ -52,8 +53,9 @@ def detectCellShape(img, peaks, detectCellShapeParameter = None, subStack = None
         array: labeled image where each label indicates a cell 
     """    
     
-    threshold = getParameter(detectCellShapeParameter, "threshold", None);
-    save      = getParameter(detectCellShapeParameter, "save", None);    
+    threshold = getParameter(detectCellShapeParameter, "threshold", threshold);
+    save      = getParameter(detectCellShapeParameter, "save", save);    
+    verbose   = getParameter(detectCellShapeParameter, "save", verbose);  
     
     if verbose:
         writeParameter(out = out, head = 'Cell shape detection:', threshold = threshold, save = save);    
@@ -87,7 +89,8 @@ def detectCellShape(img, peaks, detectCellShapeParameter = None, subStack = None
     return imgws
 
 
-def findCellSize(imglabel, findCelSizeParameter = None, verbose = False, out = sys.stdout, **parameter):
+def findCellSize(imglabel, findCelSizeParameter = None, maxLabel = None, verbose = False, 
+                 out = sys.stdout, **parameter):
     """Find cell size given cell shapes as labled image
 
     Arguments:
@@ -106,7 +109,8 @@ def findCellSize(imglabel, findCelSizeParameter = None, verbose = False, out = s
         array: measured intensities 
     """    
        
-    maxLabel = getParameter(findCelSizeParameter, "maxLabel", None);
+    maxLabel = getParameter(findCelSizeParameter, "maxLabel", maxLabel);
+    verbose  = getParameter(findCelSizeParameter, "verbose",  verbose); 
     
     if verbose:
         writeParameter(out = out, head = 'Cell size detection:', maxLabel = maxLabel);    

@@ -25,24 +25,25 @@ from ClearMap.Visualization.Plot import plotTiling
 ##############################################################################
 
 
-def filterDoG(img, filterDoGParameter = None, subStack = None, verbose = False, out = sys.stdout, **parameter):
+def filterDoG(img, filterDoGParameter = None,  size = None, sigma = None, sigma2 = None, save = None, verbose = None,
+              subStack = None, out = sys.stdout, **parameter):
     """Difference of Gaussians (DoG) filter step
     
     Arguments:
         img (array): image data
         filterDoGParameter (dict):
-            ======== ==================== ================================================================
-            Name     Type                 Descritption
-            ======== ==================== ================================================================
-            *size*   (tuple or None)      size for the DoG filter 
-                                          if None, do not correct for any background
-            *sigma*  (tuple or None)      std of outer Guassian, if None autmatically determined from size
-            *sigma2* (tuple or None)      std of inner Guassian, if None autmatically determined from size
-            *save*   (str or None)        file name to save result of this operation
-                                          if None dont save to file 
-            ======== ==================== ================================================================
+            ========= ==================== ================================================================
+            Name      Type                 Descritption
+            ========= ==================== ================================================================
+            *size*    (tuple or None)      size for the DoG filter 
+                                           if None, do not correct for any background
+            *sigma*   (tuple or None)      std of outer Guassian, if None autmatically determined from size
+            *sigma2*  (tuple or None)      std of inner Guassian, if None autmatically determined from size
+            *save*    (str or None)        file name to save result of this operation
+                                           if None dont save to file 
+            *verbose* (bool or int)        print progress information                            
+            ========= ==================== ================================================================
         subStack (dict or None): sub-stack information 
-        verbose (bool): print progress info 
         out (object): object to write progress info to
         
     Returns:
@@ -51,10 +52,11 @@ def filterDoG(img, filterDoGParameter = None, subStack = None, verbose = False, 
     
     timer = Timer();  
     
-    dogSize  = getParameter(filterDoGParameter, "size",  None);
-    dogSigma = getParameter(filterDoGParameter, "sigma", None);
-    dogSigma2= getParameter(filterDoGParameter, "sigma2",None);
-    dogSave  = getParameter(filterDoGParameter, "save",  None);
+    dogSize  = getParameter(filterDoGParameter, "size",  size);
+    dogSigma = getParameter(filterDoGParameter, "sigma", sigma);
+    dogSigma2= getParameter(filterDoGParameter, "sigma2",sigma2);
+    dogSave  = getParameter(filterDoGParameter, "save",  save);
+    verbose  = getParameter(filterDoGParameter, "verbose",  verbose);
     
     if verbose:
         writeParameter(out = out, head = 'DoG:', size = dogSize, sigma = dogSigma, sigma2 = dogSigma2, save = dogSave);

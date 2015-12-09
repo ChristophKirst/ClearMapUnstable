@@ -904,3 +904,24 @@ def writePoints(sink, points, **args):
     else:
         return retpoints;
     
+
+
+
+def writeTable(filename, table):
+    """Writes a numpy array with column names to a csv file.
+    
+    Arguments:
+        filename (str): filename to save table to
+        table (annotated array): table to write to file
+        
+    Returns:
+        str: file name
+    """
+    with open(filename,'w') as f:
+        for sublist in table:
+            f.write(', '.join([str(item) for item in sublist]));
+            f.write('\n');
+        f.close();
+
+    return filename;
+

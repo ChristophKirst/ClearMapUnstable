@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Converts point data into voxel image data for visulaization and analysis
-
 """
 #:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
 #:license: GNU, see LICENSE.txt for details.
@@ -15,17 +14,21 @@ pyximport.install(setup_args={"include_dirs":numpy.get_include()}, reload_suppor
 import ClearMap.IO as io
 import ClearMap.Analysis.VoxelizationCode as vox
 
-def voxelize(points, dataSize = None, sink = None, voxelizationSize = (5,5,5), voxelizationMethod = 'Spherical', voxelizationWeights = None):
+def voxelize(points, dataSize = None, sink = None, voxelizeParameter = None,  method = 'Spherical', size = (5,5,5), weights = None):
     """Converts a list of points into an volumetric image array
     
     Arguments:
         points (array): point data array
-        dataSize (tuple or None): size of the final output data, if None size is determined by maximal point coordinates
+        dataSize (tuple): size of final image
         sink (str, array or None): the location to write or return the resulting voxelization image, if None return array
-        voxelizationSize (tuple): size parameter for non-local
-        voxelizationMethod (str): voxelization method: 'Spherical', 'Rectangular', 'Pixel'
-        voxelizationWeights (array or None): weight for each point
-    
+        voxelizeParameter (dict):
+            ========== ==================== ===========================================================
+            Name       Type                 Descritption
+            ========== ==================== ===========================================================
+            *method*   (str or None)        method for voxelization: 'Spherical', 'Rectangular' or 'Pixel'
+            *size*     (tuple)              size parameter for the voxelization
+            *weights*  (array or None)      weights for each point, None is uniform weights                          
+            ========== ==================== ===========================================================      
     Returns:
         (array): volumetric data of smeared out points
     """
@@ -37,23 +40,23 @@ def voxelize(points, dataSize = None, sink = None, voxelizationSize = (5,5,5), v
     
     points = io.readPoints(points);
         
-    if voxelizationMethod == 'Spherical':
-        if voxelizationWeights is None:
-            data = vox.voxelizeSphere(points.astype('float'), dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2]);
+    if method.lower() == 'spherical':
+        if weights is None:
+            data = vox.voxelizeSphere(points.astype('float'), dataSize[0], dataSize[1], dataSize[2], size[0], size[1], size[2]);
         else:
-            data = vox.voxelizeSphereWithWeights(points.astype('float'), dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2], voxelizationWeights);
+            data = vox.voxelizeSphereWithWeights(points.astype('float'), dataSize[0], dataSize[1], dataSize[2], size[0], size[1], size[2], weights);
            
-    elif voxelizationMethod == 'Rectangular':
-        if voxelizationWeights is None:
-            data = vox.voxelizeRectangle(points.astype('float'), dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2]);
+    elif method.lower() == 'rectangular':
+        if weights is None:
+            data = vox.voxelizeRectangle(points.astype('float'), dataSize[0], dataSize[1], dataSize[2], size[0], size[1], size[2]);
         else:
-            data = vox.voxelizeRectangleWithWeights(points.astype('float'), dataSize[0], dataSize[1], dataSize[2], voxelizationSize[0], voxelizationSize[1], voxelizationSize[2], voxelizationWeights);
+            data = vox.voxelizeRectangleWithWeights(points.astype('float'), dataSize[0], dataSize[1], dataSize[2], size[0], size[1], size[2], weights);
     
-    elif voxelizationMethod == 'Pixel':
-        data = voxelizePixel(points, dataSize, voxelizationWeights);
+    elif method.lower() == 'pixel':
+        data = voxelizePixel(points, dataSize, weights);
         
     else:
-        raise RuntimeError('voxelize: mode: %s not supported!' % voxelizationMethod);
+        raise RuntimeError('voxelize: mode: %s not supported!' % method);
     
     return io.writeData(sink, data);
 

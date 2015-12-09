@@ -1,31 +1,25 @@
 # -*- coding: utf-8 -*-
 """
-Created on Tue Aug 25 20:23:41 2015
-
-@author: mtllab
+Template to run the processing pipeline
 """
 
 
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Aug  8 14:58:07 2015
-
-@author: mtllab"""
-#
-
-execfile('1whiskers.py')
+execfile('./ClearMap/Scripts/parameter_file_template.py')
 #
 resampleData(**CorrectionResamplingParameterCfos);
 resampleData(**CorrectionResamplingParameterAutoFluo);
 resampleData(**RegistrationResamplingParameter);
 resultDirectory  = alignData(**CorrectionAlignmentParameter);
 resultDirectory  = alignData(**RegistrationAlignmentParameter);
+
+
 #
 detectCells(**ImageProcessingParameter);
-#
-points, intensities = io.readPoints((os.path.join(BaseDirectory, 'cells-allpoints.npy'),  os.path.join(BaseDirectory,  'intensities-allpoints.npy')));
+
+
+points, intensities = io.readPoints(ImageProcessingParameter["sink"]);
 points, intensities = thresholdPoints(points, intensities, threshold = (20, 900), row = (3,3));
-io.writePoints((os.path.join(BaseDirectory, 'cells.npy'), os.path.join(BaseDirectory,  'intensities.npy')), (points, intensities));
+io.writePoints(FilteredCellsFile, (points, intensities));
 points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
 points = resamplePoints(**CorrectionResamplingPointsParameter);
 points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
@@ -34,16 +28,26 @@ points = resamplePointsInverse(**CorrectionResamplingPointsInverseParameter);
 RegistrationResamplingPointParameter["pointSource"] = points;
 points = resamplePoints(**RegistrationResamplingPointParameter);
 points = transformPoints(points, transformDirectory = RegistrationAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
-TransformedCellFile = os.path.join(BaseDirectory, 'cells_transformed_to_Atlas.npy')
-io.writePoints(TransformedCellFile, points);
+io.writePoints(TransformedCellsFile, points);
+
+
+# Check Cell; detection
+import iDISCO.Visualization.Plot as plt;
+pointSource= os.path.join(BaseDirectory, FilteredCellsFile[0]);
+data = plt.overlayPoints(cFosFile, pointSource, pointColor = None, **cFosFileRange);
+io.writeData(os.path.join(BaseDirectory, 'cells_check.tif'), data);
+
 
 #################### Heat map generation
 
-vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+points = io.readPoints(TransformedCellsFile)
+intensities = io.readPoints(FilteredCellsFile[1])
+
+vox = voxelize(points, AtlasFile, **voxelizeParameter);
 io.writeData(os.path.join(BaseDirectory, 'cells_heatmap.tif'), vox.astype('int32'));
 
-VoxelizationParameter["voxelizationWeights"] = intensities[:,0].astype(float);
-vox = voxelize(points, AtlasFile, **VoxelizationParameter);
+voxelizeParameter["weights"] = intensities[:,0].astype(float);
+vox = voxelize(points, AtlasFile, **voxelizeParameter);
 io.writeData(os.path.join(BaseDirectory, 'cells_heatmap_weighted.tif'), vox.astype('int32'));
 
 
@@ -52,22 +56,15 @@ table = numpy.zeros(ids.shape, dtype=[('id','int64'),('counts','f8'),('name', 'a
 table["id"] = ids;
 table["counts"] = counts;
 table["name"] = labelToName(ids);
-with open(os.path.join(BaseDirectory, 'Annotated_counts_intensities.csv'),'w') as f:
-    for sublist in table:
-        f.write(', '.join([str(item) for item in sublist]));
-        f.write('\n');
-    f.close();
+io.writeTable(os.path.join(BaseDirectory, 'Annotated_counts_intensities.csv'), table);
+
 
 ids, counts = countPointsInRegions(points, labeledImage = AnnotationFile, intensities = None);
 table = numpy.zeros(ids.shape, dtype=[('id','int64'),('counts','f8'),('name', 'a256')])
 table["id"] = ids;
 table["counts"] = counts;
 table["name"] = labelToName(ids);
-with open(os.path.join(BaseDirectory, 'Annotated_counts.csv'),'w') as f:
-    for sublist in table:
-        f.write(', '.join([str(item) for item in sublist]));
-        f.write('\n');
-    f.close();
+io.writeTable(os.path.join(BaseDirectory, 'Annotated_counts.csv'), table);
 
 
 
