@@ -18,4 +18,3 @@ Thumbs.db
 # data files
 ClearMap/Test/Data
 !ClearMap/Test/Data/Synthetic/*
-!ClearMap/Test/Data/Documentation/*
