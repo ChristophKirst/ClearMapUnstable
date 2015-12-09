@@ -2,10 +2,9 @@
 """
 Some statistics tests not in standard python packages
 
-Author
-""""""
-    Christoph Kirst, The Rockefeller University, 2015
 """
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
 
 import sys
 import numpy as np
@@ -27,8 +26,7 @@ def testCramerVonMises2Sample(x, y):
         can be different
 
     Returns:
-        (float): T statistic
-        (float): two-tailed p-value
+        (float, float): T statistic, two-tailed p-value
         
     References:
         - modified from https://github.com/scipy/scipy/pull/3659

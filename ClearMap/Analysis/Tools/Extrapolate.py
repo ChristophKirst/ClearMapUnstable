@@ -2,10 +2,9 @@
 """
 Method to extend interpolation objects to constantly / linearly extrapolate.
 
-Author
-""""""
-    Christoph Kirst, The Rockefeller Universty, 2015
 """
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
 
 import scipy.interpolate
 

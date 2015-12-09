@@ -31,13 +31,10 @@ Key                        Description
 
 For exmaple the :func:`writeSubStack` routine makes uses of this information
 to write out only the sub-parts of the image that is will contribute to the
-final total image.
-
-
-Author
-""""""
-   Christoph Kirst, The Rockefeller University, New York City, 2015   
+final total image. 
 """
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
 
 import sys
 import math

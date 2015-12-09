@@ -10,10 +10,6 @@ See Also:
     * :const:`IlastikPath`
     * :const:`ElastixPath`
     * :mod:`~ClearMap.Parameter`
-    
-Author
-""""""
-   Christoph Kirst, The Rockefeller University, 2015
 """
 
 import os

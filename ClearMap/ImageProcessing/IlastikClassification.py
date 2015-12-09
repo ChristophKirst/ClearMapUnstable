@@ -23,13 +23,11 @@ Note:
     Ilastik 0.5 works for images in uint8 format !
 
 References:
-    `Ilastik <http://ilastik.org/>`_
-    
-Author
-""""""
-   - Based on the ilastik interface from `cell profiler <http://www.cellprofiler.org/>`_
-   - Christoph Kirst, The Rockefeller University, New York City, 2015
+    * `Ilastik <http://ilastik.org/>`_
+    * Based on the ilastik interface from `cell profiler <http://www.cellprofiler.org/>`_
 """
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
 
 import sys
 import numpy

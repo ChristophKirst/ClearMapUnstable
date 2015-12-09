@@ -13,6 +13,8 @@ Author
     Modified by Chirstoph Kirst to optimize integration
     into ClearMap, The Rockefeller University, New York City, 2015
 """
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
 
 import numpy as np
 

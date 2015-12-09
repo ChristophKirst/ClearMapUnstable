@@ -4,10 +4,9 @@ Cell shape and size detection routines
 
 The cell shape detection is based on a seeded and masked watershed.
 
-Author
-""""""
-   Christoph Kirst, The Rockefeller University, New York City, 2015   
 """
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
 
 import sys
 import numpy

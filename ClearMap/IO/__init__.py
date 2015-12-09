@@ -135,12 +135,9 @@ Summary
 -------
     - All routines accesing data or data properties accept file name strings or numpy arrays or None
     - Numerical arrays represent data and point coordinates as [x,y,z] or [x,y] 
-
-
-Author
-""""""
-   Christoph Kirst, The Rockefeller University, New York City, 2015
 """ 
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
 
 from ClearMap.IO.IO import * 
 

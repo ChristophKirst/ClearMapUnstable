@@ -17,12 +17,10 @@ see e.g. :func:`flatfieldLineFromRegression`.
 
 References: 
     Fundamentals of Light Microscopy and Electronic Imaging, p. 421
-    
-Author
-""""""
-   Christoph Kirst, The Rockefeller University, New York City, 2015
-"""
 
+"""
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
 
 import sys
 import numpy
