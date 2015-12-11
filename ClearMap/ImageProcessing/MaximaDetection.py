@@ -175,7 +175,7 @@ def findExtendedMaxima(img, findExtendedMaximaParameter = None, hMax = None, siz
         #plotOverlayLabel(img, imgmax.astype('int64'), alpha = True)     
 
     if not save is None:#
-        writeSubStack(save, imgmax, subStack = subStack)
+        writeSubStack(save, imgmax.astype('int8'), subStack = subStack)
         
     if verbose:
         out.write(timer.elapsedTime(head = 'Extended Max') + '\n');

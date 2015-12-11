@@ -116,6 +116,8 @@ def correctIllumination(img, correctIlluminationParameter = None, flatfield = No
         
         writeParameter(out = out, head = 'Illumination correction:', flatfield = fld, background = bkg, scaling = scaling, save = save);  
     
+    
+    print subStack;
  
     if not subStack is None:
         x = subStack["x"];
@@ -135,12 +137,21 @@ def correctIllumination(img, correctIlluminationParameter = None, flatfield = No
         
     elif flatfield is True:
         # default flatfield correction
-        flatfield = flatfieldFromLine(DefaultFlatFieldLineFile, img.shape[0]);
+    
+        if subStack is None:    
+            flatfield = flatfieldFromLine(DefaultFlatFieldLineFile, img.shape[0]);
+        else:
+            dataSize = io.dataSize(subStack["source"]);
+            flatfield = flatfieldFromLine(DefaultFlatFieldLineFile, dataSize[0]);
             
     elif isinstance(flatfield, str):
         # point or image file
         if io.isPointFile(flatfield):
-            flatfield = flatfieldFromLine(flatfield, img.shape[0]);
+            if subStack is None:    
+                flatfield = flatfieldFromLine(flatfield, img.shape[0]);
+            else:
+               dataSize = io.dataSize(subStack["source"]);
+               flatfield = flatfieldFromLine(flatfield, dataSize[0]);
         else:
             flatfield = io.readData(flatfield);
     
@@ -175,16 +186,24 @@ def correctIllumination(img, correctIlluminationParameter = None, flatfield = No
     
         
     # rescale
-    if scaling == "mean" or scaling is True:
-        # scale back by average flat field correction:
-        sf = ffmean;
-    elif scaling == "max":
-        sf = ffmax;
+    if scaling is True:
+        scaling = "mean";
+    
+    if isinstance(scaling, str):
+        if scaling.lower() == "mean":
+            # scale back by average flat field correction:
+            sf = ffmean;
+        elif scaling.lower() == "max":
+            sf = ffmax;
+        else:
+            raise RuntimeError('Scaling not "Max" or "Mean" but %s' % scaling);
     else:
         sf = scaling;
       
     if verbose:
          writeParameter(out = out, head = 'Illumination correction:',  scaling = sf);
+    
+        
     
     if not sf is None:
         img = img * sf;

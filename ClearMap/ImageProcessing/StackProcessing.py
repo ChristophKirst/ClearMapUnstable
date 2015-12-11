@@ -94,14 +94,14 @@ def writeSubStack(filename, img, subStack = None):
     It assumes that the filename is a patterned file name.
     
     Arguments:
-        filename (str): file name pattern as described in 
-                        :mod:`~ClearMap.Io.FileList`
+        filename (str or None): file name pattern as described in 
+                        :mod:`~ClearMap.Io.FileList`, if None return as array
         img (array): image data of sub-stack
         subStack (dict or None): sub-stack information, if None write entire image
                                  see :ref:`SubStack`
     
     Returns:
-       str: the file name pattern 
+       str or array: the file name pattern or image
     """
     
     if not subStack is None:
@@ -113,7 +113,7 @@ def writeSubStack(filename, img, subStack = None):
         ii = 0;
         ee = -1;
     
-    io.writeData(filename, img[:,:,ii:ee], startIndex = si );     
+    return io.writeData(filename, img[:,:,ii:ee], startIndex = si );     
 
 
 

@@ -55,7 +55,7 @@ def detectCellShape(img, peaks, detectCellShapeParameter = None, threshold = Non
     
     threshold = getParameter(detectCellShapeParameter, "threshold", threshold);
     save      = getParameter(detectCellShapeParameter, "save", save);    
-    verbose   = getParameter(detectCellShapeParameter, "save", verbose);  
+    verbose   = getParameter(detectCellShapeParameter, "verbose", verbose);  
     
     if verbose:
         writeParameter(out = out, head = 'Cell shape detection:', threshold = threshold, save = save);    

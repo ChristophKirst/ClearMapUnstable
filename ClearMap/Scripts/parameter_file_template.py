@@ -106,6 +106,15 @@ detectSpotsParameter = {
 }
 
 
+
+     *classifier* (str or  None)       saves result of labeling the differnet maxima
+                                              if None dont correct image for illumination, if True the 
+            *rescale*    (float or None)      optional rescaling of the image to fit uint8 format 
+                                              used by ilastik
+
+
+
+
 #################### Heat map generation
 
 ##Voxelization

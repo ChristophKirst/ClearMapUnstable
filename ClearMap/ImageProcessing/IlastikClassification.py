@@ -34,7 +34,10 @@ import numpy
 import h5py
 import math
 
+
+from multiprocessing import Pool
 import ClearMap.Settings as settings
+import ClearMap.IO as io
 
 #from ClearMap.ImageProcessing.BackgroundRemoval import removeBackground
 from ClearMap.ImageProcessing.MaximaDetection import findCenterOfMaxima, findIntensity
@@ -232,10 +235,50 @@ def rescaleToIlastik(img, rescale = None, verbose = False, out = sys.stdout, **p
         img = img.astype('float32') *  rescale;
         img[img > math.pow(2,8)-1] = math.pow(2,8)-1;
         img = img.astype('uint8');
+    elif rescale == 'max':
+        rescale =  math.pow(2,8)-1 / float(img.max());
+        img = img.astype('float32') *  rescale;
+        img[img > math.pow(2,8)-1] = math.pow(2,8)-1;
+        img = img.astype('uint8');
     else:
         img = img.astype('uint8');
     
     return img
+
+
+def _findMax(arg):
+        source = arg[0];
+        z = arg[1];
+        img = io.readData(source, z = (z,z+1));
+        return img.max();
+    
+
+def rescaleFactorIlastik(source, processes = 12):
+    """Determines rescale factor given a image file
+
+    Arguments:
+        source: source file / image
+    
+    Returns:
+        float: rescale factor
+    """
+    
+    sizeZ = io.dataZSize(source);
+
+    argdata = [];
+    for i in range(sizeZ):
+        argdata.append([source, i]);
+    #print argdata
+    
+    # process in parallel
+    pool = Pool(processes = processes);    
+    imax = pool.map(_findMax, argdata);
+    imax = max(imax);
+    
+    return float(imax) / (math.pow(2,8)-1);
+
+
+
 
 
 
@@ -250,8 +293,8 @@ def classifyPixel(img, classifyPixelParameter = None, subStack = None, verbose =
             ============ ==================== ===========================================================
             *classifier* (str or  None)       saves result of labeling the differnet maxima
                                               if None dont correct image for illumination, if True the 
-            *rescale*    (float or None)      optional rescaling of the image to fit uint8 format 
-                                              used by ilastik
+            *rescale*    (float,all, or None) optional rescaling of the image to fit uint8 format 
+                                              used by ilastik,  rescale 
             *save*       (str or None)        save the propabilities to belong to the classes to a file
             *verbose*    (bool or int)        print / plot information about this step 
             ============ ==================== ===========================================================
