@@ -20,7 +20,7 @@
 
 
 \title{ClearMap Documentation}
-\date{December 08, 2015}
+\date{December 18, 2015}
 \release{0.9.2}
 \author{Christoph Kirst}
 \newcommand{\sphinxlogo}{}
@@ -631,12 +631,6 @@ All routines accesing data or data properties accept file name strings or numpy 
 Numerical arrays represent data and point coordinates as {[}x,y,z{]} or {[}x,y{]}
 
 \end{itemize}
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 
 
 \paragraph{ClearMap.IO.IO module}
@@ -1477,6 +1471,31 @@ point data of source
 
 \end{fulllineitems}
 
+\index{writeTable() (in module ClearMap.IO.IO)}
+
+\begin{fulllineitems}
+\phantomsection\label{api/ClearMap.IO:ClearMap.IO.IO.writeTable}\pysiglinewithargsret{\bfcode{writeTable}}{\emph{filename}, \emph{table}}{}
+Writes a numpy array with column names to a csv file.
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode\begin{itemize}
+\item {} 
+\textbf{filename} (\emph{str}) --
+filename to save table to
+
+\item {} 
+\textbf{table} (\emph{annotated array}) --
+table to write to file
+
+\end{itemize}
+
+\item[{Returns}] \leavevmode
+\emph{str} --
+file name
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
 
 
 \paragraph{ClearMap.IO.CSV module}
@@ -1497,12 +1516,6 @@ The module utilizes the csv file writer/reader from numpy.
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k}{print} \PYG{n}{points2}\PYG{o}{.}\PYG{n}{shape}
 \PYG{g+go}{(5, 3)}
 \end{Verbatim}
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{writePoints() (in module ClearMap.IO.CSV)}
 
 \begin{fulllineitems}
@@ -1589,12 +1602,6 @@ For example: \code{/test\textbackslash{}d\{4\}.tif} or  \code{/test\textbackslas
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k}{print} \PYG{n}{img}\PYG{o}{.}\PYG{n}{shape}
 \PYG{g+go}{(20, 50, 10)}
 \end{Verbatim}
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{readFileList() (in module ClearMap.IO.FileList)}
 
 \begin{fulllineitems}
@@ -2945,12 +2952,6 @@ Main routines for elastix registration are:
 {\hyperref[api/ClearMap.Alignment:ClearMap.Alignment.Elastix.transformData]{\emph{\code{transformData()}}}} and
 {\hyperref[api/ClearMap.Alignment:ClearMap.Alignment.Elastix.transformPoints]{\emph{\code{transformPoints()}}}}.
 
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
-
 
 \paragraph{ClearMap.Alignment.Elastix module}
 \label{api/ClearMap.Alignment:clearmap-alignment-elastix-module}\label{api/ClearMap.Alignment:module-ClearMap.Alignment.Elastix}\index{ClearMap.Alignment.Elastix (module)}
@@ -3012,12 +3013,6 @@ Main routines are: {\hyperref[api/ClearMap.Alignment:ClearMap.Alignment.Elastix.
 {\hyperref[api/ClearMap.Alignment:module-ClearMap.Alignment.Resampling]{\emph{\code{Resampling}}}}
 
 
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, 2015
-\end{quote}
 \index{ElastixBinary (in module ClearMap.Alignment.Elastix)}
 
 \begin{fulllineitems}
@@ -3605,12 +3600,6 @@ A \emph{permutation} is an orientation without signs and with numbers from 0 to 
 \PYG{g+gp}{\PYGZgt{}\PYGZgt{}\PYGZgt{} }\PYG{k}{print} \PYG{n}{data}\PYG{o}{.}\PYG{n}{shape}
 \PYG{g+go}{(216, 256, 10)}
 \end{Verbatim}
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University 2015
-\end{quote}
 \index{fixOrientation() (in module ClearMap.Alignment.Resampling)}
 
 \begin{fulllineitems}
@@ -4361,12 +4350,6 @@ processing packages including:
 Routines form these packages were freely choosen to optimize for speed and
 memory consumption
 
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
-
 
 \paragraph{ClearMap.ImageProcessing.StackProcessing module}
 \label{api/ClearMap.ImageProcessing:clearmap-imageprocessing-stackprocessing-module}\label{api/ClearMap.ImageProcessing:module-ClearMap.ImageProcessing.StackProcessing}\index{ClearMap.ImageProcessing.StackProcessing (module)}
@@ -4433,12 +4416,6 @@ correspond to the overlap centers
 For exmaple the {\hyperref[api/ClearMap.ImageProcessing:ClearMap.ImageProcessing.StackProcessing.writeSubStack]{\emph{\code{writeSubStack()}}}} routine makes uses of this information
 to write out only the sub-parts of the image that is will contribute to the
 final total image.
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{printSubStackInfo() (in module ClearMap.ImageProcessing.StackProcessing)}
 
 \begin{fulllineitems}
@@ -4471,9 +4448,9 @@ It assumes that the filename is a patterned file name.
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode\begin{itemize}
 \item {} 
-\textbf{filename} (\emph{str}) --
+\textbf{filename} (\emph{str or None}) --
 file name pattern as described in
-\code{FileList}
+\code{FileList}, if None return as array
 
 \item {} 
 \textbf{img} (\emph{array}) --
@@ -4487,8 +4464,8 @@ see \DUspan{xref,std,std-ref}{SubStack}
 \end{itemize}
 
 \item[{Returns}] \leavevmode
-\emph{str} --
-the file name pattern
+\emph{str or array} --
+the file name pattern or image
 
 \end{description}\end{quote}
 
@@ -4814,12 +4791,6 @@ in the future:
 {\hyperref[api/ClearMap.ImageProcessing:module-ClearMap.ImageProcessing]{\emph{\code{ImageProcessing}}}}
 
 
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{detectCells() (in module ClearMap.ImageProcessing.CellDetection)}
 
 \begin{fulllineitems}
@@ -4893,16 +4864,10 @@ Returns:
 Cell shape and size detection routines
 
 The cell shape detection is based on a seeded and masked watershed.
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{detectCellShape() (in module ClearMap.ImageProcessing.CellSizeDetection)}
 
 \begin{fulllineitems}
-\phantomsection\label{api/ClearMap.ImageProcessing:ClearMap.ImageProcessing.CellSizeDetection.detectCellShape}\pysiglinewithargsret{\bfcode{detectCellShape}}{\emph{img}, \emph{peaks}, \emph{detectCellShapeParameter=None}, \emph{subStack=None}, \emph{verbose=False}, \emph{out=\textless{}open file `\textless{}stdout\textgreater{}'}, \emph{mode `w'\textgreater{}}, \emph{**parameter}}{}
+\phantomsection\label{api/ClearMap.ImageProcessing:ClearMap.ImageProcessing.CellSizeDetection.detectCellShape}\pysiglinewithargsret{\bfcode{detectCellShape}}{\emph{img}, \emph{peaks}, \emph{detectCellShapeParameter=None}, \emph{threshold=None}, \emph{save=None}, \emph{verbose=False}, \emph{subStack=None}, \emph{out=\textless{}open file `\textless{}stdout\textgreater{}'}, \emph{mode `w'\textgreater{}}, \emph{**parameter}}{}
 Find cell shapes as labeled image
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode\begin{itemize}
@@ -4931,8 +4896,8 @@ Descritption
  & 
 (float or None)
  & 
-method to use to determine intensity (e.g. ``Max'' or ``Mean'')
-if None take intensities at the given pixels
+threshold to determine mask, pixel below this are background
+if None no mask is generated
 \\
 \hline
 \emph{save}
@@ -4972,7 +4937,7 @@ labeled image where each label indicates a cell
 \index{findCellSize() (in module ClearMap.ImageProcessing.CellSizeDetection)}
 
 \begin{fulllineitems}
-\phantomsection\label{api/ClearMap.ImageProcessing:ClearMap.ImageProcessing.CellSizeDetection.findCellSize}\pysiglinewithargsret{\bfcode{findCellSize}}{\emph{imglabel}, \emph{findCelSizeParameter=None}, \emph{verbose=False}, \emph{out=\textless{}open file `\textless{}stdout\textgreater{}'}, \emph{mode `w'\textgreater{}}, \emph{**parameter}}{}
+\phantomsection\label{api/ClearMap.ImageProcessing:ClearMap.ImageProcessing.CellSizeDetection.findCellSize}\pysiglinewithargsret{\bfcode{findCellSize}}{\emph{imglabel}, \emph{findCelSizeParameter=None}, \emph{maxLabel=None}, \emph{verbose=False}, \emph{out=\textless{}open file `\textless{}stdout\textgreater{}'}, \emph{mode `w'\textgreater{}}, \emph{**parameter}}{}
 Find cell size given cell shapes as labled image
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode\begin{itemize}
@@ -5120,22 +5085,10 @@ Structured elements defined in
 combination with various morphological operations, e.g. used in the
 :mod:\textasciitilde{}ClearMap.ImageProcessing.BackgroundRemoval{}` module.
 
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
-
 
 \subparagraph{ClearMap.ImageProcessing.Filter.LinearFilter module}
 \label{api/ClearMap.ImageProcessing.Filter:module-ClearMap.ImageProcessing.Filter.LinearFilter}\label{api/ClearMap.ImageProcessing.Filter:clearmap-imageprocessing-filter-linearfilter-module}\index{ClearMap.ImageProcessing.Filter.LinearFilter (module)}
 Linear filter module
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{filterLinear() (in module ClearMap.ImageProcessing.Filter.LinearFilter)}
 
 \begin{fulllineitems}
@@ -5238,16 +5191,10 @@ Converts image to float32 type if filter is active!
 \subparagraph{ClearMap.ImageProcessing.Filter.DoGFilter module}
 \label{api/ClearMap.ImageProcessing.Filter:module-ClearMap.ImageProcessing.Filter.DoGFilter}\label{api/ClearMap.ImageProcessing.Filter:clearmap-imageprocessing-filter-dogfilter-module}\index{ClearMap.ImageProcessing.Filter.DoGFilter (module)}
 DoG filter module
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{filterDoG() (in module ClearMap.ImageProcessing.Filter.DoGFilter)}
 
 \begin{fulllineitems}
-\phantomsection\label{api/ClearMap.ImageProcessing.Filter:ClearMap.ImageProcessing.Filter.DoGFilter.filterDoG}\pysiglinewithargsret{\bfcode{filterDoG}}{\emph{img}, \emph{filterDoGParameter=None}, \emph{subStack=None}, \emph{verbose=False}, \emph{out=\textless{}open file `\textless{}stdout\textgreater{}'}, \emph{mode `w'\textgreater{}}, \emph{**parameter}}{}
+\phantomsection\label{api/ClearMap.ImageProcessing.Filter:ClearMap.ImageProcessing.Filter.DoGFilter.filterDoG}\pysiglinewithargsret{\bfcode{filterDoG}}{\emph{img}, \emph{filterDoGParameter=None}, \emph{size=None}, \emph{sigma=None}, \emph{sigma2=None}, \emph{save=None}, \emph{verbose=None}, \emph{subStack=None}, \emph{out=\textless{}open file `\textless{}stdout\textgreater{}'}, \emph{mode `w'\textgreater{}}, \emph{**parameter}}{}
 Difference of Gaussians (DoG) filter step
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode\begin{itemize}
@@ -5297,16 +5244,19 @@ std of inner Guassian, if None autmatically determined from size
 file name to save result of this operation
 if None dont save to file
 \\
+\hline
+\emph{verbose}
+ & 
+(bool or int)
+ & 
+print progress information
+\\
 \hline\end{tabulary}
 
 
 \item {} 
 \textbf{subStack} (\emph{dict or None}) --
 sub-stack information
-
-\item {} 
-\textbf{verbose} (\emph{bool}) --
-print progress info
 
 \item {} 
 \textbf{out} (\emph{object}) --
@@ -5414,12 +5364,6 @@ Disk filter
 \\
 \hline\end{tabulary}
 
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{filterKernel() (in module ClearMap.ImageProcessing.Filter.FilterKernel)}
 
 \begin{fulllineitems}
@@ -5573,12 +5517,6 @@ Disk structure
 \begin{notice}{note}{Note:}
 To be extended!
 \end{notice}
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{structureElement() (in module ClearMap.ImageProcessing.Filter.StructureElement)}
 
 \begin{fulllineitems}
@@ -5690,12 +5628,6 @@ see e.g. {\hyperref[api/ClearMap.ImageProcessing:ClearMap.ImageProcessing.Illumi
 \paragraph{References}
 
 Fundamentals of Light Microscopy and Electronic Imaging, p. 421
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{DefaultFlatFieldLineFile (in module ClearMap.ImageProcessing.IlluminationCorrection)}
 
 \begin{fulllineitems}
@@ -5895,12 +5827,6 @@ Functions to remove background in images
 
 The main routine subtracts a morphological opening from the original image
 for background removal.
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{removeBackground() (in module ClearMap.ImageProcessing.BackgroundRemoval)}
 
 \begin{fulllineitems}
@@ -6178,12 +6104,6 @@ The main routine \code{detectCells()} uses a difference of gaussian filter (see
 
 After execution this example inspect the result of the cell detection in
 the folder Test/Data/CellShape/{\color{red}\bfseries{}cellshape\_}d\{3\}.tif.
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{detectSpots() (in module ClearMap.ImageProcessing.SpotDetection)}
 
 \begin{fulllineitems}
@@ -6266,12 +6186,6 @@ Test Spot Detection Module
 Collection of routines to detect maxima
 
 Used for finding cells or intensity peaks.
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{hMaxTransform() (in module ClearMap.ImageProcessing.MaximaDetection)}
 
 \begin{fulllineitems}
@@ -6655,16 +6569,12 @@ process the data sequentially, see
 Ilastik 0.5 works for images in uint8 format !
 \end{notice}
 \paragraph{References}
-
-\href{http://ilastik.org/}{Ilastik}
-
-Author
 \begin{itemize}
 \item {} 
-Based on the ilastik interface from \href{http://www.cellprofiler.org/}{cell profiler}
+\href{http://ilastik.org/}{Ilastik}
 
 \item {} 
-Christoph Kirst, The Rockefeller University, New York City, 2015
+Based on the ilastik interface from \href{http://www.cellprofiler.org/}{cell profiler}
 
 \end{itemize}
 \index{initializeIlastik() (in module ClearMap.ImageProcessing.IlastikClassification)}
@@ -6711,6 +6621,24 @@ uint8 version of the image
 
 \end{fulllineitems}
 
+\index{rescaleFactorIlastik() (in module ClearMap.ImageProcessing.IlastikClassification)}
+
+\begin{fulllineitems}
+\phantomsection\label{api/ClearMap.ImageProcessing:ClearMap.ImageProcessing.IlastikClassification.rescaleFactorIlastik}\pysiglinewithargsret{\bfcode{rescaleFactorIlastik}}{\emph{source}, \emph{processes=12}}{}
+Determines rescale factor given a image file
+\begin{quote}\begin{description}
+\item[{Parameters}] \leavevmode
+\textbf{source} --
+source file / image
+
+\item[{Returns}] \leavevmode
+\emph{float} --
+rescale factor
+
+\end{description}\end{quote}
+
+\end{fulllineitems}
+
 \index{classifyPixel() (in module ClearMap.ImageProcessing.IlastikClassification)}
 
 \begin{fulllineitems}
@@ -6745,10 +6673,10 @@ if None dont correct image for illumination, if True the
 \hline
 \emph{rescale}
  & 
-(float or None)
+(float,all, or None)
  & 
 optional rescaling of the image to fit uint8 format
-used by ilastik
+used by ilastik,  rescale
 \\
 \hline
 \emph{save}
@@ -6871,6 +6799,9 @@ detected by ilastik
 
 
 
+\paragraph{ClearMap.ImageProcessing.ImageStatistics module}
+\label{api/ClearMap.ImageProcessing:clearmap-imageprocessing-imagestatistics-module}
+
 \subsubsection{ClearMap.Analysis package}
 \label{api/ClearMap.Analysis:clearmap-analysis-package}\label{api/ClearMap.Analysis::doc}\label{api/ClearMap.Analysis:module-ClearMap.Analysis}\index{ClearMap.Analysis (module)}
 ClearMap analysis and statistics toolbox.
@@ -6910,12 +6841,6 @@ Tools to analysise data with espect to annotated refereneces
 \hline\end{tabulary}
 
 
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, 2015
-\end{quote}
-
 
 \paragraph{Subpackages}
 \label{api/ClearMap.Analysis:subpackages}
@@ -6924,22 +6849,10 @@ Christoph Kirst, The Rockefeller University, 2015
 \label{api/ClearMap.Analysis.Tools:clearmap-analysis-tools-package}\label{api/ClearMap.Analysis.Tools:module-ClearMap.Analysis.Tools}\label{api/ClearMap.Analysis.Tools::doc}\index{ClearMap.Analysis.Tools (module)}
 Analysis and statistics tools not in standard python packages.
 
-Author
-\begin{quote}
-
-Christoph Kirst
-\end{quote}
-
 
 \subparagraph{ClearMap.Analysis.Tools.Extrapolate module}
 \label{api/ClearMap.Analysis.Tools:clearmap-analysis-tools-extrapolate-module}\label{api/ClearMap.Analysis.Tools:module-ClearMap.Analysis.Tools.Extrapolate}\index{ClearMap.Analysis.Tools.Extrapolate (module)}
 Method to extend interpolation objects to constantly / linearly extrapolate.
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller Universty, 2015
-\end{quote}
 \index{extrap1d() (in module ClearMap.Analysis.Tools.Extrapolate)}
 
 \begin{fulllineitems}
@@ -7003,12 +6916,6 @@ inter- and extra-polation function
 \subparagraph{ClearMap.Analysis.Tools.MultipleComparisonCorrection module}
 \label{api/ClearMap.Analysis.Tools:clearmap-analysis-tools-multiplecomparisoncorrection-module}\label{api/ClearMap.Analysis.Tools:module-ClearMap.Analysis.Tools.MultipleComparisonCorrection}\index{ClearMap.Analysis.Tools.MultipleComparisonCorrection (module)}
 Correction methods for multiple comparison tests
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, 2015
-\end{quote}
 \index{correctPValues() (in module ClearMap.Analysis.Tools.MultipleComparisonCorrection)}
 
 \begin{fulllineitems}
@@ -7105,12 +7012,6 @@ modified from \href{https://github.com/nfusi/qvalue}{https://github.com/nfusi/qv
 \subparagraph{ClearMap.Analysis.Tools.StatisticalTests module}
 \label{api/ClearMap.Analysis.Tools:module-ClearMap.Analysis.Tools.StatisticalTests}\label{api/ClearMap.Analysis.Tools:clearmap-analysis-tools-statisticaltests-module}\index{ClearMap.Analysis.Tools.StatisticalTests (module)}
 Some statistics tests not in standard python packages
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, 2015
-\end{quote}
 \index{testCramerVonMises2Sample() (in module ClearMap.Analysis.Tools.StatisticalTests)}
 
 \begin{fulllineitems}
@@ -7134,9 +7035,8 @@ two arrays of sample observations
 \end{itemize}
 
 \item[{Returns}] \leavevmode
-\emph{(float)} --
-T statistic
-(float): two-tailed p-value
+\emph{(float, float)} --
+T statistic, two-tailed p-value
 
 \end{description}\end{quote}
 \paragraph{References}
@@ -7183,12 +7083,6 @@ scientific question.
 \href{http://mouse.brain-map.org/static/atlas}{Allen Brain Atlas}
 
 \end{itemize}
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{DefaultLabeledImageFile (in module ClearMap.Analysis.Label)}
 
 \begin{fulllineitems}
@@ -7506,12 +7400,6 @@ Create some statistics to test significant changes
 in voxelized and labeled data
 
 TODO: cleanup / make generic
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{readDataGroup() (in module ClearMap.Analysis.Statistics)}
 
 \begin{fulllineitems}
@@ -7633,16 +7521,10 @@ Test the statistics array
 \paragraph{ClearMap.Analysis.Voxelization module}
 \label{api/ClearMap.Analysis:clearmap-analysis-voxelization-module}\label{api/ClearMap.Analysis:module-ClearMap.Analysis.Voxelization}\index{ClearMap.Analysis.Voxelization (module)}
 Converts point data into voxel image data for visulaization and analysis
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, New York City, 2015
-\end{quote}
 \index{voxelize() (in module ClearMap.Analysis.Voxelization)}
 
 \begin{fulllineitems}
-\phantomsection\label{api/ClearMap.Analysis:ClearMap.Analysis.Voxelization.voxelize}\pysiglinewithargsret{\bfcode{voxelize}}{\emph{points}, \emph{dataSize=None}, \emph{sink=None}, \emph{voxelizationSize=(5}, \emph{5}, \emph{5)}, \emph{voxelizationMethod='Spherical'}, \emph{voxelizationWeights=None}}{}
+\phantomsection\label{api/ClearMap.Analysis:ClearMap.Analysis.Voxelization.voxelize}\pysiglinewithargsret{\bfcode{voxelize}}{\emph{points}, \emph{dataSize=None}, \emph{sink=None}, \emph{voxelizeParameter=None}, \emph{method='Spherical'}, \emph{size=(5}, \emph{5}, \emph{5)}, \emph{weights=None}}{}
 Converts a list of points into an volumetric image array
 \begin{quote}\begin{description}
 \item[{Parameters}] \leavevmode\begin{itemize}
@@ -7651,24 +7533,48 @@ Converts a list of points into an volumetric image array
 point data array
 
 \item {} 
-\textbf{dataSize} (\emph{tuple or None}) --
-size of the final output data, if None size is determined by maximal point coordinates
+\textbf{dataSize} (\emph{tuple}) --
+size of final image
 
 \item {} 
 \textbf{sink} (\emph{str, array or None}) --
 the location to write or return the resulting voxelization image, if None return array
 
 \item {} 
-\textbf{voxelizationSize} (\emph{tuple}) --
-size parameter for non-local
+\textbf{voxelizeParameter} (\emph{dict}) --
 
-\item {} 
-\textbf{voxelizationMethod} (\emph{str}) --
-voxelization method: `Spherical', `Rectangular', `Pixel'
+\begin{tabulary}{\linewidth}{|L|L|L|}
+\hline
+\textsf{\relax 
+Name
+} & \textsf{\relax 
+Type
+} & \textsf{\relax 
+Descritption
+}\\
+\hline
+\emph{method}
+ & 
+(str or None)
+ & 
+method for voxelization: `Spherical', `Rectangular' or `Pixel'
+\\
+\hline
+\emph{size}
+ & 
+(tuple)
+ & 
+size parameter for the voxelization
+\\
+\hline
+\emph{weights}
+ & 
+(array or None)
+ & 
+weights for each point, None is uniform weights
+\\
+\hline\end{tabulary}
 
-\item {} 
-\textbf{voxelizationWeights} (\emph{array or None}) --
-weight for each point
 
 \end{itemize}
 
@@ -7995,43 +7901,17 @@ This module defines default parameter used by various sub-packages.
 {\hyperref[api/ClearMap.Settings:module-ClearMap.Settings]{\emph{\code{Settings}}}}
 
 
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, 2015
-\end{quote}
-\index{SpotDetectionParameter (in module ClearMap.Parameter)}
+\index{detectCellParameter (in module ClearMap.Parameter)}
 
 \begin{fulllineitems}
-\phantomsection\label{api/ClearMap.Parameter:ClearMap.Parameter.SpotDetectionParameter}\pysigline{\bfcode{SpotDetectionParameter}\strong{ = \{`backgroundSize': (15, 15), `intensityMethod': `Max', `hMax': 20, `intensitySize': (3, 3, 3), `dogSize': (7, 7, 11), `threshold': 20\}}}
+\phantomsection\label{api/ClearMap.Parameter:ClearMap.Parameter.detectCellParameter}\pysigline{\bfcode{detectCellParameter}\strong{ = \{`findExtendedMaximaParameter': \{`threshold': 0, `save': None, `verbose': False, `hMax': 20, `size': 5\}, `correctIlluminationParameter': \{`scaling': `Mean', `flatfield': True, `save': None, `verbose': False, `background': None\}, `removeBackgroundParameter': \{`save': None, `verbose': False, `size': (15, 15)\}, `filterDoGParameter': \{`save': None, `sigma2': None, `sigma': None, `verbose': False, `size': (7, 7, 11)\}, `detectCellShapeParameter': \{`threshold': 700, `save': None, `verbose': False\}, `findIntensityParameter': \{`method': `Max', `size': (3, 3, 3)\}\}}}
 dict: Paramters for cell detection using the spot detection algorithm
-\begin{itemize}
-\item {} 
-``backgroundSize'' : Background correctoin: None or (y,x) which is size of disk for gray scale opening
-
-\item {} 
-``dogSize'' : Spot Detection via Difference of Gaussians (DoG) filter: (y,x,z) size
-
-\item {} 
-``hMax'' : h of h-max transform
-
-\item {} 
-``intensityMethod''  : None -\textgreater{} intensity of pixel of center, alternatively string of numpy array method that returns a single number
-
-\item {} 
-``intensitySize''    : size of box in (y,x,z) to include in intensity determination
-
-\item {} 
-``threshold'' : Threshold for min intensity at center to be counted as cell (should be similar to the h max)
-
-\end{itemize}
 
 
 \strong{See also:}
 
 
-{\hyperref[api/ClearMap.Parameter:ClearMap.Parameter.IlastikParameter]{\emph{\code{IlastikParameter}}}}, {\hyperref[api/ClearMap.Parameter:ClearMap.Parameter.StackProcessingParameter]{\emph{\code{StackProcessingParameter}}}}
+{\hyperref[api/ClearMap.Parameter:ClearMap.Parameter.IlastikParameter]{\emph{\code{IlastikParameter}}}}, \code{StackProcessingParameter}
 
 
 
@@ -8058,16 +7938,16 @@ dict: Paramters for cell detection using Ilastik classification
 \strong{See also:}
 
 
-{\hyperref[api/ClearMap.Parameter:ClearMap.Parameter.SpotDetectionParameter]{\emph{\code{SpotDetectionParameter}}}}, {\hyperref[api/ClearMap.Parameter:ClearMap.Parameter.StackProcessingParameter]{\emph{\code{StackProcessingParameter}}}}
+\code{SpotDetectionParameter}, \code{StackProcessingParameter}
 
 
 
 \end{fulllineitems}
 
-\index{StackProcessingParameter (in module ClearMap.Parameter)}
+\index{processStackParameter (in module ClearMap.Parameter)}
 
 \begin{fulllineitems}
-\phantomsection\label{api/ClearMap.Parameter:ClearMap.Parameter.StackProcessingParameter}\pysigline{\bfcode{StackProcessingParameter}\strong{ = \{`chunkOptimizationSize': \textless{}built-in function all\textgreater{}, `processes': 2, `chunkSizeMin': 30, `chunkOptimization': True, `cChunkOverlap': 15, `chunkSizeMax': 100\}}}~\begin{description}
+\phantomsection\label{api/ClearMap.Parameter:ClearMap.Parameter.processStackParameter}\pysigline{\bfcode{processStackParameter}\strong{ = \{`chunkOptimizationSize': \textless{}built-in function all\textgreater{}, `processes': 2, `chunkSizeMin': 30, `chunkOptimization': True, `cChunkOverlap': 15, `chunkSizeMax': 100\}}}~\begin{description}
 \item[{dict: Parameter for processing an image stack in parallel}] \leavevmode\begin{itemize}
 \item {} 
 ``processes'': max number of parallel processes
@@ -8095,7 +7975,7 @@ dict: Paramters for cell detection using Ilastik classification
 \strong{See also:}
 
 
-{\hyperref[api/ClearMap.Parameter:ClearMap.Parameter.SpotDetectionParameter]{\emph{\code{SpotDetectionParameter}}}}, {\hyperref[api/ClearMap.Parameter:ClearMap.Parameter.IlastikParameter]{\emph{\code{IlastikParameter}}}}
+\code{SpotDetectionParameter}, {\hyperref[api/ClearMap.Parameter:ClearMap.Parameter.IlastikParameter]{\emph{\code{IlastikParameter}}}}
 
 
 
@@ -8219,12 +8099,6 @@ for specific hosts
 \end{itemize}
 
 
-
-Author
-\begin{quote}
-
-Christoph Kirst, The Rockefeller University, 2015
-\end{quote}
 \index{IlastikPath (in module ClearMap.Settings)}
 
 \begin{fulllineitems}

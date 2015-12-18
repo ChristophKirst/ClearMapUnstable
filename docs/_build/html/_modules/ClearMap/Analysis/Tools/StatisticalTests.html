@@ -86,6 +86,7 @@
 <h3><a href="../../../../index.html">Table Of Contents</a></h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../imageanalysis.html">ClearMap Image Analysis Tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../api/ClearMap.html">ClearMap package</a></li>
 </ul>
  
@@ -115,10 +116,9 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Some statistics tests not in standard python packages</span>
 
-<span class="sd">Author</span>
-<span class="sd">&quot;&quot;&quot;</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">    Christoph Kirst, The Rockefeller University, 2015</span>
-<span class="s">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c">#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City</span>
+<span class="c">#:license: GNU, see LICENSE.txt for details.</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
@@ -140,8 +140,7 @@
 <span class="sd">        can be different</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        (float): T statistic</span>
-<span class="sd">        (float): two-tailed p-value</span>
+<span class="sd">        (float, float): T statistic, two-tailed p-value</span>
 <span class="sd">        </span>
 <span class="sd">    References:</span>
 <span class="sd">        - modified from https://github.com/scipy/scipy/pull/3659</span>

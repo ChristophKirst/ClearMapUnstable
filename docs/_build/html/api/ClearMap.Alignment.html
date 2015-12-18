@@ -94,6 +94,7 @@
 <h3><a href="../index.html">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imageanalysis.html">ClearMap Image Analysis Tools</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="ClearMap.html">ClearMap package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="ClearMap.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ClearMap.IO.html">ClearMap.IO package</a></li>
@@ -165,38 +166,29 @@ and <a class="reference internal" href="#ClearMap.Alignment.Resampling.resampleP
 <a class="reference internal" href="#ClearMap.Alignment.Elastix.alignData" title="ClearMap.Alignment.Elastix.alignData"><code class="xref py py-func docutils literal"><span class="pre">alignData()</span></code></a>,
 <a class="reference internal" href="#ClearMap.Alignment.Elastix.transformData" title="ClearMap.Alignment.Elastix.transformData"><code class="xref py py-func docutils literal"><span class="pre">transformData()</span></code></a> and
 <a class="reference internal" href="#ClearMap.Alignment.Elastix.transformPoints" title="ClearMap.Alignment.Elastix.transformPoints"><code class="xref py py-func docutils literal"><span class="pre">transformPoints()</span></code></a>.</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <div class="section" id="module-ClearMap.Alignment.Elastix">
 <span id="clearmap-alignment-elastix-module"></span><h2>ClearMap.Alignment.Elastix module<a class="headerlink" href="#module-ClearMap.Alignment.Elastix" title="Permalink to this headline">¶</a></h2>
 <p>Interface to Elastix for alignment of volumetric data</p>
 <p>The elastix documentation can be found <a class="reference external" href="http://elastix.isi.uu.nl/">here</a>.</p>
-<p>In essence, a transformation <img class="math" src="../_images/math/34f008bc980c63d96df26ac57911e0c9fbd04376.png" alt="T(x)"/> is sought so that for a fixed image
-<img class="math" src="../_images/math/9f5e4397826c0a9d063690c484922b2fcbe72f17.png" alt="F(x)"/> and a moving image <img class="math" src="../_images/math/37784ed27bd2bd54c6db111473d31aa55b7fd4d2.png" alt="M(x)"/>:</p>
-<div class="math">
-<p><img src="../_images/math/3d01f91763a9077c5853668012c1f21ea267383a.png" alt="F(x) = M(T(x))"/></p>
-</div><p>Once the map <img class="math" src="../_images/math/6d42c88506b8da39a2a23653aecbfb7c29728063.png" alt="T"/> is estimated via elastix, transformix maps an image
-<img class="math" src="../_images/math/5d51425409eeb39935de2990687f921af6c9f2ec.png" alt="I(x)"/> from the moving image frame to the fixed image frame, i.e.:</p>
-<div class="math">
-<p><img src="../_images/math/a57a088f3b833902b11e6fe6cde4f148c05377c9.png" alt="I(x) \rightarrow I(T(x))"/></p>
-</div><p>To register an image onto a reference image, the fixed image is typically
+<p>In essence, a transformation <img src="../_images/mathmpl/math-7a5eb78742.png" style="position: relative; bottom: -8px"/> is sought so that for a fixed image
+<img src="../_images/mathmpl/math-3f36e9e970.png" style="position: relative; bottom: -8px"/> and a moving image <img src="../_images/mathmpl/math-343ba13550.png" style="position: relative; bottom: -8px"/>:</p>
+<img src="../_images/mathmpl/math-64ac2db0c7.png" class="center" /><p>Once the map <img src="../_images/mathmpl/math-fa4ff731d3.png" style="position: relative; bottom: -3px"/> is estimated via elastix, transformix maps an image
+<img src="../_images/mathmpl/math-2acb17d5f4.png" style="position: relative; bottom: -8px"/> from the moving image frame to the fixed image frame, i.e.:</p>
+<img src="../_images/mathmpl/math-0713a4bfa3.png" class="center" /><p>To register an image onto a reference image, the fixed image is typically
 choosed to be the image to be registered, while the moving image is the
 reference image. In this way an object identified in the data at position x
 is mapped via transformix as:</p>
-<div class="math">
-<p><img src="../_images/math/cb98382bfb8ecfa46cb7ec872814cc32ee3f5617.png" alt="x \rightarrow T(x)"/></p>
-</div><div class="section" id="summary">
+<img src="../_images/mathmpl/math-558bbdc154.png" class="center" /><div class="section" id="summary">
 <h3>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
 <blockquote>
 <div><ul class="simple">
-<li>elastix finds a transformation <img class="math" src="../_images/math/949d513f2e7fd65b1cbec50b4a09ebb870820f44.png" alt="T: \mathrm{fixed image} \rightarrow \mathrm{moving image}"/></li>
+<li>elastix finds a transformation <img src="../_images/mathmpl/math-e104cde851.png" style="position: relative; bottom: -7px"/></li>
 <li>the fixed image is image to be registered</li>
 <li>the moving image is typically the reference image</li>
-<li>the result folder may contain an image (mhd file) that is <img class="math" src="../_images/math/252ced601859c1904ce92d7f0b62207a73987bb3.png" alt="T^{-1}(\mathrm{moving})"/>,
+<li>the result folder may contain an image (mhd file) that is <img src="../_images/mathmpl/math-7d5e31ce92.png" style="position: relative; bottom: -8px"/>,
 i.e. has the size of the fixed image</li>
-<li>transformix applied to data gives <img class="math" src="../_images/math/0444fb892dbb74b970322595bb4b512f294ef68d.png" alt="T^{-1}(\mathrm{data})"/> !</li>
-<li>transformix applied to points gives <img class="math" src="../_images/math/88a51f78d21848de7f61c50c53b2651d5de09222.png" alt="T(\mathrm{points})"/> !</li>
+<li>transformix applied to data gives <img src="../_images/mathmpl/math-5c6d136090.png" style="position: relative; bottom: -8px"/> !</li>
+<li>transformix applied to points gives <img src="../_images/mathmpl/math-bf518e9b97.png" style="position: relative; bottom: -8px"/> !</li>
 <li>point arrays are assumed to be in (x,y,z) coordinates consistent with (x,y,z) array represenation of images in ClearMap</li>
 </ul>
 </div></blockquote>
@@ -206,9 +198,6 @@ i.e. has the size of the fixed image</li>
 <p class="last"><a class="reference external" href="http://elastix.isi.uu.nl/">Elastix documentation</a>
 <a class="reference internal" href="#module-ClearMap.Alignment.Resampling" title="ClearMap.Alignment.Resampling"><code class="xref py py-mod docutils literal"><span class="pre">Resampling</span></code></a></p>
 </div>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, 2015</div></blockquote>
 <dl class="data">
 <dt id="ClearMap.Alignment.Elastix.ElastixBinary">
 <code class="descname">ElastixBinary</code><em class="property"> = '/home/ckirst/programs/elastix/bin/elastix'</em><a class="headerlink" href="#ClearMap.Alignment.Elastix.ElastixBinary" title="Permalink to this definition">¶</a></dt>
@@ -464,7 +453,7 @@ new size and spacing</p>
 <dl class="function">
 <dt id="ClearMap.Alignment.Elastix.alignData">
 <code class="descname">alignData</code><span class="sig-paren">(</span><em>fixedImage</em>, <em>movingImage</em>, <em>affineParameterFile</em>, <em>bSplineParameterFile=None</em>, <em>resultDirectory=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Alignment/Elastix.html#alignData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Alignment.Elastix.alignData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Align images using elastix, estimates a transformation <img class="math" src="../_images/math/74c60c8efa47fb3386ded3bc0f3552ce84175600.png" alt="T:"/> fixed image <img class="math" src="../_images/math/a9c4c6156d25f42923975ce449aadad9848ed7dc.png" alt="\rightarrow"/> moving image.</p>
+<dd><p>Align images using elastix, estimates a transformation <img src="../_images/mathmpl/math-d8b8a20969.png" style="position: relative; bottom: -3px"/> fixed image <img src="../_images/mathmpl/math-fb1cbbd43f.png" style="position: relative; bottom: -3px"/> moving image.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -496,7 +485,7 @@ path to elastix result directory</p>
 <code class="descname">transformData</code><span class="sig-paren">(</span><em>source</em>, <em>sink=[]</em>, <em>transformParameterFile=None</em>, <em>transformDirectory=None</em>, <em>resultDirectory=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Alignment/Elastix.html#transformData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Alignment.Elastix.transformData" title="Permalink to this definition">¶</a></dt>
 <dd><p>Transform a raw data set to reference using the elastix alignment results</p>
 <p>If the map determined by elastix is
-<img class="math" src="../_images/math/58c021c25f17974060dc0b426a834bd9a1e6ec6e.png" alt="T \mathrm{fixed} \rightarrow \mathrm{moving}"/>,
+<img src="../_images/mathmpl/math-ae3c6503a4.png" style="position: relative; bottom: -7px"/>,
 transformix on data works as :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>T^{-1}(mathrm{data})</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -529,7 +518,7 @@ array or file name of the transformed data</p>
 <code class="descname">deformationField</code><span class="sig-paren">(</span><em>sink=[]</em>, <em>transformParameterFile=None</em>, <em>transformDirectory=None</em>, <em>resultDirectory=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Alignment/Elastix.html#deformationField"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Alignment.Elastix.deformationField" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create the deformation field T(x) - x</p>
 <p>The map determined by elastix is
-<img class="math" src="../_images/math/58c021c25f17974060dc0b426a834bd9a1e6ec6e.png" alt="T \mathrm{fixed} \rightarrow \mathrm{moving}"/></p>
+<img src="../_images/mathmpl/math-ae3c6503a4.png" style="position: relative; bottom: -7px"/></p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -609,7 +598,7 @@ file name of the elastix point file</p>
 <dl class="function">
 <dt id="ClearMap.Alignment.Elastix.transformPoints">
 <code class="descname">transformPoints</code><span class="sig-paren">(</span><em>source</em>, <em>sink=None</em>, <em>transformParameterFile=None</em>, <em>transformDirectory=None</em>, <em>indices=True</em>, <em>resultDirectory=None</em>, <em>tmpFile=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Alignment/Elastix.html#transformPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Alignment.Elastix.transformPoints" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transform coordinates math:<cite>x</cite> via elastix estimated transformation to <img class="math" src="../_images/math/34f008bc980c63d96df26ac57911e0c9fbd04376.png" alt="T(x)"/></p>
+<dd><p>Transform coordinates math:<cite>x</cite> via elastix estimated transformation to <img src="../_images/mathmpl/math-7a5eb78742.png" style="position: relative; bottom: -8px"/></p>
 <p>Note the transformation is from the fixed image coorindates to the moving image coordiantes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -705,9 +694,6 @@ inverting the indicated axes.</p>
 <span class="go">(216, 256, 10)</span>
 </pre></div>
 </div>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.Alignment.Resampling.fixOrientation">
 <code class="descname">fixOrientation</code><span class="sig-paren">(</span><em>orientation</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Alignment/Resampling.html#fixOrientation"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Alignment.Resampling.fixOrientation" title="Permalink to this definition">¶</a></dt>

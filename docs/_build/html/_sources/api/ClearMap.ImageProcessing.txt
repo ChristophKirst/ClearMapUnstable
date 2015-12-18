@@ -91,6 +91,14 @@ ClearMap.ImageProcessing.IlastikClassification module
     :show-inheritance:
 
 
+ClearMap.ImageProcessing.ImageStatistics module
+-----------------------------------------------
+
+.. automodule:: ClearMap.ImageProcessing.ImageStatistics
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
 
 

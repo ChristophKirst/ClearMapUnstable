@@ -94,6 +94,7 @@
 <h3><a href="../index.html">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imageanalysis.html">ClearMap Image Analysis Tools</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="ClearMap.html">ClearMap package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="ClearMap.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="">ClearMap.IO package</a></li>
@@ -320,9 +321,6 @@ for intensity ,easires or other properties.</p>
 <li>Numerical arrays represent data and point coordinates as [x,y,z] or [x,y]</li>
 </ul>
 </div></blockquote>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 </div>
 <div class="section" id="module-ClearMap.IO.IO">
 <span id="clearmap-io-io-module"></span><h2>ClearMap.IO.IO module<a class="headerlink" href="#module-ClearMap.IO.IO" title="Permalink to this headline">¶</a></h2>
@@ -1071,6 +1069,30 @@ point data of source</p>
 </div>
 </dd></dl>
 
+<dl class="function">
+<dt id="ClearMap.IO.IO.writeTable">
+<code class="descname">writeTable</code><span class="sig-paren">(</span><em>filename</em>, <em>table</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/IO.html#writeTable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.IO.writeTable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a numpy array with column names to a csv file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211;
+filename to save table to</li>
+<li><strong>table</strong> (<em>annotated array</em>) &#8211;
+table to write to file</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>str</em> &#8211;
+file name</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-ClearMap.IO.CSV">
 <span id="clearmap-io-csv-module"></span><h2>ClearMap.IO.CSV module<a class="headerlink" href="#module-ClearMap.IO.CSV" title="Permalink to this headline">¶</a></h2>
@@ -1088,9 +1110,6 @@ point data of source</p>
 <span class="go">(5, 3)</span>
 </pre></div>
 </div>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.IO.CSV.writePoints">
 <code class="descname">writePoints</code><span class="sig-paren">(</span><em>filename</em>, <em>points</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/CSV.html#writePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.CSV.writePoints" title="Permalink to this definition">¶</a></dt>
@@ -1168,9 +1187,6 @@ and <code class="docutils literal"><span class="pre">\d{}</span></code> would ju
 <span class="go">(20, 50, 10)</span>
 </pre></div>
 </div>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.IO.FileList.readFileList">
 <code class="descname">readFileList</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/FileList.html#readFileList"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.FileList.readFileList" title="Permalink to this definition">¶</a></dt>

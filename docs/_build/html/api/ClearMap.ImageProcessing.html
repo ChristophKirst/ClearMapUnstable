@@ -94,6 +94,7 @@
 <h3><a href="../index.html">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imageanalysis.html">ClearMap Image Analysis Tools</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="ClearMap.html">ClearMap package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="ClearMap.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ClearMap.IO.html">ClearMap.IO package</a></li>
@@ -233,9 +234,6 @@ processing packages including:</p>
 </div></blockquote>
 <p>Routines form these packages were freely choosen to optimize for speed and
 memory consumption</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 </div>
 <div class="section" id="module-ClearMap.ImageProcessing.StackProcessing">
 <span id="clearmap-imageprocessing-stackprocessing-module"></span><h2>ClearMap.ImageProcessing.StackProcessing module<a class="headerlink" href="#module-ClearMap.ImageProcessing.StackProcessing" title="Permalink to this headline">¶</a></h2>
@@ -287,9 +285,6 @@ correspond to the overlap centers</td>
 <p>For exmaple the <a class="reference internal" href="#ClearMap.ImageProcessing.StackProcessing.writeSubStack" title="ClearMap.ImageProcessing.StackProcessing.writeSubStack"><code class="xref py py-func docutils literal"><span class="pre">writeSubStack()</span></code></a> routine makes uses of this information
 to write out only the sub-parts of the image that is will contribute to the
 final total image.</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.ImageProcessing.StackProcessing.printSubStackInfo">
 <code class="descname">printSubStackInfo</code><span class="sig-paren">(</span><em>subStack</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/StackProcessing.html#printSubStackInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.StackProcessing.printSubStackInfo" title="Permalink to this definition">¶</a></dt>
@@ -321,9 +316,9 @@ It assumes that the filename is a patterned file name.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filename</strong> (<em>str</em>) &#8211;
+<li><strong>filename</strong> (<em>str or None</em>) &#8211;
 file name pattern as described in
-<code class="xref py py-mod docutils literal"><span class="pre">FileList</span></code></li>
+<code class="xref py py-mod docutils literal"><span class="pre">FileList</span></code>, if None return as array</li>
 <li><strong>img</strong> (<em>array</em>) &#8211;
 image data of sub-stack</li>
 <li><strong>subStack</strong> (<em>dict or None</em>) &#8211;
@@ -332,8 +327,8 @@ see <span class="xref std std-ref">SubStack</span></li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>str</em> &#8211;
-the file name pattern</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>str or array</em> &#8211;
+the file name pattern or image</p>
 </td>
 </tr>
 </tbody>
@@ -576,9 +571,6 @@ in the future:</p>
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="#module-ClearMap.ImageProcessing" title="ClearMap.ImageProcessing"><code class="xref py py-mod docutils literal"><span class="pre">ImageProcessing</span></code></a></p>
 </div>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.ImageProcessing.CellDetection.detectCells">
 <code class="descname">detectCells</code><span class="sig-paren">(</span><em>source</em>, <em>sink=None</em>, <em>method='SpotDetection'</em>, <em>processMethod=&lt;built-in function all&gt;</em>, <em>verbose=False</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/CellDetection.html#detectCells"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.CellDetection.detectCells" title="Permalink to this definition">¶</a></dt>
@@ -642,12 +634,9 @@ parameter for the image procesing sub-routines</p>
 <span id="clearmap-imageprocessing-cellsizedetection-module"></span><h2>ClearMap.ImageProcessing.CellSizeDetection module<a class="headerlink" href="#module-ClearMap.ImageProcessing.CellSizeDetection" title="Permalink to this headline">¶</a></h2>
 <p>Cell shape and size detection routines</p>
 <p>The cell shape detection is based on a seeded and masked watershed.</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.ImageProcessing.CellSizeDetection.detectCellShape">
-<code class="descname">detectCellShape</code><span class="sig-paren">(</span><em>img</em>, <em>peaks</em>, <em>detectCellShapeParameter=None</em>, <em>subStack=None</em>, <em>verbose=False</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/CellSizeDetection.html#detectCellShape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.CellSizeDetection.detectCellShape" title="Permalink to this definition">¶</a></dt>
+<code class="descname">detectCellShape</code><span class="sig-paren">(</span><em>img</em>, <em>peaks</em>, <em>detectCellShapeParameter=None</em>, <em>threshold=None</em>, <em>save=None</em>, <em>verbose=False</em>, <em>subStack=None</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/CellSizeDetection.html#detectCellShape"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.CellSizeDetection.detectCellShape" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find cell shapes as labeled image</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -676,8 +665,8 @@ point data of cell centers / seeds</p>
 <tbody valign="top">
 <tr class="row-even"><td><em>threshold</em></td>
 <td>(float or None)</td>
-<td>method to use to determine intensity (e.g. &#8220;Max&#8221; or &#8220;Mean&#8221;)
-if None take intensities at the given pixels</td>
+<td>threshold to determine mask, pixel below this are background
+if None no mask is generated</td>
 </tr>
 <tr class="row-odd"><td><em>save</em></td>
 <td>(tuple)</td>
@@ -709,7 +698,7 @@ labeled image where each label indicates a cell</p>
 
 <dl class="function">
 <dt id="ClearMap.ImageProcessing.CellSizeDetection.findCellSize">
-<code class="descname">findCellSize</code><span class="sig-paren">(</span><em>imglabel</em>, <em>findCelSizeParameter=None</em>, <em>verbose=False</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/CellSizeDetection.html#findCellSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.CellSizeDetection.findCellSize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">findCellSize</code><span class="sig-paren">(</span><em>imglabel</em>, <em>findCelSizeParameter=None</em>, <em>maxLabel=None</em>, <em>verbose=False</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/CellSizeDetection.html#findCellSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.CellSizeDetection.findCellSize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find cell size given cell shapes as labled image</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -849,16 +838,13 @@ measured intensities</p>
 <p>Illumination correction toolbox.</p>
 <p>The module provides a function to correct illumination/vignetting systematic
 variations in intensity.</p>
-<p>The intensity image <img class="math" src="../_images/math/5d51425409eeb39935de2990687f921af6c9f2ec.png" alt="I(x)"/> given a flat field <img class="math" src="../_images/math/9f5e4397826c0a9d063690c484922b2fcbe72f17.png" alt="F(x)"/> and
-a background <img class="math" src="../_images/math/548010b02030d3ec6310c82bb3056e60bfb73ae3.png" alt="B(x)"/> the image is corrected to <img class="math" src="../_images/math/2bebe4e563b7ae7e184c1813435fef1e1df3cc6d.png" alt="C(x)"/> as:</p>
+<p>The intensity image <img src="../_images/mathmpl/math-2acb17d5f4.png" style="position: relative; bottom: -8px"/> given a flat field <img src="../_images/mathmpl/math-3f36e9e970.png" style="position: relative; bottom: -8px"/> and
+a background <img src="../_images/mathmpl/math-2f2e26a252.png" style="position: relative; bottom: -8px"/> the image is corrected to <img src="../_images/mathmpl/math-d72ba15f35.png" style="position: relative; bottom: -8px"/> as:</p>
 <p>The module also has functionality to create flat field corections from measured
 intensity changes in a single direction, useful e.g. for lightsheet images,
 see e.g. <a class="reference internal" href="#ClearMap.ImageProcessing.IlluminationCorrection.flatfieldLineFromRegression" title="ClearMap.ImageProcessing.IlluminationCorrection.flatfieldLineFromRegression"><code class="xref py py-func docutils literal"><span class="pre">flatfieldLineFromRegression()</span></code></a>.</p>
 <p class="rubric">References</p>
 <p>Fundamentals of Light Microscopy and Electronic Imaging, p. 421</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="data">
 <dt id="ClearMap.ImageProcessing.IlluminationCorrection.DefaultFlatFieldLineFile">
 <code class="descname">DefaultFlatFieldLineFile</code><em class="property"> = '/home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Data/lightsheet_flatfield_correction.csv'</em><a class="headerlink" href="#ClearMap.ImageProcessing.IlluminationCorrection.DefaultFlatFieldLineFile" title="Permalink to this definition">¶</a></dt>
@@ -874,9 +860,9 @@ see e.g. <a class="reference internal" href="#ClearMap.ImageProcessing.Illuminat
 <code class="descname">correctIllumination</code><span class="sig-paren">(</span><em>img</em>, <em>correctIlluminationParameter=None</em>, <em>flatfield=None</em>, <em>background=None</em>, <em>scaling=None</em>, <em>save=None</em>, <em>verbose=False</em>, <em>subStack=None</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/IlluminationCorrection.html#correctIllumination"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.IlluminationCorrection.correctIllumination" title="Permalink to this definition">¶</a></dt>
 <dd><p>Correct illumination variations</p>
 <blockquote>
-<div><p>The intensity image <img class="math" src="../_images/math/5d51425409eeb39935de2990687f921af6c9f2ec.png" alt="I(x)"/> given a flat field <img class="math" src="../_images/math/9f5e4397826c0a9d063690c484922b2fcbe72f17.png" alt="F(x)"/> and
-a background <img class="math" src="../_images/math/548010b02030d3ec6310c82bb3056e60bfb73ae3.png" alt="B(x)"/> the image is corrected to <img class="math" src="../_images/math/2bebe4e563b7ae7e184c1813435fef1e1df3cc6d.png" alt="C(x)"/> as:</p>
-<p>If the background is not given <img class="math" src="../_images/math/1a37be499c8b0ec39e085d09aed0eb5e12f70387.png" alt="B(x) = 0"/>.</p>
+<div><p>The intensity image <img src="../_images/mathmpl/math-2acb17d5f4.png" style="position: relative; bottom: -8px"/> given a flat field <img src="../_images/mathmpl/math-3f36e9e970.png" style="position: relative; bottom: -8px"/> and
+a background <img src="../_images/mathmpl/math-2f2e26a252.png" style="position: relative; bottom: -8px"/> the image is corrected to <img src="../_images/mathmpl/math-d72ba15f35.png" style="position: relative; bottom: -8px"/> as:</p>
+<p>If the background is not given <img src="../_images/mathmpl/math-9c1c3ea0f2.png" style="position: relative; bottom: -8px"/>.</p>
 <p>The correction is done slice by slice assuming the data was collected with
 a light sheet microscope.</p>
 <p>The image is finally optionally scaled.</p>
@@ -1017,9 +1003,6 @@ fitted intensities on points</p>
 <p>Functions to remove background in images</p>
 <p>The main routine subtracts a morphological opening from the original image
 for background removal.</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.ImageProcessing.BackgroundRemoval.removeBackground">
 <code class="descname">removeBackground</code><span class="sig-paren">(</span><em>img</em>, <em>removeBackgroundParameter=None</em>, <em>size=None</em>, <em>save=None</em>, <em>verbose=False</em>, <em>subStack=None</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/BackgroundRemoval.html#removeBackground"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.BackgroundRemoval.removeBackground" title="Permalink to this definition">¶</a></dt>
@@ -1269,9 +1252,6 @@ grey reconstructed image</p>
 </div>
 <p>After execution this example inspect the result of the cell detection in
 the folder Test/Data/CellShape/<a href="#id13"><span class="problematic" id="id14">cellshape_</span></a>d{3}.tif.</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.ImageProcessing.SpotDetection.detectSpots">
 <code class="descname">detectSpots</code><span class="sig-paren">(</span><em>img</em>, <em>detectSpotsParameter=None</em>, <em>correctIlluminationParameter=None</em>, <em>removeBackgroundParameter=None</em>, <em>filterDoGParameter=None</em>, <em>findExtendedMaximaParameter=None</em>, <em>detectCellShapeParameter=None</em>, <em>verbose=False</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/SpotDetection.html#detectSpots"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.SpotDetection.detectSpots" title="Permalink to this definition">¶</a></dt>
@@ -1332,9 +1312,6 @@ tuple of arrays (cell coordinates, raw intensity, fully filtered</p>
 <span id="clearmap-imageprocessing-maximadetection-module"></span><h2>ClearMap.ImageProcessing.MaximaDetection module<a class="headerlink" href="#module-ClearMap.ImageProcessing.MaximaDetection" title="Permalink to this headline">¶</a></h2>
 <p>Collection of routines to detect maxima</p>
 <p>Used for finding cells or intensity peaks.</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.ImageProcessing.MaximaDetection.hMaxTransform">
 <code class="descname">hMaxTransform</code><span class="sig-paren">(</span><em>img</em>, <em>hMax</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/MaximaDetection.html#hMaxTransform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.MaximaDetection.hMaxTransform" title="Permalink to this definition">¶</a></dt>
@@ -1665,14 +1642,10 @@ process the data sequentially, see
 <p class="last">Ilastik 0.5 works for images in uint8 format !</p>
 </div>
 <p class="rubric">References</p>
-<p><a class="reference external" href="http://ilastik.org/">Ilastik</a></p>
-<p>Author</p>
-<blockquote>
-<div><ul class="simple">
+<ul class="simple">
+<li><a class="reference external" href="http://ilastik.org/">Ilastik</a></li>
 <li>Based on the ilastik interface from <a class="reference external" href="http://www.cellprofiler.org/">cell profiler</a></li>
-<li>Christoph Kirst, The Rockefeller University, New York City, 2015</li>
 </ul>
-</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.ImageProcessing.IlastikClassification.initializeIlastik">
 <code class="descname">initializeIlastik</code><span class="sig-paren">(</span><em>path=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/IlastikClassification.html#initializeIlastik"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.IlastikClassification.initializeIlastik" title="Permalink to this definition">¶</a></dt>
@@ -1712,6 +1685,24 @@ uint8 version of the image</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="ClearMap.ImageProcessing.IlastikClassification.rescaleFactorIlastik">
+<code class="descname">rescaleFactorIlastik</code><span class="sig-paren">(</span><em>source</em>, <em>processes=12</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/IlastikClassification.html#rescaleFactorIlastik"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.IlastikClassification.rescaleFactorIlastik" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines rescale factor given a image file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>source</strong> &#8211;
+source file / image</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><em>float</em> &#8211;
+rescale factor</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="ClearMap.ImageProcessing.IlastikClassification.classifyPixel">
 <code class="descname">classifyPixel</code><span class="sig-paren">(</span><em>img</em>, <em>classifyPixelParameter=None</em>, <em>subStack=None</em>, <em>verbose=False</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/IlastikClassification.html#classifyPixel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.IlastikClassification.classifyPixel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Detect Cells Using a trained classifier in Ilastik</p>
@@ -1743,9 +1734,9 @@ image data</p>
 if None dont correct image for illumination, if True the</td>
 </tr>
 <tr class="row-odd"><td><em>rescale</em></td>
-<td>(float or None)</td>
+<td>(float,all, or None)</td>
 <td>optional rescaling of the image to fit uint8 format
-used by ilastik</td>
+used by ilastik,  rescale</td>
 </tr>
 <tr class="row-even"><td><em>save</em></td>
 <td>(str or None)</td>
@@ -1847,6 +1838,9 @@ detected by ilastik</p>
 </div>
 </dd></dl>
 
+</div>
+<div class="section" id="clearmap-imageprocessing-imagestatistics-module">
+<h2>ClearMap.ImageProcessing.ImageStatistics module<a class="headerlink" href="#clearmap-imageprocessing-imagestatistics-module" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 

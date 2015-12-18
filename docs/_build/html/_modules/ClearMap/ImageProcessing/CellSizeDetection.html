@@ -86,6 +86,7 @@
 <h3><a href="../../../index.html">Table Of Contents</a></h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../imageanalysis.html">ClearMap Image Analysis Tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api/ClearMap.html">ClearMap package</a></li>
 </ul>
  
@@ -117,10 +118,9 @@
 
 <span class="sd">The cell shape detection is based on a seeded and masked watershed.</span>
 
-<span class="sd">Author</span>
-<span class="sd">&quot;&quot;&quot;</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">   Christoph Kirst, The Rockefeller University, New York City, 2015   </span>
-<span class="s">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c">#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City</span>
+<span class="c">#:license: GNU, see LICENSE.txt for details.</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
@@ -144,7 +144,8 @@
 <span class="c">##############################################################################</span>
 
 
-<div class="viewcode-block" id="detectCellShape"><a class="viewcode-back" href="../../../api/ClearMap.ImageProcessing.html#ClearMap.ImageProcessing.CellSizeDetection.detectCellShape">[docs]</a><span class="k">def</span> <span class="nf">detectCellShape</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">peaks</span><span class="p">,</span> <span class="n">detectCellShapeParameter</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">subStack</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">):</span>
+<div class="viewcode-block" id="detectCellShape"><a class="viewcode-back" href="../../../api/ClearMap.ImageProcessing.html#ClearMap.ImageProcessing.CellSizeDetection.detectCellShape">[docs]</a><span class="k">def</span> <span class="nf">detectCellShape</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">peaks</span><span class="p">,</span> <span class="n">detectCellShapeParameter</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">threshold</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> 
+                    <span class="n">subStack</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Find cell shapes as labeled image</span>
 <span class="sd">    </span>
 <span class="sd">    Arguments:</span>
@@ -154,8 +155,8 @@
 <span class="sd">            ============ =================== ===========================================================</span>
 <span class="sd">            Name         Type                Descritption</span>
 <span class="sd">            ============ =================== ===========================================================</span>
-<span class="sd">            *threshold*  (float or None)     method to use to determine intensity (e.g. &quot;Max&quot; or &quot;Mean&quot;)</span>
-<span class="sd">                                             if None take intensities at the given pixels</span>
+<span class="sd">            *threshold*  (float or None)     threshold to determine mask, pixel below this are background</span>
+<span class="sd">                                             if None no mask is generated</span>
 <span class="sd">            *save*       (tuple)             size of the box on which to perform the *method*</span>
 <span class="sd">            *verbose*    (bool or int)       print / plot information about this step </span>
 <span class="sd">            ============ =================== ===========================================================</span>
@@ -166,8 +167,9 @@
 <span class="sd">        array: labeled image where each label indicates a cell </span>
 <span class="sd">    &quot;&quot;&quot;</span>    
     
-    <span class="n">threshold</span> <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">detectCellShapeParameter</span><span class="p">,</span> <span class="s">&quot;threshold&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">);</span>
-    <span class="n">save</span>      <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">detectCellShapeParameter</span><span class="p">,</span> <span class="s">&quot;save&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">);</span>    
+    <span class="n">threshold</span> <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">detectCellShapeParameter</span><span class="p">,</span> <span class="s">&quot;threshold&quot;</span><span class="p">,</span> <span class="n">threshold</span><span class="p">);</span>
+    <span class="n">save</span>      <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">detectCellShapeParameter</span><span class="p">,</span> <span class="s">&quot;save&quot;</span><span class="p">,</span> <span class="n">save</span><span class="p">);</span>    
+    <span class="n">verbose</span>   <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">detectCellShapeParameter</span><span class="p">,</span> <span class="s">&quot;verbose&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">);</span>  
     
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="n">writeParameter</span><span class="p">(</span><span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">,</span> <span class="n">head</span> <span class="o">=</span> <span class="s">&#39;Cell shape detection:&#39;</span><span class="p">,</span> <span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="n">save</span><span class="p">);</span>    
@@ -201,7 +203,8 @@
     <span class="k">return</span> <span class="n">imgws</span></div>
 
 
-<div class="viewcode-block" id="findCellSize"><a class="viewcode-back" href="../../../api/ClearMap.ImageProcessing.html#ClearMap.ImageProcessing.CellSizeDetection.findCellSize">[docs]</a><span class="k">def</span> <span class="nf">findCellSize</span><span class="p">(</span><span class="n">imglabel</span><span class="p">,</span> <span class="n">findCelSizeParameter</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">):</span>
+<div class="viewcode-block" id="findCellSize"><a class="viewcode-back" href="../../../api/ClearMap.ImageProcessing.html#ClearMap.ImageProcessing.CellSizeDetection.findCellSize">[docs]</a><span class="k">def</span> <span class="nf">findCellSize</span><span class="p">(</span><span class="n">imglabel</span><span class="p">,</span> <span class="n">findCelSizeParameter</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">maxLabel</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> 
+                 <span class="n">out</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Find cell size given cell shapes as labled image</span>
 
 <span class="sd">    Arguments:</span>
@@ -220,7 +223,8 @@
 <span class="sd">        array: measured intensities </span>
 <span class="sd">    &quot;&quot;&quot;</span>    
        
-    <span class="n">maxLabel</span> <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">findCelSizeParameter</span><span class="p">,</span> <span class="s">&quot;maxLabel&quot;</span><span class="p">,</span> <span class="bp">None</span><span class="p">);</span>
+    <span class="n">maxLabel</span> <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">findCelSizeParameter</span><span class="p">,</span> <span class="s">&quot;maxLabel&quot;</span><span class="p">,</span> <span class="n">maxLabel</span><span class="p">);</span>
+    <span class="n">verbose</span>  <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">findCelSizeParameter</span><span class="p">,</span> <span class="s">&quot;verbose&quot;</span><span class="p">,</span>  <span class="n">verbose</span><span class="p">);</span> 
     
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
         <span class="n">writeParameter</span><span class="p">(</span><span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">,</span> <span class="n">head</span> <span class="o">=</span> <span class="s">&#39;Cell size detection:&#39;</span><span class="p">,</span> <span class="n">maxLabel</span> <span class="o">=</span> <span class="n">maxLabel</span><span class="p">);</span>    

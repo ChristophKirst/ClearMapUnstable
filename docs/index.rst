@@ -16,11 +16,7 @@ Contents
    :maxdepth: 2
 
    introduction
-   installation
-   registration
    imageanalysis
-   statistics
-   examples
    api/ClearMap 
 
 Indices

@@ -95,6 +95,7 @@
 <h3><a href="../index.html">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imageanalysis.html">ClearMap Image Analysis Tools</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="ClearMap.html">ClearMap package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="ClearMap.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ClearMap.IO.html">ClearMap.IO package</a></li>
@@ -148,15 +149,9 @@
   <div class="section" id="module-ClearMap.Analysis.Tools">
 <span id="clearmap-analysis-tools-package"></span><h1>ClearMap.Analysis.Tools package<a class="headerlink" href="#module-ClearMap.Analysis.Tools" title="Permalink to this headline">¶</a></h1>
 <p>Analysis and statistics tools not in standard python packages.</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst</div></blockquote>
 <div class="section" id="module-ClearMap.Analysis.Tools.Extrapolate">
 <span id="clearmap-analysis-tools-extrapolate-module"></span><h2>ClearMap.Analysis.Tools.Extrapolate module<a class="headerlink" href="#module-ClearMap.Analysis.Tools.Extrapolate" title="Permalink to this headline">¶</a></h2>
 <p>Method to extend interpolation objects to constantly / linearly extrapolate.</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller Universty, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.Analysis.Tools.Extrapolate.extrap1d">
 <code class="descname">extrap1d</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>interpolation='linear'</em>, <em>exterpolation='constant'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Tools/Extrapolate.html#extrap1d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Tools.Extrapolate.extrap1d" title="Permalink to this definition">¶</a></dt>
@@ -213,9 +208,6 @@ inter- and extra-polation function</p>
 <div class="section" id="module-ClearMap.Analysis.Tools.MultipleComparisonCorrection">
 <span id="clearmap-analysis-tools-multiplecomparisoncorrection-module"></span><h2>ClearMap.Analysis.Tools.MultipleComparisonCorrection module<a class="headerlink" href="#module-ClearMap.Analysis.Tools.MultipleComparisonCorrection" title="Permalink to this headline">¶</a></h2>
 <p>Correction methods for multiple comparison tests</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.Analysis.Tools.MultipleComparisonCorrection.correctPValues">
 <code class="descname">correctPValues</code><span class="sig-paren">(</span><em>pvalues</em>, <em>method='BH'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Tools/MultipleComparisonCorrection.html#correctPValues"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Tools.MultipleComparisonCorrection.correctPValues" title="Permalink to this definition">¶</a></dt>
@@ -287,9 +279,6 @@ false  positives  among  all  features  as  or  more  extreme  than  the observe
 <div class="section" id="module-ClearMap.Analysis.Tools.StatisticalTests">
 <span id="clearmap-analysis-tools-statisticaltests-module"></span><h2>ClearMap.Analysis.Tools.StatisticalTests module<a class="headerlink" href="#module-ClearMap.Analysis.Tools.StatisticalTests" title="Permalink to this headline">¶</a></h2>
 <p>Some statistics tests not in standard python packages</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.Analysis.Tools.StatisticalTests.testCramerVonMises2Sample">
 <code class="descname">testCramerVonMises2Sample</code><span class="sig-paren">(</span><em>x</em>, <em>y</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Tools/StatisticalTests.html#testCramerVonMises2Sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Tools.StatisticalTests.testCramerVonMises2Sample" title="Permalink to this definition">¶</a></dt>
@@ -308,9 +297,8 @@ two arrays of sample observations</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>(float)</em> &#8211;
-T statistic
-(float): two-tailed p-value</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>(float, float)</em> &#8211;
+T statistic, two-tailed p-value</p>
 </td>
 </tr>
 </tbody>

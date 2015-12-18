@@ -94,6 +94,7 @@
 <h3><a href="../index.html">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imageanalysis.html">ClearMap Image Analysis Tools</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="ClearMap.html">ClearMap package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="ClearMap.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ClearMap.IO.html">ClearMap.IO package</a></li>
@@ -152,26 +153,13 @@
 <p class="first admonition-title">See also</p>
 <p class="last"><a class="reference internal" href="ClearMap.Settings.html#module-ClearMap.Settings" title="ClearMap.Settings"><code class="xref py py-mod docutils literal"><span class="pre">Settings</span></code></a></p>
 </div>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, 2015</div></blockquote>
 <dl class="data">
-<dt id="ClearMap.Parameter.SpotDetectionParameter">
-<code class="descname">SpotDetectionParameter</code><em class="property"> = {'backgroundSize': (15, 15), 'intensityMethod': 'Max', 'hMax': 20, 'intensitySize': (3, 3, 3), 'dogSize': (7, 7, 11), 'threshold': 20}</em><a class="headerlink" href="#ClearMap.Parameter.SpotDetectionParameter" title="Permalink to this definition">¶</a></dt>
+<dt id="ClearMap.Parameter.detectCellParameter">
+<code class="descname">detectCellParameter</code><em class="property"> = {'findExtendedMaximaParameter': {'threshold': 0, 'save': None, 'verbose': False, 'hMax': 20, 'size': 5}, 'correctIlluminationParameter': {'scaling': 'Mean', 'flatfield': True, 'save': None, 'verbose': False, 'background': None}, 'removeBackgroundParameter': {'save': None, 'verbose': False, 'size': (15, 15)}, 'filterDoGParameter': {'save': None, 'sigma2': None, 'sigma': None, 'verbose': False, 'size': (7, 7, 11)}, 'detectCellShapeParameter': {'threshold': 700, 'save': None, 'verbose': False}, 'findIntensityParameter': {'method': 'Max', 'size': (3, 3, 3)}}</em><a class="headerlink" href="#ClearMap.Parameter.detectCellParameter" title="Permalink to this definition">¶</a></dt>
 <dd><p>dict: Paramters for cell detection using the spot detection algorithm</p>
-<blockquote>
-<div><ul class="simple">
-<li>&#8220;backgroundSize&#8221; : Background correctoin: None or (y,x) which is size of disk for gray scale opening</li>
-<li>&#8220;dogSize&#8221; : Spot Detection via Difference of Gaussians (DoG) filter: (y,x,z) size</li>
-<li>&#8220;hMax&#8221; : h of h-max transform</li>
-<li>&#8220;intensityMethod&#8221;  : None -&gt; intensity of pixel of center, alternatively string of numpy array method that returns a single number</li>
-<li>&#8220;intensitySize&#8221;    : size of box in (y,x,z) to include in intensity determination</li>
-<li>&#8220;threshold&#8221; : Threshold for min intensity at center to be counted as cell (should be similar to the h max)</li>
-</ul>
-</div></blockquote>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#ClearMap.Parameter.IlastikParameter" title="ClearMap.Parameter.IlastikParameter"><code class="xref py py-const docutils literal"><span class="pre">IlastikParameter</span></code></a>, <a class="reference internal" href="#ClearMap.Parameter.StackProcessingParameter" title="ClearMap.Parameter.StackProcessingParameter"><code class="xref py py-const docutils literal"><span class="pre">StackProcessingParameter</span></code></a></p>
+<p class="last"><a class="reference internal" href="#ClearMap.Parameter.IlastikParameter" title="ClearMap.Parameter.IlastikParameter"><code class="xref py py-const docutils literal"><span class="pre">IlastikParameter</span></code></a>, <code class="xref py py-const docutils literal"><span class="pre">StackProcessingParameter</span></code></p>
 </div>
 </dd></dl>
 
@@ -188,13 +176,13 @@
 </div></blockquote>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#ClearMap.Parameter.SpotDetectionParameter" title="ClearMap.Parameter.SpotDetectionParameter"><code class="xref py py-const docutils literal"><span class="pre">SpotDetectionParameter</span></code></a>, <a class="reference internal" href="#ClearMap.Parameter.StackProcessingParameter" title="ClearMap.Parameter.StackProcessingParameter"><code class="xref py py-const docutils literal"><span class="pre">StackProcessingParameter</span></code></a></p>
+<p class="last"><code class="xref py py-const docutils literal"><span class="pre">SpotDetectionParameter</span></code>, <code class="xref py py-const docutils literal"><span class="pre">StackProcessingParameter</span></code></p>
 </div>
 </dd></dl>
 
 <dl class="data">
-<dt id="ClearMap.Parameter.StackProcessingParameter">
-<code class="descname">StackProcessingParameter</code><em class="property"> = {'chunkOptimizationSize': &lt;built-in function all&gt;, 'processes': 2, 'chunkSizeMin': 30, 'chunkOptimization': True, 'cChunkOverlap': 15, 'chunkSizeMax': 100}</em><a class="headerlink" href="#ClearMap.Parameter.StackProcessingParameter" title="Permalink to this definition">¶</a></dt>
+<dt id="ClearMap.Parameter.processStackParameter">
+<code class="descname">processStackParameter</code><em class="property"> = {'chunkOptimizationSize': &lt;built-in function all&gt;, 'processes': 2, 'chunkSizeMin': 30, 'chunkOptimization': True, 'cChunkOverlap': 15, 'chunkSizeMax': 100}</em><a class="headerlink" href="#ClearMap.Parameter.processStackParameter" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="docutils">
 <dt>dict: Parameter for processing an image stack in parallel</dt>
 <dd><ul class="first last simple">
@@ -209,7 +197,7 @@
 </dl>
 <div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="#ClearMap.Parameter.SpotDetectionParameter" title="ClearMap.Parameter.SpotDetectionParameter"><code class="xref py py-const docutils literal"><span class="pre">SpotDetectionParameter</span></code></a>, <a class="reference internal" href="#ClearMap.Parameter.IlastikParameter" title="ClearMap.Parameter.IlastikParameter"><code class="xref py py-const docutils literal"><span class="pre">IlastikParameter</span></code></a></p>
+<p class="last"><code class="xref py py-const docutils literal"><span class="pre">SpotDetectionParameter</span></code>, <a class="reference internal" href="#ClearMap.Parameter.IlastikParameter" title="ClearMap.Parameter.IlastikParameter"><code class="xref py py-const docutils literal"><span class="pre">IlastikParameter</span></code></a></p>
 </div>
 </dd></dl>
 

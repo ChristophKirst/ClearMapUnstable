@@ -95,6 +95,7 @@
 <h3><a href="../index.html">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imageanalysis.html">ClearMap Image Analysis Tools</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="ClearMap.html">ClearMap package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="ClearMap.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ClearMap.IO.html">ClearMap.IO package</a></li>
@@ -159,15 +160,9 @@ module.</p>
 <code class="xref py py-mod docutils literal"><span class="pre">StructureElements</span></code> can be used in
 combination with various morphological operations, e.g. used in the
 :mod:~ClearMap.ImageProcessing.BackgroundRemoval` module.</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <div class="section" id="module-ClearMap.ImageProcessing.Filter.LinearFilter">
 <span id="clearmap-imageprocessing-filter-linearfilter-module"></span><h2>ClearMap.ImageProcessing.Filter.LinearFilter module<a class="headerlink" href="#module-ClearMap.ImageProcessing.Filter.LinearFilter" title="Permalink to this headline">¶</a></h2>
 <p>Linear filter module</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.ImageProcessing.Filter.LinearFilter.filterLinear">
 <code class="descname">filterLinear</code><span class="sig-paren">(</span><em>img</em>, <em>filterLinearParameter=None</em>, <em>ftype=None</em>, <em>size=None</em>, <em>sigma=None</em>, <em>sigma2=None</em>, <em>save=None</em>, <em>subStack=None</em>, <em>verbose=False</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/Filter/LinearFilter.html#filterLinear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.Filter.LinearFilter.filterLinear" title="Permalink to this definition">¶</a></dt>
@@ -252,12 +247,9 @@ filtered image</p>
 <div class="section" id="module-ClearMap.ImageProcessing.Filter.DoGFilter">
 <span id="clearmap-imageprocessing-filter-dogfilter-module"></span><h2>ClearMap.ImageProcessing.Filter.DoGFilter module<a class="headerlink" href="#module-ClearMap.ImageProcessing.Filter.DoGFilter" title="Permalink to this headline">¶</a></h2>
 <p>DoG filter module</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.ImageProcessing.Filter.DoGFilter.filterDoG">
-<code class="descname">filterDoG</code><span class="sig-paren">(</span><em>img</em>, <em>filterDoGParameter=None</em>, <em>subStack=None</em>, <em>verbose=False</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/Filter/DoGFilter.html#filterDoG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.Filter.DoGFilter.filterDoG" title="Permalink to this definition">¶</a></dt>
+<code class="descname">filterDoG</code><span class="sig-paren">(</span><em>img</em>, <em>filterDoGParameter=None</em>, <em>size=None</em>, <em>sigma=None</em>, <em>sigma2=None</em>, <em>save=None</em>, <em>verbose=None</em>, <em>subStack=None</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/Filter/DoGFilter.html#filterDoG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.Filter.DoGFilter.filterDoG" title="Permalink to this definition">¶</a></dt>
 <dd><p>Difference of Gaussians (DoG) filter step</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -270,9 +262,9 @@ image data</p>
 <li><p class="first"><strong>filterDoGParameter</strong> (<em>dict</em>) &#8211;</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="9%" />
+<col width="10%" />
 <col width="22%" />
-<col width="70%" />
+<col width="69%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Name</th>
@@ -299,14 +291,15 @@ if None, do not correct for any background</td>
 <td>file name to save result of this operation
 if None dont save to file</td>
 </tr>
+<tr class="row-even"><td><em>verbose</em></td>
+<td>(bool or int)</td>
+<td>print progress information</td>
+</tr>
 </tbody>
 </table>
 </li>
 <li><p class="first"><strong>subStack</strong> (<em>dict or None</em>) &#8211;
 sub-stack information</p>
-</li>
-<li><p class="first"><strong>verbose</strong> (<em>bool</em>) &#8211;
-print progress info</p>
 </li>
 <li><p class="first"><strong>out</strong> (<em>object</em>) &#8211;
 object to write progress info to</p>
@@ -396,9 +389,6 @@ convolution</p>
 </tr>
 </tbody>
 </table>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.ImageProcessing.Filter.FilterKernel.filterKernel">
 <code class="descname">filterKernel</code><span class="sig-paren">(</span><em>ftype='Gaussian'</em>, <em>size=(5</em>, <em>5)</em>, <em>sigma=None</em>, <em>radius=None</em>, <em>sigma2=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/Filter/FilterKernel.html#filterKernel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.Filter.FilterKernel.filterKernel" title="Permalink to this definition">¶</a></dt>
@@ -526,9 +516,6 @@ structure element</p>
 <p class="first admonition-title">Note</p>
 <p class="last">To be extended!</p>
 </div>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.ImageProcessing.Filter.StructureElement.structureElement">
 <code class="descname">structureElement</code><span class="sig-paren">(</span><em>setype='Disk'</em>, <em>sesize=(3</em>, <em>3)</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/Filter/StructureElement.html#structureElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.Filter.StructureElement.structureElement" title="Permalink to this definition">¶</a></dt>

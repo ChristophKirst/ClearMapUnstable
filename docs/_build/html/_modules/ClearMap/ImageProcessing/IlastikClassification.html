@@ -86,6 +86,7 @@
 <h3><a href="../../../index.html">Table Of Contents</a></h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../imageanalysis.html">ClearMap Image Analysis Tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../api/ClearMap.html">ClearMap package</a></li>
 </ul>
  
@@ -136,20 +137,21 @@
 <span class="sd">    Ilastik 0.5 works for images in uint8 format !</span>
 
 <span class="sd">References:</span>
-<span class="sd">    `Ilastik &lt;http://ilastik.org/&gt;`_</span>
-<span class="sd">    </span>
-<span class="sd">Author</span>
-<span class="sd">&quot;&quot;&quot;</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">   - Based on the ilastik interface from `cell profiler &lt;http://www.cellprofiler.org/&gt;`_</span>
-<span class="s">   - Christoph Kirst, The Rockefeller University, New York City, 2015</span>
-<span class="s">&quot;&quot;&quot;</span>
+<span class="sd">    * `Ilastik &lt;http://ilastik.org/&gt;`_</span>
+<span class="sd">    * Based on the ilastik interface from `cell profiler &lt;http://www.cellprofiler.org/&gt;`_</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c">#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City</span>
+<span class="c">#:license: GNU, see LICENSE.txt for details.</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">numpy</span>
 <span class="kn">import</span> <span class="nn">h5py</span>
 <span class="kn">import</span> <span class="nn">math</span>
 
+
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
 <span class="kn">import</span> <span class="nn">ClearMap.Settings</span> <span class="kn">as</span> <span class="nn">settings</span>
+<span class="kn">import</span> <span class="nn">ClearMap.IO</span> <span class="kn">as</span> <span class="nn">io</span>
 
 <span class="c">#from ClearMap.ImageProcessing.BackgroundRemoval import removeBackground</span>
 <span class="kn">from</span> <span class="nn">ClearMap.ImageProcessing.MaximaDetection</span> <span class="kn">import</span> <span class="n">findCenterOfMaxima</span><span class="p">,</span> <span class="n">findIntensity</span>
@@ -347,10 +349,50 @@
         <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;float32&#39;</span><span class="p">)</span> <span class="o">*</span>  <span class="n">rescale</span><span class="p">;</span>
         <span class="n">img</span><span class="p">[</span><span class="n">img</span> <span class="o">&gt;</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;uint8&#39;</span><span class="p">);</span>
+    <span class="k">elif</span> <span class="n">rescale</span> <span class="o">==</span> <span class="s">&#39;max&#39;</span><span class="p">:</span>
+        <span class="n">rescale</span> <span class="o">=</span>  <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">max</span><span class="p">());</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;float32&#39;</span><span class="p">)</span> <span class="o">*</span>  <span class="n">rescale</span><span class="p">;</span>
+        <span class="n">img</span><span class="p">[</span><span class="n">img</span> <span class="o">&gt;</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;uint8&#39;</span><span class="p">);</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;uint8&#39;</span><span class="p">);</span>
     
     <span class="k">return</span> <span class="n">img</span></div>
+
+
+<span class="k">def</span> <span class="nf">_findMax</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span>
+        <span class="n">source</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+        <span class="n">img</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readData</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">z</span><span class="o">+</span><span class="mi">1</span><span class="p">));</span>
+        <span class="k">return</span> <span class="n">img</span><span class="o">.</span><span class="n">max</span><span class="p">();</span>
+    
+
+<div class="viewcode-block" id="rescaleFactorIlastik"><a class="viewcode-back" href="../../../api/ClearMap.ImageProcessing.html#ClearMap.ImageProcessing.IlastikClassification.rescaleFactorIlastik">[docs]</a><span class="k">def</span> <span class="nf">rescaleFactorIlastik</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">processes</span> <span class="o">=</span> <span class="mi">12</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determines rescale factor given a image file</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">        source: source file / image</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">        float: rescale factor</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">sizeZ</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">dataZSize</span><span class="p">(</span><span class="n">source</span><span class="p">);</span>
+
+    <span class="n">argdata</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sizeZ</span><span class="p">):</span>
+        <span class="n">argdata</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">source</span><span class="p">,</span> <span class="n">i</span><span class="p">]);</span>
+    <span class="c">#print argdata</span>
+    
+    <span class="c"># process in parallel</span>
+    <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">processes</span> <span class="o">=</span> <span class="n">processes</span><span class="p">);</span>    
+    <span class="n">imax</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">_findMax</span><span class="p">,</span> <span class="n">argdata</span><span class="p">);</span>
+    <span class="n">imax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">imax</span><span class="p">);</span>
+    
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">imax</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pow</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">8</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span></div>
+
+
+
 
 
 
@@ -365,8 +407,8 @@
 <span class="sd">            ============ ==================== ===========================================================</span>
 <span class="sd">            *classifier* (str or  None)       saves result of labeling the differnet maxima</span>
 <span class="sd">                                              if None dont correct image for illumination, if True the </span>
-<span class="sd">            *rescale*    (float or None)      optional rescaling of the image to fit uint8 format </span>
-<span class="sd">                                              used by ilastik</span>
+<span class="sd">            *rescale*    (float,all, or None) optional rescaling of the image to fit uint8 format </span>
+<span class="sd">                                              used by ilastik,  rescale </span>
 <span class="sd">            *save*       (str or None)        save the propabilities to belong to the classes to a file</span>
 <span class="sd">            *verbose*    (bool or int)        print / plot information about this step </span>
 <span class="sd">            ============ ==================== ===========================================================</span>

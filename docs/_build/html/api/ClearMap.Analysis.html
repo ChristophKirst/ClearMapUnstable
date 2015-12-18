@@ -94,6 +94,7 @@
 <h3><a href="../index.html">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../imageanalysis.html">ClearMap Image Analysis Tools</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="ClearMap.html">ClearMap package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="ClearMap.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ClearMap.IO.html">ClearMap.IO package</a></li>
@@ -176,9 +177,6 @@ the atlas is supported.</p>
 </tr>
 </tbody>
 </table>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, 2015</div></blockquote>
 <div class="section" id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
@@ -215,9 +213,6 @@ scientific question.</li>
 <ul class="simple">
 <li><a class="reference external" href="http://mouse.brain-map.org/static/atlas">Allen Brain Atlas</a></li>
 </ul>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="data">
 <dt id="ClearMap.Analysis.Label.DefaultLabeledImageFile">
 <code class="descname">DefaultLabeledImageFile</code><em class="property"> = '/home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Test/Data/Annotation/annotation_25_right.tif'</em><a class="headerlink" href="#ClearMap.Analysis.Label.DefaultLabeledImageFile" title="Permalink to this definition">¶</a></dt>
@@ -468,9 +463,6 @@ the different bain regions if the <code class="docutils literal"><span class="pr
 <p>Create some statistics to test significant changes
 in voxelized and labeled data</p>
 <p>TODO: cleanup / make generic</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.Analysis.Statistics.readDataGroup">
 <code class="descname">readDataGroup</code><span class="sig-paren">(</span><em>filenames</em>, <em>combine=True</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Statistics.html#readDataGroup"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Statistics.readDataGroup" title="Permalink to this definition">¶</a></dt>
@@ -565,30 +557,53 @@ in voxelized and labeled data</p>
 <div class="section" id="module-ClearMap.Analysis.Voxelization">
 <span id="clearmap-analysis-voxelization-module"></span><h2>ClearMap.Analysis.Voxelization module<a class="headerlink" href="#module-ClearMap.Analysis.Voxelization" title="Permalink to this headline">¶</a></h2>
 <p>Converts point data into voxel image data for visulaization and analysis</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.Analysis.Voxelization.voxelize">
-<code class="descname">voxelize</code><span class="sig-paren">(</span><em>points</em>, <em>dataSize=None</em>, <em>sink=None</em>, <em>voxelizationSize=(5</em>, <em>5</em>, <em>5)</em>, <em>voxelizationMethod='Spherical'</em>, <em>voxelizationWeights=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Voxelization.html#voxelize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Voxelization.voxelize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">voxelize</code><span class="sig-paren">(</span><em>points</em>, <em>dataSize=None</em>, <em>sink=None</em>, <em>voxelizeParameter=None</em>, <em>method='Spherical'</em>, <em>size=(5</em>, <em>5</em>, <em>5)</em>, <em>weights=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Voxelization.html#voxelize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Voxelization.voxelize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a list of points into an volumetric image array</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>points</strong> (<em>array</em>) &#8211;
-point data array</li>
-<li><strong>dataSize</strong> (<em>tuple or None</em>) &#8211;
-size of the final output data, if None size is determined by maximal point coordinates</li>
-<li><strong>sink</strong> (<em>str, array or None</em>) &#8211;
-the location to write or return the resulting voxelization image, if None return array</li>
-<li><strong>voxelizationSize</strong> (<em>tuple</em>) &#8211;
-size parameter for non-local</li>
-<li><strong>voxelizationMethod</strong> (<em>str</em>) &#8211;
-voxelization method: &#8216;Spherical&#8217;, &#8216;Rectangular&#8217;, &#8216;Pixel&#8217;</li>
-<li><strong>voxelizationWeights</strong> (<em>array or None</em>) &#8211;
-weight for each point</li>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first">
+<li><p class="first"><strong>points</strong> (<em>array</em>) &#8211;
+point data array</p>
+</li>
+<li><p class="first"><strong>dataSize</strong> (<em>tuple</em>) &#8211;
+size of final image</p>
+</li>
+<li><p class="first"><strong>sink</strong> (<em>str, array or None</em>) &#8211;
+the location to write or return the resulting voxelization image, if None return array</p>
+</li>
+<li><p class="first"><strong>voxelizeParameter</strong> (<em>dict</em>) &#8211;</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="11%" />
+<col width="22%" />
+<col width="67%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Type</th>
+<th class="head">Descritption</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><em>method</em></td>
+<td>(str or None)</td>
+<td>method for voxelization: &#8216;Spherical&#8217;, &#8216;Rectangular&#8217; or &#8216;Pixel&#8217;</td>
+</tr>
+<tr class="row-odd"><td><em>size</em></td>
+<td>(tuple)</td>
+<td>size parameter for the voxelization</td>
+</tr>
+<tr class="row-even"><td><em>weights</em></td>
+<td>(array or None)</td>
+<td>weights for each point, None is uniform weights</td>
+</tr>
+</tbody>
+</table>
+</li>
 </ul>
 </td>
 </tr>

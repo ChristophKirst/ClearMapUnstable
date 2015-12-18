@@ -86,6 +86,7 @@
 <h3><a href="../../index.html">Table Of Contents</a></h3>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../imageanalysis.html">ClearMap Image Analysis Tools</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../api/ClearMap.html">ClearMap package</a></li>
 </ul>
  
@@ -123,11 +124,7 @@
 <span class="sd">    * :const:`IlastikPath`</span>
 <span class="sd">    * :const:`ElastixPath`</span>
 <span class="sd">    * :mod:`~ClearMap.Parameter`</span>
-<span class="sd">    </span>
-<span class="sd">Author</span>
-<span class="sd">&quot;&quot;&quot;</span><span class="s">&quot;&quot;&quot;</span>
-<span class="s">   Christoph Kirst, The Rockefeller University, 2015</span>
-<span class="s">&quot;&quot;&quot;</span>
+<span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">socket</span>
@@ -180,12 +177,14 @@
     <span class="c"># check existence:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">ElastixPath</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ElastixPath</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">RuntimeWarning</span><span class="p">(</span><span class="s">&#39;Settings: elastix path </span><span class="si">%s</span><span class="s"> does not exists, cf. Settings.py or type help(Settings) for &#39;</span><span class="p">);</span>
+            <span class="c">#raise RuntimeWarning(&#39;Settings: elastix path %s does not exists, cf. Settings.py or type help(Settings) for details.&#39; % ElastixPath);</span>
+            <span class="k">print</span> <span class="s">&#39;Settings: elastix path </span><span class="si">%s</span><span class="s"> does not exists, cf. Settings.py or type help(Settings) for details.&#39;</span> <span class="o">%</span> <span class="n">ElastixPath</span><span class="p">;</span>
             <span class="n">ElastixPath</span> <span class="o">=</span> <span class="bp">None</span><span class="p">;</span>
     
     <span class="k">if</span> <span class="ow">not</span> <span class="n">IlastikPath</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">IlastikPath</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">RuntimeWarning</span><span class="p">(</span><span class="s">&#39;Settings: ilastik path </span><span class="si">%s</span><span class="s"> does not exists, cf. Settings.py&#39;</span><span class="p">);</span>
+            <span class="c">#raise RuntimeWarning(&#39;Settings: ilastik path %s does not exists, cf. Settings.py or type help(Settings) for details.&#39; % IlastikPath);</span>
+            <span class="k">print</span> <span class="s">&#39;Settings: ilastik path </span><span class="si">%s</span><span class="s"> does not exists, cf. Settings.py or type help(Settings) for details.&#39;</span> <span class="o">%</span> <span class="n">IlastikPath</span><span class="p">;</span>
             <span class="n">IlastikPath</span> <span class="o">=</span> <span class="bp">None</span><span class="p">;</span></div>
 
 <span class="n">setup</span><span class="p">();</span>
