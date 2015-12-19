@@ -92,7 +92,18 @@
 <h3><a href="index.html">Table Of Contents</a></h3>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="">ClearMap Image Analysis Tools</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">ClearMap Image Analysis Tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#visualizing-3d-images">Visualizing 3D Images</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#tiled-plots">Tiled Plots</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#image-statistics">Image Statistics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#background-removal">Background Removal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#image-filter">Image Filter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#maxima-detection">Maxima Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cell-shape-detection">Cell Shape Detection</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="api/ClearMap.html">ClearMap package</a></li>
 </ul>
  
@@ -133,9 +144,195 @@
   <div class="section" id="clearmap-image-analysis-tools">
 <h1>ClearMap Image Analysis Tools<a class="headerlink" href="#clearmap-image-analysis-tools" title="Permalink to this headline">¶</a></h1>
 <p>Here we introduce the usage of the main image processing steps with examples.</p>
+<p>We use a small test data set here to illustrate some of the image processing
+functions in ClearMap. The data is from iDISCO+ cleared mouse brain stained
+for c-fos,</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.IO</span> <span class="kn">as</span> <span class="nn">io</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.Settings</span> <span class="kn">as</span> <span class="nn">settings</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">ClearMapPath</span><span class="p">,</span> <span class="s">&#39;Test/Data/ImageAnalysis/cfos-substack.tif&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="section" id="visualizing-3d-images">
+<h2>Visualizing 3D Images<a class="headerlink" href="#visualizing-3d-images" title="Permalink to this headline">¶</a></h2>
+<p>Large images in 3d are best viewed in specialized software, such as
+<a class="reference external" href="http://www.bitplane.com/">Imaris</a> or <a class="reference external" href="http://imagej.net/Welcome">ImageJ</a>.</p>
+<p>In ClearMap we provide some basic visualization tools to inspect 3d data
+in the module <a class="reference internal" href="api/ClearMap.Visualization.html#module-ClearMap.Visualization.Plot" title="ClearMap.Visualization.Plot"><code class="xref py py-mod docutils literal"><span class="pre">ClearMap.Visualization.Plot</span></code></a></p>
+<p>To load them run</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.Visualization.Plot</span> <span class="kn">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+<div class="section" id="tiled-plots">
+<h3>Tiled Plots<a class="headerlink" href="#tiled-plots" title="Permalink to this headline">¶</a></h3>
+<p>In our experience results of 3d image analysis is inspected most accuarately
+plotting each horizontal plane in the image in tiles that are coupled for
+zooming.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readData</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">26</span><span class="p">));</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plotTiling</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+</pre></div>
+</div>
 <p>(<a class="reference external" href=".//imageanalysis-1.py">Source code</a>, <a class="reference external" href=".//imageanalysis-1.png">png</a>, <a class="reference external" href=".//imageanalysis-1.hires.png">hires.png</a>, <a class="reference external" href=".//imageanalysis-1.pdf">pdf</a>)</p>
 <div class="figure">
 <img alt="_images/imageanalysis-1.png" src="_images/imageanalysis-1.png" />
+</div>
+<p>To only plot a particular subregion its possible to specify the x,y,z range.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plotTiling</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">70</span><span class="p">),</span> <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">50</span><span class="p">),</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//imageanalysis-2.py">Source code</a>, <a class="reference external" href=".//imageanalysis-2.png">png</a>, <a class="reference external" href=".//imageanalysis-2.hires.png">hires.png</a>, <a class="reference external" href=".//imageanalysis-2.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/imageanalysis-2.png" src="_images/imageanalysis-2.png" />
+</div>
+<p>Sometimes inverse colors may be better:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plotTiling</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">inverse</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span>  <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//imageanalysis-3.py">Source code</a>, <a class="reference external" href=".//imageanalysis-3.png">png</a>, <a class="reference external" href=".//imageanalysis-3.hires.png">hires.png</a>, <a class="reference external" href=".//imageanalysis-3.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/imageanalysis-3.png" src="_images/imageanalysis-3.png" />
+</div>
+</div>
+</div>
+<div class="section" id="image-statistics">
+<h2>Image Statistics<a class="headerlink" href="#image-statistics" title="Permalink to this headline">¶</a></h2>
+<p>It is useful to gather some information about the image initially.
+For larger images that might not even fit into memory in ClearMap
+certain statistics can be gathered in parallel via the
+module <a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.ImageStatistics" title="ClearMap.ImageProcessing.ImageStatistics"><code class="xref py py-mod docutils literal"><span class="pre">ClearMap.ImageProcessing.ImageStatistics</span></code></a> module.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.ImageProcessing.ImageStatistics</span> <span class="kn">as</span> <span class="nn">stat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">stat</span><span class="o">.</span><span class="n">calculateStatistics</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">&#39;mean&#39;</span><span class="p">)</span>
+<span class="go">2305.4042155294119</span>
+</pre></div>
+</div>
+<p>To get more information about the progress use the <code class="docutils literal"><span class="pre">verbose</span></code> option</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">stat</span><span class="o">.</span><span class="n">calculateStatistics</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">method</span> <span class="o">=</span> <span class="s">&#39;mean&#39;</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+<span class="go">ChunkSize: Estimated chunk size 51 in 1 chunks!</span>
+<span class="go">Number of SubStacks: 1</span>
+<span class="go">Process 0: processing substack 0/1</span>
+<span class="go">Process 0: file          = /home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Test/Data/ImageAnalysis/cfos-substack.tif</span>
+<span class="go">Process 0: segmentation  = &lt;function calculateStatisticsOnStack at 0x7fee9c25dd70&gt;</span>
+<span class="go">Process 0: ranges: x,y,z = &lt;built-in function all&gt;,&lt;built-in function all&gt;,(0, 51)</span>
+<span class="go">Process 0: Reading data of size (250, 250, 51): elapsed time: 0:00:00</span>
+<span class="go">Process 0: Processing substack of size (250, 250, 51): elapsed time: 0:00:00</span>
+<span class="go">Total Time Image Statistics: elapsed time: 0:00:00</span>
+<span class="go">2305.4042155294119</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="background-removal">
+<h2>Background Removal<a class="headerlink" href="#background-removal" title="Permalink to this headline">¶</a></h2>
+<p>One of the first steps is often to remove background variations. Therfore the
+<code class="xref py py-mod docutils literal"><span class="pre">ClearMap.Imageprocessing.BackgroundRemoval</span></code> module can be used.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.ImageProcessing.BackgroundRemoval</span> <span class="kn">as</span> <span class="nn">bgr</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataBGR</span> <span class="o">=</span> <span class="n">bgr</span><span class="o">.</span><span class="n">removeBackground</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">asype</span><span class="p">(</span><span class="s">&#39;float&#39;</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">True</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plotTiling</span><span class="p">(</span><span class="n">dataBGR</span><span class="p">,</span> <span class="n">inverse</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//imageanalysis-4.py">Source code</a>, <a class="reference external" href=".//imageanalysis-4.png">png</a>, <a class="reference external" href=".//imageanalysis-4.hires.png">hires.png</a>, <a class="reference external" href=".//imageanalysis-4.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/imageanalysis-4.png" src="_images/imageanalysis-4.png" />
+</div>
+<p>Note that if the background feature size is choosen to small, this may result in removal of cells:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">dataBGR</span> <span class="o">=</span> <span class="n">bgr</span><span class="o">.</span><span class="n">removeBackground</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;float&#39;</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">True</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plotTiling</span><span class="p">(</span><span class="n">dataBGR</span><span class="p">,</span> <span class="n">inverse</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//imageanalysis-5.py">Source code</a>, <a class="reference external" href=".//imageanalysis-5.png">png</a>, <a class="reference external" href=".//imageanalysis-5.hires.png">hires.png</a>, <a class="reference external" href=".//imageanalysis-5.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/imageanalysis-5.png" src="_images/imageanalysis-5.png" />
+</div>
+</div>
+<div class="section" id="image-filter">
+<h2>Image Filter<a class="headerlink" href="#image-filter" title="Permalink to this headline">¶</a></h2>
+<p>A useful feature is to filter an image. Here the
+<code class="xref py py-mod docutils literal"><span class="pre">ClearMap.Imageprocessing.Filter</span></code> package can be used.</p>
+<p>To detect cells the difference of Guassians filter is usefull to detect cell
+centers.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ClearMap.ImageProcessing.Filter.DoGFilter</span> <span class="kn">import</span> <span class="n">filterDoG</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataDoG</span> <span class="o">=</span> <span class="n">filterDoG</span><span class="p">(</span><span class="n">dataBGR</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">True</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plotTiling</span><span class="p">(</span><span class="n">dataDoG</span><span class="p">,</span> <span class="n">inverse</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//imageanalysis-6.py">Source code</a>, <a class="reference external" href=".//imageanalysis-6.png">png</a>, <a class="reference external" href=".//imageanalysis-6.hires.png">hires.png</a>, <a class="reference external" href=".//imageanalysis-6.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/imageanalysis-6.png" src="_images/imageanalysis-6.png" />
+</div>
+</div>
+<div class="section" id="maxima-detection">
+<h2>Maxima Detection<a class="headerlink" href="#maxima-detection" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.MaximaDetection" title="ClearMap.ImageProcessing.MaximaDetection"><code class="xref py py-mod docutils literal"><span class="pre">ClearMap.ImageProcessing.MaximaDetection</span></code></a> module contains a set
+of useful functions for the detection of local maxima.
+A labeled image can be visualized using the
+<a class="reference internal" href="api/ClearMap.Visualization.html#ClearMap.Visualization.Plot.plotOverlayLabel" title="ClearMap.Visualization.Plot.plotOverlayLabel"><code class="xref py py-func docutils literal"><span class="pre">ClearMap.Visualization.Plot.plotOverlayLabel()</span></code></a> routine.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ClearMap.ImageProcessing.MaximaDetection</span> <span class="kn">import</span> <span class="n">findExtendedMaxima</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataMax</span> <span class="o">=</span> <span class="n">findExtendedMaxima</span><span class="p">(</span><span class="n">dataDoG</span><span class="p">,</span> <span class="n">hMax</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">threshold</span> <span class="o">=</span> <span class="mi">10</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plotOverlayLabel</span><span class="p">(</span>  <span class="n">dataDoG</span> <span class="o">/</span> <span class="n">dataDoG</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">dataMax</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;int&#39;</span><span class="p">),</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//imageanalysis-7.py">Source code</a>, <a class="reference external" href=".//imageanalysis-7.png">png</a>, <a class="reference external" href=".//imageanalysis-7.hires.png">hires.png</a>, <a class="reference external" href=".//imageanalysis-7.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/imageanalysis-7.png" src="_images/imageanalysis-7.png" />
+</div>
+<p>Its easier to see when zoomed in:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plotOverlayLabel</span><span class="p">(</span>  <span class="n">dataDoG</span> <span class="o">/</span> <span class="n">dataDoG</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">dataMax</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;int&#39;</span><span class="p">),</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">),</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//imageanalysis-8.py">Source code</a>, <a class="reference external" href=".//imageanalysis-8.png">png</a>, <a class="reference external" href=".//imageanalysis-8.hires.png">hires.png</a>, <a class="reference external" href=".//imageanalysis-8.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/imageanalysis-8.png" src="_images/imageanalysis-8.png" />
+</div>
+<p>Note that form some cells a maxima label in this sub set miht not be visible as
+maxima are detected in the entire image in 3D and the actual maxima
+might lie in layers not shown.</p>
+<p>Once the maxima are detected the cell coordinates can be determined:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ClearMap.ImageProcessing.MaximaDetection</span> <span class="kn">import</span> <span class="n">findCenterOfMaxima</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cells</span> <span class="o">=</span> <span class="n">findCenterOfMaxima</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dataMax</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">print</span> <span class="n">cells</span><span class="o">.</span><span class="n">shape</span>
+<span class="go">(3670, 3)</span>
+</pre></div>
+</div>
+<p>We can also overlay cell cordinates in an image:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plotOverlayPoints</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">cells</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//imageanalysis-9.py">Source code</a>, <a class="reference external" href=".//imageanalysis-9.png">png</a>, <a class="reference external" href=".//imageanalysis-9.hires.png">hires.png</a>, <a class="reference external" href=".//imageanalysis-9.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/imageanalysis-9.png" src="_images/imageanalysis-9.png" />
+</div>
+</div>
+<div class="section" id="cell-shape-detection">
+<h2>Cell Shape Detection<a class="headerlink" href="#cell-shape-detection" title="Permalink to this headline">¶</a></h2>
+<p>Finally once the cell centers are detected the
+<code class="xref py py-mod docutils literal"><span class="pre">ClearMap.ImageProcessing.CellShapedetection</span></code> module can be used to detect
+the cell shape via a watershed.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ClearMap.ImageProcessing.CellSizeDetection</span> <span class="kn">import</span> <span class="n">detectCellShape</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">dataShape</span> <span class="o">=</span> <span class="n">detectCellShape</span><span class="p">(</span><span class="n">dataDoG</span><span class="p">,</span> <span class="n">cells</span><span class="p">,</span> <span class="n">threshold</span> <span class="o">=</span> <span class="mi">15</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plotOverlayLabel</span><span class="p">(</span><span class="n">dataDoG</span> <span class="o">/</span> <span class="n">dataDoG</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">dataShape</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//imageanalysis-10.py">Source code</a>, <a class="reference external" href=".//imageanalysis-10.png">png</a>, <a class="reference external" href=".//imageanalysis-10.hires.png">hires.png</a>, <a class="reference external" href=".//imageanalysis-10.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/imageanalysis-10.png" src="_images/imageanalysis-10.png" />
+</div>
+<p>Now we can perform some measurements:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ClearMap.ImageProcessing.CellSizeDetection</span> <span class="kn">import</span> <span class="n">findCellSize</span><span class="p">,</span> <span class="n">findCellIntensity</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cellSizes</span> <span class="o">=</span> <span class="n">findCellSize</span><span class="p">(</span><span class="n">dataShape</span><span class="p">,</span> <span class="n">maxLabel</span> <span class="o">=</span> <span class="n">cells</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cellIntensities</span> <span class="o">=</span> <span class="n">findCellIntensity</span><span class="p">(</span><span class="n">dataBGR</span><span class="p">,</span> <span class="n">dataShape</span><span class="p">,</span>  <span class="n">maxLabel</span> <span class="o">=</span> <span class="n">cells</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p>and plot those:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">mpl</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mpl</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mpl</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cellSizes</span><span class="p">,</span> <span class="n">cellIntensities</span><span class="p">,</span> <span class="s">&#39;.&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mpl</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">&#39;cell size [voxel]&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">mpl</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">&#39;cell intensity [au]&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>(<a class="reference external" href=".//imageanalysis-11.py">Source code</a>, <a class="reference external" href=".//imageanalysis-11.png">png</a>, <a class="reference external" href=".//imageanalysis-11.hires.png">hires.png</a>, <a class="reference external" href=".//imageanalysis-11.pdf">pdf</a>)</p>
+<div class="figure">
+<img alt="_images/imageanalysis-11.png" src="_images/imageanalysis-11.png" />
+</div>
 </div>
 </div>
 

@@ -14,7 +14,7 @@ Method           Description                                                  Re
 "SpotDetection"  uses predefined spot detection pipline                       :func:`~ClearMap.ImageProcessing.CellDetection.detectCells`
 "Ilastik"        uses predefined pipline with cell classification via Ilastik :func:`~ClearMap.ImageProcessing.CellDetection.classifyCells`
 function         a user defined function                                      NA
-================ ============================================================ ================
+================ ============================================================ ========================
 
 Example:
 

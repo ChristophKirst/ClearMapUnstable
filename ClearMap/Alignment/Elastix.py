@@ -473,7 +473,7 @@ def transformData(source, sink = [], transformParameterFile = None, transformDir
     
     If the map determined by elastix is 
     :math:`T \\mathrm{fixed} \\rightarrow \\mathrm{moving}`, 
-    transformix on data works as :math:`T^{-1}(\\mathrm{data})
+    transformix on data works as :math:`T^{-1}(\\mathrm{data})`.
         
     Arguments:
         source (str or array): image source to be transformed

@@ -187,7 +187,7 @@ def findExtendedMaxima(img, findExtendedMaximaParameter = None, hMax = None, siz
 def findCenterOfMaxima(img, imgmax, findCenterOfMaximaParameter = None, save = None, verbose = False,
                        subStack = None, out = sys.stdout, **parameter):
     """Find center of detected maxima weighted by intensity
-        
+    
     Arguments:
         img (array): image data
         findCenterOfMaximaParameter (dict):
@@ -201,10 +201,9 @@ def findCenterOfMaxima(img, imgmax, findCenterOfMaximaParameter = None, save = N
         subStack (dict or None): sub-stack information 
         verbose (bool): print progress info 
         out (object): object to write progress info to
-        
+    
     Returns:
-        array: coordinates of centers of maxima, shape is (n,d) where n is 
-               number of maxima and d the dimension of the image
+        array: coordinates of centers of maxima, shape is (n,d) where n is number of maxima and d the dimension of the image
     """
     
     save    = getParameter(findCenterOfMaximaParameter, "save", save);
@@ -263,8 +262,7 @@ def findPixelCoordinates(imgmax, subStack = None, verbose = False, out = sys.std
         out (object): object to write progress info to
         
     Returns:
-        array: coordinates of centers of True pixels, shape is (n,d)  where n is 
-               number of maxima and d the dimension of the image
+        array: coordinates of centers of True pixels, shape is (n,d)  where n is number of maxima and d the dimension of the image
     """
     
     timer = Timer(); 

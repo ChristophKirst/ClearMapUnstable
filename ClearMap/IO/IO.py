@@ -757,11 +757,11 @@ def pointsToRange(points, dataSize = all, x = all, y = all, z = all, shift = Fal
     
     #ids = numpy.zeros(n, dtype = 'bool');
     if d > 0:
-        ids = numpy.logical_and(points[:,0] >= rr[0][0], points[:,0] <= rr[0][1]);
+        ids = numpy.logical_and(points[:,0] >= rr[0][0], points[:,0] < rr[0][1]);
     if d > 1:
-        ids = numpy.logical_and(numpy.logical_and(ids, points[:,1] >= rr[1][0]), points[:,1] <= rr[1][1]);
+        ids = numpy.logical_and(numpy.logical_and(ids, points[:,1] >= rr[1][0]), points[:,1] < rr[1][1]);
     if d > 2:
-        ids = numpy.logical_and(numpy.logical_and(ids, points[:,2] >= rr[2][0]), points[:,2] <= rr[2][1]);
+        ids = numpy.logical_and(numpy.logical_and(ids, points[:,2] >= rr[2][0]), points[:,2] < rr[2][1]);
         
     points = points[ids, :];
         

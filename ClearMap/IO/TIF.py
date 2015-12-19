@@ -112,9 +112,9 @@ def readData(filename, x = all, y = all, z = all, **args):
             data = numpy.zeros(ds, dtype = p.dtype);
             rz = io.toDataRange(dsize[2], r = z);
             
-            print "test"
-            print rz;
-            print dsize            
+            #print "test"
+            #print rz;
+            #print dsize            
             
             for i in range(rz[0], rz[1]):
                 xydata = t.pages[i].asarray();

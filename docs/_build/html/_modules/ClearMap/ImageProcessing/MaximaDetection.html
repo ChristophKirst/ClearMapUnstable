@@ -301,7 +301,7 @@
 <div class="viewcode-block" id="findCenterOfMaxima"><a class="viewcode-back" href="../../../api/ClearMap.ImageProcessing.html#ClearMap.ImageProcessing.MaximaDetection.findCenterOfMaxima">[docs]</a><span class="k">def</span> <span class="nf">findCenterOfMaxima</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">imgmax</span><span class="p">,</span> <span class="n">findCenterOfMaximaParameter</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
                        <span class="n">subStack</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Find center of detected maxima weighted by intensity</span>
-<span class="sd">        </span>
+<span class="sd">    </span>
 <span class="sd">    Arguments:</span>
 <span class="sd">        img (array): image data</span>
 <span class="sd">        findCenterOfMaximaParameter (dict):</span>
@@ -315,10 +315,9 @@
 <span class="sd">        subStack (dict or None): sub-stack information </span>
 <span class="sd">        verbose (bool): print progress info </span>
 <span class="sd">        out (object): object to write progress info to</span>
-<span class="sd">        </span>
+<span class="sd">    </span>
 <span class="sd">    Returns:</span>
-<span class="sd">        array: coordinates of centers of maxima, shape is (n,d) where n is </span>
-<span class="sd">               number of maxima and d the dimension of the image</span>
+<span class="sd">        array: coordinates of centers of maxima, shape is (n,d) where n is number of maxima and d the dimension of the image</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">save</span>    <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">findCenterOfMaximaParameter</span><span class="p">,</span> <span class="s">&quot;save&quot;</span><span class="p">,</span> <span class="n">save</span><span class="p">);</span>
@@ -377,8 +376,7 @@
 <span class="sd">        out (object): object to write progress info to</span>
 <span class="sd">        </span>
 <span class="sd">    Returns:</span>
-<span class="sd">        array: coordinates of centers of True pixels, shape is (n,d)  where n is </span>
-<span class="sd">               number of maxima and d the dimension of the image</span>
+<span class="sd">        array: coordinates of centers of True pixels, shape is (n,d)  where n is number of maxima and d the dimension of the image</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">();</span> 

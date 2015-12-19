@@ -57,7 +57,7 @@ ClearMap.ImageProcessing.BackgroundRemoval module
     :show-inheritance:
 
 ClearMap.ImageProcessing.GreyReconstruction module
-------------------------------------------------
+--------------------------------------------------
 
 .. automodule:: ClearMap.ImageProcessing.GreyReconstruction
     :members:
@@ -65,7 +65,7 @@ ClearMap.ImageProcessing.GreyReconstruction module
     :show-inheritance:
     
 ClearMap.ImageProcessing.SpotDetection module
--------------------------------------------
+---------------------------------------------
 
 .. automodule:: ClearMap.ImageProcessing.SpotDetection
     :members:

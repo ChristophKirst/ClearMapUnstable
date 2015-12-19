@@ -14,10 +14,13 @@ Image Representation and Size
 -----------------------------
 
 The module assumes that images in arrays are arranged as 
+
     * [x,y] or 
     * [x,y,z] 
+
 where x,y,z correspond to the x,y,z coordinates as displayed in e.g. ImageJ. 
 For example an image of size (512,512) stored in an array ``img`` will have:
+
     >>> img.shape
     (512,512)
 
@@ -25,6 +28,7 @@ Points are assumed to be given as x,y,z coordinates
 
 Parameters such as *resolution* or *dataSize* are assumed to be given in (x,y)
 or (x,y,z) format, e.g.
+
     >>> dataSize = (512,512)
 
 Orientation
@@ -33,7 +37,9 @@ Orientation
 The *orientation* parameter is a tuple of d numbers from 1 to d that specifies 
 the permutation of the axes, a minus sign infront of a numbeer indicates
 inversion of that axes. For exmaple 
+
     >>> orientation=(2,-1) 
+
 indicates that x and y should be exchanged and the new y axes should be reversed.
 
 Generally a re-orientation is composed of first a permutation of the axes and then

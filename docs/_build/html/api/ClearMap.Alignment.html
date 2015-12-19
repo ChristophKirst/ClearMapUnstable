@@ -486,7 +486,7 @@ path to elastix result directory</p>
 <dd><p>Transform a raw data set to reference using the elastix alignment results</p>
 <p>If the map determined by elastix is
 <img src="../_images/mathmpl/math-ae3c6503a4.png" style="position: relative; bottom: -7px"/>,
-transformix on data works as :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>T^{-1}(mathrm{data})</p>
+transformix on data works as <img src="../_images/mathmpl/math-5c6d136090.png" style="position: relative; bottom: -8px"/>.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -648,14 +648,13 @@ resolution and orientation of the reference object.</p>
 and <a class="reference internal" href="#ClearMap.Alignment.Resampling.resamplePoints" title="ClearMap.Alignment.Resampling.resamplePoints"><code class="xref py py-func docutils literal"><span class="pre">resamplePoints()</span></code></a>.</p>
 <div class="section" id="image-representation-and-size">
 <h3>Image Representation and Size<a class="headerlink" href="#image-representation-and-size" title="Permalink to this headline">¶</a></h3>
-<dl class="docutils">
-<dt>The module assumes that images in arrays are arranged as</dt>
-<dd><ul class="first last simple">
+<p>The module assumes that images in arrays are arranged as</p>
+<blockquote>
+<div><ul class="simple">
 <li>[x,y] or</li>
 <li>[x,y,z]</li>
 </ul>
-</dd>
-</dl>
+</div></blockquote>
 <p>where x,y,z correspond to the x,y,z coordinates as displayed in e.g. ImageJ.
 For example an image of size (512,512) stored in an array <code class="docutils literal"><span class="pre">img</span></code> will have:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">img</span><span class="o">.</span><span class="n">shape</span>

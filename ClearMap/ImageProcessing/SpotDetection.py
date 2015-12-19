@@ -3,9 +3,10 @@
 Functions to detect spots in images
 
 The main routine :func:`detectCells` uses a difference of gaussian filter (see 
-:mod:`~ClearMap.ImageProcessing.Filter) followed by a peak detection step.
+:mod:`~ClearMap.ImageProcessing.Filter`) followed by a peak detection step.
 
 Example:
+
     >>> import os
     >>> import ClearMap.IO as io  
     >>> import ClearMap.Settings as settings
@@ -39,7 +40,7 @@ Example:
     Found 38 cells !
     
 After execution this example inspect the result of the cell detection in 
-the folder Test/Data/CellShape/cellshape_\d{3}.tif.
+the folder 'Test/Data/CellShape/cellshape\_\\d{3}.tif'.
 """
 #:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
 #:license: GNU, see LICENSE.txt for details.
@@ -75,7 +76,7 @@ def detectSpots(img, detectSpotsParameter = None, correctIlluminationParameter =
         * cell shape detection via :func:`~ClearMap.ImageProcessing.CellSizeDetection.detectCellShape`
         * cell intensity and size measurements via: :func:`~ClearMap.ImageProcessing.CellSizeDetection.findCellIntensity`,
           :func:`~ClearMap.ImageProcessing.CellSizeDetection.findCellSize`. 
-
+    
     Note: 
         Processing steps are done in place to save memory.
         
@@ -86,8 +87,7 @@ def detectSpots(img, detectSpotsParameter = None, correctIlluminationParameter =
         out (object): object to print progress information to
         
     Returns:
-        tuple: tuple of arrays (cell coordinates, raw intensity, fully filtered 
-               intensty, illumination and background corrected intensity [, cell size])
+        tuple: tuple of arrays (cell coordinates, raw intensity, fully filtered intensty, illumination and background corrected intensity [, cell size])
     """
 
     timer = Timer();

@@ -49,7 +49,7 @@ ClearMap.IO.NPY module
     :show-inheritance:
 
 ClearMap.IO.NRRD module
----------------------
+-----------------------
 
 .. automodule:: ClearMap.IO.NRRD
     :members:

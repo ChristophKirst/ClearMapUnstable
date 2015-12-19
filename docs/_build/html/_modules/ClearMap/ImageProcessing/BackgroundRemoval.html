@@ -135,6 +135,8 @@
 
 <span class="kn">from</span> <span class="nn">ClearMap.Visualization.Plot</span> <span class="kn">import</span> <span class="n">plotTiling</span>
 
+<span class="kn">import</span> <span class="nn">ClearMap.IO</span> <span class="kn">as</span> <span class="nn">io</span>
+
 
 <div class="viewcode-block" id="removeBackground"><a class="viewcode-back" href="../../../api/ClearMap.ImageProcessing.html#ClearMap.ImageProcessing.BackgroundRemoval.removeBackground">[docs]</a><span class="k">def</span> <span class="nf">removeBackground</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">removeBackgroundParameter</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">verbose</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span>
                      <span class="n">subStack</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="p">,</span> <span class="o">**</span><span class="n">parameter</span><span class="p">):</span>
@@ -167,10 +169,12 @@
     <span class="n">verbose</span> <span class="o">=</span> <span class="n">getParameter</span><span class="p">(</span><span class="n">removeBackgroundParameter</span><span class="p">,</span> <span class="s">&quot;verbose&quot;</span><span class="p">,</span> <span class="n">verbose</span><span class="p">);</span>   
     
     <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
-        <span class="n">writeParameter</span><span class="p">(</span><span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">,</span> <span class="n">head</span> <span class="o">=</span> <span class="s">&#39;Background Removal:&#39;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">size</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="n">save</span><span class="p">);</span>
+        <span class="n">writeParameter</span><span class="p">(</span><span class="n">out</span> <span class="o">=</span> <span class="n">out</span><span class="p">,</span> <span class="n">head</span> <span class="o">=</span> <span class="s">&#39;Background Removal:&#39;</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">size</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="n">save</span><span class="p">);</span>    
     
     <span class="k">if</span> <span class="n">size</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>    
         <span class="k">return</span> <span class="n">img</span><span class="p">;</span>
+        
+    <span class="n">img</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readData</span><span class="p">(</span><span class="n">img</span><span class="p">);</span>
     
     <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">();</span>
     <span class="c"># background subtraction in each slice</span>

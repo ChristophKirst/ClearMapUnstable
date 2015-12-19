@@ -58,6 +58,7 @@ External Packages
 
 The :mod:`~ClearMap.ImageProcessing` module makes use of external image
 processing packages including:
+
     * `Open Cv2 <http://opencv.org/>`_
     * `Scipy <http://www.scipy.org/>`_
     * `Scikit-Image <http://scikit-image.org/docs/dev/api/skimage.html>`_

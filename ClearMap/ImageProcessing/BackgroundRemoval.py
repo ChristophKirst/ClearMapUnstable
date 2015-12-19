@@ -21,6 +21,8 @@ from ClearMap.Utils.ParameterTools import getParameter, writeParameter
 
 from ClearMap.Visualization.Plot import plotTiling
 
+import ClearMap.IO as io
+
 
 def removeBackground(img, removeBackgroundParameter = None, size = None, save = None, verbose = False,
                      subStack = None, out = sys.stdout, **parameter):
@@ -53,10 +55,12 @@ def removeBackground(img, removeBackgroundParameter = None, size = None, save = 
     verbose = getParameter(removeBackgroundParameter, "verbose", verbose);   
     
     if verbose:
-        writeParameter(out = out, head = 'Background Removal:', size = size, save = save);
+        writeParameter(out = out, head = 'Background Removal:', size = size, save = save);    
     
     if size is None:    
         return img;
+        
+    img = io.readData(img);
     
     timer = Timer();
     # background subtraction in each slice

@@ -127,11 +127,11 @@
 <span class="sd">    * use the classifiers file name in the ClearMap routine :func:`classifyPixel`</span>
 <span class="sd">    * try to avoid too many features in the classifier </span>
 <span class="sd">      as classification gets very memory intensive otherwise</span>
-<span class="sd">    </span>
+
 <span class="sd">Note:</span>
 <span class="sd">    Note that ilastik classification works in parallel, thus it is advised to </span>
 <span class="sd">    process the data sequentially, see </span>
-<span class="sd">    :fun:`~ClearMap.Imageprocessing.StackProcessing.sequentiallyProcessStack`  </span>
+<span class="sd">    :func:`~ClearMap.Imageprocessing.StackProcessing.sequentiallyProcessStack`  </span>
 
 <span class="sd">Note:</span>
 <span class="sd">    Ilastik 0.5 works for images in uint8 format !</span>
@@ -417,8 +417,7 @@
 <span class="sd">        out (object): object to write progress info to</span>
 <span class="sd">    </span>
 <span class="sd">    Returns:</span>
-<span class="sd">        array: probabilities for each pixel to belong to a class in the </span>
-<span class="sd">               classifier, shape is (img.shape, number of classes)</span>
+<span class="sd">        array: probabilities for each pixel to belong to a class in the classifier, shape is (img.shape, number of classes)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">_checkIlastikInitialized</span><span class="p">();</span>
@@ -470,7 +469,7 @@
 <span class="sd">    The routine assumes that the first class is identifying the cells.</span>
 <span class="sd">        </span>
 <span class="sd">    Arguments:    </span>
-<span class="sd">       img (array): image data</span>
+<span class="sd">        img (array): image data</span>
 <span class="sd">        classifyPixelParameter (dict):</span>
 <span class="sd">            ============ ==================== ===========================================================</span>
 <span class="sd">            Name         Type                 Descritption</span>

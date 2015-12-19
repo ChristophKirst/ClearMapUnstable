@@ -7,13 +7,15 @@ image stack into several sub-stacks, typically in z-direction. As most of
 the image processig steps are non-local sub-stacks are created with overlaps 
 and the results rejoined accordingly to minimize boundary effects.
 
-Parallel processing is handled via the 
-:mod:`~ClearMap.ImageProcessing.StackProcessing` module.
+Parallel processing is handled via this module.
+
+.. _SubStack:
+
+Sub-Stacks
+----------
 
 The parallel processing module creates a dictionary with information on
 the sub-stack as follows:
-
-.. _SubStack:
 
 ========================== ==================================================
 Key                        Description
@@ -21,7 +23,7 @@ Key                        Description
 ``stackId``                id of the sub-stack
 ``nStacks``                total number of sub-stacks
 ``source``                 source file/folder/pattern of the stack
-``x``, ``y``, ``z``        the range of the sub-stack withing the full image
+``x``, ``y``, ``z``        the range of the sub-stack with in the full image
 ``zCenters``               tuple of the centers of the overlaps
 ``zCenterIndices``         tuple of the original indices of the centers of 
                            the overlaps
@@ -67,22 +69,27 @@ def _processSubStack(dsr):
     sf  = dsr[0];
     pp  = dsr[1];
     sub = dsr[2];
-    
-    pw = ProcessWriter(sub["stackId"]);
+    verbose = dsr[3];
+
     timer = Timer();
+    pw = ProcessWriter(sub["stackId"]);
     
-    pw.write("processing substack " + str(sub["stackId"]) + "/" + str(sub["nStacks"]));
-    pw.write("file          = " + sub["source"]);
-    pw.write("segmentation  = " + str(sf));
-    pw.write("ranges: x,y,z = " + str(sub["x"]) +  "," + str(sub["y"]) + "," + str(sub["z"])); 
+    if verbose:
+        pw.write("processing substack " + str(sub["stackId"]) + "/" + str(sub["nStacks"]));
+        pw.write("file          = " + sub["source"]);
+        pw.write("segmentation  = " + str(sf));
+        pw.write("ranges: x,y,z = " + str(sub["x"]) +  "," + str(sub["y"]) + "," + str(sub["z"])); 
     
-    timer.reset();    
-    img = io.readData(sub["source"], x = sub["x"], y = sub["y"], z = sub["z"]); 
-    pw.write(timer.elapsedTime(head = 'Reading data of size ' + str(img.shape)));
+    img = io.readData(sub["source"], x = sub["x"], y = sub["y"], z = sub["z"]);
+    
+    if verbose:
+        pw.write(timer.elapsedTime(head = 'Reading data of size ' + str(img.shape)));
     
     timer.reset();
     seg = sf(img, subStack = sub, out = pw, **pp);    
-    pw.write(timer.elapsedTime(head = 'Processing substack of size ' + str(img.shape)));
+
+    if verbose:    
+        pw.write(timer.elapsedTime(head = 'Processing substack of size ' + str(img.shape)));
     
     return seg;
 
@@ -401,7 +408,7 @@ def parallelProcessStack(source, x = all, y = all, z = all, sink = None,
     
     argdata = [];
     for i in range(nSubStacks):
-        argdata.append((function, parameter, subStacks[i]));    
+        argdata.append((function, parameter, subStacks[i], verbose));    
     #print argdata
     
     # process in parallel

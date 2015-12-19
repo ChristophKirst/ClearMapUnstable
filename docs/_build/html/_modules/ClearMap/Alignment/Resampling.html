@@ -128,10 +128,13 @@
 <span class="sd">-----------------------------</span>
 
 <span class="sd">The module assumes that images in arrays are arranged as </span>
+
 <span class="sd">    * [x,y] or </span>
 <span class="sd">    * [x,y,z] </span>
+
 <span class="sd">where x,y,z correspond to the x,y,z coordinates as displayed in e.g. ImageJ. </span>
 <span class="sd">For example an image of size (512,512) stored in an array ``img`` will have:</span>
+
 <span class="sd">    &gt;&gt;&gt; img.shape</span>
 <span class="sd">    (512,512)</span>
 
@@ -139,6 +142,7 @@
 
 <span class="sd">Parameters such as *resolution* or *dataSize* are assumed to be given in (x,y)</span>
 <span class="sd">or (x,y,z) format, e.g.</span>
+
 <span class="sd">    &gt;&gt;&gt; dataSize = (512,512)</span>
 
 <span class="sd">Orientation</span>
@@ -147,7 +151,9 @@
 <span class="sd">The *orientation* parameter is a tuple of d numbers from 1 to d that specifies </span>
 <span class="sd">the permutation of the axes, a minus sign infront of a numbeer indicates</span>
 <span class="sd">inversion of that axes. For exmaple </span>
+
 <span class="sd">    &gt;&gt;&gt; orientation=(2,-1) </span>
+
 <span class="sd">indicates that x and y should be exchanged and the new y axes should be reversed.</span>
 
 <span class="sd">Generally a re-orientation is composed of first a permutation of the axes and then</span>

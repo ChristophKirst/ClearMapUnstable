@@ -13,11 +13,11 @@ To train a classifier ilastik 0.5 should be used following these steps:
     * use the classifiers file name in the ClearMap routine :func:`classifyPixel`
     * try to avoid too many features in the classifier 
       as classification gets very memory intensive otherwise
-    
+
 Note:
     Note that ilastik classification works in parallel, thus it is advised to 
     process the data sequentially, see 
-    :fun:`~ClearMap.Imageprocessing.StackProcessing.sequentiallyProcessStack`  
+    :func:`~ClearMap.Imageprocessing.StackProcessing.sequentiallyProcessStack`  
 
 Note:
     Ilastik 0.5 works for images in uint8 format !
@@ -303,8 +303,7 @@ def classifyPixel(img, classifyPixelParameter = None, subStack = None, verbose =
         out (object): object to write progress info to
     
     Returns:
-        array: probabilities for each pixel to belong to a class in the 
-               classifier, shape is (img.shape, number of classes)
+        array: probabilities for each pixel to belong to a class in the classifier, shape is (img.shape, number of classes)
     """
 
     _checkIlastikInitialized();
@@ -356,7 +355,7 @@ def classifyCells(img, classifyCellsParameter = None, classifier = None, rescale
     The routine assumes that the first class is identifying the cells.
         
     Arguments:    
-       img (array): image data
+        img (array): image data
         classifyPixelParameter (dict):
             ============ ==================== ===========================================================
             Name         Type                 Descritption

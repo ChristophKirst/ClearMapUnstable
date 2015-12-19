@@ -25,7 +25,7 @@ import ClearMap.IO as io
 import ClearMap.Analysis.Voxelization as vox
 
 
-def plotTiling(dataSource, tiling = "automatic", maxtiles = 20, x = all, y = all, z = all): 
+def plotTiling(dataSource, tiling = "automatic", maxtiles = 20, x = all, y = all, z = all, inverse = False): 
     """Plot 3d image as 2d tiles
     
     Arguments:
@@ -33,6 +33,7 @@ def plotTiling(dataSource, tiling = "automatic", maxtiles = 20, x = all, y = all
         tiling (str or tuple): tiling specification
         maxtiles: maximalnumber of tiles
         x, y, z (all or tuple): sub-range specification
+        inverse (bool):invert image
     
     Returns:
         (object): figure handle
@@ -65,7 +66,6 @@ def plotTiling(dataSource, tiling = "automatic", maxtiles = 20, x = all, y = all
         print "plotTiling: number of tiles %d very big! Clipping at %d!" % (ntiles, maxtiles);
         ntiles = maxtiles;
     
-    
     if tiling == "automatic":
         nx = math.floor(math.sqrt(ntiles));
         ny = int(math.ceil(ntiles / nx));
@@ -77,24 +77,33 @@ def plotTiling(dataSource, tiling = "automatic", maxtiles = 20, x = all, y = all
     #print image.shape
         
     fig, axarr = plt.subplots(nx, ny, sharex = True, sharey = True);
+    fig.subplots_adjust(wspace=0.05, hspace=0.05);
     axarr = numpy.array(axarr);
     axarr = axarr.flatten();
     
     imin = image.min();
     imax = image.max();
     
+    if inverse:
+        (imin, imax) = (-float(imax), -float(imin));
+    #print imin, imax    
+    
     for i in range(0, ntiles): 
         a = axarr[i];
-        imgpl = image[:,:,i,:];
-        imgpl = imgpl.transpose([1,0,2]);      
+        imgpl = image[:,:,i,:].copy();
+        imgpl = imgpl.transpose([1,0,2]);  
         
         if imgpl.shape[2] == 1:
             imgpl = imgpl.reshape((imgpl.shape[0], imgpl.shape[1]));       
+            
+        if inverse:
+            imgpl = -imgpl.astype('float');
+        
         #a.imshow(imgpl, interpolation='none', cmap = cmap, vmin = imin, vmax = imax);
         a.imshow(imgpl, interpolation='none', cmap = cmap, vmin = imin, vmax = imax);
     
-    fig.canvas.manager.window.activateWindow()
-    fig.canvas.manager.window.raise_()
+    #fig.canvas.manager.window.activateWindow()
+    #fig.canvas.manager.window.raise_()
     
     return fig;
 
@@ -142,14 +151,16 @@ def overlayLabel(dataSource, labelSource, sink = None,  alpha = False, labelColo
     if alpha == False:
         cimage = (label == 0) * image;
         cimage = numpy.repeat(cimage, 3);
-        cimage = cimage.reshape(image.shape + (3,));        
+        cimage = cimage.reshape(image.shape + (3,)); 
+        cimage = cimage.astype(carray.dtype);
         cimage += carray;
     else:
         cimage = numpy.repeat(image, 3);
-        cimage = cimage.reshape(image.shape + (3,));    
+        cimage = cimage.reshape(image.shape + (3,));
+        cimage = cimage.astype(carray.dtype);
         cimage *= carray;
 
-    return io.write(cimage, sink = sink);
+    return io.writeData(sink, cimage);
     
     
 def plotOverlayLabel(dataSource, labelSource, alpha = False, labelColorMap = 'jet',  x = all, y = all, z = all, tiling = "automatic", maxtiles = 20):
@@ -219,7 +230,7 @@ def overlayPoints(dataSource, pointSource, sink = None, pointColor = [1,0,0], x 
         cimage = numpy.concatenate((data, cimage), axis  = 3);
     
     #print cimage.shape    
-    return io.writeData(cimage, sink = sink);   
+    return io.writeData(sink, cimage);   
 
 
 def plotOverlayPoints(dataSource, pointSource, pointColor = [1,0,0], x = all, y = all, z = all):

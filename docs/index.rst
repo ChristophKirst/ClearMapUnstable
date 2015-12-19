@@ -40,7 +40,8 @@ function:
     >>> import ClearMap as cm
     >>> help(cm)
 
-For more details see the :doc:`introduction`, the :doc:`examples` and the :doc:`api/ClearMap ` section.
+
+For more details see the :doc:`introduction`, the :doc:`imageanalysis` and the :doc:`api/ClearMap` section.
 
 
 Author

@@ -121,13 +121,15 @@
 <span class="sd">the image processig steps are non-local sub-stacks are created with overlaps </span>
 <span class="sd">and the results rejoined accordingly to minimize boundary effects.</span>
 
-<span class="sd">Parallel processing is handled via the </span>
-<span class="sd">:mod:`~ClearMap.ImageProcessing.StackProcessing` module.</span>
+<span class="sd">Parallel processing is handled via this module.</span>
+
+<span class="sd">.. _SubStack:</span>
+
+<span class="sd">Sub-Stacks</span>
+<span class="sd">----------</span>
 
 <span class="sd">The parallel processing module creates a dictionary with information on</span>
 <span class="sd">the sub-stack as follows:</span>
-
-<span class="sd">.. _SubStack:</span>
 
 <span class="sd">========================== ==================================================</span>
 <span class="sd">Key                        Description</span>
@@ -135,7 +137,7 @@
 <span class="sd">``stackId``                id of the sub-stack</span>
 <span class="sd">``nStacks``                total number of sub-stacks</span>
 <span class="sd">``source``                 source file/folder/pattern of the stack</span>
-<span class="sd">``x``, ``y``, ``z``        the range of the sub-stack withing the full image</span>
+<span class="sd">``x``, ``y``, ``z``        the range of the sub-stack with in the full image</span>
 <span class="sd">``zCenters``               tuple of the centers of the overlaps</span>
 <span class="sd">``zCenterIndices``         tuple of the original indices of the centers of </span>
 <span class="sd">                           the overlaps</span>
@@ -181,22 +183,27 @@
     <span class="n">sf</span>  <span class="o">=</span> <span class="n">dsr</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
     <span class="n">pp</span>  <span class="o">=</span> <span class="n">dsr</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
     <span class="n">sub</span> <span class="o">=</span> <span class="n">dsr</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
-    
-    <span class="n">pw</span> <span class="o">=</span> <span class="n">ProcessWriter</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;stackId&quot;</span><span class="p">]);</span>
+    <span class="n">verbose</span> <span class="o">=</span> <span class="n">dsr</span><span class="p">[</span><span class="mi">3</span><span class="p">];</span>
+
     <span class="n">timer</span> <span class="o">=</span> <span class="n">Timer</span><span class="p">();</span>
+    <span class="n">pw</span> <span class="o">=</span> <span class="n">ProcessWriter</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;stackId&quot;</span><span class="p">]);</span>
     
-    <span class="n">pw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;processing substack &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;stackId&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;nStacks&quot;</span><span class="p">]));</span>
-    <span class="n">pw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;file          = &quot;</span> <span class="o">+</span> <span class="n">sub</span><span class="p">[</span><span class="s">&quot;source&quot;</span><span class="p">]);</span>
-    <span class="n">pw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;segmentation  = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sf</span><span class="p">));</span>
-    <span class="n">pw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ranges: x,y,z = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;x&quot;</span><span class="p">])</span> <span class="o">+</span>  <span class="s">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;y&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;z&quot;</span><span class="p">]));</span> 
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">pw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;processing substack &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;stackId&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;nStacks&quot;</span><span class="p">]));</span>
+        <span class="n">pw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;file          = &quot;</span> <span class="o">+</span> <span class="n">sub</span><span class="p">[</span><span class="s">&quot;source&quot;</span><span class="p">]);</span>
+        <span class="n">pw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;segmentation  = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sf</span><span class="p">));</span>
+        <span class="n">pw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s">&quot;ranges: x,y,z = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;x&quot;</span><span class="p">])</span> <span class="o">+</span>  <span class="s">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;y&quot;</span><span class="p">])</span> <span class="o">+</span> <span class="s">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;z&quot;</span><span class="p">]));</span> 
     
-    <span class="n">timer</span><span class="o">.</span><span class="n">reset</span><span class="p">();</span>    
-    <span class="n">img</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readData</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;source&quot;</span><span class="p">],</span> <span class="n">x</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="s">&quot;x&quot;</span><span class="p">],</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="s">&quot;y&quot;</span><span class="p">],</span> <span class="n">z</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="s">&quot;z&quot;</span><span class="p">]);</span> 
-    <span class="n">pw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">elapsedTime</span><span class="p">(</span><span class="n">head</span> <span class="o">=</span> <span class="s">&#39;Reading data of size &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)));</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readData</span><span class="p">(</span><span class="n">sub</span><span class="p">[</span><span class="s">&quot;source&quot;</span><span class="p">],</span> <span class="n">x</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="s">&quot;x&quot;</span><span class="p">],</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="s">&quot;y&quot;</span><span class="p">],</span> <span class="n">z</span> <span class="o">=</span> <span class="n">sub</span><span class="p">[</span><span class="s">&quot;z&quot;</span><span class="p">]);</span>
+    
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="n">pw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">elapsedTime</span><span class="p">(</span><span class="n">head</span> <span class="o">=</span> <span class="s">&#39;Reading data of size &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)));</span>
     
     <span class="n">timer</span><span class="o">.</span><span class="n">reset</span><span class="p">();</span>
     <span class="n">seg</span> <span class="o">=</span> <span class="n">sf</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">subStack</span> <span class="o">=</span> <span class="n">sub</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">pw</span><span class="p">,</span> <span class="o">**</span><span class="n">pp</span><span class="p">);</span>    
-    <span class="n">pw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">elapsedTime</span><span class="p">(</span><span class="n">head</span> <span class="o">=</span> <span class="s">&#39;Processing substack of size &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)));</span>
+
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>    
+        <span class="n">pw</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">timer</span><span class="o">.</span><span class="n">elapsedTime</span><span class="p">(</span><span class="n">head</span> <span class="o">=</span> <span class="s">&#39;Processing substack of size &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)));</span>
     
     <span class="k">return</span> <span class="n">seg</span><span class="p">;</span>
 
@@ -515,7 +522,7 @@
     
     <span class="n">argdata</span> <span class="o">=</span> <span class="p">[];</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nSubStacks</span><span class="p">):</span>
-        <span class="n">argdata</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">function</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">subStacks</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>    
+        <span class="n">argdata</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">function</span><span class="p">,</span> <span class="n">parameter</span><span class="p">,</span> <span class="n">subStacks</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">verbose</span><span class="p">));</span>    
     <span class="c">#print argdata</span>
     
     <span class="c"># process in parallel</span>
