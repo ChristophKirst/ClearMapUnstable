@@ -1,0 +1,4 @@
+# data files
+Data/*
+!Data/Synthetic/
+!Data/ImageAnalysis/
