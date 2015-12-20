@@ -270,7 +270,7 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">VoxelizationFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">,</span> <span class="s">&#39;points_voxelized.tif&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
-<p>To set the resolution of the Atlas Files (in um/ pixel):</p>
+<p>To set the resolution of the Atlas Files (in µm/ pixel):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">AtlasResolution</span> <span class="o">=</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
 </pre></div>
 </div>
@@ -363,10 +363,11 @@
 </div>
 <div class="section" id="difference-of-gaussians-filter">
 <h4>Difference of Gaussians filter:<a class="headerlink" href="#difference-of-gaussians-filter" title="Permalink to this headline">¶</a></h4>
+<p>This is an optional filter to improve the contrast of objects</p>
 <dl class="docutils">
 <dt>filterDoGParameter = {</dt>
 <dd>&#8220;size&#8221;    : None,        # (tuple or None)      size for the DoG filter if None, do not correct for any background
-&#8220;sigma&#8221;   : None,        # (tuple or None)      std of outer Guassian, if None autmatically determined from size
+&#8220;sigma&#8221;   : None,        # (tuple or None)      std of outer Gaussian, if None autmatically determined from size
 &#8220;sigma2&#8221;  : None,        # (tuple or None)      std of inner Guassian, if None autmatically determined from size
 &#8220;save&#8221;    : None,        # (str or None)        file name to save result of this operation if None dont save to file
 &#8220;verbose&#8221; : True      # (bool or int)        print / plot information about this step</dd>

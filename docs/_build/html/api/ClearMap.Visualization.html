@@ -156,8 +156,196 @@ analysis results</p>
 <p>Author</p>
 <blockquote>
 <div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
-<div class="section" id="clearmap-visualization-plot-module">
-<h2>ClearMap.Visualization.Plot module<a class="headerlink" href="#clearmap-visualization-plot-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ClearMap.Visualization.Plot">
+<span id="clearmap-visualization-plot-module"></span><h2>ClearMap.Visualization.Plot module<a class="headerlink" href="#module-ClearMap.Visualization.Plot" title="Permalink to this headline">¶</a></h2>
+<p>Plotting routines for overlaying lables, tilings, and sectioning of 3d data sets</p>
+<p>Supported functionality:</p>
+<blockquote>
+<div><ul class="simple">
+<li>plot volumetric data as a sequnece of tiles via <a class="reference internal" href="#ClearMap.Visualization.Plot.plotTiling" title="ClearMap.Visualization.Plot.plotTiling"><code class="xref py py-func docutils literal"><span class="pre">plotTiling()</span></code></a></li>
+<li>overlay points on imags via <a class="reference internal" href="#ClearMap.Visualization.Plot.overlayPoints" title="ClearMap.Visualization.Plot.overlayPoints"><code class="xref py py-func docutils literal"><span class="pre">overlayPoints()</span></code></a> and
+<a class="reference internal" href="#ClearMap.Visualization.Plot.plotOverlayPoints" title="ClearMap.Visualization.Plot.plotOverlayPoints"><code class="xref py py-func docutils literal"><span class="pre">plotOverlayPoints()</span></code></a></li>
+<li>overlay labeled images on gray scale images via <a class="reference internal" href="#ClearMap.Visualization.Plot.overlayLabel" title="ClearMap.Visualization.Plot.overlayLabel"><code class="xref py py-func docutils literal"><span class="pre">overlayLabel()</span></code></a> and
+<a class="reference internal" href="#ClearMap.Visualization.Plot.plotOverlayLabel" title="ClearMap.Visualization.Plot.plotOverlayLabel"><code class="xref py py-func docutils literal"><span class="pre">plotOverlayLabel()</span></code></a></li>
+</ul>
+</div></blockquote>
+<p>Author</p>
+<blockquote>
+<div>Christoph Kirst, The Rockefeller University, 2015</div></blockquote>
+<dl class="function">
+<dt id="ClearMap.Visualization.Plot.plotTiling">
+<code class="descname">plotTiling</code><span class="sig-paren">(</span><em>dataSource</em>, <em>tiling='automatic'</em>, <em>maxtiles=20</em>, <em>x=&lt;built-in function all&gt;</em>, <em>y=&lt;built-in function all&gt;</em>, <em>z=&lt;built-in function all&gt;</em>, <em>inverse=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Visualization/Plot.html#plotTiling"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Visualization.Plot.plotTiling" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot 3d image as 2d tiles</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dataSouce</strong> (<em>str or array</em>) &#8211;
+volumetric image data</li>
+<li><strong>tiling</strong> (<em>str or tuple</em>) &#8211;
+tiling specification</li>
+<li><strong>maxtiles</strong> &#8211;
+maximalnumber of tiles</li>
+<li><strong>x, y, z</strong> (<em>all or tuple</em>) &#8211;
+sub-range specification</li>
+<li><strong>inverse</strong> (<em>bool</em>) &#8211;
+invert image</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>(object)</em> &#8211;
+figure handle</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ClearMap.Visualization.Plot.overlayLabel">
+<code class="descname">overlayLabel</code><span class="sig-paren">(</span><em>dataSource</em>, <em>labelSource</em>, <em>sink=None</em>, <em>alpha=False</em>, <em>labelColorMap='jet'</em>, <em>x=&lt;built-in function all&gt;</em>, <em>y=&lt;built-in function all&gt;</em>, <em>z=&lt;built-in function all&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Visualization/Plot.html#overlayLabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Visualization.Plot.overlayLabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overlay a gray scale image with colored labeled image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dataSouce</strong> (<em>str or array</em>) &#8211;
+volumetric image data</li>
+<li><strong>labelSource</strong> (<em>str or array</em>) &#8211;
+labeled image to be overlayed on the image data</li>
+<li><strong>sink</strong> (<em>str or None</em>) &#8211;
+destination for the overlayed image</li>
+<li><strong>alpha</strong> (<em>float or False</em>) &#8211;
+transparency</li>
+<li><strong>labelColorMap</strong> (<em>str or object</em>) &#8211;
+color map for the labels</li>
+<li><strong>x, y, z</strong> (<em>all or tuple</em>) &#8211;
+sub-range specification</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>(array or str)</em> &#8211;
+figure handle</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#ClearMap.Visualization.Plot.overlayPoints" title="ClearMap.Visualization.Plot.overlayPoints"><code class="xref py py-func docutils literal"><span class="pre">overlayPoints()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="ClearMap.Visualization.Plot.plotOverlayLabel">
+<code class="descname">plotOverlayLabel</code><span class="sig-paren">(</span><em>dataSource</em>, <em>labelSource</em>, <em>alpha=False</em>, <em>labelColorMap='jet'</em>, <em>x=&lt;built-in function all&gt;</em>, <em>y=&lt;built-in function all&gt;</em>, <em>z=&lt;built-in function all&gt;</em>, <em>tiling='automatic'</em>, <em>maxtiles=20</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Visualization/Plot.html#plotOverlayLabel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Visualization.Plot.plotOverlayLabel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot gray scale image overlayed with labeled image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dataSouce</strong> (<em>str or array</em>) &#8211;
+volumetric image data</li>
+<li><strong>labelSource</strong> (<em>str or array</em>) &#8211;
+labeled image to be overlayed on the image data</li>
+<li><strong>alpha</strong> (<em>float or False</em>) &#8211;
+transparency</li>
+<li><strong>labelColorMap</strong> (<em>str or object</em>) &#8211;
+color map for the labels</li>
+<li><strong>x, y, z</strong> (<em>all or tuple</em>) &#8211;
+sub-range specification</li>
+<li><strong>tiling</strong> (<em>str or tuple</em>) &#8211;
+tiling specification</li>
+<li><strong>maxtiles</strong> &#8211;
+maximalnumber of tiles</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>(object)</em> &#8211;
+figure handle</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#ClearMap.Visualization.Plot.overlayLabel" title="ClearMap.Visualization.Plot.overlayLabel"><code class="xref py py-func docutils literal"><span class="pre">overlayLabel()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="ClearMap.Visualization.Plot.overlayPoints">
+<code class="descname">overlayPoints</code><span class="sig-paren">(</span><em>dataSource, pointSource, sink=None, pointColor=[1, 0, 0], x=&lt;built-in function all&gt;, y=&lt;built-in function all&gt;, z=&lt;built-in function all&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Visualization/Plot.html#overlayPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Visualization.Plot.overlayPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Overlay points on 3D data and return as color image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dataSouce</strong> (<em>str or array</em>) &#8211;
+volumetric image data</li>
+<li><strong>pointSource</strong> (<em>str or array</em>) &#8211;
+point data to be overlayed on the image data</li>
+<li><strong>pointColor</strong> (<em>array</em>) &#8211;
+RGB color for the overlayed points</li>
+<li><strong>x, y, z</strong> (<em>all or tuple</em>) &#8211;
+sub-range specification</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>(str or array)</em> &#8211;
+image overlayed with points</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#ClearMap.Visualization.Plot.overlayLabel" title="ClearMap.Visualization.Plot.overlayLabel"><code class="xref py py-func docutils literal"><span class="pre">overlayLabel()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="ClearMap.Visualization.Plot.plotOverlayPoints">
+<code class="descname">plotOverlayPoints</code><span class="sig-paren">(</span><em>dataSource, pointSource, pointColor=[1, 0, 0], x=&lt;built-in function all&gt;, y=&lt;built-in function all&gt;, z=&lt;built-in function all&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Visualization/Plot.html#plotOverlayPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Visualization.Plot.plotOverlayPoints" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot points overlayed on gray scale 3d image as tiles.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>dataSouce</strong> (<em>str or array</em>) &#8211;
+volumetric image data</li>
+<li><strong>pointSource</strong> (<em>str or array</em>) &#8211;
+point data to be overlayed on the image data</li>
+<li><strong>pointColor</strong> (<em>array</em>) &#8211;
+RGB color for the overlayed points</li>
+<li><strong>x, y, z</strong> (<em>all or tuple</em>) &#8211;
+sub-range specification</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>(object)</em> &#8211;
+figure handle</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition seealso">
+<p class="first admonition-title">See also</p>
+<p class="last"><a class="reference internal" href="#ClearMap.Visualization.Plot.plotTiling" title="ClearMap.Visualization.Plot.plotTiling"><code class="xref py py-func docutils literal"><span class="pre">plotTiling()</span></code></a></p>
+</div>
+</dd></dl>
+
+<dl class="function">
+<dt id="ClearMap.Visualization.Plot.test">
+<code class="descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Visualization/Plot.html#test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Visualization.Plot.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test Plot module</p>
+</dd></dl>
+
 </div>
 </div>
 

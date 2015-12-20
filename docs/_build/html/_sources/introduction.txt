@@ -66,7 +66,7 @@ Alignment
 The Alignment module provides tools to resample, reorient and register
 volumetric images in a fast parallel way.
 
-Image registration is done by interfacing to the [Elastix]_ software package. This package allows to align cleared mouse brains onto the Allan brain atlas [ABA]_.
+Image registration is done by interfacing to the [Elastix]_ software package. This package allows to align cleared mouse brains onto the Allen brain atlas [ABA]_.
 
 
 Image Processing

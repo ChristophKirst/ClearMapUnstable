@@ -167,15 +167,24 @@ You have to use the ``\d{4}`` notation to save the files as a series of images, 
 
 Difference of Gaussians filter:
 """""""""""""""""""""""""""""""
-This is an optional filter to improve the contrast of objects
+This is an optional filter to improve the contrast of objects. This filter has a "Mexican Hat" shape that weighs negatively the intensity at the border of the objects. The main parameter to set here is the size, as an (x,y,z) tuple:
 
-filterDoGParameter = {
-    "size"    : None,        # (tuple or None)      size for the DoG filter if None, do not correct for any background
-    "sigma"   : None,        # (tuple or None)      std of outer Gaussian, if None autmatically determined from size
-    "sigma2"  : None,        # (tuple or None)      std of inner Guassian, if None autmatically determined from size
-    "save"    : None,        # (str or None)        file name to save result of this operation if None dont save to file 
-    "verbose" : True      # (bool or int)        print / plot information about this step
-}
+   >>> filterDoGParameter = {
+   >>>     "size"    : None,
+   >>>     "sigma"   : None,
+   >>>     "sigma2"  : None,
+   >>>     "save"    : None,
+   >>>     "verbose" : True
+   >>> }
+
+For this tutorial, we will not use the DoG filter, as it is unnecessary. The signal from c-fos nuclear staining has enough contrast, and a simple shape that do not necessitate this additionnal filtering, but it could help increase the contrast of the relevant objects for other experiments.
+
+.. note:: As for the back
+
+Extended Maxima:
+""""""""""""""""
+
+
 
 findExtendedMaximaParameter = {
     "hMax"      : None,            # (float or None)     h parameter for the initial h-Max transform, if None, do not perform a h-max transform

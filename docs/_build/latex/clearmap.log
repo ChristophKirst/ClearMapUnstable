@@ -1,11 +1,11 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.12.19)  19 DEC 2015 18:03
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.12.20)  20 DEC 2015 12:47
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
 **clearmap.tex
 (./clearmap.tex
-LaTeX2e <2015/01/01>
-Babel <3.9l> and hyphenation patterns for 79 languages loaded.
+LaTeX2e <2015/10/01> patch level 2
+Babel <3.9m> and hyphenation patterns for 79 languages loaded.
 (./sphinxmanual.cls
 Document Class: sphinxmanual 2009/06/02 Document class (Sphinx manual)
 (/usr/local/texlive/2015/texmf-dist/tex/latex/base/report.cls
@@ -32,17 +32,19 @@ Package: inputenc 2015/03/17 v1.2c Input encoding file
 \inpenc@posthook=\toks15
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/base/utf8.def
-File: utf8.def 2014/09/29 v1.1m UTF-8 support for inputenc
+File: utf8.def 2015/09/07 v1.1p UTF-8 support for inputenc
 Now handling font encoding OML ...
 ... no UTF-8 mapping file for font encoding OML
 Now handling font encoding T1 ...
 ... processing UTF-8 mapping file for font encoding T1
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/base/t1enc.dfu
-File: t1enc.dfu 2014/09/29 v1.1m UTF-8 support for inputenc
+File: t1enc.dfu 2015/09/07 v1.1p UTF-8 support for inputenc
+   defining Unicode char U+00A0 (decimal 160)
    defining Unicode char U+00A1 (decimal 161)
    defining Unicode char U+00A3 (decimal 163)
    defining Unicode char U+00AB (decimal 171)
+   defining Unicode char U+00AD (decimal 173)
    defining Unicode char U+00BB (decimal 187)
    defining Unicode char U+00BF (decimal 191)
    defining Unicode char U+00C0 (decimal 192)
@@ -163,6 +165,10 @@ File: t1enc.dfu 2014/09/29 v1.1m UTF-8 support for inputenc
    defining Unicode char U+016F (decimal 367)
    defining Unicode char U+0170 (decimal 368)
    defining Unicode char U+0171 (decimal 369)
+   defining Unicode char U+0174 (decimal 372)
+   defining Unicode char U+0175 (decimal 373)
+   defining Unicode char U+0176 (decimal 374)
+   defining Unicode char U+0177 (decimal 375)
    defining Unicode char U+0178 (decimal 376)
    defining Unicode char U+0179 (decimal 377)
    defining Unicode char U+017A (decimal 378)
@@ -170,6 +176,10 @@ File: t1enc.dfu 2014/09/29 v1.1m UTF-8 support for inputenc
    defining Unicode char U+017C (decimal 380)
    defining Unicode char U+017D (decimal 381)
    defining Unicode char U+017E (decimal 382)
+   defining Unicode char U+0218 (decimal 536)
+   defining Unicode char U+0219 (decimal 537)
+   defining Unicode char U+021A (decimal 538)
+   defining Unicode char U+021B (decimal 539)
    defining Unicode char U+200C (decimal 8204)
    defining Unicode char U+2013 (decimal 8211)
    defining Unicode char U+2014 (decimal 8212)
@@ -189,9 +199,11 @@ Now handling font encoding OT1 ...
 ... processing UTF-8 mapping file for font encoding OT1
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/base/ot1enc.dfu
-File: ot1enc.dfu 2014/09/29 v1.1m UTF-8 support for inputenc
+File: ot1enc.dfu 2015/09/07 v1.1p UTF-8 support for inputenc
+   defining Unicode char U+00A0 (decimal 160)
    defining Unicode char U+00A1 (decimal 161)
    defining Unicode char U+00A3 (decimal 163)
+   defining Unicode char U+00AD (decimal 173)
    defining Unicode char U+00B8 (decimal 184)
    defining Unicode char U+00BF (decimal 191)
    defining Unicode char U+00C5 (decimal 197)
@@ -209,6 +221,14 @@ File: ot1enc.dfu 2014/09/29 v1.1m UTF-8 support for inputenc
    defining Unicode char U+0142 (decimal 322)
    defining Unicode char U+0152 (decimal 338)
    defining Unicode char U+0153 (decimal 339)
+   defining Unicode char U+0174 (decimal 372)
+   defining Unicode char U+0175 (decimal 373)
+   defining Unicode char U+0176 (decimal 374)
+   defining Unicode char U+0177 (decimal 375)
+   defining Unicode char U+0218 (decimal 536)
+   defining Unicode char U+0219 (decimal 537)
+   defining Unicode char U+021A (decimal 538)
+   defining Unicode char U+021B (decimal 539)
    defining Unicode char U+2013 (decimal 8211)
    defining Unicode char U+2014 (decimal 8212)
    defining Unicode char U+2018 (decimal 8216)
@@ -220,7 +240,7 @@ Now handling font encoding OMS ...
 ... processing UTF-8 mapping file for font encoding OMS
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/base/omsenc.dfu
-File: omsenc.dfu 2014/09/29 v1.1m UTF-8 support for inputenc
+File: omsenc.dfu 2015/09/07 v1.1p UTF-8 support for inputenc
    defining Unicode char U+00A7 (decimal 167)
    defining Unicode char U+00B6 (decimal 182)
    defining Unicode char U+00B7 (decimal 183)
@@ -256,13 +276,13 @@ File: t1enc.def 2005/09/27 v1.99g Standard LaTeX file
 LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
 )<<t1.cmap>>)
 (/usr/local/texlive/2015/texmf-dist/tex/generic/babel/babel.sty
-Package: babel 2014/09/25 3.9l The Babel package
+Package: babel 2015/08/03 3.9m The Babel package
 
 (/usr/local/texlive/2015/texmf-dist/tex/generic/babel-english/english.ldf
 Language: english 2012/08/20 v3.3p English support from the babel system
 
 (/usr/local/texlive/2015/texmf-dist/tex/generic/babel/babel.def
-File: babel.def 2014/09/25 3.9l Babel common definitions
+File: babel.def 2015/08/03 3.9m Babel common definitions
 \babel@savecnt=\count88
 \U@D=\dimen103
 )
@@ -336,7 +356,7 @@ Now handling font encoding TS1 ...
 ... processing UTF-8 mapping file for font encoding TS1
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/base/ts1enc.dfu
-File: ts1enc.dfu 2014/09/29 v1.1m UTF-8 support for inputenc
+File: ts1enc.dfu 2015/09/07 v1.1p UTF-8 support for inputenc
    defining Unicode char U+00A2 (decimal 162)
    defining Unicode char U+00A3 (decimal 163)
    defining Unicode char U+00A4 (decimal 164)
@@ -966,634 +986,1374 @@ LaTeX Font Info:    Font shape `T1/pcr/m/it' in size <9> not available
 [8]
 LaTeX Font Info:    Font shape `T1/phv/bx/n' in size <9> not available
 (Font)              Font shape `T1/phv/b/n' tried instead on input line 799.
- [9] [10]
-Underfull \hbox (badness 10000) in paragraph at lines 931--933
+ [9] [10] [11]
+Underfull \hbox (badness 10000) in paragraph at lines 941--943
 []\T1/ptm/m/n/10 In ClearMap we pro-vide some ba-sic vi-su-al-iza-tion tools to
  in-spect the 3d data in the mod-ule
  []
 
-[11]
-Underfull \hbox (badness 10000) in paragraph at lines 967--971
+<imageanalysis-1.pdf, id=268, 578.16pt x 433.62pt>
+File: imageanalysis-1.pdf Graphic file (type pdf)
+ <use imageanalysis-1.pdf>
+Package pdftex.def Info: imageanalysis-1.pdf used on input line 962.
+(pdftex.def)             Requested size: 578.15858pt x 433.61894pt.
+File: imageanalysis-1.pdf Graphic file (type pdf)
+
+<use imageanalysis-1.pdf>
+Package pdftex.def Info: imageanalysis-1.pdf used on input line 962.
+(pdftex.def)             Requested size: 469.755pt x 352.31538pt.
+ [12]
+<imageanalysis-2.pdf, id=276, 578.16pt x 433.62pt>
+File: imageanalysis-2.pdf Graphic file (type pdf)
+ <use imageanalysis-2.pdf>
+Package pdftex.def Info: imageanalysis-2.pdf used on input line 970.
+(pdftex.def)             Requested size: 578.15858pt x 433.61894pt.
+File: imageanalysis-2.pdf Graphic file (type pdf)
+
+<use imageanalysis-2.pdf>
+Package pdftex.def Info: imageanalysis-2.pdf used on input line 970.
+(pdftex.def)             Requested size: 469.755pt x 352.31538pt.
+ [13 <./imageanalysis-1.pdf>]
+<imageanalysis-3.pdf, id=332, 578.16pt x 433.62pt>
+File: imageanalysis-3.pdf Graphic file (type pdf)
+ <use imageanalysis-3.pdf>
+Package pdftex.def Info: imageanalysis-3.pdf used on input line 978.
+(pdftex.def)             Requested size: 578.15858pt x 433.61894pt.
+File: imageanalysis-3.pdf Graphic file (type pdf)
+
+<use imageanalysis-3.pdf>
+Package pdftex.def Info: imageanalysis-3.pdf used on input line 978.
+(pdftex.def)             Requested size: 469.755pt x 352.31538pt.
+ [14 <./imageanalysis-2.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 983--987
 \T1/ptm/m/n/10 It is use-ful to gather some in-for-ma-tion about the im-age ini
 -tially. For larger im-ages that
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 967--971
+Underfull \hbox (badness 10000) in paragraph at lines 983--987
 \T1/ptm/m/n/10 don't fit in mem-ory in ClearMap cer-tain statis-tics can be gat
 h-ered in par-al-lel via the mod-ule
  []
 
-
-Underfull \hbox (badness 10000) in paragraph at lines 999--1001
+[15 <./imageanalysis-3.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 1015--1017
 \T1/ptm/m/n/10 One of the first steps is of-ten to re-move back-ground vari-a-t
 ions. The
  []
 
-[12]
-Underfull \hbox (badness 10000) in paragraph at lines 1032--1036
-\T1/ptm/m/n/10 The \T1/pcr/m/n/10 ClearMap.ImageProcessing.MaximaDetection \T1/
-ptm/m/n/10 mod-ule con-tains a set of use-ful
+<imageanalysis-4.pdf, id=393, 578.16pt x 433.62pt>
+File: imageanalysis-4.pdf Graphic file (type pdf)
+ <use imageanalysis-4.pdf>
+Package pdftex.def Info: imageanalysis-4.pdf used on input line 1024.
+(pdftex.def)             Requested size: 578.15858pt x 433.61894pt.
+File: imageanalysis-4.pdf Graphic file (type pdf)
+
+<use imageanalysis-4.pdf>
+Package pdftex.def Info: imageanalysis-4.pdf used on input line 1024.
+(pdftex.def)             Requested size: 469.755pt x 352.31538pt.
+ <imageanalysis-5.pdf, id=394, 578.16pt x 433.62pt>
+File: imageanalysis-5.pdf Graphic file (type pdf)
+
+<use imageanalysis-5.pdf>
+Package pdftex.def Info: imageanalysis-5.pdf used on input line 1033.
+(pdftex.def)             Requested size: 578.15858pt x 433.61894pt.
+File: imageanalysis-5.pdf Graphic file (type pdf)
+ <use imageanalysis-5.pdf>
+Package pdftex.def Info: imageanalysis-5.pdf used on input line 1033.
+(pdftex.def)             Requested size: 469.755pt x 352.31538pt.
+ [16 <./imageanalysis-4.pdf>] <imageanalysis-6.pdf, id=422, 578.16pt x 433.62pt
+>
+File: imageanalysis-6.pdf Graphic file (type pdf)
+ <use imageanalysis-6.pdf>
+Package pdftex.def Info: imageanalysis-6.pdf used on input line 1049.
+(pdftex.def)             Requested size: 578.15858pt x 433.61894pt.
+File: imageanalysis-6.pdf Graphic file (type pdf)
+
+<use imageanalysis-6.pdf>
+Package pdftex.def Info: imageanalysis-6.pdf used on input line 1049.
+(pdftex.def)             Requested size: 469.755pt x 352.31538pt.
+ [17 <./imageanalysis-5.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 1054--1058
+\T1/ptm/m/n/10 The [][]\T1/pcr/m/sl/10 ClearMap.ImageProcessing.MaximaDetection
+[][] \T1/ptm/m/n/10 mod-ule con-tains a set of use-ful
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 1032--1036
+Underfull \hbox (badness 10000) in paragraph at lines 1054--1058
 \T1/ptm/m/n/10 func-tions for the de-tec-tion of lo-cal max-ima. A la-beled im-
 age can be vi-su-al-ized us-ing the
  []
 
-[13] [14]
-Chapter 2.
-[15
+<imageanalysis-7.pdf, id=452, 578.16pt x 433.62pt>
+File: imageanalysis-7.pdf Graphic file (type pdf)
+ <use imageanalysis-7.pdf>
+Package pdftex.def Info: imageanalysis-7.pdf used on input line 1065.
+(pdftex.def)             Requested size: 578.15858pt x 433.61894pt.
+File: imageanalysis-7.pdf Graphic file (type pdf)
 
-] [16]
+<use imageanalysis-7.pdf>
+Package pdftex.def Info: imageanalysis-7.pdf used on input line 1065.
+(pdftex.def)             Requested size: 469.755pt x 352.31538pt.
+ [18 <./imageanalysis-6.pdf>]
+<imageanalysis-8.pdf, id=482, 578.16pt x 433.62pt>
+File: imageanalysis-8.pdf Graphic file (type pdf)
+ <use imageanalysis-8.pdf>
+Package pdftex.def Info: imageanalysis-8.pdf used on input line 1073.
+(pdftex.def)             Requested size: 578.15858pt x 433.61894pt.
+File: imageanalysis-8.pdf Graphic file (type pdf)
+
+<use imageanalysis-8.pdf>
+Package pdftex.def Info: imageanalysis-8.pdf used on input line 1073.
+(pdftex.def)             Requested size: 469.755pt x 352.31538pt.
+ [19 <./imageanalysis-7.pdf>]
+<imageanalysis-9.pdf, id=522, 578.16pt x 433.62pt>
+File: imageanalysis-9.pdf Graphic file (type pdf)
+ <use imageanalysis-9.pdf>
+Package pdftex.def Info: imageanalysis-9.pdf used on input line 1094.
+(pdftex.def)             Requested size: 578.15858pt x 433.61894pt.
+File: imageanalysis-9.pdf Graphic file (type pdf)
+
+<use imageanalysis-9.pdf>
+Package pdftex.def Info: imageanalysis-9.pdf used on input line 1094.
+(pdftex.def)             Requested size: 469.755pt x 352.31538pt.
+ [20 <./imageanalysis-8.pdf>]
+<imageanalysis-10.pdf, id=563, 578.16pt x 433.62pt>
+File: imageanalysis-10.pdf Graphic file (type pdf)
+ <use imageanalysis-10.pdf>
+Package pdftex.def Info: imageanalysis-10.pdf used on input line 1109.
+(pdftex.def)             Requested size: 578.15858pt x 433.61894pt.
+File: imageanalysis-10.pdf Graphic file (type pdf)
+
+<use imageanalysis-10.pdf>
+Package pdftex.def Info: imageanalysis-10.pdf used on input line 1109.
+(pdftex.def)             Requested size: 469.755pt x 352.31538pt.
+ [21 <./imageanalysis-9.pdf>]
+<imageanalysis-11.pdf, id=604, 578.16pt x 433.62pt>
+File: imageanalysis-11.pdf Graphic file (type pdf)
+ <use imageanalysis-11.pdf>
+Package pdftex.def Info: imageanalysis-11.pdf used on input line 1129.
+(pdftex.def)             Requested size: 578.15858pt x 433.61894pt.
+File: imageanalysis-11.pdf Graphic file (type pdf)
+
+<use imageanalysis-11.pdf>
+Package pdftex.def Info: imageanalysis-11.pdf used on input line 1129.
+(pdftex.def)             Requested size: 469.755pt x 352.31538pt.
+ [22 <./imageanalysis-10.pdf>] [23 <./imageanalysis-11.pdf>] [24
+
+]
+Chapter 2.
+[25] [26]
 LaTeX Font Info:    Font shape `T1/pcr/bx/n' in size <10> not available
-(Font)              Font shape `T1/pcr/b/n' tried instead on input line 1373.
- [17] [18] [19] [20]
-Underfull \hbox (badness 10000) in paragraph at lines 1943--1946
+(Font)              Font shape `T1/pcr/b/n' tried instead on input line 1405.
+ [27] [28] [29] [30]
+Underfull \hbox (badness 10000) in paragraph at lines 1975--1978
 
  []
 
-[21]
-Underfull \hbox (badness 10000) in paragraph at lines 2041--2041
+[31]
+Underfull \hbox (badness 10000) in paragraph at lines 2073--2073
 []\T1/ptm/m/it/10 filename\T1/ptm/m/n/10 , \T1/ptm/m/it/10 prop-er-ties-Post-fi
 x='_intensities'\T1/ptm/m/n/10 ,
  []
 
-[22] [23] [24] [25] [26] [27] [28] [29] [30] [31] [32] [33] [34] [35]
-Overfull \hbox (4.53415pt too wide) in paragraph at lines 3910--3910
+[32] [33] [34] [35] [36] [37] [38] [39] [40] [41] [42] [43] [44] [45]
+Underfull \hbox (badness 10000) in paragraph at lines 3840--3843
+[]\T1/ptm/b/n/10 path \T1/ptm/m/n/10 (\T1/ptm/m/it/10 str or None\T1/ptm/m/n/10
+ ) -- path to elastix root di-rec-tory if None
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 3870--3872
+[][][]\T1/pcr/m/sl/10 ElastixBinary[][]\T1/ptm/m/n/10 , [][]\T1/pcr/m/sl/10 Ela
+stixLib[][]\T1/ptm/m/n/10 , [][]\T1/pcr/m/sl/10 TransformixBinary[][]\T1/ptm/m/
+n/10 , [][]\T1/pcr/m/sl/10 Initialized[][]\T1/ptm/m/n/10 ,
+ []
+
+[46] [47] [48] [49] [50] [51] [52]
+Underfull \hbox (badness 6078) in paragraph at lines 4747--4747
+[]\T1/ptm/m/it/10 sink\T1/ptm/m/n/10 , \T1/ptm/m/it/10 source=None\T1/ptm/m/n/1
+0 , \T1/ptm/m/it/10 data-Size-Source=None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 ori-e
+n-ta-tion=None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 res-o-lu-tion-
+ []
+
+
+Underfull \hbox (badness 5091) in paragraph at lines 4756--4758
+[]\T1/ptm/b/n/10 source \T1/ptm/m/n/10 (\T1/ptm/m/it/10 str or ar-ray\T1/ptm/m/
+n/10 ) -- des-ti-na-tion for in-ver-sly resmapled im-age (=source in
+ []
+
+[53] [54] [55] [56] [57] [58] [59]
+Overfull \hbox (1.05194pt too wide) in paragraph at lines 5696--5696
+[]\T1/ptm/m/it/10 thresh- 
+ []
+
+[60]
+Overfull \hbox (1.50256pt too wide) in paragraph at lines 5940--5940
+[]\T1/ptm/m/it/10 sigma2|  
+ []
+
+[61] [62] [63] [64] [65]
+Underfull \hbox (badness 10000) in paragraph at lines 6564--6564
+[]\T1/ptm/m/it/10 data\T1/ptm/m/n/10 , \T1/ptm/m/it/10 sink=None\T1/ptm/m/n/10 
+, \T1/ptm/m/it/10 method='polynomial'\T1/ptm/m/n/10 , \T1/ptm/m/it/10 re-verse=
+None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 ver-
+ []
+
+
+Overfull \hbox (6.21593pt too wide) in paragraph at lines 6658--6658
+[]\T1/phv/m/n/10 Name|  
+ []
+
+[66]
+Underfull \hbox (badness 10000) in paragraph at lines 6765--6765
+[]\T1/ptm/m/it/10 img\T1/ptm/m/n/10 , \T1/ptm/m/it/10 mask\T1/ptm/m/n/10 , \T1/
+ptm/m/it/10 greyRe-con-struc-tion-Pa-ram-e-ter=None\T1/ptm/m/n/10 , \T1/ptm/m/i
+t/10 method=None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 size=3\T1/ptm/m/n/10 ,
+ []
+
+[67] [68]
+Underfull \hbox (badness 10000) in paragraph at lines 6885--6888
+[]\T1/ptm/m/n/10 After ex-e-cu-tion this ex-am-ple in-spect the re-sult of the 
+cell de-tec-tion in the folder
+ []
+
+[69]
+Underfull \hbox (badness 10000) in paragraph at lines 7043--7043
+[]\T1/ptm/m/it/10 img\T1/ptm/m/n/10 , \T1/ptm/m/it/10 find-Ex-tend-ed-Max-ima-P
+a-ram-e-ter=None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 hMax=None\T1/ptm/m/n/10 , \T1/
+ptm/m/it/10 size=5\T1/ptm/m/n/10 , \T1/ptm/m/it/10 thresh-
+ []
+
+[70]
+Overfull \hbox (1.52386pt too wide) in paragraph at lines 7175--7175
 []\T1/phv/m/n/10 Name|  
  []
 
 
-Overfull \hbox (7.57405pt too wide) in paragraph at lines 3910--3910
+Overfull \hbox (6.51537pt too wide) in paragraph at lines 7274--7274
+[]\T1/phv/m/n/10 Name|  
+ []
+
+
+Overfull \hbox (9.55527pt too wide) in paragraph at lines 7274--7274
+[]\T1/ptm/m/it/10 method|  
+ []
+
+[71] [72]
+Overfull \hbox (3.15163pt too wide) in paragraph at lines 7457--7457
+[]\T1/phv/m/n/10 Name|  
+ []
+
+
+Overfull \hbox (4.99132pt too wide) in paragraph at lines 7457--7457
+[]\T1/ptm/m/it/10 rescale|  
+ []
+
+
+Overfull \hbox (2.4408pt too wide) in paragraph at lines 7537--7537
+[]\T1/phv/m/n/10 Name|  
+ []
+
+
+Overfull \hbox (4.28049pt too wide) in paragraph at lines 7537--7537
+[]\T1/ptm/m/it/10 rescale|  
+ []
+
+[73]
+Overfull \hbox (4.53415pt too wide) in paragraph at lines 7626--7626
+[]\T1/phv/m/n/10 Name|  
+ []
+
+
+Overfull \hbox (7.57405pt too wide) in paragraph at lines 7626--7626
 []\T1/ptm/m/it/10 method|  
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3940--3940
+Underfull \hbox (badness 10000) in paragraph at lines 7656--7656
 []\T1/ptm/m/it/10 img\T1/ptm/m/n/10 , \T1/ptm/m/it/10 cal-cu-lat-eS-tatis-tic-s
 Pa-ram-e-ter=None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 method='Max'\T1/ptm/m/n/10 , 
 \T1/ptm/m/it/10 re-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 3940--3940
+Underfull \hbox (badness 10000) in paragraph at lines 7656--7656
 \T1/ptm/m/it/10 move=True\T1/ptm/m/n/10 , \T1/ptm/m/it/10 ver-bose=False\T1/ptm
 /m/n/10 , \T1/ptm/m/it/10 sub-Stack=None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 out=<o
 pen file
  []
 
-[36]
-Overfull \hbox (4.53415pt too wide) in paragraph at lines 3984--3984
+
+Overfull \hbox (4.53415pt too wide) in paragraph at lines 7700--7700
 []\T1/phv/m/n/10 Name|  
  []
 
 
-Overfull \hbox (7.57405pt too wide) in paragraph at lines 3984--3984
+Overfull \hbox (7.57405pt too wide) in paragraph at lines 7700--7700
 []\T1/ptm/m/it/10 method|  
  []
 
-
-Overfull \hbox (5.44794pt too wide) in paragraph at lines 4044--4044
+[74]
+Overfull \hbox (5.44794pt too wide) in paragraph at lines 7760--7760
 []\T1/phv/m/n/10 Name|  
  []
 
 
-Overfull \hbox (8.48784pt too wide) in paragraph at lines 4044--4044
+Overfull \hbox (8.48784pt too wide) in paragraph at lines 7760--7760
 []\T1/ptm/m/it/10 method|  
  []
 
-[37]
-Overfull \hbox (111.56721pt too wide) in paragraph at lines 4210--4211
+[75]
+Overfull \hbox (111.56721pt too wide) in paragraph at lines 7926--7927
 []\T1/ptm/m/n/10 modified from [][]http://statsmodels.sourceforge.net/ipdirecti
 ve/generated/scikits.statsmodels.sandbox.stats.multicomp.multipletests.html[][]
  
  []
 
-[38] [39] [40]
-Overfull \hbox (145.32872pt too wide) in paragraph at lines 4454--4454
-[]\T1/ptm/m/it/10 slf\T1/ptm/m/n/10 , \T1/ptm/m/it/10 an-no-ta-tion-File='/User
-s/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Data/ARA2_annotation_info_co
-llapse.csv'\T1/pcr/m/n/10 ) 
+[76] [77]
+Overfull \hbox (110.66968pt too wide) in paragraph at lines 8170--8170
+[]\T1/ptm/m/it/10 slf\T1/ptm/m/n/10 , \T1/ptm/m/it/10 an-no-ta-tion-File='/home
+/mtllab/Programs/ClearMap/idisco/ClearMap/Data/ARA2_annotation_info_collapse.cs
+v'\T1/pcr/m/n/10 ) 
  []
 
 
-Overfull \hbox (150.8291pt too wide) in paragraph at lines 4509--4509
-[]\T1/ptm/m/it/10 slf\T1/ptm/m/n/10 , \T1/ptm/m/it/10 an-no-ta-tion-File='/User
-s/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Data/ARA2_annotation_info_co
-llapse.csv'\T1/pcr/m/n/10 ) 
+Overfull \hbox (116.17006pt too wide) in paragraph at lines 8225--8225
+[]\T1/ptm/m/it/10 slf\T1/ptm/m/n/10 , \T1/ptm/m/it/10 an-no-ta-tion-File='/home
+/mtllab/Programs/ClearMap/idisco/ClearMap/Data/ARA2_annotation_info_collapse.cs
+v'\T1/pcr/m/n/10 ) 
+ []
+
+[78]
+Overfull \hbox (80.20036pt too wide) in paragraph at lines 8290--8290
+[]\T1/ptm/m/it/10 annotationFile='/home/mtllab/Programs/ClearMap/idisco/ClearMa
+p/Data/ARA2_annotation_info_collapse.csv'\T1/pcr/m/n/10 ) 
  []
 
 
-Overfull \hbox (114.8594pt too wide) in paragraph at lines 4574--4574
-[]\T1/ptm/m/it/10 annotationFile='/Users/nicolasrenier/Documents/ClearMap/idisc
-o/ClearMap/Data/ARA2_annotation_info_collapse.csv'\T1/pcr/m/n/10 ) 
+Overfull \hbox (121.52946pt too wide) in paragraph at lines 8308--8308
+[]\T1/ptm/m/it/10 points\T1/ptm/m/n/10 , \T1/ptm/m/it/10 la-beled-Im-age='/home
+/mtllab/Programs/ClearMap/idisco/ClearMap/Test/Data/Annotation/annotation_25_ri
+ght.tif'\T1/ptm/m/n/10 ,
  []
 
 
-Overfull \hbox (156.1885pt too wide) in paragraph at lines 4592--4592
-[]\T1/ptm/m/it/10 points\T1/ptm/m/n/10 , \T1/ptm/m/it/10 la-beled-Im-age='/User
-s/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Test/Data/Annotation/annotat
-ion_25_right.tif'\T1/ptm/m/n/10 ,
+Overfull \hbox (175.52946pt too wide) in paragraph at lines 8314--8314
+[]\T1/ptm/m/it/10 points\T1/ptm/m/n/10 , \T1/ptm/m/it/10 la-beled-Im-age='/home
+/mtllab/Programs/ClearMap/idisco/ClearMap/Test/Data/Annotation/annotation_25_ri
+ght.tif'\T1/ptm/m/n/10 ,
  []
 
-
-Overfull \hbox (210.1885pt too wide) in paragraph at lines 4598--4598
-[]\T1/ptm/m/it/10 points\T1/ptm/m/n/10 , \T1/ptm/m/it/10 la-beled-Im-age='/User
-s/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Test/Data/Annotation/annotat
-ion_25_right.tif'\T1/ptm/m/n/10 ,
- []
-
-[41]
-Overfull \hbox (261.95851pt too wide) in paragraph at lines 4732--4732
+[79]
+Overfull \hbox (227.29947pt too wide) in paragraph at lines 8448--8448
 []\T1/ptm/m/it/10 pointGroup\T1/ptm/m/n/10 , \T1/ptm/m/it/10 la-beled-Im-age='/
-Users/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Test/Data/Annotation/ann
-otation_25_right.tif'\T1/ptm/m/n/10 ,
+home/mtllab/Programs/ClearMap/idisco/ClearMap/Test/Data/Annotation/annotation_2
+5_right.tif'\T1/ptm/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4732--4732
+Underfull \hbox (badness 10000) in paragraph at lines 8448--8448
 \T1/ptm/m/it/10 in-ten-si-ty-Group=None\T1/ptm/m/n/10 , \T1/ptm/m/it/10 in-ten-
 si-ty-Row=0\T1/ptm/m/n/10 , \T1/ptm/m/it/10 re-turnIds=True\T1/ptm/m/n/10 , \T1
 /ptm/m/it/10 re-turn-
  []
 
 
-Overfull \hbox (298.05783pt too wide) in paragraph at lines 4740--4740
+Overfull \hbox (263.39879pt too wide) in paragraph at lines 8456--8456
 []\T1/ptm/m/it/10 pointCounts1\T1/ptm/m/n/10 , \T1/ptm/m/it/10 point-Counts2\T1
-/ptm/m/n/10 , \T1/ptm/m/it/10 la-beled-Im-age='/Users/nicolasrenier/Documents/C
-learMap/idisco/ClearMap/Test/Data/Annotation/annotation_25_right.tif'\T1/ptm/m/
-n/10 ,
+/ptm/m/n/10 , \T1/ptm/m/it/10 la-beled-Im-age='/home/mtllab/Programs/ClearMap/i
+disco/ClearMap/Test/Data/Annotation/annotation_25_right.tif'\T1/ptm/m/n/10 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 4764--4764
+Underfull \hbox (badness 10000) in paragraph at lines 8480--8480
 []\T1/ptm/m/it/10 points1\T1/ptm/m/n/10 , \T1/ptm/m/it/10 in-ten-si-ties1\T1/pt
 m/m/n/10 , \T1/ptm/m/it/10 points2\T1/ptm/m/n/10 , \T1/ptm/m/it/10 in-ten-si-ti
 es2\T1/ptm/m/n/10 , \T1/ptm/m/it/10 data-
  []
 
 
-Overfull \hbox (221.09898pt too wide) in paragraph at lines 4764--4764
-\T1/ptm/m/it/10 Size='/Users/nicolasrenier/Documents/ClearMap/idisco/ClearMap/T
-est/Data/Annotation/annotation_25_right.tif'\T1/ptm/m/n/10 ,
+Overfull \hbox (186.43994pt too wide) in paragraph at lines 8480--8480
+\T1/ptm/m/it/10 Size='/home/mtllab/Programs/ClearMap/idisco/ClearMap/Test/Data/
+Annotation/annotation_25_right.tif'\T1/ptm/m/n/10 ,
  []
 
-[42] [43] [44] [45] [46] [47] [48
+
+Overfull \hbox (0.70403pt too wide) in paragraph at lines 8550--8550
+[]\T1/ptm/m/it/10 weights|  
+ []
+
+[80] [81] [82] [83] [84] [85] [86] [87] [88
 
 ]
 Chapter 3.
-[49] [50
+[89] [90
 
 ]
 Chapter 4.
-[51] [52
+[91] [92
 
-] [53
+] [93
 
-] [54
+] [94
 
 ]
-Overfull \hbox (84.6225pt too wide) in paragraph at lines 5435--5436
+Overfull \hbox (84.6225pt too wide) in paragraph at lines 9509--9510
 []\T1/pcr/m/n/10 ClearMap.Analysis.Tools.MultipleComparisonCorrection\T1/ptm/m/
 n/10 ,
  []
 
 
-Overfull \hbox (12.6225pt too wide) in paragraph at lines 5436--5437
+Overfull \hbox (12.6225pt too wide) in paragraph at lines 9510--9511
 []\T1/pcr/m/n/10 ClearMap.Analysis.Tools.StatisticalTests\T1/ptm/m/n/10 ,
  []
 
 
-Overfull \hbox (30.6225pt too wide) in paragraph at lines 5439--5440
+Overfull \hbox (24.6225pt too wide) in paragraph at lines 9513--9514
+[]\T1/pcr/m/n/10 ClearMap.ImageProcessing.BackgroundRemoval\T1/ptm/m/n/10 ,
+ []
+
+
+Overfull \hbox (0.6225pt too wide) in paragraph at lines 9514--9515
+[]\T1/pcr/m/n/10 ClearMap.ImageProcessing.CellDetection\T1/ptm/m/n/10 ,
+ []
+
+
+Overfull \hbox (24.6225pt too wide) in paragraph at lines 9515--9516
+[]\T1/pcr/m/n/10 ClearMap.ImageProcessing.CellSizeDetection\T1/ptm/m/n/10 ,
+ []
+
+
+Overfull \hbox (30.6225pt too wide) in paragraph at lines 9517--9518
 []\T1/pcr/m/n/10 ClearMap.ImageProcessing.Filter.Convolution\T1/ptm/m/n/10 ,
  []
 
 
-Overfull \hbox (36.6225pt too wide) in paragraph at lines 5440--5441
+Overfull \hbox (18.6225pt too wide) in paragraph at lines 9518--9519
+[]\T1/pcr/m/n/10 ClearMap.ImageProcessing.Filter.DoGFilter\T1/ptm/m/n/10 ,
+ []
+
+
+Overfull \hbox (36.6225pt too wide) in paragraph at lines 9519--9520
 []\T1/pcr/m/n/10 ClearMap.ImageProcessing.Filter.FilterKernel\T1/ptm/m/n/10 ,
  []
 
 
-Overfull \hbox (60.6225pt too wide) in paragraph at lines 5441--5442
+Overfull \hbox (36.6225pt too wide) in paragraph at lines 9520--9521
+[]\T1/pcr/m/n/10 ClearMap.ImageProcessing.Filter.LinearFilter\T1/ptm/m/n/10 ,
+ []
+
+
+Overfull \hbox (60.6225pt too wide) in paragraph at lines 9521--9522
 []\T1/pcr/m/n/10 ClearMap.ImageProcessing.Filter.StructureElement\T1/ptm/m/n/10
  ,
  []
 
 
-Overfull \hbox (12.6225pt too wide) in paragraph at lines 5442--5443
+Overfull \hbox (30.6225pt too wide) in paragraph at lines 9522--9523
+[]\T1/pcr/m/n/10 ClearMap.ImageProcessing.GreyReconstruction\T1/ptm/m/n/10 ,
+ []
+
+
+Overfull \hbox (48.6225pt too wide) in paragraph at lines 9523--9524
+[]\T1/pcr/m/n/10 ClearMap.ImageProcessing.IlastikClassification\T1/ptm/m/n/10 ,
+
+ []
+
+
+Overfull \hbox (54.6225pt too wide) in paragraph at lines 9524--9525
+[]\T1/pcr/m/n/10 ClearMap.ImageProcessing.IlluminationCorrection\T1/ptm/m/n/10 
+,
+ []
+
+
+Overfull \hbox (12.6225pt too wide) in paragraph at lines 9525--9526
 []\T1/pcr/m/n/10 ClearMap.ImageProcessing.ImageStatistics\T1/ptm/m/n/10 ,
  []
 
 
-Overfull \hbox (12.6225pt too wide) in paragraph at lines 5443--5444
+Overfull \hbox (12.6225pt too wide) in paragraph at lines 9526--9527
+[]\T1/pcr/m/n/10 ClearMap.ImageProcessing.MaximaDetection\T1/ptm/m/n/10 ,
+ []
+
+
+Overfull \hbox (0.6225pt too wide) in paragraph at lines 9527--9528
+[]\T1/pcr/m/n/10 ClearMap.ImageProcessing.SpotDetection\T1/ptm/m/n/10 ,
+ []
+
+
+Overfull \hbox (12.6225pt too wide) in paragraph at lines 9528--9529
 []\T1/pcr/m/n/10 ClearMap.ImageProcessing.StackProcessing\T1/ptm/m/n/10 ,
  []
 
-[55
+[95
 
-
-] (./clearmap.ind [56
+] (./clearmap.ind [96
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 18--19
+Underfull \hbox (badness 10000) in paragraph at lines 19--20
 []\T1/ptm/m/n/10 calculateChunkSize() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 18--19
+Underfull \hbox (badness 10000) in paragraph at lines 19--20
 \T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 19--20
+Underfull \hbox (badness 10000) in paragraph at lines 20--21
 []\T1/ptm/m/n/10 calculateStatistics() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 19--20
+Underfull \hbox (badness 10000) in paragraph at lines 20--21
 \T1/ptm/m/n/10 ClearMap.ImageProcessing.ImageStatistics),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 20--22
+Underfull \hbox (badness 10000) in paragraph at lines 21--23
 []\T1/ptm/m/n/10 calculateStatisticsOnStack() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 20--22
+Underfull \hbox (badness 10000) in paragraph at lines 21--23
 \T1/ptm/m/n/10 ClearMap.ImageProcessing.ImageStatistics),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 22--23
+Underfull \hbox (badness 10000) in paragraph at lines 23--24
 []\T1/ptm/m/n/10 calculateSubStacks() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 22--23
+Underfull \hbox (badness 10000) in paragraph at lines 23--24
 \T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing),
  []
 
 
-Overfull \hbox (0.69969pt too wide) in paragraph at lines 30--31
+Underfull \hbox (badness 10000) in paragraph at lines 24--25
+[]\T1/ptm/m/n/10 checkElastixInitialized() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
+[]\T1/ptm/m/n/10 classifyCells() (in mod-ule
+ []
+
+
+Overfull \hbox (8.70963pt too wide) in paragraph at lines 25--26
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.IlastikClassification),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 26--27
+[]\T1/ptm/m/n/10 classifyPixel() (in mod-ule
+ []
+
+
+Overfull \hbox (8.70963pt too wide) in paragraph at lines 26--27
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.IlastikClassification),
+ []
+
+
+Overfull \hbox (0.69969pt too wide) in paragraph at lines 36--37
 []\T1/ptm/m/n/10 ClearMap.Analysis.Tools.MultipleComparisonCorrection
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 36--37
+Underfull \hbox (badness 10000) in paragraph at lines 45--46
+[]\T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.DoGFilter (mod-ule),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--49
 []\T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.StructureElement
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 38--39
-[]\T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing (mod-ule),
+Underfull \hbox (badness 10000) in paragraph at lines 49--50
+[]\T1/ptm/m/n/10 ClearMap.ImageProcessing.GreyReconstruction (mod-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 63--64
+Underfull \hbox (badness 10000) in paragraph at lines 50--51
+[]\T1/ptm/m/n/10 ClearMap.ImageProcessing.IlastikClassification (mod-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--52
+[]\T1/ptm/m/n/10 ClearMap.ImageProcessing.IlluminationCorrection
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 55--56
+[]\T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing (mod-ule),
+ []
+
+[97
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 85--86
 []\T1/ptm/m/n/10 convolve() (in mod-ule
  []
 
 
-Overfull \hbox (2.29044pt too wide) in paragraph at lines 63--64
+Overfull \hbox (2.29044pt too wide) in paragraph at lines 85--86
 \T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.Convolution),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 68--70
+Underfull \hbox (badness 10000) in paragraph at lines 93--95
+[]\T1/ptm/m/n/10 correctIllumination() (in mod-ule
+ []
+
+
+Overfull \hbox (21.47987pt too wide) in paragraph at lines 93--95
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.IlluminationCorrection),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 95--97
 []\T1/ptm/m/n/10 correctPValues() (in mod-ule
  []
 
 
-Overfull \hbox (46.52965pt too wide) in paragraph at lines 68--70
+Overfull \hbox (46.52965pt too wide) in paragraph at lines 95--97
 \T1/ptm/m/n/10 ClearMap.Analysis.Tools.MultipleComparisonCorrection),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 70--71
+Underfull \hbox (badness 10000) in paragraph at lines 97--98
 []\T1/ptm/m/n/10 countPointsGroupInRegions() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 71--72
+Underfull \hbox (badness 10000) in paragraph at lines 98--99
 []\T1/ptm/m/n/10 countPointsInRegions() (in mod-ule
- []
-
-[57
-
-]
-Underfull \hbox (badness 10000) in paragraph at lines 73--74
-[]\T1/ptm/m/n/10 cutoffPValues() (in mod-ule
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 90--91
-[]\T1/ptm/m/n/10 DefaultAnnotationFile (in mod-ule
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 91--92
-[]\T1/ptm/m/n/10 DefaultLabeledImageFile (in mod-ule
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--100
-[]\T1/ptm/m/n/10 estimateQValues() (in mod-ule
- []
-
-
-Overfull \hbox (46.52965pt too wide) in paragraph at lines 98--100
-\T1/ptm/m/n/10 ClearMap.Analysis.Tools.MultipleComparisonCorrection),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 100--101
-[]\T1/ptm/m/n/10 extrap1d() (in mod-ule
+[]\T1/ptm/m/n/10 cutoffPValues() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 101--102
-[]\T1/ptm/m/n/10 extrap1dFromInterp1d() (in mod-ule
+Underfull \hbox (badness 10000) in paragraph at lines 123--124
+[]\T1/ptm/m/n/10 DefaultAnnotationFile (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 105--106
-[]\T1/ptm/m/n/10 fileExperssionToFileName() (in mod-ule
+Underfull \hbox (badness 10000) in paragraph at lines 124--126
+[]\T1/ptm/m/n/10 DefaultFlatFieldLineFile (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 107--108
-[]\T1/ptm/m/n/10 filterKernel() (in mod-ule
+Overfull \hbox (21.47987pt too wide) in paragraph at lines 124--126
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.IlluminationCorrection),
  []
 
 
-Overfull \hbox (1.50992pt too wide) in paragraph at lines 107--108
-\T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.FilterKernel),
+Underfull \hbox (badness 10000) in paragraph at lines 126--127
+[]\T1/ptm/m/n/10 DefaultLabeledImageFile (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 108--109
-[]\T1/ptm/m/n/10 filterKernel2D() (in mod-ule
+Underfull \hbox (badness 10000) in paragraph at lines 127--128
+[]\T1/ptm/m/n/10 deformationDistance() (in mod-ule
  []
 
 
-Overfull \hbox (1.50992pt too wide) in paragraph at lines 108--109
-\T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.FilterKernel),
+Underfull \hbox (badness 10000) in paragraph at lines 128--129
+[]\T1/ptm/m/n/10 deformationField() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 109--110
-[]\T1/ptm/m/n/10 filterKernel3D() (in mod-ule
+Underfull \hbox (badness 10000) in paragraph at lines 130--131
+[]\T1/ptm/m/n/10 detectCells() (in mod-ule
  []
 
 
-Overfull \hbox (1.50992pt too wide) in paragraph at lines 109--110
-\T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.FilterKernel),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 114--115
-[]\T1/ptm/m/n/10 getParameter() (in mod-ule
+Underfull \hbox (badness 10000) in paragraph at lines 130--131
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.CellDetection),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 131--132
-[]\T1/ptm/m/n/10 joinParameter() (in mod-ule
+[]\T1/ptm/m/n/10 detectCellShape() (in mod-ule
+ []
+
+
+Overfull \hbox (2.02995pt too wide) in paragraph at lines 131--132
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.CellSizeDetection),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 132--133
-[]\T1/ptm/m/n/10 joinPoints() (in mod-ule
+[]\T1/ptm/m/n/10 detectSpots() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 132--133
-\T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing),
+Underfull \hbox (badness 10000) in paragraph at lines 140--142
+[]\T1/ptm/m/n/10 estimateQValues() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 133--134
-[]\T1/ptm/m/n/10 joinStatistics() (in mod-ule
+Overfull \hbox (46.52965pt too wide) in paragraph at lines 140--142
+\T1/ptm/m/n/10 ClearMap.Analysis.Tools.MultipleComparisonCorrection),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 133--134
-\T1/ptm/m/n/10 ClearMap.ImageProcessing.ImageStatistics),
+Underfull \hbox (badness 10000) in paragraph at lines 142--143
+[]\T1/ptm/m/n/10 extendedMax() (in mod-ule
+ []
+
+
+Overfull \hbox (1.47015pt too wide) in paragraph at lines 142--143
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.MaximaDetection),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 143--144
+[]\T1/ptm/m/n/10 extrap1d() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 144--145
+[]\T1/ptm/m/n/10 extrap1dFromInterp1d() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 148--149
+[]\T1/ptm/m/n/10 fileExperssionToFileName() (in mod-ule
+ []
+
+[98]
+Underfull \hbox (badness 10000) in paragraph at lines 150--151
+[]\T1/ptm/m/n/10 filterDoG() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 150--151
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.DoGFilter),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 151--152
-[]\T1/ptm/m/n/10 makeColorAnnotations() (in mod-ule
+[]\T1/ptm/m/n/10 filterKernel() (in mod-ule
+ []
+
+
+Overfull \hbox (1.50992pt too wide) in paragraph at lines 151--152
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.FilterKernel),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 152--153
-[]\T1/ptm/m/n/10 makeColorPalette() (in mod-ule
+[]\T1/ptm/m/n/10 filterKernel2D() (in mod-ule
+ []
+
+
+Overfull \hbox (1.50992pt too wide) in paragraph at lines 152--153
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.FilterKernel),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 153--154
+[]\T1/ptm/m/n/10 filterKernel3D() (in mod-ule
+ []
+
+
+Overfull \hbox (1.50992pt too wide) in paragraph at lines 153--154
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.FilterKernel),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 154--155
+[]\T1/ptm/m/n/10 filterLinear() (in mod-ule
+ []
+
+
+Overfull \hbox (0.64993pt too wide) in paragraph at lines 154--155
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.LinearFilter),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 155--156
+[]\T1/ptm/m/n/10 findCellIntensity() (in mod-ule
+ []
+
+
+Overfull \hbox (2.02995pt too wide) in paragraph at lines 155--156
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.CellSizeDetection),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 156--157
+[]\T1/ptm/m/n/10 findCellSize() (in mod-ule
+ []
+
+
+Overfull \hbox (2.02995pt too wide) in paragraph at lines 156--157
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.CellSizeDetection),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 157--158
+[]\T1/ptm/m/n/10 findCenterOfMaxima() (in mod-ule
+ []
+
+
+Overfull \hbox (1.47015pt too wide) in paragraph at lines 157--158
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.MaximaDetection),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 158--159
+[]\T1/ptm/m/n/10 findExtendedMaxima() (in mod-ule
+ []
+
+
+Overfull \hbox (1.47015pt too wide) in paragraph at lines 158--159
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.MaximaDetection),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 159--160
+[]\T1/ptm/m/n/10 findIntensity() (in mod-ule
+ []
+
+
+Overfull \hbox (1.47015pt too wide) in paragraph at lines 159--160
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.MaximaDetection),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 160--161
-[]\T1/ptm/m/n/10 noProcessing() (in mod-ule
+[]\T1/ptm/m/n/10 findPixelCoordinates() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 160--161
-\T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing),
- []
-
-[58]
-Underfull \hbox (badness 10000) in paragraph at lines 165--166
-[]\T1/ptm/m/n/10 parallelProcessStack() (in mod-ule
+Overfull \hbox (1.47015pt too wide) in paragraph at lines 160--161
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.MaximaDetection),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 165--166
-\T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing),
+Underfull \hbox (badness 10000) in paragraph at lines 161--162
+[]\T1/ptm/m/n/10 fixInterpolation() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 170--171
-[]\T1/ptm/m/n/10 parse_optional_nrrdvector() (in mod-ule
+Underfull \hbox (badness 10000) in paragraph at lines 162--163
+[]\T1/ptm/m/n/10 fixOrientation() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 178--179
-[]\T1/ptm/m/n/10 pointsToCoordinatesAndProperties() (in mod-ule
+Underfull \hbox (badness 10000) in paragraph at lines 163--165
+[]\T1/ptm/m/n/10 flatfieldFromLine() (in mod-ule
+ []
+
+
+Overfull \hbox (21.47987pt too wide) in paragraph at lines 163--165
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.IlluminationCorrection),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 165--167
+[]\T1/ptm/m/n/10 flatfieldLineFromRegression() (in mod-ule
+ []
+
+
+Overfull \hbox (21.47987pt too wide) in paragraph at lines 165--167
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.IlluminationCorrection),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 173--174
+[]\T1/ptm/m/n/10 getParameter() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 174--175
+[]\T1/ptm/m/n/10 getResultDataFile() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 176--177
+[]\T1/ptm/m/n/10 getTransformFileSizeAndSpacing() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 177--178
+[]\T1/ptm/m/n/10 getTransformParameterFile() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--180
+[]\T1/ptm/m/n/10 greyReconstruction() (in mod-ule
+ []
+
+
+Overfull \hbox (9.65036pt too wide) in paragraph at lines 178--180
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.GreyReconstruction),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 183--184
-[]\T1/ptm/m/n/10 printSubStackInfo() (in mod-ule
+[]\T1/ptm/m/n/10 hMaxTransform() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 183--184
-\T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing),
+Overfull \hbox (1.47015pt too wide) in paragraph at lines 183--184
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.MaximaDetection),
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 194--195
-[]\T1/ptm/m/n/10 readDataGroup() (in mod-ule
+[]\T1/ptm/m/n/10 Initialized (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 201--202
-[]\T1/ptm/m/n/10 readPointsGroup() (in mod-ule
+Overfull \hbox (8.70963pt too wide) in paragraph at lines 194--195
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.IlastikClassification),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 207--209
-[]\T1/ptm/m/n/10 sequentiallyProcessStack() (in mod-ule
+Underfull \hbox (badness 10000) in paragraph at lines 195--196
+[]\T1/ptm/m/n/10 initializeElastix() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 207--209
+Underfull \hbox (badness 10000) in paragraph at lines 196--198
+[]\T1/ptm/m/n/10 initializeIlastik() (in mod-ule
+ []
+
+
+Overfull \hbox (8.70963pt too wide) in paragraph at lines 196--198
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.IlastikClassification),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 198--199
+[]\T1/ptm/m/n/10 inverseOrientation() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 206--207
+[]\T1/ptm/m/n/10 joinParameter() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 207--208
+[]\T1/ptm/m/n/10 joinPoints() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 207--208
 \T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 213--215
+Underfull \hbox (badness 10000) in paragraph at lines 208--209
+[]\T1/ptm/m/n/10 joinStatistics() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 208--209
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.ImageStatistics),
+ []
+
+[99]
+Underfull \hbox (badness 10000) in paragraph at lines 223--224
+[]\T1/ptm/m/n/10 localMax() (in mod-ule
+ []
+
+
+Overfull \hbox (1.47015pt too wide) in paragraph at lines 223--224
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.MaximaDetection),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 227--228
+[]\T1/ptm/m/n/10 makeColorAnnotations() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 228--229
+[]\T1/ptm/m/n/10 makeColorPalette() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 236--237
+[]\T1/ptm/m/n/10 noProcessing() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 236--237
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 242--243
+[]\T1/ptm/m/n/10 orientationToPermuation() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 243--244
+[]\T1/ptm/m/n/10 orientDataSize() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 244--245
+[]\T1/ptm/m/n/10 orientDataSizeInverse() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 245--246
+[]\T1/ptm/m/n/10 orientResolution() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 246--247
+[]\T1/ptm/m/n/10 orientResolutionInverse() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 252--253
+[]\T1/ptm/m/n/10 parallelProcessStack() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 252--253
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 257--258
+[]\T1/ptm/m/n/10 parse_optional_nrrdvector() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 258--259
+[]\T1/ptm/m/n/10 parseElastixOutputPoints() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 259--260
+[]\T1/ptm/m/n/10 plotOverlayLabel() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 260--261
+[]\T1/ptm/m/n/10 plotOverlayPoints() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 269--270
+[]\T1/ptm/m/n/10 pointsToCoordinatesAndProperties() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 275--276
+[]\T1/ptm/m/n/10 printSubStackInfo() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 275--276
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 289--290
+[]\T1/ptm/m/n/10 readDataGroup() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 298--299
+[]\T1/ptm/m/n/10 readPointsGroup() (in mod-ule
+ []
+
+[100]
+Underfull \hbox (badness 10000) in paragraph at lines 299--300
+[]\T1/ptm/m/n/10 reconstruct() (in mod-ule
+ []
+
+
+Overfull \hbox (9.65036pt too wide) in paragraph at lines 299--300
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.GreyReconstruction),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 300--301
+[]\T1/ptm/m/n/10 removeBackground() (in mod-ule
+ []
+
+
+Overfull \hbox (13.85057pt too wide) in paragraph at lines 300--301
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.BackgroundRemoval),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 301--302
+[]\T1/ptm/m/n/10 resampleData() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 302--303
+[]\T1/ptm/m/n/10 resampleDataInverse() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 303--304
+[]\T1/ptm/m/n/10 resampleDataSize() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 304--305
+[]\T1/ptm/m/n/10 resamplePoints() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 305--306
+[]\T1/ptm/m/n/10 resamplePointsInverse() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 306--307
+[]\T1/ptm/m/n/10 resampleXY() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 308--310
+[]\T1/ptm/m/n/10 rescaleFactorIlastik() (in mod-ule
+ []
+
+
+Overfull \hbox (8.70963pt too wide) in paragraph at lines 308--310
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.IlastikClassification),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 310--311
+[]\T1/ptm/m/n/10 rescaleSizeAndSpacing() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 311--313
+[]\T1/ptm/m/n/10 rescaleToIlastik() (in mod-ule
+ []
+
+
+Overfull \hbox (8.70963pt too wide) in paragraph at lines 311--313
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.IlastikClassification),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 317--318
+[]\T1/ptm/m/n/10 sagittalToCoronalData() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 318--320
+[]\T1/ptm/m/n/10 sequentiallyProcessStack() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 318--320
+\T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 320--321
+[]\T1/ptm/m/n/10 setElastixLibraryPath() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 321--322
+[]\T1/ptm/m/n/10 setPathTransformParameterFiles() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 322--323
+[]\T1/ptm/m/n/10 setTransformFileSizeAndSpacing() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 327--329
 []\T1/ptm/m/n/10 structureElement() (in mod-ule
  []
 
 
-Overfull \hbox (22.86977pt too wide) in paragraph at lines 213--215
+Overfull \hbox (22.86977pt too wide) in paragraph at lines 327--329
 \T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.StructureElement),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 215--217
+Underfull \hbox (badness 10000) in paragraph at lines 329--331
 []\T1/ptm/m/n/10 structureElement2D() (in mod-ule
  []
 
 
-Overfull \hbox (22.86977pt too wide) in paragraph at lines 215--217
+Overfull \hbox (22.86977pt too wide) in paragraph at lines 329--331
 \T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.StructureElement),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 217--219
+Underfull \hbox (badness 10000) in paragraph at lines 331--333
 []\T1/ptm/m/n/10 structureElement3D() (in mod-ule
  []
 
 
-Overfull \hbox (22.86977pt too wide) in paragraph at lines 217--219
+Overfull \hbox (22.86977pt too wide) in paragraph at lines 331--333
 \T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.StructureElement),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 219--221
+Underfull \hbox (badness 10000) in paragraph at lines 333--335
 []\T1/ptm/m/n/10 structureElementOffsets() (in mod-ule
  []
 
 
-Overfull \hbox (22.86977pt too wide) in paragraph at lines 219--221
+Overfull \hbox (22.86977pt too wide) in paragraph at lines 333--335
 \T1/ptm/m/n/10 ClearMap.ImageProcessing.Filter.StructureElement),
  []
 
 
-Overfull \hbox (28.8691pt too wide) in paragraph at lines 226--227
+Overfull \hbox (28.8691pt too wide) in paragraph at lines 342--343
 []\T1/ptm/m/n/10 test() (in mod-ule ClearMap.ImageProcessing.Filter.FilterKerne
 l),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 231--232
+Overfull \hbox (13.8396pt too wide) in paragraph at lines 343--344
+[]\T1/ptm/m/n/10 test() (in mod-ule ClearMap.ImageProcessing.SpotDetection),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 352--353
 []\T1/ptm/m/n/10 testCompletedCumulatives() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 232--234
+Underfull \hbox (badness 10000) in paragraph at lines 353--355
 []\T1/ptm/m/n/10 testCompletedCumulativesInSpheres() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 234--235
+Underfull \hbox (badness 10000) in paragraph at lines 355--356
 []\T1/ptm/m/n/10 testCompletedInvertedCumulatives() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 235--237
+Underfull \hbox (badness 10000) in paragraph at lines 356--358
 []\T1/ptm/m/n/10 testCramerVonMises2Sample() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 235--237
+Underfull \hbox (badness 10000) in paragraph at lines 356--358
 \T1/ptm/m/n/10 ClearMap.Analysis.Tools.StatisticalTests),
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 237--238
+Underfull \hbox (badness 10000) in paragraph at lines 358--359
 []\T1/ptm/m/n/10 thresholdPoints() (in mod-ule
  []
 
-[59]
-Underfull \hbox (badness 10000) in paragraph at lines 246--247
+
+Underfull \hbox (badness 10000) in paragraph at lines 367--368
+[]\T1/ptm/m/n/10 transformData() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 368--369
+[]\T1/ptm/m/n/10 TransformixBinary (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 369--370
+[]\T1/ptm/m/n/10 transformPoints() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 370--371
+[]\T1/ptm/m/n/10 transformPointsToImaris() (in mod-ule
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 371--372
 []\T1/ptm/m/n/10 tTestPointsInRegions() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 247--248
+Underfull \hbox (badness 10000) in paragraph at lines 372--373
 []\T1/ptm/m/n/10 tTestVoxelization() (in mod-ule
  []
 
+[101]
+Underfull \hbox (badness 10000) in paragraph at lines 379--380
+[]\T1/ptm/m/n/10 voxelizePixel() (in mod-ule
+ []
 
-Underfull \hbox (badness 10000) in paragraph at lines 256--257
+
+Underfull \hbox (badness 10000) in paragraph at lines 383--384
 []\T1/ptm/m/n/10 weightsFromPrecentiles() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 263--264
+Underfull \hbox (badness 10000) in paragraph at lines 394--395
 []\T1/ptm/m/n/10 writeParameter() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 269--270
+Underfull \hbox (badness 10000) in paragraph at lines 403--404
 []\T1/ptm/m/n/10 writeSubStack() (in mod-ule
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 269--270
+Underfull \hbox (badness 10000) in paragraph at lines 403--404
 \T1/ptm/m/n/10 ClearMap.ImageProcessing.StackProcessing),
  []
 
-[60
+[102
 
 ])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 5462.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 5462.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 9551.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 9551.
  (./clearmap.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 5462.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 5462.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 9551.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 9551.
 
 Package rerunfilecheck Info: File `clearmap.out' has not changed.
-(rerunfilecheck)             Checksum: 22A42354E8141C8715B36DE573435163;1030.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 5462.
+(rerunfilecheck)             Checksum: 2538915BDD4D102935273882A3E7F1B8;1030.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 9551.
  ) 
 Here is how much of TeX's memory you used:
- 9978 strings out of 493089
- 151710 string characters out of 6134841
- 251422 words of memory out of 5000000
- 12798 multiletter control sequences out of 15000+600000
- 68231 words of font info for 77 fonts, out of 8000000 for 9000
+ 10379 strings out of 493054
+ 163818 string characters out of 6134765
+ 258176 words of memory out of 5000000
+ 13031 multiletter control sequences out of 15000+600000
+ 78670 words of font info for 91 fonts, out of 8000000 for 9000
  1142 hyphenation exceptions out of 8191
- 36i,12n,45p,852b,563s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,12n,45p,852b,565s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2015/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
-exlive/2015/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/local/texlive/2
-015/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2015/texm
-f-dist/fonts/type1/urw/courier/ucrro8a.pfb></usr/local/texlive/2015/texmf-dist/
-fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/t
-ype1/urw/helvetic/uhvbo8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/u
-rw/helvetic/uhvr8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/time
-s/utmb8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/times/utmr8a.p
-fb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on clearmap.pdf (64 pages, 270607 bytes).
+exlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/te
+xlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texl
+ive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive
+/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/
+2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/20
+15/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/local/texlive/2015/texmf
+-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/local/texlive/2015/texmf-dist/fo
+nts/type1/urw/courier/ucrro8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/typ
+e1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/
+helvetic/uhvbo8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/helvet
+ic/uhvr8a.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/times/utmb8a.
+pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/
+local/texlive/2015/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on clearmap.pdf (106 pages, 1681518 bytes).
 PDF statistics:
- 1180 PDF objects out of 1200 (max. 8388607)
- 1076 compressed objects within 11 object streams
- 392 named destinations out of 1000 (max. 500000)
- 157 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 2154 PDF objects out of 2487 (max. 8388607)
+ 1795 compressed objects within 18 object streams
+ 566 named destinations out of 1000 (max. 500000)
+ 212 words of extra memory for PDF output out of 10000 (max. 10000000)
 

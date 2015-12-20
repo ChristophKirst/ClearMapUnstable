@@ -2,271 +2,405 @@
 \def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
 
   \bigletter {Symbols}
-  \item \_\_getnewargs\_\_() (LabelRecord method), \hyperpage{40}
-  \item \_\_getstate\_\_() (LabelRecord method), \hyperpage{40}
-  \item \_\_repr\_\_() (LabelRecord method), \hyperpage{40}
+  \item \_\_getnewargs\_\_() (LabelRecord method), \hyperpage{78}
+  \item \_\_getstate\_\_() (LabelRecord method), \hyperpage{78}
+  \item \_\_repr\_\_() (LabelRecord method), \hyperpage{78}
 
   \indexspace
   \bigletter A
-  \item acronym (LabelRecord attribute), \hyperpage{40}
-  \item acronym() (LabelInfo method), \hyperpage{41}
-  \item acronyms (LabelInfo attribute), \hyperpage{41}
-  \item AlignmentParameter (in module ClearMap.Parameter), \hyperpage{44}
+  \item acronym (LabelRecord attribute), \hyperpage{78}
+  \item acronym() (LabelInfo method), \hyperpage{78}
+  \item acronyms (LabelInfo attribute), \hyperpage{78}
+  \item alignData() (in module ClearMap.Alignment.Elastix), \hyperpage{47}
+  \item AlignmentParameter (in module ClearMap.Parameter), \hyperpage{83}
 
   \indexspace
   \bigletter C
-  \item calculateChunkSize() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{31}
-  \item calculateStatistics() (in module ClearMap.ImageProcessing.ImageStatistics), \hyperpage{36}
+  \item calculateChunkSize() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{57}
+  \item calculateStatistics() (in module ClearMap.ImageProcessing.ImageStatistics), \hyperpage{74}
   \item calculateStatisticsOnStack() (in module ClearMap.ImageProcessing.ImageStatistics), 
-		\hyperpage{36}
-  \item calculateSubStacks() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{31}
-  \item ClearMap (module), \hyperpage{15}
-  \item ClearMap.Alignment (module), \hyperpage{29}
-  \item ClearMap.Analysis (module), \hyperpage{37}
-  \item ClearMap.Analysis.Label (module), \hyperpage{40}
-  \item ClearMap.Analysis.Statistics (module), \hyperpage{42}
-  \item ClearMap.Analysis.Tools (module), \hyperpage{38}
-  \item ClearMap.Analysis.Tools.Extrapolate (module), \hyperpage{38}
-  \item ClearMap.Analysis.Tools.MultipleComparisonCorrection (module), \hyperpage{38}
-  \item ClearMap.Analysis.Tools.StatisticalTests (module), \hyperpage{39}
-  \item ClearMap.ImageProcessing (module), \hyperpage{29}
-  \item ClearMap.ImageProcessing.Filter (module), \hyperpage{33}
-  \item ClearMap.ImageProcessing.Filter.Convolution (module), \hyperpage{34}
-  \item ClearMap.ImageProcessing.Filter.FilterKernel (module), \hyperpage{34}
-  \item ClearMap.ImageProcessing.Filter.StructureElement (module), \hyperpage{35}
-  \item ClearMap.ImageProcessing.ImageStatistics (module), \hyperpage{36}
-  \item ClearMap.ImageProcessing.StackProcessing (module), \hyperpage{30}
-  \item ClearMap.IO (module), \hyperpage{15}
-  \item ClearMap.IO.CSV (module), \hyperpage{23}
-  \item ClearMap.IO.FileList (module), \hyperpage{24}
-  \item ClearMap.IO.IO (module), \hyperpage{17}
-  \item ClearMap.IO.NPY (module), \hyperpage{26}
-  \item ClearMap.IO.NRRD (module), \hyperpage{26}
-  \item ClearMap.IO.VTK (module), \hyperpage{28}
-  \item ClearMap.Parameter (module), \hyperpage{43}
-  \item ClearMap.Settings (module), \hyperpage{44}
-  \item ClearMap.Utils (module), \hyperpage{45}
-  \item ClearMap.Utils.ParameterTools (module), \hyperpage{45}
-  \item ClearMap.Utils.ProcessWriter (module), \hyperpage{46}
-  \item ClearMap.Utils.Timer (module), \hyperpage{47}
-  \item ClearMap.Visualization (module), \hyperpage{43}
-  \item ClearMapPath (in module ClearMap.Settings), \hyperpage{45}
-  \item clearMapPath() (in module ClearMap.Settings), \hyperpage{45}
-  \item collapse (LabelInfo attribute), \hyperpage{41}
-  \item collapse (LabelRecord attribute), \hyperpage{40}
-  \item collapseMap (LabelInfo attribute), \hyperpage{41}
-  \item color (LabelRecord attribute), \hyperpage{40}
-  \item color() (LabelInfo method), \hyperpage{41}
-  \item colorPValues() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
-  \item colors (LabelInfo attribute), \hyperpage{41}
-  \item convertData() (in module ClearMap.IO.IO), \hyperpage{21}
-  \item convolve() (in module ClearMap.ImageProcessing.Filter.Convolution), \hyperpage{34}
-  \item copyData() (in module ClearMap.IO.FileList), \hyperpage{25}
-  \item copyData() (in module ClearMap.IO.IO), \hyperpage{21}
-  \item copyData() (in module ClearMap.IO.NRRD), \hyperpage{28}
-  \item copyFile() (in module ClearMap.IO.IO), \hyperpage{20}
+		\hyperpage{74}
+  \item calculateSubStacks() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{57}
+  \item checkElastixInitialized() (in module ClearMap.Alignment.Elastix), \hyperpage{46}
+  \item classifyCells() (in module ClearMap.ImageProcessing.IlastikClassification), \hyperpage{73}
+  \item classifyPixel() (in module ClearMap.ImageProcessing.IlastikClassification), \hyperpage{72}
+  \item ClearMap (module), \hyperpage{25}
+  \item ClearMap.Alignment (module), \hyperpage{44}
+  \item ClearMap.Alignment.Elastix (module), \hyperpage{44}
+  \item ClearMap.Alignment.Resampling (module), \hyperpage{49}
+  \item ClearMap.Analysis (module), \hyperpage{75}
+  \item ClearMap.Analysis.Label (module), \hyperpage{77}
+  \item ClearMap.Analysis.Statistics (module), \hyperpage{79}
+  \item ClearMap.Analysis.Tools (module), \hyperpage{75}
+  \item ClearMap.Analysis.Tools.Extrapolate (module), \hyperpage{75}
+  \item ClearMap.Analysis.Tools.MultipleComparisonCorrection (module), \hyperpage{76}
+  \item ClearMap.Analysis.Tools.StatisticalTests (module), \hyperpage{77}
+  \item ClearMap.Analysis.Voxelization (module), \hyperpage{80}
+  \item ClearMap.ImageProcessing (module), \hyperpage{55}
+  \item ClearMap.ImageProcessing.BackgroundRemoval (module), \hyperpage{66}
+  \item ClearMap.ImageProcessing.CellDetection (module), \hyperpage{59}
+  \item ClearMap.ImageProcessing.CellSizeDetection (module), \hyperpage{60}
+  \item ClearMap.ImageProcessing.Filter (module), \hyperpage{61}
+  \item ClearMap.ImageProcessing.Filter.Convolution (module), \hyperpage{62}
+  \item ClearMap.ImageProcessing.Filter.DoGFilter (module), \hyperpage{62}
+  \item ClearMap.ImageProcessing.Filter.FilterKernel (module), \hyperpage{63}
+  \item ClearMap.ImageProcessing.Filter.LinearFilter (module), \hyperpage{61}
+  \item ClearMap.ImageProcessing.Filter.StructureElement (module), \hyperpage{64}
+  \item ClearMap.ImageProcessing.GreyReconstruction (module), \hyperpage{67}
+  \item ClearMap.ImageProcessing.IlastikClassification (module), \hyperpage{72}
+  \item ClearMap.ImageProcessing.IlluminationCorrection (module), \hyperpage{65}
+  \item ClearMap.ImageProcessing.ImageStatistics (module), \hyperpage{74}
+  \item ClearMap.ImageProcessing.MaximaDetection (module), \hyperpage{69}
+  \item ClearMap.ImageProcessing.SpotDetection (module), \hyperpage{68}
+  \item ClearMap.ImageProcessing.StackProcessing (module), \hyperpage{56}
+  \item ClearMap.IO (module), \hyperpage{25}
+  \item ClearMap.IO.CSV (module), \hyperpage{33}
+  \item ClearMap.IO.FileList (module), \hyperpage{34}
+  \item ClearMap.IO.Imaris (module), \hyperpage{36}
+  \item ClearMap.IO.IO (module), \hyperpage{27}
+  \item ClearMap.IO.NPY (module), \hyperpage{38}
+  \item ClearMap.IO.NRRD (module), \hyperpage{39}
+  \item ClearMap.IO.RAW (module), \hyperpage{41}
+  \item ClearMap.IO.TIF (module), \hyperpage{42}
+  \item ClearMap.IO.VTK (module), \hyperpage{43}
+  \item ClearMap.Parameter (module), \hyperpage{83}
+  \item ClearMap.Settings (module), \hyperpage{84}
+  \item ClearMap.Utils (module), \hyperpage{85}
+  \item ClearMap.Utils.ParameterTools (module), \hyperpage{85}
+  \item ClearMap.Utils.ProcessWriter (module), \hyperpage{86}
+  \item ClearMap.Utils.Timer (module), \hyperpage{86}
+  \item ClearMap.Visualization (module), \hyperpage{81}
+  \item ClearMap.Visualization.Plot (module), \hyperpage{81}
+  \item ClearMapPath (in module ClearMap.Settings), \hyperpage{85}
+  \item clearMapPath() (in module ClearMap.Settings), \hyperpage{85}
+  \item closeFile() (in module ClearMap.IO.Imaris), \hyperpage{36}
+  \item collapse (LabelInfo attribute), \hyperpage{78}
+  \item collapse (LabelRecord attribute), \hyperpage{78}
+  \item collapseMap (LabelInfo attribute), \hyperpage{78}
+  \item color (LabelRecord attribute), \hyperpage{78}
+  \item color() (LabelInfo method), \hyperpage{78}
+  \item colorPValues() (in module ClearMap.Analysis.Statistics), \hyperpage{79}
+  \item colors (LabelInfo attribute), \hyperpage{78}
+  \item convertData() (in module ClearMap.IO.IO), \hyperpage{31}
+  \item convolve() (in module ClearMap.ImageProcessing.Filter.Convolution), \hyperpage{63}
+  \item copyData() (in module ClearMap.IO.FileList), \hyperpage{35}
+  \item copyData() (in module ClearMap.IO.Imaris), \hyperpage{38}
+  \item copyData() (in module ClearMap.IO.IO), \hyperpage{31}
+  \item copyData() (in module ClearMap.IO.NRRD), \hyperpage{40}
+  \item copyData() (in module ClearMap.IO.RAW), \hyperpage{42}
+  \item copyData() (in module ClearMap.IO.TIF), \hyperpage{43}
+  \item copyFile() (in module ClearMap.IO.IO), \hyperpage{30}
+  \item correctIllumination() (in module ClearMap.ImageProcessing.IlluminationCorrection), 
+		\hyperpage{65}
   \item correctPValues() (in module ClearMap.Analysis.Tools.MultipleComparisonCorrection), 
-		\hyperpage{38}
-  \item countPointsGroupInRegions() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
-  \item countPointsInRegions() (in module ClearMap.Analysis.Label), \hyperpage{41}
-  \item createDirectory() (in module ClearMap.IO.IO), \hyperpage{18}
-  \item cutoffPValues() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
+		\hyperpage{76}
+  \item countPointsGroupInRegions() (in module ClearMap.Analysis.Statistics), \hyperpage{80}
+  \item countPointsInRegions() (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item createDirectory() (in module ClearMap.IO.IO), \hyperpage{28}
+  \item cutoffPValues() (in module ClearMap.Analysis.Statistics), \hyperpage{79}
 
   \indexspace
   \bigletter D
-  \item dataFileExtensions (in module ClearMap.IO.IO), \hyperpage{17}
-  \item dataFileExtensionToType (in module ClearMap.IO.IO), \hyperpage{18}
-  \item dataFileNameToModule() (in module ClearMap.IO.IO), \hyperpage{18}
-  \item dataFileNameToType() (in module ClearMap.IO.IO), \hyperpage{18}
-  \item dataFileTypes (in module ClearMap.IO.IO), \hyperpage{18}
-  \item dataSize() (in module ClearMap.IO.FileList), \hyperpage{25}
-  \item dataSize() (in module ClearMap.IO.IO), \hyperpage{19}
-  \item dataSize() (in module ClearMap.IO.NRRD), \hyperpage{27}
-  \item dataSizeFromDataRange() (in module ClearMap.IO.IO), \hyperpage{19}
-  \item dataToRange() (in module ClearMap.IO.IO), \hyperpage{20}
-  \item dataZSize() (in module ClearMap.IO.FileList), \hyperpage{25}
-  \item dataZSize() (in module ClearMap.IO.IO), \hyperpage{19}
-  \item dataZSize() (in module ClearMap.IO.NRRD), \hyperpage{27}
-  \item DefaultAnnotationFile (in module ClearMap.Analysis.Label), \hyperpage{40}
-  \item DefaultLabeledImageFile (in module ClearMap.Analysis.Label), \hyperpage{40}
-  \item detectCellParameter (in module ClearMap.Parameter), \hyperpage{43}
+  \item dataFileExtensions (in module ClearMap.IO.IO), \hyperpage{27}
+  \item dataFileExtensionToType (in module ClearMap.IO.IO), \hyperpage{28}
+  \item dataFileNameToModule() (in module ClearMap.IO.IO), \hyperpage{28}
+  \item dataFileNameToType() (in module ClearMap.IO.IO), \hyperpage{28}
+  \item dataFileTypes (in module ClearMap.IO.IO), \hyperpage{28}
+  \item dataSize() (in module ClearMap.IO.FileList), \hyperpage{35}
+  \item dataSize() (in module ClearMap.IO.Imaris), \hyperpage{37}
+  \item dataSize() (in module ClearMap.IO.IO), \hyperpage{29}
+  \item dataSize() (in module ClearMap.IO.NRRD), \hyperpage{40}
+  \item dataSize() (in module ClearMap.IO.RAW), \hyperpage{41}
+  \item dataSize() (in module ClearMap.IO.TIF), \hyperpage{43}
+  \item dataSizeFromDataRange() (in module ClearMap.IO.IO), \hyperpage{29}
+  \item dataToRange() (in module ClearMap.IO.IO), \hyperpage{30}
+  \item dataZSize() (in module ClearMap.IO.FileList), \hyperpage{35}
+  \item dataZSize() (in module ClearMap.IO.Imaris), \hyperpage{37}
+  \item dataZSize() (in module ClearMap.IO.IO), \hyperpage{29}
+  \item dataZSize() (in module ClearMap.IO.NRRD), \hyperpage{40}
+  \item dataZSize() (in module ClearMap.IO.RAW), \hyperpage{41}
+  \item dataZSize() (in module ClearMap.IO.TIF), \hyperpage{43}
+  \item DefaultAnnotationFile (in module ClearMap.Analysis.Label), \hyperpage{77}
+  \item DefaultFlatFieldLineFile (in module ClearMap.ImageProcessing.IlluminationCorrection), 
+		\hyperpage{65}
+  \item DefaultLabeledImageFile (in module ClearMap.Analysis.Label), \hyperpage{77}
+  \item deformationDistance() (in module ClearMap.Alignment.Elastix), \hyperpage{48}
+  \item deformationField() (in module ClearMap.Alignment.Elastix), \hyperpage{48}
+  \item detectCellParameter (in module ClearMap.Parameter), \hyperpage{83}
+  \item detectCells() (in module ClearMap.ImageProcessing.CellDetection), \hyperpage{59}
+  \item detectCellShape() (in module ClearMap.ImageProcessing.CellSizeDetection), \hyperpage{60}
+  \item detectSpots() (in module ClearMap.ImageProcessing.SpotDetection), \hyperpage{69}
 
   \indexspace
   \bigletter E
-  \item elapsedTime() (Timer method), \hyperpage{47}
-  \item ElastixPath (in module ClearMap.Settings), \hyperpage{45}
+  \item elapsedTime() (Timer method), \hyperpage{87}
+  \item ElastixBinary (in module ClearMap.Alignment.Elastix), \hyperpage{45}
+  \item ElastixLib (in module ClearMap.Alignment.Elastix), \hyperpage{45}
+  \item ElastixPath (in module ClearMap.Settings), \hyperpage{85}
   \item estimateQValues() (in module ClearMap.Analysis.Tools.MultipleComparisonCorrection), 
-		\hyperpage{39}
-  \item extrap1d() (in module ClearMap.Analysis.Tools.Extrapolate), \hyperpage{38}
-  \item extrap1dFromInterp1d() (in module ClearMap.Analysis.Tools.Extrapolate), \hyperpage{38}
+		\hyperpage{76}
+  \item extendedMax() (in module ClearMap.ImageProcessing.MaximaDetection), \hyperpage{70}
+  \item extrap1d() (in module ClearMap.Analysis.Tools.Extrapolate), \hyperpage{75}
+  \item extrap1dFromInterp1d() (in module ClearMap.Analysis.Tools.Extrapolate), \hyperpage{76}
 
   \indexspace
   \bigletter F
-  \item fileExperssionToFileName() (in module ClearMap.IO.FileList), \hyperpage{24}
-  \item fileExtension() (in module ClearMap.IO.IO), \hyperpage{18}
-  \item filterKernel() (in module ClearMap.ImageProcessing.Filter.FilterKernel), \hyperpage{34}
-  \item filterKernel2D() (in module ClearMap.ImageProcessing.Filter.FilterKernel), \hyperpage{34}
-  \item filterKernel3D() (in module ClearMap.ImageProcessing.Filter.FilterKernel), \hyperpage{35}
-  \item formatElapsedTime() (Timer method), \hyperpage{47}
+  \item fileExperssionToFileName() (in module ClearMap.IO.FileList), \hyperpage{34}
+  \item fileExtension() (in module ClearMap.IO.IO), \hyperpage{28}
+  \item filterDoG() (in module ClearMap.ImageProcessing.Filter.DoGFilter), \hyperpage{62}
+  \item filterKernel() (in module ClearMap.ImageProcessing.Filter.FilterKernel), \hyperpage{63}
+  \item filterKernel2D() (in module ClearMap.ImageProcessing.Filter.FilterKernel), \hyperpage{63}
+  \item filterKernel3D() (in module ClearMap.ImageProcessing.Filter.FilterKernel), \hyperpage{63}
+  \item filterLinear() (in module ClearMap.ImageProcessing.Filter.LinearFilter), \hyperpage{61}
+  \item findCellIntensity() (in module ClearMap.ImageProcessing.CellSizeDetection), \hyperpage{60}
+  \item findCellSize() (in module ClearMap.ImageProcessing.CellSizeDetection), \hyperpage{60}
+  \item findCenterOfMaxima() (in module ClearMap.ImageProcessing.MaximaDetection), \hyperpage{71}
+  \item findExtendedMaxima() (in module ClearMap.ImageProcessing.MaximaDetection), \hyperpage{70}
+  \item findIntensity() (in module ClearMap.ImageProcessing.MaximaDetection), \hyperpage{71}
+  \item findPixelCoordinates() (in module ClearMap.ImageProcessing.MaximaDetection), \hyperpage{71}
+  \item fixInterpolation() (in module ClearMap.Alignment.Resampling), \hyperpage{52}
+  \item fixOrientation() (in module ClearMap.Alignment.Resampling), \hyperpage{50}
+  \item flatfieldFromLine() (in module ClearMap.ImageProcessing.IlluminationCorrection), 
+		\hyperpage{66}
+  \item flatfieldLineFromRegression() (in module ClearMap.ImageProcessing.IlluminationCorrection), 
+		\hyperpage{66}
+  \item formatElapsedTime() (Timer method), \hyperpage{87}
 
   \indexspace
   \bigletter G
-  \item getParameter() (in module ClearMap.Utils.ParameterTools), \hyperpage{45}
+  \item getDataExtent() (in module ClearMap.IO.Imaris), \hyperpage{37}
+  \item getDataSize() (in module ClearMap.IO.Imaris), \hyperpage{37}
+  \item getParameter() (in module ClearMap.Utils.ParameterTools), \hyperpage{85}
+  \item getResultDataFile() (in module ClearMap.Alignment.Elastix), \hyperpage{47}
+  \item getScaleAndOffset() (in module ClearMap.IO.Imaris), \hyperpage{37}
+  \item getTransformFileSizeAndSpacing() (in module ClearMap.Alignment.Elastix), \hyperpage{47}
+  \item getTransformParameterFile() (in module ClearMap.Alignment.Elastix), \hyperpage{46}
+  \item greyReconstruction() (in module ClearMap.ImageProcessing.GreyReconstruction), 
+		\hyperpage{67}
+
+  \indexspace
+  \bigletter H
+  \item hMaxTransform() (in module ClearMap.ImageProcessing.MaximaDetection), \hyperpage{69}
 
   \indexspace
   \bigletter I
-  \item id (LabelRecord attribute), \hyperpage{40}
-  \item ids (LabelInfo attribute), \hyperpage{41}
-  \item IlastikParameter (in module ClearMap.Parameter), \hyperpage{43}
-  \item IlastikPath (in module ClearMap.Settings), \hyperpage{45}
-  \item initialize() (in module ClearMap.Analysis.Label), \hyperpage{41}
-  \item initialize() (LabelInfo method), \hyperpage{41}
-  \item isDataFile() (in module ClearMap.IO.IO), \hyperpage{18}
-  \item isFile() (in module ClearMap.IO.IO), \hyperpage{18}
-  \item isFileExpression() (in module ClearMap.IO.IO), \hyperpage{18}
-  \item isPointFile() (in module ClearMap.IO.IO), \hyperpage{18}
+  \item id (LabelRecord attribute), \hyperpage{78}
+  \item ids (LabelInfo attribute), \hyperpage{78}
+  \item IlastikParameter (in module ClearMap.Parameter), \hyperpage{83}
+  \item IlastikPath (in module ClearMap.Settings), \hyperpage{84}
+  \item initialize() (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item initialize() (LabelInfo method), \hyperpage{78}
+  \item Initialized (in module ClearMap.Alignment.Elastix), \hyperpage{45}
+  \item Initialized (in module ClearMap.ImageProcessing.IlastikClassification), \hyperpage{72}
+  \item initializeElastix() (in module ClearMap.Alignment.Elastix), \hyperpage{46}
+  \item initializeIlastik() (in module ClearMap.ImageProcessing.IlastikClassification), 
+		\hyperpage{72}
+  \item inverseOrientation() (in module ClearMap.Alignment.Resampling), \hyperpage{50}
+  \item isDataFile() (in module ClearMap.IO.IO), \hyperpage{28}
+  \item isFile() (in module ClearMap.IO.IO), \hyperpage{28}
+  \item isFileExpression() (in module ClearMap.IO.IO), \hyperpage{28}
+  \item isPointFile() (in module ClearMap.IO.IO), \hyperpage{28}
 
   \indexspace
   \bigletter J
-  \item joinParameter() (in module ClearMap.Utils.ParameterTools), \hyperpage{46}
-  \item joinPoints() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{31}
-  \item joinStatistics() (in module ClearMap.ImageProcessing.ImageStatistics), \hyperpage{37}
+  \item joinParameter() (in module ClearMap.Utils.ParameterTools), \hyperpage{86}
+  \item joinPoints() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{57}
+  \item joinStatistics() (in module ClearMap.ImageProcessing.ImageStatistics), \hyperpage{75}
 
   \indexspace
   \bigletter L
-  \item Label (in module ClearMap.Analysis.Label), \hyperpage{41}
-  \item labelAtCollapse() (in module ClearMap.Analysis.Label), \hyperpage{41}
-  \item labelAtLevel() (in module ClearMap.Analysis.Label), \hyperpage{41}
-  \item LabelInfo (class in ClearMap.Analysis.Label), \hyperpage{41}
-  \item labelPoints() (in module ClearMap.Analysis.Label), \hyperpage{41}
-  \item LabelRecord (class in ClearMap.Analysis.Label), \hyperpage{40}
-  \item labelToAcronym() (in module ClearMap.Analysis.Label), \hyperpage{41}
-  \item labelToColor() (in module ClearMap.Analysis.Label), \hyperpage{41}
-  \item labelToName() (in module ClearMap.Analysis.Label), \hyperpage{41}
-  \item level() (LabelInfo method), \hyperpage{41}
-  \item levels (LabelInfo attribute), \hyperpage{41}
+  \item Label (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item labelAtCollapse() (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item labelAtLevel() (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item LabelInfo (class in ClearMap.Analysis.Label), \hyperpage{78}
+  \item labelPoints() (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item LabelRecord (class in ClearMap.Analysis.Label), \hyperpage{78}
+  \item labelToAcronym() (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item labelToColor() (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item labelToName() (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item level() (LabelInfo method), \hyperpage{79}
+  \item levels (LabelInfo attribute), \hyperpage{78}
+  \item localMax() (in module ClearMap.ImageProcessing.MaximaDetection), \hyperpage{70}
 
   \indexspace
   \bigletter M
-  \item makeColorAnnotations() (in module ClearMap.Analysis.Label), \hyperpage{42}
-  \item makeColorPalette() (in module ClearMap.Analysis.Label), \hyperpage{42}
-  \item mean() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
+  \item makeColorAnnotations() (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item makeColorPalette() (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item mean() (in module ClearMap.Analysis.Statistics), \hyperpage{79}
 
   \indexspace
   \bigletter N
-  \item name (LabelRecord attribute), \hyperpage{41}
-  \item name() (LabelInfo method), \hyperpage{41}
-  \item names (LabelInfo attribute), \hyperpage{41}
-  \item noProcessing() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{32}
-  \item NrrdError, \hyperpage{27}
+  \item name (LabelRecord attribute), \hyperpage{78}
+  \item name() (LabelInfo method), \hyperpage{78}
+  \item names (LabelInfo attribute), \hyperpage{78}
+  \item noProcessing() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{58}
+  \item NrrdError, \hyperpage{39}
+
+  \indexspace
+  \bigletter O
+  \item openFile() (in module ClearMap.IO.Imaris), \hyperpage{36}
+  \item orientationToPermuation() (in module ClearMap.Alignment.Resampling), \hyperpage{50}
+  \item orientDataSize() (in module ClearMap.Alignment.Resampling), \hyperpage{51}
+  \item orientDataSizeInverse() (in module ClearMap.Alignment.Resampling), \hyperpage{51}
+  \item orientResolution() (in module ClearMap.Alignment.Resampling), \hyperpage{50}
+  \item orientResolutionInverse() (in module ClearMap.Alignment.Resampling), \hyperpage{51}
+  \item overlayLabel() (in module ClearMap.Visualization.Plot), \hyperpage{81}
+  \item overlayPoints() (in module ClearMap.Visualization.Plot), \hyperpage{82}
 
   \indexspace
   \bigletter P
-  \item parallelProcessStack() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{32}
-  \item parent (LabelRecord attribute), \hyperpage{41}
-  \item parent() (LabelInfo method), \hyperpage{41}
-  \item parents (LabelInfo attribute), \hyperpage{41}
-  \item parse\_nrrdvector() (in module ClearMap.IO.NRRD), \hyperpage{27}
-  \item parse\_optional\_nrrdvector() (in module ClearMap.IO.NRRD), \hyperpage{27}
-  \item pointFileExtensions (in module ClearMap.IO.IO), \hyperpage{17}
-  \item pointFileExtensionToType (in module ClearMap.IO.IO), \hyperpage{17}
-  \item pointFileNameToModule() (in module ClearMap.IO.IO), \hyperpage{19}
-  \item pointFileNameToType() (in module ClearMap.IO.IO), \hyperpage{18}
-  \item pointFileTypes (in module ClearMap.IO.IO), \hyperpage{17}
-  \item pointShiftFromRange() (in module ClearMap.IO.IO), \hyperpage{22}
-  \item pointsToCoordinates() (in module ClearMap.IO.IO), \hyperpage{21}
-  \item pointsToCoordinatesAndProperties() (in module ClearMap.IO.IO), \hyperpage{22}
-  \item pointsToCoordinatesAndPropertiesFileNames() (in module ClearMap.IO.IO), \hyperpage{22}
-  \item pointsToProperties() (in module ClearMap.IO.IO), \hyperpage{21}
-  \item pointsToRange() (in module ClearMap.IO.IO), \hyperpage{22}
-  \item printElapsedTime() (Timer method), \hyperpage{47}
-  \item printSubStackInfo() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{30}
-  \item process (ProcessWriter attribute), \hyperpage{46}
-  \item processStackParameter (in module ClearMap.Parameter), \hyperpage{43}
-  \item ProcessWriter (class in ClearMap.Utils.ProcessWriter), \hyperpage{46}
+  \item parallelProcessStack() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{58}
+  \item parent (LabelRecord attribute), \hyperpage{78}
+  \item parent() (LabelInfo method), \hyperpage{79}
+  \item parents (LabelInfo attribute), \hyperpage{78}
+  \item parse\_nrrdvector() (in module ClearMap.IO.NRRD), \hyperpage{39}
+  \item parse\_optional\_nrrdvector() (in module ClearMap.IO.NRRD), \hyperpage{39}
+  \item parseElastixOutputPoints() (in module ClearMap.Alignment.Elastix), \hyperpage{46}
+  \item plotOverlayLabel() (in module ClearMap.Visualization.Plot), \hyperpage{82}
+  \item plotOverlayPoints() (in module ClearMap.Visualization.Plot), \hyperpage{82}
+  \item plotTiling() (in module ClearMap.Visualization.Plot), \hyperpage{81}
+  \item pointFileExtensions (in module ClearMap.IO.IO), \hyperpage{27}
+  \item pointFileExtensionToType (in module ClearMap.IO.IO), \hyperpage{27}
+  \item pointFileNameToModule() (in module ClearMap.IO.IO), \hyperpage{29}
+  \item pointFileNameToType() (in module ClearMap.IO.IO), \hyperpage{28}
+  \item pointFileTypes (in module ClearMap.IO.IO), \hyperpage{27}
+  \item pointShiftFromRange() (in module ClearMap.IO.IO), \hyperpage{32}
+  \item pointsToCoordinates() (in module ClearMap.IO.IO), \hyperpage{31}
+  \item pointsToCoordinatesAndProperties() (in module ClearMap.IO.IO), \hyperpage{32}
+  \item pointsToCoordinatesAndPropertiesFileNames() (in module ClearMap.IO.IO), \hyperpage{32}
+  \item pointsToProperties() (in module ClearMap.IO.IO), \hyperpage{31}
+  \item pointsToRange() (in module ClearMap.IO.IO), \hyperpage{32}
+  \item printElapsedTime() (Timer method), \hyperpage{87}
+  \item printSettings() (in module ClearMap.Alignment.Elastix), \hyperpage{46}
+  \item printSubStackInfo() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{56}
+  \item process (ProcessWriter attribute), \hyperpage{86}
+  \item processStackParameter (in module ClearMap.Parameter), \hyperpage{83}
+  \item ProcessWriter (class in ClearMap.Utils.ProcessWriter), \hyperpage{86}
 
   \indexspace
   \bigletter R
-  \item readData() (in module ClearMap.IO.FileList), \hyperpage{25}
-  \item readData() (in module ClearMap.IO.IO), \hyperpage{20}
-  \item readData() (in module ClearMap.IO.NRRD), \hyperpage{27}
-  \item readDataFiles() (in module ClearMap.IO.FileList), \hyperpage{25}
-  \item readDataGroup() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
-  \item readFileList() (in module ClearMap.IO.FileList), \hyperpage{24}
-  \item readHeader() (in module ClearMap.IO.NRRD), \hyperpage{27}
-  \item readPoints() (in module ClearMap.IO.CSV), \hyperpage{24}
-  \item readPoints() (in module ClearMap.IO.IO), \hyperpage{22}
-  \item readPoints() (in module ClearMap.IO.NPY), \hyperpage{26}
-  \item readPoints() (in module ClearMap.IO.VTK), \hyperpage{28}
-  \item readPointsGroup() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
-  \item ResamplingParameter (in module ClearMap.Parameter), \hyperpage{44}
-  \item reset() (Timer method), \hyperpage{47}
+  \item readData() (in module ClearMap.IO.FileList), \hyperpage{35}
+  \item readData() (in module ClearMap.IO.Imaris), \hyperpage{37}
+  \item readData() (in module ClearMap.IO.IO), \hyperpage{30}
+  \item readData() (in module ClearMap.IO.NRRD), \hyperpage{40}
+  \item readData() (in module ClearMap.IO.RAW), \hyperpage{41}
+  \item readData() (in module ClearMap.IO.TIF), \hyperpage{43}
+  \item readDataFiles() (in module ClearMap.IO.FileList), \hyperpage{35}
+  \item readDataGroup() (in module ClearMap.Analysis.Statistics), \hyperpage{79}
+  \item readDataSet() (in module ClearMap.IO.Imaris), \hyperpage{36}
+  \item readFileList() (in module ClearMap.IO.FileList), \hyperpage{34}
+  \item readHeader() (in module ClearMap.IO.NRRD), \hyperpage{39}
+  \item readPoints() (in module ClearMap.IO.CSV), \hyperpage{34}
+  \item readPoints() (in module ClearMap.IO.Imaris), \hyperpage{38}
+  \item readPoints() (in module ClearMap.IO.IO), \hyperpage{32}
+  \item readPoints() (in module ClearMap.IO.NPY), \hyperpage{39}
+  \item readPoints() (in module ClearMap.IO.VTK), \hyperpage{44}
+  \item readPointsGroup() (in module ClearMap.Analysis.Statistics), \hyperpage{79}
+  \item reconstruct() (in module ClearMap.ImageProcessing.GreyReconstruction), \hyperpage{67}
+  \item removeBackground() (in module ClearMap.ImageProcessing.BackgroundRemoval), \hyperpage{66}
+  \item resampleData() (in module ClearMap.Alignment.Resampling), \hyperpage{52}
+  \item resampleDataInverse() (in module ClearMap.Alignment.Resampling), \hyperpage{53}
+  \item resampleDataSize() (in module ClearMap.Alignment.Resampling), \hyperpage{51}
+  \item resamplePoints() (in module ClearMap.Alignment.Resampling), \hyperpage{53}
+  \item resamplePointsInverse() (in module ClearMap.Alignment.Resampling), \hyperpage{54}
+  \item resampleXY() (in module ClearMap.Alignment.Resampling), \hyperpage{52}
+  \item ResamplingParameter (in module ClearMap.Parameter), \hyperpage{84}
+  \item rescaleFactorIlastik() (in module ClearMap.ImageProcessing.IlastikClassification), 
+		\hyperpage{72}
+  \item rescaleSizeAndSpacing() (in module ClearMap.Alignment.Elastix), \hyperpage{47}
+  \item rescaleToIlastik() (in module ClearMap.ImageProcessing.IlastikClassification), 
+		\hyperpage{72}
+  \item reset() (Timer method), \hyperpage{87}
 
   \indexspace
   \bigletter S
+  \item sagittalToCoronalData() (in module ClearMap.Alignment.Resampling), \hyperpage{54}
   \item sequentiallyProcessStack() (in module ClearMap.ImageProcessing.StackProcessing), 
-		\hyperpage{32}
-  \item setup() (in module ClearMap.Settings), \hyperpage{45}
-  \item splitFileExpression() (in module ClearMap.IO.FileList), \hyperpage{24}
-  \item start() (Timer method), \hyperpage{47}
-  \item std() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
+		\hyperpage{58}
+  \item setElastixLibraryPath() (in module ClearMap.Alignment.Elastix), \hyperpage{46}
+  \item setPathTransformParameterFiles() (in module ClearMap.Alignment.Elastix), \hyperpage{46}
+  \item setTransformFileSizeAndSpacing() (in module ClearMap.Alignment.Elastix), \hyperpage{47}
+  \item setup() (in module ClearMap.Settings), \hyperpage{85}
+  \item splitFileExpression() (in module ClearMap.IO.FileList), \hyperpage{34}
+  \item start() (Timer method), \hyperpage{87}
+  \item std() (in module ClearMap.Analysis.Statistics), \hyperpage{80}
   \item structureElement() (in module ClearMap.ImageProcessing.Filter.StructureElement), 
-		\hyperpage{35}
+		\hyperpage{64}
   \item structureElement2D() (in module ClearMap.ImageProcessing.Filter.StructureElement), 
-		\hyperpage{35}
+		\hyperpage{64}
   \item structureElement3D() (in module ClearMap.ImageProcessing.Filter.StructureElement), 
-		\hyperpage{35}
+		\hyperpage{64}
   \item structureElementOffsets() (in module ClearMap.ImageProcessing.Filter.StructureElement), 
-		\hyperpage{35}
+		\hyperpage{64}
 
   \indexspace
   \bigletter T
-  \item test() (in module ClearMap.Analysis.Label), \hyperpage{42}
-  \item test() (in module ClearMap.Analysis.Statistics), \hyperpage{43}
-  \item test() (in module ClearMap.ImageProcessing.Filter.FilterKernel), \hyperpage{35}
-  \item test() (in module ClearMap.IO.CSV), \hyperpage{24}
-  \item test() (in module ClearMap.IO.FileList), \hyperpage{26}
-  \item test() (in module ClearMap.IO.NPY), \hyperpage{26}
-  \item test() (in module ClearMap.IO.NRRD), \hyperpage{28}
-  \item testCompletedCumulatives() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
+  \item test() (in module ClearMap.Alignment.Elastix), \hyperpage{49}
+  \item test() (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item test() (in module ClearMap.Analysis.Statistics), \hyperpage{80}
+  \item test() (in module ClearMap.Analysis.Voxelization), \hyperpage{81}
+  \item test() (in module ClearMap.ImageProcessing.Filter.FilterKernel), \hyperpage{64}
+  \item test() (in module ClearMap.ImageProcessing.SpotDetection), \hyperpage{69}
+  \item test() (in module ClearMap.IO.CSV), \hyperpage{34}
+  \item test() (in module ClearMap.IO.FileList), \hyperpage{36}
+  \item test() (in module ClearMap.IO.Imaris), \hyperpage{38}
+  \item test() (in module ClearMap.IO.NPY), \hyperpage{39}
+  \item test() (in module ClearMap.IO.NRRD), \hyperpage{41}
+  \item test() (in module ClearMap.IO.RAW), \hyperpage{42}
+  \item test() (in module ClearMap.IO.TIF), \hyperpage{43}
+  \item test() (in module ClearMap.Visualization.Plot), \hyperpage{83}
+  \item testCompletedCumulatives() (in module ClearMap.Analysis.Statistics), \hyperpage{80}
   \item testCompletedCumulativesInSpheres() (in module ClearMap.Analysis.Statistics), 
-		\hyperpage{42}
-  \item testCompletedInvertedCumulatives() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
+		\hyperpage{80}
+  \item testCompletedInvertedCumulatives() (in module ClearMap.Analysis.Statistics), \hyperpage{80}
   \item testCramerVonMises2Sample() (in module ClearMap.Analysis.Tools.StatisticalTests), 
-		\hyperpage{39}
-  \item thresholdPoints() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
-  \item time (Timer attribute), \hyperpage{47}
-  \item Timer (class in ClearMap.Utils.Timer), \hyperpage{47}
-  \item toDataRange() (in module ClearMap.IO.IO), \hyperpage{19}
-  \item toDataSize() (in module ClearMap.IO.IO), \hyperpage{19}
-  \item toLabelAtCollapse() (LabelInfo method), \hyperpage{41}
-  \item toLabelAtCollapseMap() (LabelInfo method), \hyperpage{41}
-  \item toLabelAtLevel() (LabelInfo method), \hyperpage{41}
-  \item toMultiChannelData() (in module ClearMap.IO.IO), \hyperpage{21}
-  \item tTestPointsInRegions() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
-  \item tTestVoxelization() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
+		\hyperpage{77}
+  \item thresholdPoints() (in module ClearMap.Analysis.Statistics), \hyperpage{80}
+  \item time (Timer attribute), \hyperpage{87}
+  \item Timer (class in ClearMap.Utils.Timer), \hyperpage{86}
+  \item toDataRange() (in module ClearMap.IO.IO), \hyperpage{29}
+  \item toDataSize() (in module ClearMap.IO.IO), \hyperpage{29}
+  \item toLabelAtCollapse() (LabelInfo method), \hyperpage{79}
+  \item toLabelAtCollapseMap() (LabelInfo method), \hyperpage{79}
+  \item toLabelAtLevel() (LabelInfo method), \hyperpage{79}
+  \item toMultiChannelData() (in module ClearMap.IO.IO), \hyperpage{31}
+  \item transformData() (in module ClearMap.Alignment.Elastix), \hyperpage{47}
+  \item TransformixBinary (in module ClearMap.Alignment.Elastix), \hyperpage{45}
+  \item transformPoints() (in module ClearMap.Alignment.Elastix), \hyperpage{48}
+  \item transformPointsToImaris() (in module ClearMap.IO.Imaris), \hyperpage{38}
+  \item tTestPointsInRegions() (in module ClearMap.Analysis.Statistics), \hyperpage{80}
+  \item tTestVoxelization() (in module ClearMap.Analysis.Statistics), \hyperpage{79}
 
   \indexspace
   \bigletter V
-  \item var() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
-  \item VoxelizationParameter (in module ClearMap.Parameter), \hyperpage{44}
+  \item var() (in module ClearMap.Analysis.Statistics), \hyperpage{80}
+  \item VoxelizationParameter (in module ClearMap.Parameter), \hyperpage{84}
+  \item voxelize() (in module ClearMap.Analysis.Voxelization), \hyperpage{80}
+  \item voxelizePixel() (in module ClearMap.Analysis.Voxelization), \hyperpage{80}
 
   \indexspace
   \bigletter W
-  \item weightsFromPrecentiles() (in module ClearMap.Analysis.Statistics), \hyperpage{42}
-  \item write() (ProcessWriter method), \hyperpage{46}
-  \item writeData() (in module ClearMap.IO.FileList), \hyperpage{25}
-  \item writeData() (in module ClearMap.IO.IO), \hyperpage{20}
-  \item writeData() (in module ClearMap.IO.NRRD), \hyperpage{27}
-  \item writeLUT() (in module ClearMap.Analysis.Label), \hyperpage{42}
-  \item writePAL() (in module ClearMap.Analysis.Label), \hyperpage{41}
-  \item writeParameter() (in module ClearMap.Utils.ParameterTools), \hyperpage{46}
-  \item writePoints() (in module ClearMap.IO.CSV), \hyperpage{23}
-  \item writePoints() (in module ClearMap.IO.IO), \hyperpage{23}
-  \item writePoints() (in module ClearMap.IO.NPY), \hyperpage{26}
-  \item writePoints() (in module ClearMap.IO.VTK), \hyperpage{28}
-  \item writeString() (ProcessWriter method), \hyperpage{46}
-  \item writeSubStack() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{31}
-  \item writeTable() (in module ClearMap.IO.IO), \hyperpage{23}
+  \item weightsFromPrecentiles() (in module ClearMap.Analysis.Statistics), \hyperpage{80}
+  \item write() (ProcessWriter method), \hyperpage{86}
+  \item writeData() (in module ClearMap.IO.FileList), \hyperpage{35}
+  \item writeData() (in module ClearMap.IO.Imaris), \hyperpage{38}
+  \item writeData() (in module ClearMap.IO.IO), \hyperpage{30}
+  \item writeData() (in module ClearMap.IO.NRRD), \hyperpage{40}
+  \item writeData() (in module ClearMap.IO.RAW), \hyperpage{42}
+  \item writeData() (in module ClearMap.IO.TIF), \hyperpage{43}
+  \item writeHeader() (in module ClearMap.IO.RAW), \hyperpage{41}
+  \item writeLUT() (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item writePAL() (in module ClearMap.Analysis.Label), \hyperpage{79}
+  \item writeParameter() (in module ClearMap.Utils.ParameterTools), \hyperpage{86}
+  \item writePoints() (in module ClearMap.Alignment.Elastix), \hyperpage{48}
+  \item writePoints() (in module ClearMap.IO.CSV), \hyperpage{33}
+  \item writePoints() (in module ClearMap.IO.Imaris), \hyperpage{38}
+  \item writePoints() (in module ClearMap.IO.IO), \hyperpage{33}
+  \item writePoints() (in module ClearMap.IO.NPY), \hyperpage{39}
+  \item writePoints() (in module ClearMap.IO.VTK), \hyperpage{44}
+  \item writeRawData() (in module ClearMap.IO.RAW), \hyperpage{42}
+  \item writeString() (ProcessWriter method), \hyperpage{86}
+  \item writeSubStack() (in module ClearMap.ImageProcessing.StackProcessing), \hyperpage{56}
+  \item writeTable() (in module ClearMap.IO.IO), \hyperpage{33}
 
 \end{theindex}

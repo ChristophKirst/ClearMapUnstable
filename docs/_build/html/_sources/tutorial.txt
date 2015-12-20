@@ -94,7 +94,7 @@ To set the output for the voxelized heat map file:
 
     >>> VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 
-To set the resolution of the Atlas Files (in um/ pixel):
+To set the resolution of the Atlas Files (in µm/ pixel):
 
     >>> AtlasResolution = (25, 25, 25);
 
@@ -167,10 +167,11 @@ You have to use the ``\d{4}`` notation to save the files as a series of images, 
 
 Difference of Gaussians filter:
 """""""""""""""""""""""""""""""
+This is an optional filter to improve the contrast of objects
 
 filterDoGParameter = {
     "size"    : None,        # (tuple or None)      size for the DoG filter if None, do not correct for any background
-    "sigma"   : None,        # (tuple or None)      std of outer Guassian, if None autmatically determined from size
+    "sigma"   : None,        # (tuple or None)      std of outer Gaussian, if None autmatically determined from size
     "sigma2"  : None,        # (tuple or None)      std of inner Guassian, if None autmatically determined from size
     "save"    : None,        # (str or None)        file name to save result of this operation if None dont save to file 
     "verbose" : True      # (bool or int)        print / plot information about this step
