@@ -1,11 +1,9 @@
 ClearMap Image Analysis Tools
 =============================
 
-Here we introduce the usage of the main image processing steps with examples.
+Here we introduce the main image processing steps for the detection of nuclear-located signal with examples.
 
-We use a small test data set here to illustrate some of the image processing 
-functions in ClearMap. The data is from iDISCO+ cleared mouse brain stained
-for c-fos, 
+The data is a small region isolated from an iDISCO+ cleared mouse brain immunostained against c-fos. This small stack is included in the ClearMap package in the Test/Data/ImageAnalysis/ folder:
 
     >>> import os
     >>> import ClearMap.IO as io
@@ -17,10 +15,10 @@ Visualizing 3D Images
 ---------------------
 
 Large images in 3d are best viewed in specialized software, such as 
-`Imaris <http://www.bitplane.com/>`_ or `ImageJ <http://imagej.net/Welcome>`_.
+`Imaris <http://www.bitplane.com/>`_ for 3D rendering or `ImageJ <http://imagej.net/Welcome>`_ to parse the stacks. For the full size data, it is recommended to open the stacks in ImageJ using the « virtual stack » mode.
 
-In ClearMap we provide some basic visualization tools to inspect 3d data 
-in the module :mod:`ClearMap.Visualization.Plot`
+In ClearMap we provide some basic visualization tools to inspect the 3d data 
+in the module :mod:`ClearMap.Visualization.Plot`.
 
 To load them run
 
@@ -30,9 +28,9 @@ To load them run
 Tiled Plots
 ^^^^^^^^^^^
 
-In our experience results of 3d image analysis is inspected most accuarately
-plotting each horizontal plane in the image in tiles that are coupled for 
-zooming. 
+In our experience results of 3d image analysis is inspected most accurately
+by plotting each horizontal plane in the image in tiles that are coupled for 
+zooming. Intermediate results from all the steps of the SpotDetection can also be written as image stacks and opened with ImageJ.
 
     >>> data = io.readData(filename, z = (0,26));
     >>> plt.plotTiling(data);
@@ -81,7 +79,7 @@ Image Statistics
 ----------------
 
 It is useful to gather some information about the image initially.
-For larger images that might not even fit into memory in ClearMap
+For larger images that don’t fit in memory in ClearMap
 certain statistics can be gathered in parallel via the 
 module :mod:`ClearMap.ImageProcessing.ImageStatistics` module.
 
@@ -103,13 +101,13 @@ To get more information about the progress use the ``verbose`` option
     Total Time Image Statistics: elapsed time: 0:00:00
     2305.4042155294119
 
-
+Image statistics can be very helpful for modules, such as Ilastik, requiring a different bit depth than the original 16 or 12 bits files, as it helps to determine how to resample the images to a lower bit depth.
 
 Background Removal
 ------------------
 
-One of the first steps is often to remove background variations. Therfore the
-:mod:`ClearMap.Imageprocessing.BackgroundRemoval` module can be used.
+One of the first steps is often to remove background variations. The
+:mod:`ClearMap.Imageprocessing.BackgroundRemoval` module can be used. It performs the background subtraction by morphological opening. The parameter is set as (x,y) where x and y are the diameter of an ellipsoid of a size close to the typical object detected in pixels. The intensity of the signal is greatly reduced after the filtering, but the signal-to-noise ration is increased:
 
    >>> import ClearMap.ImageProcessing.BackgroundRemoval as bgr
    >>> dataBGR = bgr.removeBackground(data.asype('float'), size=(5,5), verbose = True);
@@ -153,8 +151,7 @@ Image Filter
 A useful feature is to filter an image. Here the 
 :mod:`ClearMap.Imageprocessing.Filter` package can be used.
 
-To detect cells the difference of Guassians filter is usefull to detect cell 
-centers.
+To detect cells center, the difference of Gaussians filter is a powerful way to increase the contrast between the cells and the background. The size is set as (x,y,z), and usually x, y and z are about the typical size in pixels of the detected object. As after the background subtraction, the intensity of the signal is again reduced after the filtering, but the signal-to-noise ration is dramatically increased:
 
     >>> from ClearMap.ImageProcessing.Filter.DoGFilter import filterDoG
     >>> dataDoG = filterDoG(dataBGR, size=(8,8,4), verbose = True);
@@ -225,9 +222,9 @@ Its easier to see when zoomed in:
     plt.plotOverlayLabel(dataDoG / dataDoG.max(), dataMax.astype('int'), z = (10,16), x = (50,100), y = (50,100))
 
 
-Note that form some cells a maxima label in this sub set miht not be visible as
+Note that for some cells, a maxima label in this subset might not be visible as
 maxima are detected in the entire image in 3D and the actual maxima 
-might lie in layers not shown.
+might lie in layers not shown above or below the current planes.
 
 
 Once the maxima are detected the cell coordinates can be determined:
@@ -237,7 +234,7 @@ Once the maxima are detected the cell coordinates can be determined:
     >>> print cells.shape
     (3670, 3)
 
-We can also overlay cell cordinates in an image:
+We can also overlay the cell coordinates in an image:
 
     >>> plt.plotOverlayPoints(data, cells, z = (10,16))
 

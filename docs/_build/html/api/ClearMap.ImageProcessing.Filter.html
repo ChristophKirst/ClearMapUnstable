@@ -93,9 +93,13 @@
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
 <h3><a href="../index.html">Table Of Contents</a></h3>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Introduction</a></li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction.html">Overview of ClearMap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../imageanalysis.html">ClearMap Image Analysis Tools</a></li>
+</ul>
+<ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="ClearMap.html">ClearMap package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="ClearMap.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="ClearMap.IO.html">ClearMap.IO package</a></li>
@@ -150,9 +154,9 @@
 <span id="clearmap-imageprocessing-filter-package"></span><h1>ClearMap.ImageProcessing.Filter package<a class="headerlink" href="#module-ClearMap.ImageProcessing.Filter" title="Permalink to this headline">¶</a></h1>
 <p>This sub-package provides various volumetric filter kernels and structure elments</p>
 <p>A set of linear filters can be applied to the data using
-<a class="reference internal" href="#module-ClearMap.ImageProcessing.Filter.LinearFilter" title="ClearMap.ImageProcessing.Filter.LinearFilter"><code class="xref py py-mod docutils literal"><span class="pre">LinearFilter</span></code></a>.</p>
+<code class="xref py py-mod docutils literal"><span class="pre">LinearFilter</span></code>.</p>
 <p>Because its utility for cell detection the difference of Gaussians filter
-is implemented directly in <a class="reference internal" href="#module-ClearMap.ImageProcessing.Filter.DoGFilter" title="ClearMap.ImageProcessing.Filter.DoGFilter"><code class="xref py py-mod docutils literal"><span class="pre">DoGFilter</span></code></a>.</p>
+is implemented directly in <code class="xref py py-mod docutils literal"><span class="pre">DoGFilter</span></code>.</p>
 <p>The fitler kernels defined in <a class="reference internal" href="#module-ClearMap.ImageProcessing.Filter.FilterKernel" title="ClearMap.ImageProcessing.Filter.FilterKernel"><code class="xref py py-mod docutils literal"><span class="pre">FilterKernel</span></code></a>
 can be used in combination with the <code class="xref py py-mod docutils literal"><span class="pre">Convolution</span></code>
 module.</p>
@@ -160,161 +164,11 @@ module.</p>
 <code class="xref py py-mod docutils literal"><span class="pre">StructureElements</span></code> can be used in
 combination with various morphological operations, e.g. used in the
 :mod:~ClearMap.ImageProcessing.BackgroundRemoval` module.</p>
-<div class="section" id="module-ClearMap.ImageProcessing.Filter.LinearFilter">
-<span id="clearmap-imageprocessing-filter-linearfilter-module"></span><h2>ClearMap.ImageProcessing.Filter.LinearFilter module<a class="headerlink" href="#module-ClearMap.ImageProcessing.Filter.LinearFilter" title="Permalink to this headline">¶</a></h2>
-<p>Linear filter module</p>
-<dl class="function">
-<dt id="ClearMap.ImageProcessing.Filter.LinearFilter.filterLinear">
-<code class="descname">filterLinear</code><span class="sig-paren">(</span><em>img</em>, <em>filterLinearParameter=None</em>, <em>ftype=None</em>, <em>size=None</em>, <em>sigma=None</em>, <em>sigma2=None</em>, <em>save=None</em>, <em>subStack=None</em>, <em>verbose=False</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/Filter/LinearFilter.html#filterLinear"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.Filter.LinearFilter.filterLinear" title="Permalink to this definition">¶</a></dt>
-<dd><p>Applies a linear filter to the image</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first">
-<li><p class="first"><strong>img</strong> (<em>array</em>) &#8211;
-image data</p>
-</li>
-<li><p class="first"><strong>filterLinearParameter</strong> (<em>dict</em>) &#8211;</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="10%" />
-<col width="22%" />
-<col width="69%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Name</th>
-<th class="head">Type</th>
-<th class="head">Descritption</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td><em>ftype</em></td>
-<td>(str or None)</td>
-<td>the type of the filter, see <a class="reference internal" href="#filtertypes"><span>Filter Type</span></a>
-if None do ot perform any fitlering</td>
-</tr>
-<tr class="row-odd"><td><em>size</em></td>
-<td>(tuple or None)</td>
-<td>size for the filter
-if None, do not perform filtering</td>
-</tr>
-<tr class="row-even"><td><em>sigma</em></td>
-<td>(tuple or None)</td>
-<td>std of outer Guassian, if None autmatically determined from size</td>
-</tr>
-<tr class="row-odd"><td><em>sigma2</em></td>
-<td>(tuple or None)</td>
-<td>std of inner Guassian, if None autmatically determined from size</td>
-</tr>
-<tr class="row-even"><td><em>save</em></td>
-<td>(str or None)</td>
-<td>file name to save result of this operation
-if None dont save to file</td>
-</tr>
-<tr class="row-odd"><td><em>verbose</em></td>
-<td>(bool or int)</td>
-<td>print progress information</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li><p class="first"><strong>subStack</strong> (<em>dict or None</em>) &#8211;
-sub-stack information</p>
-</li>
-<li><p class="first"><strong>verbose</strong> (<em>bool</em>) &#8211;
-print progress info</p>
-</li>
-<li><p class="first"><strong>out</strong> (<em>object</em>) &#8211;
-object to write progress info to</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>array</em> &#8211;
-filtered image</p>
-</td>
-</tr>
-</tbody>
-</table>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Converts image to float32 type if filter is active!</p>
+<div class="section" id="clearmap-imageprocessing-filter-linearfilter-module">
+<h2>ClearMap.ImageProcessing.Filter.LinearFilter module<a class="headerlink" href="#clearmap-imageprocessing-filter-linearfilter-module" title="Permalink to this headline">¶</a></h2>
 </div>
-</dd></dl>
-
-</div>
-<div class="section" id="module-ClearMap.ImageProcessing.Filter.DoGFilter">
-<span id="clearmap-imageprocessing-filter-dogfilter-module"></span><h2>ClearMap.ImageProcessing.Filter.DoGFilter module<a class="headerlink" href="#module-ClearMap.ImageProcessing.Filter.DoGFilter" title="Permalink to this headline">¶</a></h2>
-<p>DoG filter module</p>
-<dl class="function">
-<dt id="ClearMap.ImageProcessing.Filter.DoGFilter.filterDoG">
-<code class="descname">filterDoG</code><span class="sig-paren">(</span><em>img</em>, <em>filterDoGParameter=None</em>, <em>size=None</em>, <em>sigma=None</em>, <em>sigma2=None</em>, <em>save=None</em>, <em>verbose=None</em>, <em>subStack=None</em>, <em>out=&lt;open file '&lt;stdout&gt;'</em>, <em>mode 'w'&gt;</em>, <em>**parameter</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/ImageProcessing/Filter/DoGFilter.html#filterDoG"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.ImageProcessing.Filter.DoGFilter.filterDoG" title="Permalink to this definition">¶</a></dt>
-<dd><p>Difference of Gaussians (DoG) filter step</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first">
-<li><p class="first"><strong>img</strong> (<em>array</em>) &#8211;
-image data</p>
-</li>
-<li><p class="first"><strong>filterDoGParameter</strong> (<em>dict</em>) &#8211;</p>
-<table border="1" class="docutils">
-<colgroup>
-<col width="10%" />
-<col width="22%" />
-<col width="69%" />
-</colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Name</th>
-<th class="head">Type</th>
-<th class="head">Descritption</th>
-</tr>
-</thead>
-<tbody valign="top">
-<tr class="row-even"><td><em>size</em></td>
-<td>(tuple or None)</td>
-<td>size for the DoG filter
-if None, do not correct for any background</td>
-</tr>
-<tr class="row-odd"><td><em>sigma</em></td>
-<td>(tuple or None)</td>
-<td>std of outer Guassian, if None autmatically determined from size</td>
-</tr>
-<tr class="row-even"><td><em>sigma2</em></td>
-<td>(tuple or None)</td>
-<td>std of inner Guassian, if None autmatically determined from size</td>
-</tr>
-<tr class="row-odd"><td><em>save</em></td>
-<td>(str or None)</td>
-<td>file name to save result of this operation
-if None dont save to file</td>
-</tr>
-<tr class="row-even"><td><em>verbose</em></td>
-<td>(bool or int)</td>
-<td>print progress information</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li><p class="first"><strong>subStack</strong> (<em>dict or None</em>) &#8211;
-sub-stack information</p>
-</li>
-<li><p class="first"><strong>out</strong> (<em>object</em>) &#8211;
-object to write progress info to</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>array</em> &#8211;
-DoG filtered image</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
+<div class="section" id="clearmap-imageprocessing-filter-dogfilter-module">
+<h2>ClearMap.ImageProcessing.Filter.DoGFilter module<a class="headerlink" href="#clearmap-imageprocessing-filter-dogfilter-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-ClearMap.ImageProcessing.Filter.Convolution">
 <span id="clearmap-imageprocessing-filter-convolution-module"></span><h2>ClearMap.ImageProcessing.Filter.Convolution module<a class="headerlink" href="#module-ClearMap.ImageProcessing.Filter.Convolution" title="Permalink to this headline">¶</a></h2>
@@ -641,7 +495,7 @@ structure element</p>
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015 Christoph Kirst.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.2.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.
     </div>
   </body>
 </html>

@@ -3,6 +3,7 @@
 Example script to set up the parameters for the image processing pipeline
 """
 
+######################### Import modules
 
 import os, numpy, math
 
@@ -35,67 +36,64 @@ OriginalResolution = (4.0625, 4.0625, 3);
 #Orientation
 FinalOrientation = (1,2,3);
 
-VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
-
 
 #Resolution of the Atlas (in um/ pixel)
 AtlasResolution = (25, 25, 25);
-
-#
-ResolutionAffineCFosAutoFluo =  (16, 16, 16);
 
 #Path to registration parameters and atlases
 PathReg        = '/home/mtllab/Documents/warping';
 AtlasFile      = os.path.join(PathReg, 'half_template_25_right.tif');
 AnnotationFile = os.path.join(PathReg, 'annotation_25_right.tif');
 
-#ImageProcessingMethod = "SpotDetection";
-
 ######################### Cell Detection Parameters using custom filters
 
+
+ImageProcessingMethod = "SpotDetection";
+
+
 correctIlluminationParameter = {
-    "flatfield" : None,  # (str, True or None)  flat field intensities, if None d onot correct image for illumination, if True the 
+    "flatfield"  : None,  # (str, True or None)  flat field intensities, if None d onot correct image for illumination, if True the 
     "background" : None, # (str, None or array) background image as file name or array, if None background is assumed to be zero
-    "scaling" :  "Mean", # (str or None)        scale the corrected result by this factor, if 'max'/'mean' scale to keep max/mean invariant
-    "save" : None,       # (str or None)        save the corrected image to file
-    "verbose" : True    # (bool or int)        print / plot information about this step 
+    "scaling"    : "Mean", # (str or None)        scale the corrected result by this factor, if 'max'/'mean' scale to keep max/mean invariant
+    "save"       : None,       # (str or None)        save the corrected image to file
+    "verbose"    : True    # (bool or int)        print / plot information about this step 
 }
 
 removeBackgroundParameter = {
-    "size" : (7,7),  # size for the structure element of the morphological opening
-    "save" : None,     # file name to save result of this operation
+    "size"    : (7,7),  # size for the structure element of the morphological opening
+    "save"    : None,     # file name to save result of this operation
     "verbose" : True  # print / plot information about this step       
 }
 
 
 filterDoGParameter = {
-    "size" :  None,        # (tuple or None)      size for the DoG filter if None, do not correct for any background
-    "sigma" : None,        # (tuple or None)      std of outer Guassian, if None autmatically determined from size
-    "sigma2": None,        # (tuple or None)      std of inner Guassian, if None autmatically determined from size
-    "save"  : None,        # (str or None)        file name to save result of this operation if None dont save to file 
+    "size"    : None,        # (tuple or None)      size for the DoG filter if None, do not correct for any background
+    "sigma"   : None,        # (tuple or None)      std of outer Guassian, if None autmatically determined from size
+    "sigma2"  : None,        # (tuple or None)      std of inner Guassian, if None autmatically determined from size
+    "save"    : None,        # (str or None)        file name to save result of this operation if None dont save to file 
     "verbose" : True      # (bool or int)        print / plot information about this step
 }
 
 findExtendedMaximaParameter = {
-    "hMax" : None,            # (float or None)     h parameter for the initial h-Max transform, if None, do not perform a h-max transform
-    "size" : 5,             # (tuple)             size for the structure element for the local maxima filter
+    "hMax"      : None,            # (float or None)     h parameter for the initial h-Max transform, if None, do not perform a h-max transform
+    "size"      : 5,             # (tuple)             size for the structure element for the local maxima filter
     "threshold" : 0,        # (float or None)     include only maxima larger than a threshold, if None keep all localmaxima
-    "save"  : None,         # (str or None)       file name to save result of this operation if None dont save to file 
-    "verbose" : True       # (bool or int)       print / plot information about this step
+    "save"      : None,         # (str or None)       file name to save result of this operation if None dont save to file 
+    "verbose"   : True       # (bool or int)       print / plot information about this step
 }
 
 findIntensityParameter = {
     "method" : 'Max',       # (str, func, None)   method to use to determine intensity (e.g. "Max" or "Mean") if None take intensities at the given pixels
-    "size" :  (3,3,3)       # (tuple)             size of the box on which to perform the *method*
+    "size"   : (3,3,3)       # (tuple)             size of the box on which to perform the *method*
 }
 
 detectCellShapeParameter = {
     "threshold" : 700,     # (float or None)      threshold to determine mask, pixel below this are background if None no mask is generated
-    "save"  : None,        # (str or None)        file name to save result of this operation if None dont save to file 
-    "verbose" : True      # (bool or int)        print / plot information about this step if None take intensities at the given pixels
+    "save"      : None,        # (str or None)        file name to save result of this operation if None dont save to file 
+    "verbose"   : True      # (bool or int)        print / plot information about this step if None take intensities at the given pixels
 }
 
-## Paramters for cell detection using spot detection algorithm 
+## Parameters for cell detection using spot detection algorithm 
 detectSpotsParameter = {
     "correctIlluminationParameter" : correctIlluminationParameter,
     "removeBackgroundParameter"    : removeBackgroundParameter,
@@ -112,6 +110,8 @@ detectSpotsParameter = {
 #################### Heat map generation
 
 ##Voxelization
+
+VoxelizationFile = os.path.join(BaseDirectory, 'points_voxelized.tif');
 
 ## Parameter to calculate density voxelization
 voxelizeParameter = {
@@ -165,6 +165,10 @@ StackProcessingParameter = {
 
 ### Resample Fluorescent and CFos images
 # Autofluorescent cFos resampling for aquisition correction
+
+
+ResolutionAffineCFosAutoFluo =  (16, 16, 16);
+
 CorrectionResamplingParameterCfos = ResamplingParameter.copy();
 
 CorrectionResamplingParameterCfos["source"] = cFosFile;

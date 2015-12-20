@@ -1,0 +1,457 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Tutorial &mdash; ClearMap 0.9.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/clearmap.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.9.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/copybutton.js"></script>
+    <link rel="top" title="ClearMap 0.9.2 documentation" href="index.html" />
+    <link rel="next" title="ClearMap Image Analysis Tools" href="imageanalysis.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+ 
+    <script type="text/javascript">
+      // intelligent scrolling of the sidebar content
+      $(window).scroll(function() {
+        var sb = $('.sphinxsidebarwrapper');
+        var win = $(window);
+        var sbh = sb.height();
+        var offset = $('.sphinxsidebar').position()['top'];
+        var wintop = win.scrollTop();
+        var winbot = wintop + win.innerHeight();
+        var curtop = sb.position()['top'];
+        var curbot = curtop + sbh;
+        // does sidebar fit in window?
+        if (sbh < win.innerHeight()) {
+          // yes: easy case -- always keep at the top
+          sb.css('top', $u.min([$u.max([0, wintop - offset - 10]),
+                                $(document).height() - sbh - 200]));
+        } else {
+          // no: only scroll if top/bottom edge of sidebar is at
+          // top/bottom edge of window
+          if (curtop > wintop && curbot > winbot) {
+            sb.css('top', $u.max([wintop - offset - 10, 0]));
+          } else if (curtop < wintop && curbot < winbot) {
+            sb.css('top', $u.min([winbot - sbh - offset - 20,
+                                  $(document).height() - sbh - 200]));
+          }
+        }
+      });
+    </script>
+
+
+  </head>
+  <body role="document">
+<div style="background-color: #e2e8e9; text-align: left; padding: 10px 10px 15px 15px">
+<p style="font-size: 30px; color: color: #11557C"> <a href="index.html" style="color: #11557C; font-weight: bold">ClearMap iDISCO+ Toolbox Documentation</a></p>
+<a href="index.html"><img src="_static/brain_bw_small.jpg" height=50px width=150% border="0" alt="ClearMap"/></a>
+</div>
+
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="imageanalysis.html" title="ClearMap Image Analysis Tools"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+       <li><a href="index.html">home</a>|&nbsp;</li>
+       <li><a href="search.html">search</a>|&nbsp;</li>
+       <li><a href="api/ClearMap.html">documentation </a> &raquo;</li>
+ 
+      </ul>
+    </div>
+
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h3><a href="index.html">Table Of Contents</a></h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Overview of ClearMap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-parameter-file">The Parameter File</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#import-modules">Import Modules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-parameters">Data parameters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cell-detection">Cell detection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#heat-map-generation">Heat map generation</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#the-run-file">The Run File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analysis-tools">Analysis Tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="imageanalysis.html">ClearMap Image Analysis Tools</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/ClearMap.html">ClearMap package</a></li>
+</ul>
+ 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="imageanalysis.html"
+                        title="next chapter">ClearMap Image Analysis Tools</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tutorial.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+<p>The goal of this tutorial is to explain the scripts we used to analyse samples. As an example, we will use a dataset from a Light Sheet imaged adult mouse brain stained for c-fos. The tutorial files also contain an autofluorescence file to enable the registration of the scan to the reference atlas. The tutorial files are found in the ClearMap/Scripts folder. They consist of :</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="#the-parameter-file">The Parameter File</a> This sets the parameters individually for each sample</li>
+<li><a class="reference internal" href="#the-run-file">The Run File</a> This will run all the commands to process each sample individually</li>
+<li><a class="reference internal" href="#analysis-tools">Analysis Tools</a> This scripts will run the analysis tools and group statistics for all samples in the batch</li>
+</ul>
+</div></blockquote>
+<p>A project will usually contain 1 parameter file for each sample, 1 run file for the whole experiment and 1 analysis file for the whole experiment.</p>
+<div class="section" id="the-parameter-file">
+<h2>The Parameter File<a class="headerlink" href="#the-parameter-file" title="Permalink to this headline">¶</a></h2>
+<p>The parameter is a Python script that will contain all the necessary informations to process each sample. An example script, <em>parameter_file_template.py</em> is provided in the ClearMap/Scripts folder. It contains the following sections:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Section</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Import modules</td>
+<td>load from ClearMap the functions used here</td>
+</tr>
+<tr class="row-odd"><td>Data parameters</td>
+<td>points to the files used, their resolution and orientation</td>
+</tr>
+<tr class="row-even"><td>Cell detection</td>
+<td>parameters for the cell detection, and module used</td>
+</tr>
+<tr class="row-odd"><td>Heat map generation</td>
+<td>to generate a voxelized map of the detected cells</td>
+</tr>
+<tr class="row-even"><td>Config Parameters</td>
+<td>the parameters for memory and processors management</td>
+</tr>
+<tr class="row-odd"><td>Run Parameters</td>
+<td>you would usually not change these. They specify how the data will be processed</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="import-modules">
+<h3>Import Modules<a class="headerlink" href="#import-modules" title="Permalink to this headline">¶</a></h3>
+<p>You would usually not change these. They are all the functions that will be used later either in the parameter file or in the  execution file.</p>
+</div>
+<div class="section" id="data-parameters">
+<h3>Data parameters<a class="headerlink" href="#data-parameters" title="Permalink to this headline">¶</a></h3>
+<p>This is where you point to the files used, their resolution and orientation. It also defines which atlas and annotation files to use.</p>
+<p>To set the directory where all files will be read and written for this sample:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">BaseDirectory</span> <span class="o">=</span> <span class="s">&#39;/home/mtllab/exploration/sample1&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>To set the image files used for the processing:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cFosFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">,</span> <span class="s">&#39;cfos/0_8x-cfos-Table Z\d{4}.ome.tif&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">AutofluoFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">,</span> <span class="s">&#39;autofluo/0_8xs3-autofluo-Table Z\d{4}.ome.tif&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Note the use of the command <code class="docutils literal"><span class="pre">os.path.join</span></code> to link the set <code class="docutils literal"><span class="pre">BaseDirectory</span></code> with the folder where the files are. On the LaVision ultramicroscope system, the images files are generated not as stacks, but as numbered files in the ome.tif format. Each Z stack will end by <code class="docutils literal"><span class="pre">-Table</span> <span class="pre">Z0000.ome.tif</span></code>. The 0000 is the plane number. To indicate <strong>ClearMap</strong> to read the next planes, replace the 4 digits with the command <code class="docutils literal"><span class="pre">\d{4}</span></code>. On our system, files for each channel (here, c-fos and background fluorescence) are saved in a different stack, in a different folder.</p>
+<p>To restrict the range for the object detection:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cFosFileRange</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;x&#39;</span> <span class="p">:</span> <span class="nb">all</span><span class="p">,</span> <span class="s">&#39;y&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">180</span><span class="p">,</span> <span class="mi">2600</span><span class="p">),</span> <span class="s">&#39;z&#39;</span> <span class="p">:</span> <span class="nb">all</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>This range will only affect the region used for the cell detection. It will not be taken into account for the 3D image registration to the reference Atlas, nor for the voxelization or other analysis. This is useful to limit the amount of memory used. In our example, we use the full x range, the full z range, but restrict the y range. The camera on our system, an Andor sNEO CMOS, has a sensor size of 2160 x 2660. However, the lens used on for the acquisition, an Olympus 2X 0.5NA MVPLAPO, has a strong corner deformation, so we restrict the y range because no cells can be reliably detected outside of this range.</p>
+<p>As a reminder, in the image files, the (0, 0, 0) coordinate correspond to the upper left corner of the first plane. To the opposite, the (2160, 2660, 2400) coordinate will be the bottom right corner of the last plane (here 2400, but can vary).</p>
+<p>When optimizing the parameters for the object detection, you should dramatically restrict the range to speed up the detection. We recommend using 500 planes, 500 pixels on each side:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">cFosFileRange</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;x&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="s">&#39;y&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="s">&#39;z&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)};</span>
+</pre></div>
+</div>
+<p>But of course adapting the range to where the relevant objects are on your sample.</p>
+<p>Next, to set the resolution of the original data (in µm / pixel):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">OriginalResolution</span> <span class="o">=</span> <span class="p">(</span><span class="mf">4.0625</span><span class="p">,</span> <span class="mf">4.0625</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In this example, this is set for a zoom factor of 0.8X on the LaVision system with the 2X lens. This information can be found in the metadata of the tif file usually. If you don’t know the pixel size, we recommend opening the stack with the plugin BioFormat on ImageJ, and go to «&nbsp;image&nbsp;» -&gt; «&nbsp;show info&nbsp;» to read the metadata. On the LaVision file, this information is at the end of the list.</p>
+<p>The orientation of the sample has to be set to match the orientation of the Atlas reference files. It is not mandatory to acquire the sample in the same orientation as the atlas. For instance, you can acquire the left side of the brain, and map it onto the right side of the atlas:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">FinalOrientation</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The convention is as follow (examples given, any configuration is possible):</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Value of the tuple</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>(1, 2, 3)</td>
+<td>The scan has the same orientation as the atlas reference</td>
+</tr>
+<tr class="row-odd"><td>(-1, 2, 3)</td>
+<td>The x axis is mirrored compared to the atlas</td>
+</tr>
+<tr class="row-even"><td>(1, -2, 3)</td>
+<td>The y axis is mirrored compared to the atlas</td>
+</tr>
+<tr class="row-odd"><td>(2, 1, 3)</td>
+<td>Performs a rotation by exchanging the x and y axis</td>
+</tr>
+<tr class="row-even"><td>(3, 2, 1)</td>
+<td>Performs a rotation by exchanging the z and x axis</td>
+</tr>
+</tbody>
+</table>
+<p>For our samples, we use the following orientation to match our atlas files:</p>
+<blockquote>
+<div><ul class="simple">
+<li>The right side of the brain is facing the objective, lateral side up.</li>
+<li>The rostral side of the brain is up</li>
+<li>The dorsal side is facing left</li>
+<li>The ventral side is facing right</li>
+</ul>
+</div></blockquote>
+<p>This means that in our scans, if we want to image the right hemisphere, we use (1, 2, 3) and if we want to image the left hemisphere, we use (-1, 2, 3).</p>
+<p>To set the output for the voxelized heat map file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">VoxelizationFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">,</span> <span class="s">&#39;points_voxelized.tif&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>To set the resolution of the Atlas Files (in um/ pixel):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">AtlasResolution</span> <span class="o">=</span> <span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>To choose which atlas files you would like to use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">PathReg</span>        <span class="o">=</span> <span class="s">&#39;/home/mtllab/Documents/warping&#39;</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">AtlasFile</span>      <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PathReg</span><span class="p">,</span> <span class="s">&#39;half_template_25_right.tif&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">AnnotationFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PathReg</span><span class="p">,</span> <span class="s">&#39;annotation_25_right.tif&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>It is important to make sure that the Atlas used is in the correct orientation (see above), but also don’t contain too much information outside of the field of view. While the registration program can deal with a bit of extra «&nbsp;bleed&nbsp;» outside of the sample, this should be kept to a minimum. We usually prepare different crops of the atlas file to match the usual field of views we acquire.</p>
+</div>
+<div class="section" id="cell-detection">
+<h3>Cell detection<a class="headerlink" href="#cell-detection" title="Permalink to this headline">¶</a></h3>
+<p>At this point, two detection methods exist: the <code class="docutils literal"><span class="pre">SpotDetection</span></code> and <code class="docutils literal"><span class="pre">Ilastik</span></code>:</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal"><span class="pre">SpotDetection</span></code> is designed for globular objects, such as neuron cell bodies or nuclei. This is the fastest method, and offers a greater degree of fine controls over the sensibility of the detection. However, it is not well suited for complex objects.</li>
+<li><code class="docutils literal"><span class="pre">Ilastik</span></code> is a framework that relies on the user generating a classifier through the graphical interface of the Ilastik program, by painting over a few objects and over the background. The program will then learn to classify the pixels between objects or backgrouns based on the user indications. This is a very easy way to tune very complex filters to detect complex objects or textures. However, the classification is a black box, and very dependent of the user’s classification.</li>
+</ul>
+</div></blockquote>
+<p>In this tutorial, we will use the SpotDetection method. To choose which method to use for the cell detection:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ImageProcessingMethod</span> <span class="o">=</span> <span class="s">&quot;SpotDetection&quot;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>The parameters for the Spot Detection methods are then sorted in «&nbsp;dictionaries&nbsp;» by theme :</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="19%" />
+<col width="81%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Dictionary name</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>correctIlluminationParameter</td>
+<td>If you have an intensity profile for your microscope, you can correct variations in illuminations here</td>
+</tr>
+<tr class="row-odd"><td>removeBackgroundParameter</td>
+<td>To set the background subtraction via morphological opening</td>
+</tr>
+<tr class="row-even"><td>filterDoGParameter</td>
+<td>To set the parameters for the Difference of Gaussian filter</td>
+</tr>
+<tr class="row-odd"><td>findExtendedMaximaParameter</td>
+<td>If the object contains multiple peaks of intensity, this will collapse them into one peak</td>
+</tr>
+<tr class="row-even"><td>findIntensityParameter</td>
+<td>Often, the center of the mass of an object is not the voxel of highest intensity. This is a correction for this</td>
+</tr>
+<tr class="row-odd"><td>detectCellShapeParameter</td>
+<td>This set the parameters for the cell shape «&nbsp;painting&nbsp;» via the watershed</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="correcting-the-illumination">
+<h4>Correcting the illumination:<a class="headerlink" href="#correcting-the-illumination" title="Permalink to this headline">¶</a></h4>
+<p>Because of the Gaussian shape of the light sheet and of the objecting lens vignetting, the sample illumination is not uniform. While correcting the illumination can improve the uniformity of the cell detection, it is usually not really necessary if all samples where imaged the same way, as the same anatomical features will be positioned in the same region of the lens across samples. Nevertheless, to correct for variation in the illumination use:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">correctIlluminationParameter</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s">&quot;flatfield&quot;</span>  <span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s">&quot;background&quot;</span> <span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s">&quot;scaling&quot;</span>    <span class="p">:</span> <span class="s">&quot;Mean&quot;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s">&quot;save&quot;</span>       <span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s">&quot;verbose&quot;</span>    <span class="p">:</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>For this tutorial, we will not use the correction, so the <code class="docutils literal"><span class="pre">flatfield</span></code> parameter is set to <code class="docutils literal"><span class="pre">None</span></code>. Please note that you need to generate an intensity profile for your system if you wish to use this function.</p>
+</div>
+<div class="section" id="background-subtraction">
+<h4>Background Subtraction:<a class="headerlink" href="#background-subtraction" title="Permalink to this headline">¶</a></h4>
+<p>This is the most important pre-treatment step, usually always turned on. The background subtraction via morphological opening is not very sensitive to the size parameter used, as long as it is in the range of the size of the objects detected. The parameters for the background subtraction are as follow:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">removeBackgroundParameter</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;size&quot;</span>    <span class="p">:</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span><span class="mi">7</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;save&quot;</span>    <span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;verbose&quot;</span> <span class="p">:</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>The parameter <code class="docutils literal"><span class="pre">size</span></code> is a tuple with (x,y) in pixels and correspond to an ellipsoid of this size. Of importance, you can check the result of the background subtraction by setting the <code class="docutils literal"><span class="pre">save</span></code> parameter to a filename. This will output a series of tif images you can open with ImageJ to check the results. For instance you could set <code class="docutils literal"><span class="pre">save</span></code> like this:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;save&quot;</span>    <span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">,</span> <span class="s">&#39;background/background\d{4}.ome.tif&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>You have to use the <code class="docutils literal"><span class="pre">\d{4}</span></code> notation to save the files as a series of images, otherwise only the first plane is saved!</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Only use the <code class="docutils literal"><span class="pre">save</span></code> function when you analyse a small subset of your data, otherwise the full stack will be written to the disk. Don’t forget to turn off this parameter when you’re done optimizing the filters.</p>
+</div>
+</div>
+<div class="section" id="difference-of-gaussians-filter">
+<h4>Difference of Gaussians filter:<a class="headerlink" href="#difference-of-gaussians-filter" title="Permalink to this headline">¶</a></h4>
+<dl class="docutils">
+<dt>filterDoGParameter = {</dt>
+<dd>&#8220;size&#8221;    : None,        # (tuple or None)      size for the DoG filter if None, do not correct for any background
+&#8220;sigma&#8221;   : None,        # (tuple or None)      std of outer Guassian, if None autmatically determined from size
+&#8220;sigma2&#8221;  : None,        # (tuple or None)      std of inner Guassian, if None autmatically determined from size
+&#8220;save&#8221;    : None,        # (str or None)        file name to save result of this operation if None dont save to file
+&#8220;verbose&#8221; : True      # (bool or int)        print / plot information about this step</dd>
+</dl>
+<p>}</p>
+<dl class="docutils">
+<dt>findExtendedMaximaParameter = {</dt>
+<dd>&#8220;hMax&#8221;      : None,            # (float or None)     h parameter for the initial h-Max transform, if None, do not perform a h-max transform
+&#8220;size&#8221;      : 5,             # (tuple)             size for the structure element for the local maxima filter
+&#8220;threshold&#8221; : 0,        # (float or None)     include only maxima larger than a threshold, if None keep all localmaxima
+&#8220;save&#8221;      : None,         # (str or None)       file name to save result of this operation if None dont save to file
+&#8220;verbose&#8221;   : True       # (bool or int)       print / plot information about this step</dd>
+</dl>
+<p>}</p>
+<dl class="docutils">
+<dt>findIntensityParameter = {</dt>
+<dd>&#8220;method&#8221; : &#8216;Max&#8217;,       # (str, func, None)   method to use to determine intensity (e.g. &#8220;Max&#8221; or &#8220;Mean&#8221;) if None take intensities at the given pixels
+&#8220;size&#8221;   : (3,3,3)       # (tuple)             size of the box on which to perform the <em>method</em></dd>
+</dl>
+<p>}</p>
+<dl class="docutils">
+<dt>detectCellShapeParameter = {</dt>
+<dd>&#8220;threshold&#8221; : 700,     # (float or None)      threshold to determine mask, pixel below this are background if None no mask is generated
+&#8220;save&#8221;      : None,        # (str or None)        file name to save result of this operation if None dont save to file
+&#8220;verbose&#8221;   : True      # (bool or int)        print / plot information about this step if None take intensities at the given pixels</dd>
+</dl>
+<p>}</p>
+<p>## Parameters for cell detection using spot detection algorithm
+detectSpotsParameter = {</p>
+<blockquote>
+<div>&#8220;correctIlluminationParameter&#8221; : correctIlluminationParameter,
+&#8220;removeBackgroundParameter&#8221;    : removeBackgroundParameter,
+&#8220;filterDoGParameter&#8221;           : filterDoGParameter,
+&#8220;findExtendedMaximaParameter&#8221;  : findExtendedMaximaParameter,
+&#8220;findIntensityParameter&#8221;       : findIntensityParameter,
+&#8220;detectCellShapeParameter&#8221;     : detectCellShapeParameter</div></blockquote>
+<p>}</p>
+</div>
+</div>
+<div class="section" id="heat-map-generation">
+<h3>Heat map generation<a class="headerlink" href="#heat-map-generation" title="Permalink to this headline">¶</a></h3>
+<p>To set the output for the voxelized heat map file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">VoxelizationFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">,</span> <span class="s">&#39;points_voxelized.tif&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="the-run-file">
+<h2>The Run File<a class="headerlink" href="#the-run-file" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="analysis-tools">
+<h2>Analysis Tools<a class="headerlink" href="#analysis-tools" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="imageanalysis.html" title="ClearMap Image Analysis Tools"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >previous</a> |</li>
+       <li><a href="index.html">home</a>|&nbsp;</li>
+       <li><a href="search.html">search</a>|&nbsp;</li>
+       <li><a href="api/ClearMap.html">documentation </a> &raquo;</li>
+ 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2015 Christoph Kirst.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.
+    </div>
+  </body>
+</html>
