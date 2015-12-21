@@ -11,6 +11,39 @@ However, the tools included with *ClearMap* should also be more broadly useful f
 
 *ClearMap* is written in Python 2.7, and is designed to take advantage of parallel processing capabilities of modern workstations. We hope the open structure of the code will enable in the future many new modules to be added to ClearMap to broaden the range of applications to different types of biological objects or structures.
 
+Author and License
+------------------
+
+Authors:
+^^^^^^^^
+
+ClearMap lead programming and design:
+"""""""""""""""""""""""""""""""""""""
+Christoph Kirst, 
+*The Rockefeller University*
+
+Scripts and specific applications:
+""""""""""""""""""""""""""""""""""
+Nicolas Renier and Christoph Kirst
+*The Rockefeller University*
+
+Documentation:
+""""""""""""""
+Christoph Kirst and Nicolas Renier
+*The Rockefeller University*
+
+Additional programming and consulting:
+""""""""""""""""""""""""""""""""""""""
+Kannan Umadevi Venkataraju
+*Cold Spring Harbor Laboratories*
+
+
+License
+^^^^^^^
+GNU GENERAL PUBLIC LICENSE Version 3
+
+See :download:`LICENSE <../LICENSE.txt>` or `gnu.org <http://www.gnu.org/licenses/gpl-3.0.en.html>`_ for details.
+
 
 
 
@@ -38,36 +71,6 @@ Indices
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-
-Author and License
-------------------
-
-ClearMap lead programming and design:
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Christoph Kirst, 
-*The Rockefeller University*
-
-Scripts and specific applications:
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Nicolas Renier and Christoph Kirst
-*The Rockefeller University*
-
-Documentation:
-^^^^^^^^^^^^^^
-Christoph Kirst and Nicolas Renier
-*The Rockefeller University*
-
-Additional programming and consulting:
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Kannan Umadevi Venkataraju
-*Cold Spring Harbor Laboratories*
-
-
-License
-^^^^^^^
-GNU GENERAL PUBLIC LICENSE Version 3
-
-See :download:`LICENSE <../LICENSE.txt>` or `gnu.org <http://www.gnu.org/licenses/gpl-3.0.en.html>`_ for details.
 
 
 

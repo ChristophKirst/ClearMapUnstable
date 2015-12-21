@@ -6,7 +6,7 @@ Module to read data and write points to `Imaris <http://www.bitplane.com/imaris/
 files.
 
 Note: 
-    To write points without errors make sure the original file has at least one spot object!
+    To write points without errors make sure the original file has at least one spot object! You can create a fake point in Imaris, then save the file. The point will be overwritten by ClearMap.
 
 Example:
     >>> import os, numpy
@@ -16,14 +16,13 @@ Example:
     >>> ims.dataSize(filename);
     (256, 320, 256)
 
-Todo: 
-    * Fix writing new spots to imaris file
-    * Get settings to directly render points as 'pixel' and not as spheres
-
-Author
-""""""
-    Chirstoph Kirst, The Rockefeller University, New York City, 2015
 """
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
+
+#Todo: 
+#    * Fix writing new spots to imaris file
+#    * Get settings to directly render points as 'pixel' and not as spheres
 
 import h5py
 import numpy

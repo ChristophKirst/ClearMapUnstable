@@ -73,7 +73,7 @@ Image Processing
 ----------------
 
 ClearMap provides a number of image processing tools with a focus on the
-processing of large 3D volumetric images in parallel. For the detection of objects in 3D, ClearMap has a modular architecture. For the user, most of this is hidden and called by the ``SpotDetection`` function (see the example script).
+processing of large 3D volumetric images in parallel. For the detection of objects in 3D, ClearMap has a modular architecture. For the user, this is hidden and handled automatically by the ``detectCells`` function (see the example script).
 
 The main processing modules include:
 

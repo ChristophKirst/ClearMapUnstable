@@ -5,10 +5,9 @@ ParameterTools
 Provides simple formatting tools to handle / print parameter dictionaries
 organized as key:value pairs.
 
-Author
-""""""
-   Christoph Kirst, The Rockefeller University, New York City, 2015
 """
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
 
 
 def getParameter(parameter, key, default = None):

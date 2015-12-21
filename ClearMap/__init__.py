@@ -1,22 +1,14 @@
 # -*- coding: utf-8 -*-
 """
-*ClearMap* Registration, Image Analysis and Statistics Library.
-
 *ClearMap* is a python toolbox for the analysis and registration of volumetric 
-data from cleared tissues.
+data from cleared tissues obtained with Light Sheet microscopy.
 
-*ClearMap* is targeted towards large lightsheet volumetric imaging data
-of iDISCO+ cleared mouse brains samples, their registration to the Alan brain atlas,
-volumetric image processing and statistical analysis.
+The ClearMap code package is structured into four main modules:
 
-Author
-""""""
-     Christoph Kirst, 
-     The Rockefeller University, New York City, 2015
-   
-License
-""""""
-     GNU GENERAL PUBLIC LICENSE Version 3
+   * **IO** for reading and writing images and data
+   * **Alignment** for resampling, reorientation and registration of images onto references
+   * **Image Processing** for correcting and quantifying the image data
+   * **Analysis** for the statistical analysis of the data
 
 """
 

@@ -149,19 +149,17 @@
             
   <div class="section" id="clearmap-package">
 <h1>ClearMap package<a class="headerlink" href="#clearmap-package" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-ClearMap"></span><p><em>ClearMap</em> Registration, Image Analysis and Statistics Library.</p>
-<p><em>ClearMap</em> is a python toolbox for the analysis and registration of volumetric
-data from cleared tissues.</p>
-<p><em>ClearMap</em> is targeted towards large lightsheet volumetric imaging data
-of iDISCO+ cleared mouse brains samples, their registration to the Alan brain atlas,
-volumetric image processing and statistical analysis.</p>
-<p>Author</p>
+<span class="target" id="module-ClearMap"></span><p><em>ClearMap</em> is a python toolbox for the analysis and registration of volumetric
+data from cleared tissues obtained with Light Sheet microscopy.</p>
+<p>The ClearMap code package is structured into four main modules:</p>
 <blockquote>
-<div>Christoph Kirst,
-The Rockefeller University, New York City, 2015</div></blockquote>
-<p>License</p>
-<blockquote>
-<div>GNU GENERAL PUBLIC LICENSE Version 3</div></blockquote>
+<div><ul class="simple">
+<li><strong>IO</strong> for reading and writing images and data</li>
+<li><strong>Alignment</strong> for resampling, reorientation and registration of images onto references</li>
+<li><strong>Image Processing</strong> for correcting and quantifying the image data</li>
+<li><strong>Analysis</strong> for the statistical analysis of the data</li>
+</ul>
+</div></blockquote>
 <div class="section" id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
@@ -176,14 +174,14 @@ The Rockefeller University, New York City, 2015</div></blockquote>
 <li class="toctree-l2"><a class="reference internal" href="ClearMap.IO.html#module-ClearMap.IO.Imaris">ClearMap.IO.Imaris module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ClearMap.IO.html#module-ClearMap.IO.NPY">ClearMap.IO.NPY module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ClearMap.IO.html#module-ClearMap.IO.NRRD">ClearMap.IO.NRRD module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ClearMap.IO.html#module-ClearMap.IO.RAW">ClearMap.IO.RAW module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ClearMap.IO.html#clearmap-io-raw-module">ClearMap.IO.RAW module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ClearMap.IO.html#module-ClearMap.IO.TIF">ClearMap.IO.TIF module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ClearMap.IO.html#module-ClearMap.IO.VTK">ClearMap.IO.VTK module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ClearMap.Alignment.html">ClearMap.Alignment package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ClearMap.Alignment.html#module-ClearMap.Alignment.Elastix">ClearMap.Alignment.Elastix module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ClearMap.Alignment.html#module-ClearMap.Alignment.Resampling">ClearMap.Alignment.Resampling module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ClearMap.Alignment.html#clearmap-alignment-elastix-module">ClearMap.Alignment.Elastix module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ClearMap.Alignment.html#clearmap-alignment-resampling-module">ClearMap.Alignment.Resampling module</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ClearMap.ImageProcessing.html">ClearMap.ImageProcessing package</a><ul>
@@ -191,15 +189,15 @@ The Rockefeller University, New York City, 2015</div></blockquote>
 <li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#parallel-image-processing">Parallel Image Processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#external-packages">External Packages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.StackProcessing">ClearMap.ImageProcessing.StackProcessing module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.CellDetection">ClearMap.ImageProcessing.CellDetection module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.CellSizeDetection">ClearMap.ImageProcessing.CellSizeDetection module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#clearmap-imageprocessing-celldetection-module">ClearMap.ImageProcessing.CellDetection module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#clearmap-imageprocessing-cellsizedetection-module">ClearMap.ImageProcessing.CellSizeDetection module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#subpackages">Subpackages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.IlluminationCorrection">ClearMap.ImageProcessing.IlluminationCorrection module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.BackgroundRemoval">ClearMap.ImageProcessing.BackgroundRemoval module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.GreyReconstruction">ClearMap.ImageProcessing.GreyReconstruction module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.SpotDetection">ClearMap.ImageProcessing.SpotDetection module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.MaximaDetection">ClearMap.ImageProcessing.MaximaDetection module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.IlastikClassification">ClearMap.ImageProcessing.IlastikClassification module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#clearmap-imageprocessing-backgroundremoval-module">ClearMap.ImageProcessing.BackgroundRemoval module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#clearmap-imageprocessing-greyreconstruction-module">ClearMap.ImageProcessing.GreyReconstruction module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#clearmap-imageprocessing-spotdetection-module">ClearMap.ImageProcessing.SpotDetection module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#clearmap-imageprocessing-maximadetection-module">ClearMap.ImageProcessing.MaximaDetection module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#clearmap-imageprocessing-ilastikclassification-module">ClearMap.ImageProcessing.IlastikClassification module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.ImageStatistics">ClearMap.ImageProcessing.ImageStatistics module</a></li>
 </ul>
 </li>

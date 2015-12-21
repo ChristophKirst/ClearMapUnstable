@@ -6,12 +6,10 @@ Notes:
     - points are assumed to be in [x,y,z] coordinates as standard in ClearMap
     - reading of points not supported at the moment!
 
-Author
-""""""
-    Christoph Kirst, The Rockefeller University, New York City, 2015
-    
-    Modified from matlab code by Kannan Umadevi Venkataraju
 """
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
+# Modified from a matlab code by Kannan Umadevi Venkataraju
 
 #from evtk.hl import pointsToVTK 
 

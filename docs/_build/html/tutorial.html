@@ -95,13 +95,23 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Tutorial</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#the-parameter-file">The Parameter File</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#import-modules">Import Modules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#data-parameters">Data parameters</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#cell-detection">Cell detection</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#heat-map-generation">Heat map generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#import-modules"><cite>Import Modules</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-parameters"><cite>Data parameters</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cell-detection"><cite>Cell detection</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#heat-map-generation"><cite>Heat map generation</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#config-parameters"><cite>Config parameters</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-parameters"><cite>Run Parameters</cite></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#the-run-file">The Run File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-run-file">The Run File</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#resampling-operations"><cite>Resampling operations</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#alignment-operations"><cite>Alignment operations</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cell-detection-and-thresholding"><cite>Cell detection and thresholding</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#point-coordinate-transformation"><cite>Point coordinate transformation</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#heat-map"><cite>Heat map</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#table-generation"><cite>Table generation</cite></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#analysis-tools">Analysis Tools</a></li>
 </ul>
 </li>
@@ -158,11 +168,11 @@
 <p>A project will usually contain 1 parameter file for each sample, 1 run file for the whole experiment and 1 analysis file for the whole experiment.</p>
 <div class="section" id="the-parameter-file">
 <h2>The Parameter File<a class="headerlink" href="#the-parameter-file" title="Permalink to this headline">¶</a></h2>
-<p>The parameter is a Python script that will contain all the necessary informations to process each sample. An example script, <em>parameter_file_template.py</em> is provided in the ClearMap/Scripts folder. It contains the following sections:</p>
+<p>The parameter is a Python script that will contain all the necessary informations to process each sample. An example script, <em>parameter_file_template.py</em> is provided in the ClearMap/Scripts folder. Open this file to follow closely the tutorial. It contains the following sections:</p>
 <table border="1" class="docutils">
 <colgroup>
-<col width="19%" />
-<col width="81%" />
+<col width="22%" />
+<col width="78%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Section</th>
@@ -170,32 +180,32 @@
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td>Import modules</td>
+<tr class="row-even"><td><a class="reference internal" href="#import-modules">Import modules</a></td>
 <td>load from ClearMap the functions used here</td>
 </tr>
-<tr class="row-odd"><td>Data parameters</td>
+<tr class="row-odd"><td><a class="reference internal" href="#data-parameters">Data parameters</a></td>
 <td>points to the files used, their resolution and orientation</td>
 </tr>
-<tr class="row-even"><td>Cell detection</td>
+<tr class="row-even"><td><a class="reference internal" href="#cell-detection">Cell detection</a></td>
 <td>parameters for the cell detection, and module used</td>
 </tr>
-<tr class="row-odd"><td>Heat map generation</td>
+<tr class="row-odd"><td><a class="reference internal" href="#heat-map-generation">Heat map generation</a></td>
 <td>to generate a voxelized map of the detected cells</td>
 </tr>
-<tr class="row-even"><td>Config Parameters</td>
+<tr class="row-even"><td><a class="reference internal" href="#config-parameters">Config Parameters</a></td>
 <td>the parameters for memory and processors management</td>
 </tr>
-<tr class="row-odd"><td>Run Parameters</td>
+<tr class="row-odd"><td><a class="reference internal" href="#run-parameters">Run Parameters</a></td>
 <td>you would usually not change these. They specify how the data will be processed</td>
 </tr>
 </tbody>
 </table>
 <div class="section" id="import-modules">
-<h3>Import Modules<a class="headerlink" href="#import-modules" title="Permalink to this headline">¶</a></h3>
+<h3><cite>Import Modules</cite><a class="headerlink" href="#import-modules" title="Permalink to this headline">¶</a></h3>
 <p>You would usually not change these. They are all the functions that will be used later either in the parameter file or in the  execution file.</p>
 </div>
 <div class="section" id="data-parameters">
-<h3>Data parameters<a class="headerlink" href="#data-parameters" title="Permalink to this headline">¶</a></h3>
+<h3><cite>Data parameters</cite><a class="headerlink" href="#data-parameters" title="Permalink to this headline">¶</a></h3>
 <p>This is where you point to the files used, their resolution and orientation. It also defines which atlas and annotation files to use.</p>
 <p>To set the directory where all files will be read and written for this sample:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">BaseDirectory</span> <span class="o">=</span> <span class="s">&#39;/home/mtllab/exploration/sample1&#39;</span><span class="p">;</span>
@@ -283,7 +293,7 @@
 <p>It is important to make sure that the Atlas used is in the correct orientation (see above), but also don’t contain too much information outside of the field of view. While the registration program can deal with a bit of extra «&nbsp;bleed&nbsp;» outside of the sample, this should be kept to a minimum. We usually prepare different crops of the atlas file to match the usual field of views we acquire.</p>
 </div>
 <div class="section" id="cell-detection">
-<h3>Cell detection<a class="headerlink" href="#cell-detection" title="Permalink to this headline">¶</a></h3>
+<h3><cite>Cell detection</cite><a class="headerlink" href="#cell-detection" title="Permalink to this headline">¶</a></h3>
 <p>At this point, two detection methods exist: the <code class="docutils literal"><span class="pre">SpotDetection</span></code> and <code class="docutils literal"><span class="pre">Ilastik</span></code>:</p>
 <blockquote>
 <div><ul class="simple">
@@ -363,60 +373,283 @@
 </div>
 <div class="section" id="difference-of-gaussians-filter">
 <h4>Difference of Gaussians filter:<a class="headerlink" href="#difference-of-gaussians-filter" title="Permalink to this headline">¶</a></h4>
-<p>This is an optional filter to improve the contrast of objects</p>
-<dl class="docutils">
-<dt>filterDoGParameter = {</dt>
-<dd>&#8220;size&#8221;    : None,        # (tuple or None)      size for the DoG filter if None, do not correct for any background
-&#8220;sigma&#8221;   : None,        # (tuple or None)      std of outer Gaussian, if None autmatically determined from size
-&#8220;sigma2&#8221;  : None,        # (tuple or None)      std of inner Guassian, if None autmatically determined from size
-&#8220;save&#8221;    : None,        # (str or None)        file name to save result of this operation if None dont save to file
-&#8220;verbose&#8221; : True      # (bool or int)        print / plot information about this step</dd>
-</dl>
-<p>}</p>
-<dl class="docutils">
-<dt>findExtendedMaximaParameter = {</dt>
-<dd>&#8220;hMax&#8221;      : None,            # (float or None)     h parameter for the initial h-Max transform, if None, do not perform a h-max transform
-&#8220;size&#8221;      : 5,             # (tuple)             size for the structure element for the local maxima filter
-&#8220;threshold&#8221; : 0,        # (float or None)     include only maxima larger than a threshold, if None keep all localmaxima
-&#8220;save&#8221;      : None,         # (str or None)       file name to save result of this operation if None dont save to file
-&#8220;verbose&#8221;   : True       # (bool or int)       print / plot information about this step</dd>
-</dl>
-<p>}</p>
-<dl class="docutils">
-<dt>findIntensityParameter = {</dt>
-<dd>&#8220;method&#8221; : &#8216;Max&#8217;,       # (str, func, None)   method to use to determine intensity (e.g. &#8220;Max&#8221; or &#8220;Mean&#8221;) if None take intensities at the given pixels
-&#8220;size&#8221;   : (3,3,3)       # (tuple)             size of the box on which to perform the <em>method</em></dd>
-</dl>
-<p>}</p>
-<dl class="docutils">
-<dt>detectCellShapeParameter = {</dt>
-<dd>&#8220;threshold&#8221; : 700,     # (float or None)      threshold to determine mask, pixel below this are background if None no mask is generated
-&#8220;save&#8221;      : None,        # (str or None)        file name to save result of this operation if None dont save to file
-&#8220;verbose&#8221;   : True      # (bool or int)        print / plot information about this step if None take intensities at the given pixels</dd>
-</dl>
-<p>}</p>
-<p>## Parameters for cell detection using spot detection algorithm
-detectSpotsParameter = {</p>
-<blockquote>
-<div>&#8220;correctIlluminationParameter&#8221; : correctIlluminationParameter,
-&#8220;removeBackgroundParameter&#8221;    : removeBackgroundParameter,
-&#8220;filterDoGParameter&#8221;           : filterDoGParameter,
-&#8220;findExtendedMaximaParameter&#8221;  : findExtendedMaximaParameter,
-&#8220;findIntensityParameter&#8221;       : findIntensityParameter,
-&#8220;detectCellShapeParameter&#8221;     : detectCellShapeParameter</div></blockquote>
-<p>}</p>
+<p>This is an optional filter to improve the contrast of objects. This filter has a &#8220;Mexican Hat&#8221; shape that weighs negatively the intensity at the border of the objects. The main parameter to set here is the <code class="docutils literal"><span class="pre">size</span></code>, as an (x,y,z) tuple, for instance <code class="docutils literal"><span class="pre">(6,6,11)</span></code> would work well for our example. However, we’ll bypass this filter and set it to <code class="docutils literal"><span class="pre">None</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">filterDoGParameter</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;size&quot;</span>    <span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;sigma&quot;</span>   <span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;sigma2&quot;</span>  <span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;save&quot;</span>    <span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;verbose&quot;</span> <span class="p">:</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>For this tutorial, we will not use the DoG filter, as it is unnecessary. The signal from a c-Fos nuclear staining has enough contrast, and a simple shape that do not necessitate this additionnal filtering, but it could help increase the contrast of the relevant objects for other experiments.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">As for the background subtraction seen above, you can save the output of the filter to files in a folder. This is important to check that the settings you used are effective!</p>
+</div>
+</div>
+<div class="section" id="extended-maxima">
+<h4>Extended Maxima:<a class="headerlink" href="#extended-maxima" title="Permalink to this headline">¶</a></h4>
+<p>The extended maxima is another filter to use for objects that contain several peaks of intensity, like for instance a higher resolution view of a cell nucleus where you might have a more granular texture. In the case of our tutorial, the c-fos nuclear signal is imaged at low resolution, so the object only appears as a single peak, so we will turn off the extended maxima by setting the <code class="docutils literal"><span class="pre">hMax</span></code> parameter to <code class="docutils literal"><span class="pre">None</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">findExtendedMaximaParameter</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;hMax&quot;</span>      <span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;size&quot;</span>      <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;threshold&quot;</span> <span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;save&quot;</span>      <span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;verbose&quot;</span>   <span class="p">:</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Saving the files for the output of this filter as explained above would overlay in red the extended maxima found on top of the DoG filtered image (we recommend using also DoG if you use the Extended Maxima).</p>
+</div>
+</div>
+<div class="section" id="peak-intensity">
+<h4>Peak Intensity:<a class="headerlink" href="#peak-intensity" title="Permalink to this headline">¶</a></h4>
+<p>By default, the code will look for the center of the 3D shape painted by the Extended Maxima and attribute the x,y,z to this coordinate. This is the coordinate that will be saved in the point file. However, we noticed that often, the pixel that contains the highest intensity (the peak) is not always the center of the volume. This is likely due to potential deformations of the shape of the nucleus by the objective lens. To look for the actual peak intensity for the detected object, we’ll use this function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">findIntensityParameter</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;method&quot;</span> <span class="p">:</span> <span class="s">&#39;Max&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;size&quot;</span>   <span class="p">:</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>If the parameter <code class="docutils literal"><span class="pre">method</span></code> is set to <code class="docutils literal"><span class="pre">None</span></code>, then the peak intensity will be also the pixel at the center of the volume. We’ll set the parameter to <code class="docutils literal"><span class="pre">Max</span></code> to look if there is a voxel around the center that has a higher intensity than the center. This will be done by looking around the center with a box of a certain <code class="docutils literal"><span class="pre">size</span></code>, that we set here to (3,3,3), which is by how many pixels in each direction from the center the code will be looking for a peak of higher intensity.</p>
+</div>
+<div class="section" id="cell-volume">
+<h4>Cell Volume:<a class="headerlink" href="#cell-volume" title="Permalink to this headline">¶</a></h4>
+<p>The cell shape is not used for the cell detection itself (which is just looking for local maxima in intensity), but measuring the cell volume will be important to remove later the local peaks detected that do not correspond to an actual cell. This is done by setting these parameters:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">detectCellShapeParameter</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;threshold&quot;</span> <span class="p">:</span> <span class="mi">700</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;save&quot;</span>      <span class="p">:</span> <span class="bp">None</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;verbose&quot;</span>   <span class="p">:</span> <span class="bp">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">}</span>
+</pre></div>
+</div>
+<p>The shape detection is done by a watershed, which will paint the volume of the cell from the detected center outwards. The only parameter to set is the <code class="docutils literal"><span class="pre">threshold</span></code>. The threshold correspond to the background intensity, and tells the watershed detection where to stop painting. This value is based on the background subtracted image here. If the <code class="docutils literal"><span class="pre">threshold</span></code> is set to <code class="docutils literal"><span class="pre">None</span></code>, then the cell shape detection is bypassed.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Saving the files for the output of this filter as explained above would show all detected objects. The most convenient is to open the folder of images generated with ImageJ, and apply a LUT (Lookup Table) to color each object differently, for instance using the LUT 3-3-2 RGB. The code will write on the image each detected object with a increasing intensity value, so you can make sure this way that adjacent cells are not blending together.</p>
+</div>
 </div>
 </div>
 <div class="section" id="heat-map-generation">
-<h3>Heat map generation<a class="headerlink" href="#heat-map-generation" title="Permalink to this headline">¶</a></h3>
-<p>To set the output for the voxelized heat map file:</p>
+<h3><cite>Heat map generation</cite><a class="headerlink" href="#heat-map-generation" title="Permalink to this headline">¶</a></h3>
+<p>The voxelization makes it easier to look at the results of the cell detection. The voxelization function will create an image of a specified size (usually the size of the Atlas file) and plot the detected cell centers. To make them visible easily, each point will be expanded into a sphere (or cube, or gaussian) of a given diameter. The intensity value of this sphere is set to 1 by default. So if many points are detected, the overlapping spheres will create a high intensity region.</p>
+<p>To set the output for the voxelized heat map file (you would usually not change this):</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">VoxelizationFile</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">,</span> <span class="s">&#39;points_voxelized.tif&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
+<p>And then let’s survey the parameters for the voxelization:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">voxelizeParameter</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;method&quot;</span> <span class="p">:</span> <span class="s">&#39;Spherical&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;size&quot;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">15</span><span class="p">),</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;weights&quot;</span> <span class="p">:</span> <span class="bp">None</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">};</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">method</span></code> here is set to <code class="docutils literal"><span class="pre">Spherical</span></code> to paint the points as expanded spheres. the <code class="docutils literal"><span class="pre">size</span></code> of those spheres is set next, and is given in pixels. Here, we’ll choose <code class="docutils literal"><span class="pre">(15,15,15)</span></code>, but feel free to experiment! Note that the size is in pixel in the final resolution. So for instance, here each sphere will have a diameter of 15 x 25 = 375µm. The <code class="docutils literal"><span class="pre">weights</span></code> parameter will be changed later, but is set to <code class="docutils literal"><span class="pre">None</span></code> at this point, meaning that each sphere has an intensity value of 1. The weights allows to change this by integrating the size or intensity of the cells when drawing each sphere.</p>
+</div>
+<div class="section" id="config-parameters">
+<h3><cite>Config parameters</cite><a class="headerlink" href="#config-parameters" title="Permalink to this headline">¶</a></h3>
+<p>There are two configuration parameter you should change to match the processing power of your workstation. The first one is the number of processors to be used for the resampling/rotation operations. As this process is not very demanding for the memory, just use the max number of parallel processes your configuration can handle. For instance, we have a 6 cores machine:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ResamplingParameter</span> <span class="o">=</span> <span class="p">{</span><span class="s">&quot;processes&quot;</span><span class="p">:</span> <span class="mi">12</span><span class="p">};</span>
+</pre></div>
+</div>
+<p>The next settings are for the cell detection. This is limited mainly by the amount of RAM memory you have, but will also change depending on how many filters you use, and their settings. Here is the setting we use on our machine, with 128Gb of RAM for this tutorial:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">StackProcessingParameter</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;processes&quot;</span> <span class="p">:</span> <span class="mi">6</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;chunkSizeMax&quot;</span> <span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;chunkSizeMin&quot;</span> <span class="p">:</span> <span class="mi">50</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;chunkOverlap&quot;</span> <span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;chunkOptimization&quot;</span> <span class="p">:</span> <span class="bp">True</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;chunkOptimizationSize&quot;</span> <span class="p">:</span> <span class="nb">all</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="s">&quot;processMethod&quot;</span> <span class="p">:</span> <span class="s">&quot;parallel&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">};</span>
+</pre></div>
+</div>
+<p>For the cell detection, the full stack of images will be sliced in smaller chunks to be processed in parallel, and then fused back together. Although it would be tempting to use all the available parallel processing power from your machine, each chunk will take a significant amount of RAM while being analyzed, so the more chunks you process in parallel, the smaller they will be. Also, the chunks will need to overlap, so the smaller they are, the higher the number of overlaps. The size of a chunk is set by both <code class="docutils literal"><span class="pre">chunkSizeMax</span></code> and <code class="docutils literal"><span class="pre">chunkSizeMin</span></code>. This is because the code will determine what is the ideal chunk size within that range, depending on the total number of chunks to process. When running the script, keep an eye on the amount of memory used by using the system’s activity monitor for instance. If too much data has to go in the swap memory (meaning the RAM is maxed out), reduce the chunk size, or reduce the number of parallel processes.</p>
+</div>
+<div class="section" id="run-parameters">
+<h3><cite>Run Parameters</cite><a class="headerlink" href="#run-parameters" title="Permalink to this headline">¶</a></h3>
+<p>You usually would not change anything in this section of the parameter file. This section defines the name of the files generated during the run, and set the parameters for the various operations of resampling and alignment. Of note, you can check these parameters for the alignment:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">RegistrationAlignmentParameter</span><span class="p">[</span><span class="s">&quot;affineParameterFile&quot;</span><span class="p">]</span>  <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PathReg</span><span class="p">,</span> <span class="s">&#39;Par0000affine.txt&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">RegistrationAlignmentParameter</span><span class="p">[</span><span class="s">&quot;bSplineParameterFile&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">PathReg</span><span class="p">,</span> <span class="s">&#39;Par0000bspline.txt&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>These point to the two files that will be used as parameter files for the alignment operation with Elastix. If you create new parameter files for the alignment based on your specific need, just make sure you link to the correct parameter file here.</p>
+<p>We’re all set for the parameter file, now let’s explain how the run will proceed.</p>
 </div>
 </div>
 <div class="section" id="the-run-file">
 <h2>The Run File<a class="headerlink" href="#the-run-file" title="Permalink to this headline">¶</a></h2>
+<p>The run file consist of the list of operation to execute to analyze each sample. For our tutorial, it can be found in /ClearMap/Scripts/process_template.py. The run file starts by loading all the parameters from the parameter file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="nb">execfile</span><span class="p">(</span><span class="s">&#39;./ClearMap/Scripts/parameter_file_template.py&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Make sure all the modules load correctly. Otherwise, try to install the missing modules. You might get a warning from the compiler the first time you load to parameter file on a new installation. The script shown in the tutorial will execute the following operations:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="#resampling-operations">Resampling operations</a></li>
+<li><a class="reference internal" href="#alignment-operations">Alignment operations</a></li>
+<li><a class="reference internal" href="#cell-detection-and-thresholding">Cell detection and thresholding</a></li>
+<li><a class="reference internal" href="#point-coordinate-transformation">Point coordinate transformation</a></li>
+<li><a class="reference internal" href="#heat-map">Heat map</a></li>
+<li><a class="reference internal" href="#table-generation">Table generation</a></li>
+</ul>
+</div></blockquote>
+<div class="section" id="resampling-operations">
+<h3><cite>Resampling operations</cite><a class="headerlink" href="#resampling-operations" title="Permalink to this headline">¶</a></h3>
+<p>The first set of operations to run are the resampling, which will use the parameters set previously. The resampling is executed by the <code class="docutils literal"><span class="pre">resampleData</span></code> function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">resampleData</span><span class="p">(</span><span class="o">**</span><span class="n">CorrectionResamplingParameterCfos</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resampleData</span><span class="p">(</span><span class="o">**</span><span class="n">CorrectionResamplingParameterAutoFluo</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resampleData</span><span class="p">(</span><span class="o">**</span><span class="n">RegistrationResamplingParameter</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>As you can notice, there are 3 sets of resampling operations. The first two are optional. They create files of intermediate size for the c-Fos and Autofluorescence channels to correct for eventual movements of the sample between the acquisition of those channels. The third resampling only concerns the auto-fluorescence channel and will generate the file used to align to the Atlas reference.</p>
+</div>
+<div class="section" id="alignment-operations">
+<h3><cite>Alignment operations</cite><a class="headerlink" href="#alignment-operations" title="Permalink to this headline">¶</a></h3>
+<p>The alignment is done via Elastix, which is interfaced by ClearMap and is executed by the <code class="docutils literal"><span class="pre">alignData</span></code> function:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">resultDirectory</span>  <span class="o">=</span> <span class="n">alignData</span><span class="p">(</span><span class="o">**</span><span class="n">CorrectionAlignmentParameter</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">resultDirectory</span>  <span class="o">=</span> <span class="n">alignData</span><span class="p">(</span><span class="o">**</span><span class="n">RegistrationAlignmentParameter</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>We again do two sets of alignments. The first one here is optional, and is using the files of intermediate resolution generated by the first two resampling operations to re-align the 2 channels in case the sample moved between acquisitions. The second alignment is done onto the Atlas.</p>
+</div>
+<div class="section" id="cell-detection-and-thresholding">
+<h3><cite>Cell detection and thresholding</cite><a class="headerlink" href="#cell-detection-and-thresholding" title="Permalink to this headline">¶</a></h3>
+<p>The cell detection is started by this command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">detectCells</span><span class="p">(</span><span class="o">**</span><span class="n">ImageProcessingParameter</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>This should take a while, between 20 minutes to a few hours depending on your machine, the size of the stack, the filter used. If you&#8217;re executing the cell detection for testing the parameter, consider restricting the range of the detection as described above with the <code class="docutils literal"><span class="pre">cFosFileRange</span></code> parameter.</p>
+<p>The cell detection will create two files here: <code class="docutils literal"><span class="pre">cells-allpoints.npy</span></code> and <code class="docutils literal"><span class="pre">intensities-allpoints.npy</span></code>. These two files will contain all the detected maxima, and need to be filtered, as most local peaks do not correspond to an actual cell.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The coordinates in the files are in the original coordinates of the raw data, and are not transposed yet.</p>
+</div>
+<p>Once the cell detection is done, the points detected have to be filtered to retain only the genuine cells. This is the most important step of the cell detection. First, let&#8217;s open the files <code class="docutils literal"><span class="pre">cells-allpoints.npy</span></code> and <code class="docutils literal"><span class="pre">intensities-allpoints.npy</span></code>:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span><span class="p">,</span> <span class="n">intensities</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readPoints</span><span class="p">(</span><span class="n">ImageProcessingParameter</span><span class="p">[</span><span class="s">&quot;sink&quot;</span><span class="p">]);</span>
+</pre></div>
+</div>
+<p>Here, we use the function io.readPoints which opens the data related to points coordinates or intensities. In ClearMap scripts, the inputs are usually referred to as <code class="docutils literal"><span class="pre">source</span></code> and the output as <code class="docutils literal"><span class="pre">sink</span></code>. <code class="docutils literal"><span class="pre">ImageProcessingParameter[&quot;sink&quot;]</span></code> is defined in the parameter file described above, and is a tuple containing the location of both files for point coordinates and intensities. So here we&#8217;re opening both files at the same time.</p>
+<p>Then, we use the function <code class="docutils literal"><span class="pre">thresholdPoints</span></code> to threshold the points based on their size and save them to 2 files (coordinates and intensities):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span><span class="p">,</span> <span class="n">intensities</span> <span class="o">=</span> <span class="n">thresholdPoints</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">intensities</span><span class="p">,</span> <span class="n">threshold</span> <span class="o">=</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">900</span><span class="p">),</span> <span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">));</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">io</span><span class="o">.</span><span class="n">writePoints</span><span class="p">(</span><span class="n">FilteredCellsFile</span><span class="p">,</span> <span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">intensities</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>The way the <code class="docutils literal"><span class="pre">thresholdPoints</span></code> function work is by setting the <code class="docutils literal"><span class="pre">threshold</span></code> parameter as <code class="docutils literal"><span class="pre">(lower</span> <span class="pre">limit,</span> <span class="pre">upper</span> <span class="pre">limit)</span></code>. If only one value is provided, it assumes this is the lower boundary. <code class="docutils literal"><span class="pre">row</span></code> defines for the (lower, higher) boundaries which column to use from the intensities array. We presented this array in the overview, but as a reminder:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="8%" />
+<col width="92%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Row</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>Max intensity of the cell center in the raw data</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>Max intensity of the cell center after the DoG filtering.</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>Max intensity of the cell center after the background subtraction</td>
+</tr>
+<tr class="row-odd"><td>3</td>
+<td>Cell size in voxels after the watershed detection</td>
+</tr>
+</tbody>
+</table>
+<p>So here we use column 3 for both boundaries, which is the volume in voxel of each detected cell, which we set at 20.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">the size in voxels of each detected cell is defined by the watershed, which will greatly depend on the <code class="docutils literal"><span class="pre">threshold</span></code> parameter set previously for the cell detection, so if you change this parameter, you&#8217;ll have to adjust threshold here as well.</p>
+</div>
+<p>Finally, you&#8217;ll can now check that the cell detection worked as expected by plotting the result of the detection and thresholding onto the raw data. This should be disabled if you&#8217;re running the detection on the whole stack, and should only be used while testing. Just delete or comment out (with #) if you don&#8217;t need it. The run the cell detection check:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">iDISCO.Visualization.Plot</span> <span class="kn">as</span> <span class="nn">plt</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pointSource</span><span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">,</span> <span class="n">FilteredCellsFile</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">data</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">overlayPoints</span><span class="p">(</span><span class="n">cFosFile</span><span class="p">,</span> <span class="n">pointSource</span><span class="p">,</span> <span class="n">pointColor</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="o">**</span><span class="n">cFosFileRange</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">io</span><span class="o">.</span><span class="n">writeData</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">,</span> <span class="s">&#39;cells_check.tif&#39;</span><span class="p">),</span> <span class="n">data</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>You might get a warning that a non-standard tiff file is being written. ImageJ, with the plugin BioFormat, can open these files. The resulting <code class="docutils literal"><span class="pre">cell_check.tif</span></code> file has 2 channels, one with the original data and one with the detected cells shown as a single pixel pointing to the detected center. Browse through the stack to make sure there is only one center detected per cell, that there are no obvious false positive or false negatives.</p>
+</div>
+<div class="section" id="point-coordinate-transformation">
+<h3><cite>Point coordinate transformation</cite><a class="headerlink" href="#point-coordinate-transformation" title="Permalink to this headline">¶</a></h3>
+<p>The points coordinate are then resampled and transformed onto their final position in the Atlas reference space. Again, this is done twice: once for the correction between both channels, and then for the Atlas alignment.</p>
+<dl class="docutils">
+<dt>The first step: correction (optional)</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readPoints</span><span class="p">(</span><span class="n">CorrectionResamplingPointsParameter</span><span class="p">[</span><span class="s">&quot;pointSource&quot;</span><span class="p">]);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="n">resamplePoints</span><span class="p">(</span><span class="o">**</span><span class="n">CorrectionResamplingPointsParameter</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="n">transformPoints</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">transformDirectory</span> <span class="o">=</span> <span class="n">CorrectionAlignmentParameter</span><span class="p">[</span><span class="s">&quot;resultDirectory&quot;</span><span class="p">],</span> <span class="n">indices</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">resultDirectory</span> <span class="o">=</span> <span class="bp">None</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">CorrectionResamplingPointsInverseParameter</span><span class="p">[</span><span class="s">&quot;pointSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">points</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="n">resamplePointsInverse</span><span class="p">(</span><span class="o">**</span><span class="n">CorrectionResamplingPointsInverseParameter</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>The points are first resampled with the function <code class="docutils literal"><span class="pre">resamplePoints</span></code> and then their coordinates are transformed based on the results of the alignment done by Elastix with the <code class="docutils literal"><span class="pre">transformPoints</span></code> function. This function works by interfacing with the Transformix mode of Elastix. The parameter <code class="docutils literal"><span class="pre">indices</span></code>, here set to <code class="docutils literal"><span class="pre">False</span></code> indicate to keep the point coordinates with the decimals after the resampling, instead of using the integer coordinates, so prevent loosing information while sequentially re-sampling the point coordinates.</p>
+<dl class="docutils">
+<dt>The second step: alignment of the points in the Atlas reference space</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">RegistrationResamplingPointParameter</span><span class="p">[</span><span class="s">&quot;pointSource&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">points</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="n">resamplePoints</span><span class="p">(</span><span class="o">**</span><span class="n">RegistrationResamplingPointParameter</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="n">transformPoints</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">transformDirectory</span> <span class="o">=</span> <span class="n">RegistrationAlignmentParameter</span><span class="p">[</span><span class="s">&quot;resultDirectory&quot;</span><span class="p">],</span> <span class="n">indices</span> <span class="o">=</span> <span class="bp">False</span><span class="p">,</span> <span class="n">resultDirectory</span> <span class="o">=</span> <span class="bp">None</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+<dt>Then writing the final point coordinates:</dt>
+<dd><div class="first last highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">io</span><span class="o">.</span><span class="n">writePoints</span><span class="p">(</span><span class="n">TransformedCellsFile</span><span class="p">,</span> <span class="n">points</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>The points in their Atlas coordinates are written in the file <code class="docutils literal"><span class="pre">cells_transformed_to_Atlas.npy</span></code> and will be used for the region statistics and to generate the heat maps.</p>
+</div>
+<div class="section" id="heat-map">
+<h3><cite>Heat map</cite><a class="headerlink" href="#heat-map" title="Permalink to this headline">¶</a></h3>
+<p>First, let&#8217;s open the files generated previously:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">points</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readPoints</span><span class="p">(</span><span class="n">TransformedCellsFile</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intensities</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readPoints</span><span class="p">(</span><span class="n">FilteredCellsFile</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Then, the heat map is generated by the <code class="docutils literal"><span class="pre">voxelize</span></code> command:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">vox</span> <span class="o">=</span> <span class="n">voxelize</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">AtlasFile</span><span class="p">,</span> <span class="o">**</span><span class="n">voxelizeParameter</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">io</span><span class="o">.</span><span class="n">writeData</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">,</span> <span class="s">&#39;cells_heatmap.tif&#39;</span><span class="p">),</span> <span class="n">vox</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;int32&#39;</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>The heat map is generated as a 32bit float file, so it may need to be down sampled in ImageJ. The second parameter, <code class="docutils literal"><span class="pre">AtlasFile</span></code>, is only to pass the size of the Atlas file to the function.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The heat map generated here will be used later for the voxel statistics.</p>
+</div>
+</div>
+<div class="section" id="table-generation">
+<h3><cite>Table generation</cite><a class="headerlink" href="#table-generation" title="Permalink to this headline">¶</a></h3>
+<p>The table will show the number of detected points according to the region annotations. It relies on having a labeled image, which is a nrrd or tif file. The function <code class="docutils literal"><span class="pre">countPointsInRegions</span></code> will use the intensity value of each point as defining the regions:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ids</span><span class="p">,</span> <span class="n">counts</span> <span class="o">=</span> <span class="n">countPointsInRegions</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">labeledImage</span> <span class="o">=</span> <span class="n">AnnotationFile</span><span class="p">,</span> <span class="n">intensities</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">collapse</span> <span class="o">=</span> <span class="bp">None</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">AnnotationFile</span></code> is set in the parameter file as shown above, and should match the dimensions and orientation of the Atlas file used. The <code class="docutils literal"><span class="pre">collapse</span></code> function is here set to <code class="docutils literal"><span class="pre">None</span></code>, but is used if you wish to group adjacent regions into larger regions if you feel that the AnnotationFile has too many subdivisions.</p>
+<p>Then, a table of the results is generated:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">table</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ids</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="p">[(</span><span class="s">&#39;id&#39;</span><span class="p">,</span><span class="s">&#39;int64&#39;</span><span class="p">),(</span><span class="s">&#39;counts&#39;</span><span class="p">,</span><span class="s">&#39;f8&#39;</span><span class="p">),(</span><span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;a256&#39;</span><span class="p">)])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="p">[</span><span class="s">&quot;id&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ids</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="p">[</span><span class="s">&quot;counts&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">table</span><span class="p">[</span><span class="s">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labelToName</span><span class="p">(</span><span class="n">ids</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">io</span><span class="o">.</span><span class="n">writeTable</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseDirectory</span><span class="p">,</span> <span class="s">&#39;Annotated_counts.csv&#39;</span><span class="p">),</span> <span class="n">table</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Contrarily to the heat maps, the table generated here will not be used for the statistics later, so it is not necessary to execute this in most cases.</p>
+</div>
+<p>This conclude the part of the tutorial covering the settings and run parameters used to analyze the c-Fos dataset in the mouse brain. The next section will cover how to run the statistics on the results obtained after running the <code class="docutils literal"><span class="pre">process_template.py</span></code> script for all samples of the same experiment.</p>
+</div>
 </div>
 <div class="section" id="analysis-tools">
 <h2>Analysis Tools<a class="headerlink" href="#analysis-tools" title="Permalink to this headline">¶</a></h2>

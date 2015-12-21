@@ -5,22 +5,20 @@ Two types of data files are discriminated:
     * `Image data`_
     * `Point data`_
 
-Image data are files with data from the microscopy or results representing
-visualization of the analysis in e.g. volumetric form.
+The image data are stacks from microscopes obtained by volume imaging, or the results of analysis representing
+the visualization of the detected objects for instance.
 
-Point data are lists of e.g. cell coordinates or measured 
-intensitites. 
+The point data are lists of cell coordinates or measured intensities for instance. 
 
 Image data
 ---------- 
 
-Images are represented internally as numpy arrays. CleaMap assumes images
-in arrays are aranged as [x,y], [x,y,z] or [x,y,z,c] where x,y,z correspond to 
+Images are represented internally as numpy arrays. ClearMap assumes images
+in arrays are arranged as [x,y], [x,y,z] or [x,y,z,c] where x,y,z correspond to 
 the x,y,z coordinates as when viewed in an image viewer such as ImageJ. 
 The c coordinate is a possible color channel.
 
-Note:
-    Many image libraries read images as [y,x,z] or [y,x] arrays!
+.. note:: Many image libraries read images as [y,x,z] or [y,x] arrays!
 
 The ClearMap toolbox supports a range of (volumetric) image formats:
 
@@ -33,6 +31,8 @@ NRRD            nearly raw raster data files                               :mod:
 IMS             imaris image file                                          :mod:`~ClearMap.IO.Imaris`
 reg exp         folder, file list or file pattern of a stack of 2d images  :mod:`~ClearMap.IO.FileList`
 =============== ========================================================== ============================
+
+.. note:: ClearMap can read the image data from a Bitplane’s Imaris, but can’t export image data as an Imaris file.
 
 The image format is inferred automatically from the file name extension.
 
@@ -60,7 +60,7 @@ To write image data use :func:`~ClearMap.IO.IO.writeData`:
     >>> print io.dataSize(res);
     (20, 50, 10)
     
-Generally, the IO module is desinged to work with image sources which can be
+Generally, the IO module is designed to work with image sources which can be
 either files or already loaded numpy arrays. This is important to enable flexible
 parallel processing, without rewriting the data analysis routines. 
 
@@ -74,7 +74,7 @@ For example:
     (20, 50, 10)
 
 Range parameter can be passed in order to only load sub sets of image data,
-usefull when the imags are very large. For example to load a sub-image
+useful when the images are very large. For example to load a sub-image:
 
     >>> import os, numpy
     >>> import ClearMap.IO as io
@@ -99,15 +99,18 @@ for intensity ,easires or other properties.
 Points can also be given as tuples (coordinate arrray, property array).
 
 
-ClearMap supports the following files formats fro point like data:
+ClearMap supports the following files formats for point like data:
 
 ========= ========================================================== =======================
-Format    Descrition                                                 Module
+Format    Description                                                Module
 ========= ========================================================== =======================
 CSV       comma separated values in text file                        :mod:`~ClearMap.IO.CSV`
 NPY       numpy binary file                                          :mod:`~ClearMap.IO.NPY`
 VTK       vtk point data file                                        :mod:`~ClearMap.IO.VTK`
 ========= ========================================================== =======================
+
+.. note:: ClearMap can write points data to a pre-existing Bitplane’s Imaris file, but can’t import the points from them.
+
 
 The point file format is inferred automatically from the file name extension.
 
@@ -133,7 +136,7 @@ and to write it use :func:`~ClearMap.IO.IO.writePoints`:
 
 Summary
 -------
-    - All routines accesing data or data properties accept file name strings or numpy arrays or None
+    - All routines accessing data or data properties accept file name strings or numpy arrays or None
     - Numerical arrays represent data and point coordinates as [x,y,z] or [x,y] 
 """ 
 #:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City

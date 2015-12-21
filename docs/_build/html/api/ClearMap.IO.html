@@ -160,14 +160,13 @@
 </ul>
 </dd>
 </dl>
-<p>Image data are files with data from the microscopy or results representing
-visualization of the analysis in e.g. volumetric form.</p>
-<p>Point data are lists of e.g. cell coordinates or measured
-intensitites.</p>
+<p>The image data are stacks from microscopes obtained by volume imaging, or the results of analysis representing
+the visualization of the detected objects for instance.</p>
+<p>The point data are lists of cell coordinates or measured intensities for instance.</p>
 <div class="section" id="image-data">
 <h2>Image data<a class="headerlink" href="#image-data" title="Permalink to this headline">¶</a></h2>
-<p>Images are represented internally as numpy arrays. CleaMap assumes images
-in arrays are aranged as [x,y], [x,y,z] or [x,y,z,c] where x,y,z correspond to
+<p>Images are represented internally as numpy arrays. ClearMap assumes images
+in arrays are arranged as [x,y], [x,y,z] or [x,y,z,c] where x,y,z correspond to
 the x,y,z coordinates as when viewed in an image viewer such as ImageJ.
 The c coordinate is a possible color channel.</p>
 <div class="admonition note">
@@ -194,7 +193,7 @@ The c coordinate is a possible color channel.</p>
 </tr>
 <tr class="row-odd"><td>RAW / MHD</td>
 <td>raw image files with optional mhd header file</td>
-<td><a class="reference internal" href="#module-ClearMap.IO.RAW" title="ClearMap.IO.RAW"><code class="xref py py-mod docutils literal"><span class="pre">RAW</span></code></a></td>
+<td><code class="xref py py-mod docutils literal"><span class="pre">RAW</span></code></td>
 </tr>
 <tr class="row-even"><td>NRRD</td>
 <td>nearly raw raster data files</td>
@@ -210,6 +209,10 @@ The c coordinate is a possible color channel.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">ClearMap can read the image data from a Bitplane’s Imaris, but can’t export image data as an Imaris file.</p>
+</div>
 <p>The image format is inferred automatically from the file name extension.</p>
 <p>For example to read image data use <a class="reference internal" href="#ClearMap.IO.IO.readData" title="ClearMap.IO.IO.readData"><code class="xref py py-func docutils literal"><span class="pre">readData()</span></code></a>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
@@ -235,7 +238,7 @@ The c coordinate is a possible color channel.</p>
 <span class="go">(20, 50, 10)</span>
 </pre></div>
 </div>
-<p>Generally, the IO module is desinged to work with image sources which can be
+<p>Generally, the IO module is designed to work with image sources which can be
 either files or already loaded numpy arrays. This is important to enable flexible
 parallel processing, without rewriting the data analysis routines.</p>
 <p>For example:</p>
@@ -248,7 +251,7 @@ parallel processing, without rewriting the data analysis routines.</p>
 </pre></div>
 </div>
 <p>Range parameter can be passed in order to only load sub sets of image data,
-usefull when the imags are very large. For example to load a sub-image</p>
+useful when the images are very large. For example to load a sub-image:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.IO</span> <span class="kn">as</span> <span class="nn">io</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.Settings</span> <span class="kn">as</span> <span class="nn">settings</span>
@@ -268,7 +271,7 @@ is the point number and the second the spatial dimension, i.e. [i,d]
 The spatial dimension can be extended with additional dimensions
 for intensity ,easires or other properties.</p>
 <p>Points can also be given as tuples (coordinate arrray, property array).</p>
-<p>ClearMap supports the following files formats fro point like data:</p>
+<p>ClearMap supports the following files formats for point like data:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="10%" />
@@ -277,7 +280,7 @@ for intensity ,easires or other properties.</p>
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Format</th>
-<th class="head">Descrition</th>
+<th class="head">Description</th>
 <th class="head">Module</th>
 </tr>
 </thead>
@@ -296,6 +299,10 @@ for intensity ,easires or other properties.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">ClearMap can write points data to a pre-existing Bitplane’s Imaris file, but can’t import the points from them.</p>
+</div>
 <p>The point file format is inferred automatically from the file name extension.</p>
 <p>For example to read point data use <a class="reference internal" href="#ClearMap.IO.IO.readPoints" title="ClearMap.IO.IO.readPoints"><code class="xref py py-func docutils literal"><span class="pre">readPoints()</span></code></a>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
@@ -321,7 +328,7 @@ for intensity ,easires or other properties.</p>
 <h2>Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h2>
 <blockquote>
 <div><ul class="simple">
-<li>All routines accesing data or data properties accept file name strings or numpy arrays or None</li>
+<li>All routines accessing data or data properties accept file name strings or numpy arrays or None</li>
 <li>Numerical arrays represent data and point coordinates as [x,y,z] or [x,y]</li>
 </ul>
 </div></blockquote>
@@ -329,12 +336,8 @@ for intensity ,easires or other properties.</p>
 <div class="section" id="module-ClearMap.IO.IO">
 <span id="clearmap-io-io-module"></span><h2>ClearMap.IO.IO module<a class="headerlink" href="#module-ClearMap.IO.IO" title="Permalink to this headline">¶</a></h2>
 <p>IO interface to read microscope and point data</p>
-<p>Main module to distribute read and writing of individual data formats
-to the specialized sub-modules</p>
+<p>This is the main module to distribute the reading and writing of individual data formats to the specialized sub-modules.</p>
 <p>See <a class="reference internal" href="#module-ClearMap.IO" title="ClearMap.IO"><code class="xref py py-mod docutils literal"><span class="pre">ClearMap.IO</span></code></a> for details.</p>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="data">
 <dt id="ClearMap.IO.IO.pointFileExtensions">
 <code class="descname">pointFileExtensions</code><em class="property"> = ['csv', 'txt', 'npy', 'vtk', 'ims']</em><a class="headerlink" href="#ClearMap.IO.IO.pointFileExtensions" title="Permalink to this definition">¶</a></dt>
@@ -1411,7 +1414,7 @@ file name patttern of the copy</p>
 files.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">To write points without errors make sure the original file has at least one spot object!</p>
+<p class="last">To write points without errors make sure the original file has at least one spot object! You can create a fake point in Imaris, then save the file. The point will be overwritten by ClearMap.</p>
 </div>
 <p class="rubric">Example</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span>
@@ -1422,17 +1425,6 @@ files.</p>
 <span class="go">(256, 320, 256)</span>
 </pre></div>
 </div>
-<dl class="docutils">
-<dt>Todo:</dt>
-<dd><ul class="first last simple">
-<li>Fix writing new spots to imaris file</li>
-<li>Get settings to directly render points as &#8216;pixel&#8217; and not as spheres</li>
-</ul>
-</dd>
-</dl>
-<p>Author</p>
-<blockquote>
-<div>Chirstoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.IO.Imaris.openFile">
 <code class="descname">openFile</code><span class="sig-paren">(</span><em>filename</em>, <em>mode='a'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/Imaris.html#openFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.Imaris.openFile" title="Permalink to this definition">¶</a></dt>
@@ -1770,9 +1762,6 @@ file name patttern of the copy</p>
 <span class="go">(5, 3)</span>
 </pre></div>
 </div>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.IO.NPY.writePoints">
 <code class="descname">writePoints</code><span class="sig-paren">(</span><em>filename</em>, <em>points</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/NPY.html#writePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.NPY.writePoints" title="Permalink to this definition">¶</a></dt>
@@ -1809,8 +1798,7 @@ See <a class="reference external" href="http://teem.sourceforge.net/nrrd/format.
 <p>Author</p>
 <blockquote>
 <div><p>Copyright 2011 Maarten Everts and David Hammond.</p>
-<p>Modified to integrate into ClearMap framework:
-- Christoph Kirst, The Rockefeller University, New York City, 2015</p>
+<p>Modified to integrate into ClearMap framework by Christoph Kirst, The Rockefeller University, New York City, 2015</p>
 </div></blockquote>
 <dl class="exception">
 <dt id="ClearMap.IO.NRRD.NrrdError">
@@ -1983,196 +1971,8 @@ file name of the copy</p>
 </dd></dl>
 
 </div>
-<div class="section" id="module-ClearMap.IO.RAW">
-<span id="clearmap-io-raw-module"></span><h2>ClearMap.IO.RAW module<a class="headerlink" href="#module-ClearMap.IO.RAW" title="Permalink to this headline">¶</a></h2>
-<p>Simple Interface to read RAW/MHD files e.g. created by elastix</p>
-<p>Todo: read subsets efficiently</p>
-<p class="rubric">Example</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ClearMap.Settings</span> <span class="kn">import</span> <span class="n">ClearMapPath</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.IO.RAW</span> <span class="kn">as</span> <span class="nn">raw</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ClearMapPath</span><span class="p">,</span> <span class="s">&#39;Test/Data/Raw/test.mhd&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">raw</span><span class="o">.</span><span class="n">dataSize</span><span class="p">(</span><span class="n">filename</span><span class="p">);</span>
-<span class="go">(20, 50, 10)</span>
-</pre></div>
-</div>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
-<dl class="function">
-<dt id="ClearMap.IO.RAW.dataSize">
-<code class="descname">dataSize</code><span class="sig-paren">(</span><em>filename</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#dataSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.dataSize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read data size from raw/mhd image</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filename</strong> (<em>str</em>) &#8211;
-imaris file name</li>
-<li><strong>x,y,z</strong> (<em>tuple or all</em>) &#8211;
-range specifications</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>int</em> &#8211;
-raw image data size</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="ClearMap.IO.RAW.dataZSize">
-<code class="descname">dataZSize</code><span class="sig-paren">(</span><em>filename</em>, <em>z=&lt;built-in function all&gt;</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#dataZSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.dataZSize" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read z data size from raw/mhd image</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filename</strong> (<em>str</em>) &#8211;
-imaris file name</li>
-<li><strong>z</strong> (<em>tuple or all</em>) &#8211;
-range specification</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>int</em> &#8211;
-raw image z data size</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="ClearMap.IO.RAW.readData">
-<code class="descname">readData</code><span class="sig-paren">(</span><em>filename</em>, <em>x=&lt;built-in function all&gt;</em>, <em>y=&lt;built-in function all&gt;</em>, <em>z=&lt;built-in function all&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#readData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.readData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read data from raw/mhd image</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filename</strong> (<em>str</em>) &#8211;
-file name as regular expression</li>
-<li><strong>x,y,z</strong> (<em>tuple</em>) &#8211;
-data range specifications</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>array</em> &#8211;
-image data</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="ClearMap.IO.RAW.writeHeader">
-<code class="descname">writeHeader</code><span class="sig-paren">(</span><em>filename</em>, <em>meta_dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#writeHeader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.writeHeader" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write raw header mhd file</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filename</strong> (<em>str</em>) &#8211;
-file name of header</li>
-<li><strong>meta_dict</strong> (<em>dict</em>) &#8211;
-dictionary of meta data</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>str</em> &#8211;
-header file name</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="ClearMap.IO.RAW.writeRawData">
-<code class="descname">writeRawData</code><span class="sig-paren">(</span><em>filename</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#writeRawData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.writeRawData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write the data into a raw format file.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filename</strong> (<em>str</em>) &#8211;
-file name as regular expression</li>
-<li><strong>data</strong> (<em>array</em>) &#8211;
-data to write to raw file</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>str</em> &#8211;
-file name of raw file</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="ClearMap.IO.RAW.writeData">
-<code class="descname">writeData</code><span class="sig-paren">(</span><em>filename</em>, <em>data</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#writeData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.writeData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Write  data into to raw/mhd file pair</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>filename</strong> (<em>str</em>) &#8211;
-file name as regular expression</li>
-<li><strong>data</strong> (<em>array</em>) &#8211;
-data to write to raw file</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>str</em> &#8211;
-file name of mhd file</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="ClearMap.IO.RAW.copyData">
-<code class="descname">copyData</code><span class="sig-paren">(</span><em>source</em>, <em>sink</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#copyData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.copyData" title="Permalink to this definition">¶</a></dt>
-<dd><p>Copy a raw/mhd file pair from source to sink</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>source</strong> (<em>str</em>) &#8211;
-file name of source</li>
-<li><strong>sink</strong> (<em>str</em>) &#8211;
-file name of sink</li>
-</ul>
-</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>str</em> &#8211;
-file name of the copy</p>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-<dl class="function">
-<dt id="ClearMap.IO.RAW.test">
-<code class="descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.test" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test RAW io module</p>
-</dd></dl>
-
+<div class="section" id="clearmap-io-raw-module">
+<h2>ClearMap.IO.RAW module<a class="headerlink" href="#clearmap-io-raw-module" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="module-ClearMap.IO.TIF">
 <span id="clearmap-io-tif-module"></span><h2>ClearMap.IO.TIF module<a class="headerlink" href="#module-ClearMap.IO.TIF" title="Permalink to this headline">¶</a></h2>
@@ -2188,9 +1988,6 @@ file name of the copy</p>
 <span class="go">(50, 100, 30, 4)</span>
 </pre></div>
 </div>
-<p>Author</p>
-<blockquote>
-<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.IO.TIF.dataSize">
 <code class="descname">dataSize</code><span class="sig-paren">(</span><em>filename</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/TIF.html#dataSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.TIF.dataSize" title="Permalink to this definition">¶</a></dt>
@@ -2326,11 +2123,6 @@ file name of the copy</p>
 <li>points are assumed to be in [x,y,z] coordinates as standard in ClearMap</li>
 <li>reading of points not supported at the moment!</li>
 </ul>
-<p>Author</p>
-<blockquote>
-<div><p>Christoph Kirst, The Rockefeller University, New York City, 2015</p>
-<p>Modified from matlab code by Kannan Umadevi Venkataraju</p>
-</div></blockquote>
 <dl class="function">
 <dt id="ClearMap.IO.VTK.writePoints">
 <code class="descname">writePoints</code><span class="sig-paren">(</span><em>filename</em>, <em>points</em>, <em>labelImage=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/VTK.html#writePoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.VTK.writePoints" title="Permalink to this definition">¶</a></dt>

@@ -20,6 +20,17 @@ detectCells(**ImageProcessingParameter);
 points, intensities = io.readPoints(ImageProcessingParameter["sink"]);
 points, intensities = thresholdPoints(points, intensities, threshold = (20, 900), row = (3,3));
 io.writePoints(FilteredCellsFile, (points, intensities));
+
+
+# Check Cell; detection
+import iDISCO.Visualization.Plot as plt;
+pointSource= os.path.join(BaseDirectory, FilteredCellsFile[0]);
+data = plt.overlayPoints(cFosFile, pointSource, pointColor = None, **cFosFileRange);
+io.writeData(os.path.join(BaseDirectory, 'cells_check.tif'), data);
+
+
+# Transform point coordinates
+
 points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
 points = resamplePoints(**CorrectionResamplingPointsParameter);
 points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
@@ -29,14 +40,6 @@ RegistrationResamplingPointParameter["pointSource"] = points;
 points = resamplePoints(**RegistrationResamplingPointParameter);
 points = transformPoints(points, transformDirectory = RegistrationAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
 io.writePoints(TransformedCellsFile, points);
-
-
-# Check Cell; detection
-import iDISCO.Visualization.Plot as plt;
-pointSource= os.path.join(BaseDirectory, FilteredCellsFile[0]);
-data = plt.overlayPoints(cFosFile, pointSource, pointColor = None, **cFosFileRange);
-io.writeData(os.path.join(BaseDirectory, 'cells_check.tif'), data);
-
 
 #################### Heat map generation
 

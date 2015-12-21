@@ -9,13 +9,13 @@ Notes:
     - The mapping between labels and brain area information is found in the
       './Data/ARA2_annotation_info.csv' file. 
       In the './Data/ARA2_annotation_info_collapse.csv' file a cross marks an area
-      to which all sub-areas will be collapsed.
+      to which all sub-areas can be collapsed.
       The location of this file is set in :const:`DefaultAnnotationFile`.  
       
-    - For consistentcy cretain labels of the Allen brain atlas without 
-      annotation were assinged to their correct parent regions.
+    - For consistency certain labels of the Allen brain atlas without 
+      annotation were assigned to their correct parent regions.
       
-    - A collapse collumn in the mapping file was added to allow for a region 
+    - A collapse column in the mapping file was added to allow for a region 
       based collapse of statistics based on the inheritance structure of the 
       annotated regions. These might need to be adjusted to the particular
       scientific question.
@@ -40,18 +40,18 @@ DefaultLabeledImageFile = os.path.join(ClearMapPath, 'Test/Data/Annotation/annot
 """str: default volumetric annotated image file
 
 This file is by default the Allen brain annotated mouse atlas with 25um 
-isotropic reslution.
+isotropic resolution.
 """
 
 
 DefaultAnnotationFile   = os.path.join(ClearMapPath, 'Data/ARA2_annotation_info_collapse.csv');
-"""str: default list of labels in the annotatd image and names of annotated regoins
+"""str: default list of labels in the annotated image and names of annotated regions
 
-This file is by default the lables for the Allen brain annotated mouse 
-atlas with 25um isotropic reslution.
+This file is by default the labels for the Allen brain annotated mouse 
+atlas with 25um isotropic resolution.
 
-An extra column for collapse indicats how to automatically collapse data into 
-the different bain regions if the ``collapse`` option is given.
+An extra column for collapse indicates how to automatically collapse data into 
+the different brain regions if the ``collapse`` option is given.
 """
 
 
@@ -70,7 +70,7 @@ def _collapseToBool(txt):
 
 
 class LabelInfo(object):
-    """Class that holds infomration of the annotated regions"""    
+    """Class that holds information of the annotated regions"""    
     
     
     ids = None;

@@ -20,8 +20,7 @@ Author
 """"""
     Copyright 2011 Maarten Everts and David Hammond.
 
-    Modified to integrate into ClearMap framework: 
-    - Christoph Kirst, The Rockefeller University, New York City, 2015
+    Modified to integrate into ClearMap framework by Christoph Kirst, The Rockefeller University, New York City, 2015
 """
 
 import numpy as np

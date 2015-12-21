@@ -2,15 +2,13 @@
 """
 IO interface to read microscope and point data
 
-Main module to distribute read and writing of individual data formats 
-to the specialized sub-modules 
+This is the main module to distribute the reading and writing of individual data formats to the specialized sub-modules.
 
 See :mod:`ClearMap.IO` for details.
 
-Author
-""""""
-    Christoph Kirst, The Rockefeller University, New York City, 2015
 """
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
 
 import sys
 self = sys.modules[__name__];
@@ -42,7 +40,7 @@ dataFileExtensionToType = { "tif" : "TIF", "tiff" : "TIF", "raw" : "RAW", "mhd" 
 
 
 ##############################################################################
-# Basic file querries
+# Basic file queries
 ##############################################################################
 
 def fileExtension(filename):

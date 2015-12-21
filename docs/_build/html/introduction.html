@@ -259,7 +259,7 @@ volumetric images in a fast parallel way.</p>
 <div class="section" id="image-processing">
 <h2>Image Processing<a class="headerlink" href="#image-processing" title="Permalink to this headline">¶</a></h2>
 <p>ClearMap provides a number of image processing tools with a focus on the
-processing of large 3D volumetric images in parallel. For the detection of objects in 3D, ClearMap has a modular architecture. For the user, most of this is hidden and called by the <code class="docutils literal"><span class="pre">SpotDetection</span></code> function (see the example script).</p>
+processing of large 3D volumetric images in parallel. For the detection of objects in 3D, ClearMap has a modular architecture. For the user, this is hidden and handled automatically by the <code class="docutils literal"><span class="pre">detectCells</span></code> function (see the example script).</p>
 <p>The main processing modules include:</p>
 <table border="1" class="docutils">
 <colgroup>
@@ -272,7 +272,7 @@ processing of large 3D volumetric images in parallel. For the detection of objec
 </tr>
 </thead>
 <tbody valign="top">
-<tr class="row-even"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.BackgroundRemoval" title="ClearMap.ImageProcessing.BackgroundRemoval"><code class="xref py py-mod docutils literal"><span class="pre">BackgroundRemoval</span></code></a></td>
+<tr class="row-even"><td><code class="xref py py-mod docutils literal"><span class="pre">BackgroundRemoval</span></code></td>
 <td>Background estimation and removal via morphological opening</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.IlluminationCorrection" title="ClearMap.ImageProcessing.IlluminationCorrection"><code class="xref py py-mod docutils literal"><span class="pre">IlluminationCorrection</span></code></a></td>
@@ -281,19 +281,19 @@ processing of large 3D volumetric images in parallel. For the detection of objec
 <tr class="row-even"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.Filter.html#module-ClearMap.ImageProcessing.Filter" title="ClearMap.ImageProcessing.Filter"><code class="xref py py-mod docutils literal"><span class="pre">Filter</span></code></a></td>
 <td>Filtering of the image via large set of filter kernels</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.GreyReconstruction" title="ClearMap.ImageProcessing.GreyReconstruction"><code class="xref py py-mod docutils literal"><span class="pre">GreyReconstruction</span></code></a></td>
+<tr class="row-odd"><td><code class="xref py py-mod docutils literal"><span class="pre">GreyReconstruction</span></code></td>
 <td>Reconstruction of images</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.SpotDetection" title="ClearMap.ImageProcessing.SpotDetection"><code class="xref py py-mod docutils literal"><span class="pre">SpotDetection</span></code></a></td>
+<tr class="row-even"><td><code class="xref py py-mod docutils literal"><span class="pre">SpotDetection</span></code></td>
 <td>Detection of local peaks</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.CellDetection" title="ClearMap.ImageProcessing.CellDetection"><code class="xref py py-mod docutils literal"><span class="pre">CellDetection</span></code></a></td>
+<tr class="row-odd"><td><code class="xref py py-mod docutils literal"><span class="pre">CellDetection</span></code></td>
 <td>Detection of cell centers</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.CellSizeDetection" title="ClearMap.ImageProcessing.CellSizeDetection"><code class="xref py py-mod docutils literal"><span class="pre">CellSizeDetection</span></code></a></td>
+<tr class="row-even"><td><code class="xref py py-mod docutils literal"><span class="pre">CellSizeDetection</span></code></td>
 <td>Detection of cell shapes via watershed</td>
 </tr>
-<tr class="row-odd"><td><a class="reference internal" href="api/ClearMap.ImageProcessing.html#module-ClearMap.ImageProcessing.IlastikClassification" title="ClearMap.ImageProcessing.IlastikClassification"><code class="xref py py-mod docutils literal"><span class="pre">IlastikClassification</span></code></a></td>
+<tr class="row-odd"><td><code class="xref py py-mod docutils literal"><span class="pre">IlastikClassification</span></code></td>
 <td>Classification of voxels via interface to <a class="reference internal" href="#ilastik" id="id4">[Ilastik]</a></td>
 </tr>
 </tbody>

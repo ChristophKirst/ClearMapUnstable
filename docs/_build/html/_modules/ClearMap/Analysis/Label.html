@@ -127,13 +127,13 @@
 <span class="sd">    - The mapping between labels and brain area information is found in the</span>
 <span class="sd">      &#39;./Data/ARA2_annotation_info.csv&#39; file. </span>
 <span class="sd">      In the &#39;./Data/ARA2_annotation_info_collapse.csv&#39; file a cross marks an area</span>
-<span class="sd">      to which all sub-areas will be collapsed.</span>
+<span class="sd">      to which all sub-areas can be collapsed.</span>
 <span class="sd">      The location of this file is set in :const:`DefaultAnnotationFile`.  </span>
 <span class="sd">      </span>
-<span class="sd">    - For consistentcy cretain labels of the Allen brain atlas without </span>
-<span class="sd">      annotation were assinged to their correct parent regions.</span>
+<span class="sd">    - For consistency certain labels of the Allen brain atlas without </span>
+<span class="sd">      annotation were assigned to their correct parent regions.</span>
 <span class="sd">      </span>
-<span class="sd">    - A collapse collumn in the mapping file was added to allow for a region </span>
+<span class="sd">    - A collapse column in the mapping file was added to allow for a region </span>
 <span class="sd">      based collapse of statistics based on the inheritance structure of the </span>
 <span class="sd">      annotated regions. These might need to be adjusted to the particular</span>
 <span class="sd">      scientific question.</span>
@@ -158,18 +158,18 @@
 <span class="sd">&quot;&quot;&quot;str: default volumetric annotated image file</span>
 
 <span class="sd">This file is by default the Allen brain annotated mouse atlas with 25um </span>
-<span class="sd">isotropic reslution.</span>
+<span class="sd">isotropic resolution.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
 <span class="n">DefaultAnnotationFile</span>   <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ClearMapPath</span><span class="p">,</span> <span class="s">&#39;Data/ARA2_annotation_info_collapse.csv&#39;</span><span class="p">);</span>
-<span class="sd">&quot;&quot;&quot;str: default list of labels in the annotatd image and names of annotated regoins</span>
+<span class="sd">&quot;&quot;&quot;str: default list of labels in the annotated image and names of annotated regions</span>
 
-<span class="sd">This file is by default the lables for the Allen brain annotated mouse </span>
-<span class="sd">atlas with 25um isotropic reslution.</span>
+<span class="sd">This file is by default the labels for the Allen brain annotated mouse </span>
+<span class="sd">atlas with 25um isotropic resolution.</span>
 
-<span class="sd">An extra column for collapse indicats how to automatically collapse data into </span>
-<span class="sd">the different bain regions if the ``collapse`` option is given.</span>
+<span class="sd">An extra column for collapse indicates how to automatically collapse data into </span>
+<span class="sd">the different brain regions if the ``collapse`` option is given.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
@@ -188,7 +188,7 @@
 
 
 <div class="viewcode-block" id="LabelInfo"><a class="viewcode-back" href="../../../api/ClearMap.Analysis.html#ClearMap.Analysis.Label.LabelInfo">[docs]</a><span class="k">class</span> <span class="nc">LabelInfo</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Class that holds infomration of the annotated regions&quot;&quot;&quot;</span>    
+    <span class="sd">&quot;&quot;&quot;Class that holds information of the annotated regions&quot;&quot;&quot;</span>    
     
     
     <span class="n">ids</span> <span class="o">=</span> <span class="bp">None</span><span class="p">;</span>

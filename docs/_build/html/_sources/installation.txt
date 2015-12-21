@@ -49,8 +49,8 @@ Configuration
 
 Open the file ClearMap/Settings.py to set the paths of installations for Ilastik and Elastix:
 
-    >>> IlastikPath = '/usr/local/ilastik-05-rc-final';
-    >>> ElastixPath = '/usr/local/elastix';
+    >>> IlastikPath = '/yourpath/ilastik-05-rc-final';
+    >>> ElastixPath = '/yourpath/elastix';
 
 Note that Ilastik is optional. If you haven’t installed it, you can set the path to ``None``. You can also set the installation to run on multiple machines by setting a host specific path:
 

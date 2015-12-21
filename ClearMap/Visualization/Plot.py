@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 """
-Plotting routines for overlaying lables, tilings, and sectioning of 3d data sets
+Plotting routines for overlaying labels, tilings, and sectioning of 3d data sets
 
 Supported functionality:
 
-    * plot volumetric data as a sequnece of tiles via :func:`plotTiling`
-    * overlay points on imags via :func:`overlayPoints` and 
+    * plot volumetric data as a sequence of tiles via :func:`plotTiling`
+    * overlay points on images via :func:`overlayPoints` and 
       :func:`plotOverlayPoints`
     * overlay labeled images on gray scale images via :func:`overlayLabel` and 
       :func:`plotOverlayLabel`
 
-Author
-""""""
-    Christoph Kirst, The Rockefeller University, 2015
-
 """
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
+
 
 import math
 import numpy
