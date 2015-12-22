@@ -12,7 +12,9 @@ Installation
 
 To install ClearMap, first create a folder to contain all the files for the program. Then, open a terminal window, change to the directory hosting ClearMap and download the code from GIT by running this command:
 
-    >>> git clone https://git.assembla.com/idisco.git
+.. code-block:: bash
+
+    $ git clone https://git.assembla.com/idisco.git
 
 If you’re starting from scratch, you also need to download individually the following softwares:
 
@@ -47,7 +49,7 @@ We use `Spyder <https://pythonhosted.org/spyder/>`_ to run the code.
 Configuration
 ^^^^^^^^^^^^^
 
-Open the file ClearMap/Settings.py to set the paths of installations for Ilastik and Elastix:
+Open the file ``ClearMap/Settings.py`` to set the paths of installations for Ilastik and Elastix:
 
     >>> IlastikPath = '/yourpath/ilastik-05-rc-final';
     >>> ElastixPath = '/yourpath/elastix';
@@ -55,9 +57,9 @@ Open the file ClearMap/Settings.py to set the paths of installations for Ilastik
 Note that Ilastik is optional. If you haven’t installed it, you can set the path to ``None``. You can also set the installation to run on multiple machines by setting a host specific path:
 
     >>> if hostname == 'kagalaska.nld':  #Christoph’s Laptop 
-    >>>         IlastikPath = '/home/ckirst/programs/ilastik-05/';
-    >>>         ElastixPath = '/home/ckirst/programs/elastix/';
-    >>>     elif hostname == 'mtllab-Ubuntu': #Nico’s Workstation
-    >>>         IlastikPath = '/usr/local/ilastik-05-rc-final';
-    >>>         ElastixPath = '/usr/local/elastix';       
+    >>>     IlastikPath = '/home/ckirst/programs/ilastik-05/';
+    >>>     ElastixPath = '/home/ckirst/programs/elastix/';
+    >>> elif hostname == 'mtllab-Ubuntu': #Nico’s Workstation
+    >>>     IlastikPath = '/usr/local/ilastik-05-rc-final';
+    >>>     ElastixPath = '/usr/local/elastix';       
 

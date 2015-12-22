@@ -43,7 +43,7 @@
 \contentsline {subsubsection}{\emph {Voxel statistics}}{19}{subsubsection*.30}
 \contentsline {subsubsection}{\emph {Regions statistics}}{20}{subsubsection*.31}
 \contentsline {subsubsection}{\emph {Automated region isolation}}{21}{subsubsection*.32}
-\contentsline {section}{\numberline {2.4}ClearMap Image Analysis Tools}{21}{section.2.4}
+\contentsline {section}{\numberline {2.4}ClearMap Image Analysis Tools}{22}{section.2.4}
 \contentsline {subsection}{\numberline {2.4.1}Visualizing 3D Images}{22}{subsection.2.4.1}
 \contentsline {subsubsection}{Tiled Plots}{22}{subsubsection*.33}
 \contentsline {subsection}{\numberline {2.4.2}Image Statistics}{25}{subsection.2.4.2}
@@ -75,69 +75,87 @@
 \contentsline {paragraph}{Example}{49}{paragraph*.121}
 \contentsline {paragraph}{Notes}{51}{paragraph*.131}
 \contentsline {paragraph}{ClearMap.IO.RAW module}{51}{paragraph*.133}
-\contentsline {paragraph}{ClearMap.IO.TIF module}{51}{paragraph*.134}
-\contentsline {paragraph}{Example}{51}{paragraph*.135}
-\contentsline {paragraph}{ClearMap.IO.VTK module}{52}{paragraph*.142}
-\contentsline {paragraph}{Notes}{52}{paragraph*.143}
-\contentsline {paragraph}{Notes}{52}{paragraph*.146}
-\contentsline {subsubsection}{ClearMap.Alignment package}{52}{subsubsection*.147}
-\contentsline {paragraph}{ClearMap.Alignment.Elastix module}{53}{paragraph*.149}
-\contentsline {paragraph}{ClearMap.Alignment.Resampling module}{53}{paragraph*.150}
-\contentsline {subsubsection}{ClearMap.ImageProcessing package}{53}{subsubsection*.151}
-\contentsline {paragraph}{Volumetric Image Processing}{53}{paragraph*.152}
-\contentsline {paragraph}{Parallel Image Processing}{53}{paragraph*.153}
-\contentsline {paragraph}{External Packages}{54}{paragraph*.154}
-\contentsline {paragraph}{ClearMap.ImageProcessing.StackProcessing module}{54}{paragraph*.155}
-\contentsline {subparagraph}{Sub-Stacks}{54}{subparagraph*.156}
-\contentsline {paragraph}{ClearMap.ImageProcessing.CellDetection module}{57}{paragraph*.165}
-\contentsline {paragraph}{ClearMap.ImageProcessing.CellSizeDetection module}{57}{paragraph*.166}
-\contentsline {paragraph}{Subpackages}{57}{paragraph*.167}
-\contentsline {subparagraph}{ClearMap.ImageProcessing.Filter package}{57}{subparagraph*.168}
-\contentsline {subparagraph}{ClearMap.ImageProcessing.Filter.LinearFilter module}{57}{subparagraph*.169}
-\contentsline {subparagraph}{ClearMap.ImageProcessing.Filter.DoGFilter module}{58}{subparagraph*.171}
-\contentsline {subparagraph}{ClearMap.ImageProcessing.Filter.Convolution module}{58}{subparagraph*.173}
-\contentsline {subparagraph}{ClearMap.ImageProcessing.Filter.FilterKernel module}{59}{subparagraph*.175}
-\contentsline {subparagraph}{Filter Type}{59}{subparagraph*.176}
-\contentsline {subparagraph}{ClearMap.ImageProcessing.Filter.StructureElement module}{60}{subparagraph*.181}
-\contentsline {subparagraph}{Structure Element Types}{60}{subparagraph*.182}
-\contentsline {paragraph}{ClearMap.ImageProcessing.IlluminationCorrection module}{61}{paragraph*.187}
-\contentsline {paragraph}{References}{61}{paragraph*.188}
-\contentsline {paragraph}{References}{62}{paragraph*.191}
-\contentsline {paragraph}{ClearMap.ImageProcessing.BackgroundRemoval module}{62}{paragraph*.194}
-\contentsline {paragraph}{ClearMap.ImageProcessing.GreyReconstruction module}{62}{paragraph*.195}
-\contentsline {paragraph}{ClearMap.ImageProcessing.SpotDetection module}{62}{paragraph*.196}
-\contentsline {paragraph}{ClearMap.ImageProcessing.MaximaDetection module}{62}{paragraph*.197}
-\contentsline {paragraph}{ClearMap.ImageProcessing.IlastikClassification module}{62}{paragraph*.198}
-\contentsline {paragraph}{ClearMap.ImageProcessing.ImageStatistics module}{62}{paragraph*.199}
-\contentsline {subsubsection}{ClearMap.Analysis package}{64}{subsubsection*.203}
-\contentsline {paragraph}{Subpackages}{64}{paragraph*.204}
-\contentsline {subparagraph}{ClearMap.Analysis.Tools package}{64}{subparagraph*.205}
-\contentsline {subparagraph}{ClearMap.Analysis.Tools.Extrapolate module}{64}{subparagraph*.206}
-\contentsline {subparagraph}{ClearMap.Analysis.Tools.MultipleComparisonCorrection module}{65}{subparagraph*.209}
-\contentsline {paragraph}{References}{65}{paragraph*.211}
-\contentsline {paragraph}{Notes}{65}{paragraph*.212}
-\contentsline {paragraph}{Notes}{65}{paragraph*.214}
-\contentsline {paragraph}{References}{66}{paragraph*.215}
-\contentsline {subparagraph}{ClearMap.Analysis.Tools.StatisticalTests module}{66}{subparagraph*.216}
-\contentsline {paragraph}{References}{66}{paragraph*.218}
-\contentsline {paragraph}{ClearMap.Analysis.Label module}{66}{paragraph*.219}
-\contentsline {paragraph}{Notes}{66}{paragraph*.220}
-\contentsline {paragraph}{References}{66}{paragraph*.221}
-\contentsline {paragraph}{ClearMap.Analysis.Statistics module}{68}{paragraph*.266}
-\contentsline {paragraph}{ClearMap.Analysis.Voxelization module}{69}{paragraph*.283}
-\contentsline {subsubsection}{ClearMap.Visualization package}{70}{subsubsection*.287}
-\contentsline {paragraph}{ClearMap.Visualization.Plot module}{70}{paragraph*.288}
-\contentsline {subsubsection}{ClearMap.Parameter module}{72}{subsubsection*.295}
-\contentsline {subsubsection}{ClearMap.Settings module}{73}{subsubsection*.302}
-\contentsline {paragraph}{Notes}{73}{paragraph*.303}
-\contentsline {paragraph}{Notes}{73}{paragraph*.305}
-\contentsline {paragraph}{Notes}{74}{paragraph*.307}
-\contentsline {paragraph}{Notes}{74}{paragraph*.309}
-\contentsline {subsubsection}{ClearMap.Utils package}{74}{subsubsection*.312}
-\contentsline {paragraph}{ClearMap.Utils.ParameterTools module}{74}{paragraph*.313}
-\contentsline {paragraph}{ClearMap.Utils.ProcessWriter module}{75}{paragraph*.317}
-\contentsline {paragraph}{ClearMap.Utils.Timer module}{75}{paragraph*.322}
-\contentsline {chapter}{\numberline {4}Indices}{77}{chapter.4}
-\contentsline {chapter}{Bibliography}{79}{chapter*.331}
-\contentsline {chapter}{Python Module Index}{81}{section*.340}
-\contentsline {chapter}{Index}{83}{section*.341}
+\contentsline {paragraph}{Example}{51}{paragraph*.134}
+\contentsline {paragraph}{ClearMap.IO.TIF module}{52}{paragraph*.143}
+\contentsline {paragraph}{Example}{52}{paragraph*.144}
+\contentsline {paragraph}{ClearMap.IO.VTK module}{53}{paragraph*.151}
+\contentsline {paragraph}{Notes}{53}{paragraph*.152}
+\contentsline {paragraph}{Notes}{54}{paragraph*.155}
+\contentsline {subsubsection}{ClearMap.Alignment package}{54}{subsubsection*.156}
+\contentsline {paragraph}{ClearMap.Alignment.Elastix module}{54}{paragraph*.158}
+\contentsline {subparagraph}{Summary}{55}{subparagraph*.159}
+\contentsline {paragraph}{Notes}{55}{paragraph*.161}
+\contentsline {paragraph}{Notes}{55}{paragraph*.163}
+\contentsline {paragraph}{Notes}{55}{paragraph*.165}
+\contentsline {paragraph}{Notes}{55}{paragraph*.167}
+\contentsline {paragraph}{Notes}{56}{paragraph*.173}
+\contentsline {paragraph}{Notes}{56}{paragraph*.175}
+\contentsline {paragraph}{ClearMap.Alignment.Resampling module}{59}{paragraph*.188}
+\contentsline {subparagraph}{Image Representation and Size}{59}{subparagraph*.189}
+\contentsline {subparagraph}{Orientation}{59}{subparagraph*.190}
+\contentsline {paragraph}{Examples}{59}{paragraph*.191}
+\contentsline {paragraph}{Notes}{62}{paragraph*.203}
+\contentsline {paragraph}{Notes}{63}{paragraph*.205}
+\contentsline {paragraph}{Notes}{64}{paragraph*.207}
+\contentsline {paragraph}{Notes}{64}{paragraph*.209}
+\contentsline {subsubsection}{ClearMap.ImageProcessing package}{65}{subsubsection*.211}
+\contentsline {paragraph}{Volumetric Image Processing}{65}{paragraph*.212}
+\contentsline {paragraph}{Parallel Image Processing}{65}{paragraph*.213}
+\contentsline {paragraph}{External Packages}{65}{paragraph*.214}
+\contentsline {paragraph}{ClearMap.ImageProcessing.StackProcessing module}{66}{paragraph*.215}
+\contentsline {subparagraph}{Sub-Stacks}{66}{subparagraph*.216}
+\contentsline {paragraph}{ClearMap.ImageProcessing.CellDetection module}{69}{paragraph*.225}
+\contentsline {paragraph}{Example}{69}{paragraph*.226}
+\contentsline {paragraph}{ClearMap.ImageProcessing.CellSizeDetection module}{70}{paragraph*.228}
+\contentsline {paragraph}{Subpackages}{71}{paragraph*.232}
+\contentsline {subparagraph}{ClearMap.ImageProcessing.Filter package}{71}{subparagraph*.233}
+\contentsline {subparagraph}{ClearMap.ImageProcessing.Filter.LinearFilter module}{71}{subparagraph*.234}
+\contentsline {subparagraph}{ClearMap.ImageProcessing.Filter.DoGFilter module}{72}{subparagraph*.236}
+\contentsline {subparagraph}{ClearMap.ImageProcessing.Filter.Convolution module}{72}{subparagraph*.238}
+\contentsline {subparagraph}{ClearMap.ImageProcessing.Filter.FilterKernel module}{72}{subparagraph*.240}
+\contentsline {subparagraph}{Filter Type}{73}{subparagraph*.241}
+\contentsline {subparagraph}{ClearMap.ImageProcessing.Filter.StructureElement module}{73}{subparagraph*.246}
+\contentsline {subparagraph}{Structure Element Types}{74}{subparagraph*.247}
+\contentsline {paragraph}{ClearMap.ImageProcessing.IlluminationCorrection module}{74}{paragraph*.252}
+\contentsline {paragraph}{References}{74}{paragraph*.253}
+\contentsline {paragraph}{References}{75}{paragraph*.256}
+\contentsline {paragraph}{ClearMap.ImageProcessing.BackgroundRemoval module}{76}{paragraph*.259}
+\contentsline {paragraph}{ClearMap.ImageProcessing.GreyReconstruction module}{76}{paragraph*.261}
+\contentsline {paragraph}{ClearMap.ImageProcessing.SpotDetection module}{78}{paragraph*.264}
+\contentsline {paragraph}{Example}{78}{paragraph*.265}
+\contentsline {paragraph}{ClearMap.ImageProcessing.MaximaDetection module}{79}{paragraph*.268}
+\contentsline {paragraph}{ClearMap.ImageProcessing.IlastikClassification module}{81}{paragraph*.276}
+\contentsline {paragraph}{References}{82}{paragraph*.277}
+\contentsline {paragraph}{ClearMap.ImageProcessing.ImageStatistics module}{83}{paragraph*.284}
+\contentsline {subsubsection}{ClearMap.Analysis package}{84}{subsubsection*.288}
+\contentsline {paragraph}{Subpackages}{85}{paragraph*.289}
+\contentsline {subparagraph}{ClearMap.Analysis.Tools package}{85}{subparagraph*.290}
+\contentsline {subparagraph}{ClearMap.Analysis.Tools.Extrapolate module}{85}{subparagraph*.291}
+\contentsline {subparagraph}{ClearMap.Analysis.Tools.MultipleComparisonCorrection module}{85}{subparagraph*.294}
+\contentsline {paragraph}{References}{86}{paragraph*.296}
+\contentsline {paragraph}{Notes}{86}{paragraph*.297}
+\contentsline {paragraph}{Notes}{86}{paragraph*.299}
+\contentsline {paragraph}{References}{86}{paragraph*.300}
+\contentsline {subparagraph}{ClearMap.Analysis.Tools.StatisticalTests module}{86}{subparagraph*.301}
+\contentsline {paragraph}{References}{87}{paragraph*.303}
+\contentsline {paragraph}{ClearMap.Analysis.Label module}{87}{paragraph*.304}
+\contentsline {paragraph}{Notes}{87}{paragraph*.305}
+\contentsline {paragraph}{References}{87}{paragraph*.306}
+\contentsline {paragraph}{ClearMap.Analysis.Statistics module}{89}{paragraph*.351}
+\contentsline {paragraph}{ClearMap.Analysis.Voxelization module}{90}{paragraph*.368}
+\contentsline {subsubsection}{ClearMap.Visualization package}{90}{subsubsection*.372}
+\contentsline {paragraph}{ClearMap.Visualization.Plot module}{91}{paragraph*.373}
+\contentsline {subsubsection}{ClearMap.Parameter module}{92}{subsubsection*.380}
+\contentsline {subsubsection}{ClearMap.Settings module}{94}{subsubsection*.387}
+\contentsline {paragraph}{Notes}{94}{paragraph*.388}
+\contentsline {paragraph}{Notes}{94}{paragraph*.390}
+\contentsline {paragraph}{Notes}{94}{paragraph*.392}
+\contentsline {paragraph}{Notes}{94}{paragraph*.394}
+\contentsline {subsubsection}{ClearMap.Utils package}{95}{subsubsection*.397}
+\contentsline {paragraph}{ClearMap.Utils.ParameterTools module}{95}{paragraph*.398}
+\contentsline {paragraph}{ClearMap.Utils.ProcessWriter module}{95}{paragraph*.402}
+\contentsline {paragraph}{ClearMap.Utils.Timer module}{96}{paragraph*.407}
+\contentsline {chapter}{\numberline {4}Indices}{97}{chapter.4}
+\contentsline {chapter}{Bibliography}{99}{chapter*.416}
+\contentsline {chapter}{Python Module Index}{101}{section*.425}
+\contentsline {chapter}{Index}{103}{section*.426}

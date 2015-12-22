@@ -154,11 +154,11 @@
 <p>ClearMap analysis and statistics toolbox.</p>
 <p>This part of ClearMap provides a toolbox for the statistical analysis and
 visualization of detected cells or structures and region specific analysis
-of annoated data.</p>
-<p>For cleared mouse brains aligned to the Allen brain atlas a wide range of
-statistical analysis tools with respect to the anotated brain regions in
+of annotated data.</p>
+<p>For cleared mouse brains aligned to the Allen brain atlas, a wide range of
+statistical analysis tools with respect to the annotated brain regions in
 the atlas is supported.</p>
-<p>Key moduls are:</p>
+<p>Key modules are:</p>
 <table border="1" class="docutils">
 <colgroup>
 <col width="38%" />
@@ -166,7 +166,7 @@ the atlas is supported.</p>
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Module</th>
-<th class="head">Descrition</th>
+<th class="head">Description</th>
 </tr>
 </thead>
 <tbody valign="top">
@@ -177,7 +177,7 @@ the atlas is supported.</p>
 <td>Statistical tools for the analysis of detected cells</td>
 </tr>
 <tr class="row-even"><td><a class="reference internal" href="#module-ClearMap.Analysis.Label" title="ClearMap.Analysis.Label"><code class="xref py py-mod docutils literal"><span class="pre">Label</span></code></a></td>
-<td>Tools to analysise data with espect to annotated refereneces</td>
+<td>Tools to analyse data with respect to annotated references</td>
 </tr>
 </tbody>
 </table>
@@ -204,11 +204,11 @@ but can be set in the constant <a class="reference internal" href="#ClearMap.Ana
 <li>The mapping between labels and brain area information is found in the
 &#8216;./Data/ARA2_annotation_info.csv&#8217; file.
 In the &#8216;./Data/ARA2_annotation_info_collapse.csv&#8217; file a cross marks an area
-to which all sub-areas will be collapsed.
+to which all sub-areas can be collapsed.
 The location of this file is set in <a class="reference internal" href="#ClearMap.Analysis.Label.DefaultAnnotationFile" title="ClearMap.Analysis.Label.DefaultAnnotationFile"><code class="xref py py-const docutils literal"><span class="pre">DefaultAnnotationFile</span></code></a>.</li>
-<li>For consistentcy cretain labels of the Allen brain atlas without
-annotation were assinged to their correct parent regions.</li>
-<li>A collapse collumn in the mapping file was added to allow for a region
+<li>For consistency certain labels of the Allen brain atlas without
+annotation were assigned to their correct parent regions.</li>
+<li>A collapse column in the mapping file was added to allow for a region
 based collapse of statistics based on the inheritance structure of the
 annotated regions. These might need to be adjusted to the particular
 scientific question.</li>
@@ -219,20 +219,20 @@ scientific question.</li>
 </ul>
 <dl class="data">
 <dt id="ClearMap.Analysis.Label.DefaultLabeledImageFile">
-<code class="descname">DefaultLabeledImageFile</code><em class="property"> = '/Users/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Test/Data/Annotation/annotation_25_right.tif'</em><a class="headerlink" href="#ClearMap.Analysis.Label.DefaultLabeledImageFile" title="Permalink to this definition">¶</a></dt>
+<code class="descname">DefaultLabeledImageFile</code><em class="property"> = '/home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Test/Data/Annotation/annotation_25_right.tif'</em><a class="headerlink" href="#ClearMap.Analysis.Label.DefaultLabeledImageFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>str: default volumetric annotated image file</p>
 <p>This file is by default the Allen brain annotated mouse atlas with 25um
-isotropic reslution.</p>
+isotropic resolution.</p>
 </dd></dl>
 
 <dl class="data">
 <dt id="ClearMap.Analysis.Label.DefaultAnnotationFile">
-<code class="descname">DefaultAnnotationFile</code><em class="property"> = '/Users/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Data/ARA2_annotation_info_collapse.csv'</em><a class="headerlink" href="#ClearMap.Analysis.Label.DefaultAnnotationFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>str: default list of labels in the annotatd image and names of annotated regoins</p>
-<p>This file is by default the lables for the Allen brain annotated mouse
-atlas with 25um isotropic reslution.</p>
-<p>An extra column for collapse indicats how to automatically collapse data into
-the different bain regions if the <code class="docutils literal"><span class="pre">collapse</span></code> option is given.</p>
+<code class="descname">DefaultAnnotationFile</code><em class="property"> = '/home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Data/ARA2_annotation_info_collapse.csv'</em><a class="headerlink" href="#ClearMap.Analysis.Label.DefaultAnnotationFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>str: default list of labels in the annotated image and names of annotated regions</p>
+<p>This file is by default the labels for the Allen brain annotated mouse
+atlas with 25um isotropic resolution.</p>
+<p>An extra column for collapse indicates how to automatically collapse data into
+the different brain regions if the <code class="docutils literal"><span class="pre">collapse</span></code> option is given.</p>
 </dd></dl>
 
 <dl class="class">
@@ -298,9 +298,9 @@ the different bain regions if the <code class="docutils literal"><span class="pr
 
 <dl class="class">
 <dt id="ClearMap.Analysis.Label.LabelInfo">
-<em class="property">class </em><code class="descname">LabelInfo</code><span class="sig-paren">(</span><em>slf</em>, <em>annotationFile='/Users/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Data/ARA2_annotation_info_collapse.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Label.html#LabelInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Label.LabelInfo" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descname">LabelInfo</code><span class="sig-paren">(</span><em>slf</em>, <em>annotationFile='/home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Data/ARA2_annotation_info_collapse.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Label.html#LabelInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Label.LabelInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Class that holds infomration of the annotated regions</p>
+<p>Class that holds information of the annotated regions</p>
 <dl class="attribute">
 <dt id="ClearMap.Analysis.Label.LabelInfo.ids">
 <code class="descname">ids</code><em class="property"> = None</em><a class="headerlink" href="#ClearMap.Analysis.Label.LabelInfo.ids" title="Permalink to this definition">¶</a></dt>
@@ -343,7 +343,7 @@ the different bain regions if the <code class="docutils literal"><span class="pr
 
 <dl class="method">
 <dt id="ClearMap.Analysis.Label.LabelInfo.initialize">
-<code class="descname">initialize</code><span class="sig-paren">(</span><em>slf</em>, <em>annotationFile='/Users/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Data/ARA2_annotation_info_collapse.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Label.html#LabelInfo.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Label.LabelInfo.initialize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">initialize</code><span class="sig-paren">(</span><em>slf</em>, <em>annotationFile='/home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Data/ARA2_annotation_info_collapse.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Label.html#LabelInfo.initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Label.LabelInfo.initialize" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -396,7 +396,7 @@ the different bain regions if the <code class="docutils literal"><span class="pr
 
 <dl class="function">
 <dt id="ClearMap.Analysis.Label.initialize">
-<code class="descname">initialize</code><span class="sig-paren">(</span><em>annotationFile='/Users/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Data/ARA2_annotation_info_collapse.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Label.html#initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Label.initialize" title="Permalink to this definition">¶</a></dt>
+<code class="descname">initialize</code><span class="sig-paren">(</span><em>annotationFile='/home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Data/ARA2_annotation_info_collapse.csv'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Label.html#initialize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Label.initialize" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -411,12 +411,12 @@ the different bain regions if the <code class="docutils literal"><span class="pr
 
 <dl class="function">
 <dt id="ClearMap.Analysis.Label.labelPoints">
-<code class="descname">labelPoints</code><span class="sig-paren">(</span><em>points</em>, <em>labeledImage='/Users/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Test/Data/Annotation/annotation_25_right.tif'</em>, <em>level=None</em>, <em>collapse=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Label.html#labelPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Label.labelPoints" title="Permalink to this definition">¶</a></dt>
+<code class="descname">labelPoints</code><span class="sig-paren">(</span><em>points</em>, <em>labeledImage='/home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Test/Data/Annotation/annotation_25_right.tif'</em>, <em>level=None</em>, <em>collapse=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Label.html#labelPoints"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Label.labelPoints" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
 <dt id="ClearMap.Analysis.Label.countPointsInRegions">
-<code class="descname">countPointsInRegions</code><span class="sig-paren">(</span><em>points</em>, <em>labeledImage='/Users/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Test/Data/Annotation/annotation_25_right.tif'</em>, <em>intensities=None</em>, <em>intensityRow=0</em>, <em>level=None</em>, <em>allIds=False</em>, <em>sort=True</em>, <em>returnIds=True</em>, <em>returnCounts=False</em>, <em>collapse=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Label.html#countPointsInRegions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Label.countPointsInRegions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">countPointsInRegions</code><span class="sig-paren">(</span><em>points</em>, <em>labeledImage='/home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Test/Data/Annotation/annotation_25_right.tif'</em>, <em>intensities=None</em>, <em>intensityRow=0</em>, <em>level=None</em>, <em>allIds=False</em>, <em>sort=True</em>, <em>returnIds=True</em>, <em>returnCounts=False</em>, <em>collapse=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Label.html#countPointsInRegions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Label.countPointsInRegions" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -523,13 +523,13 @@ in voxelized and labeled data</p>
 
 <dl class="function">
 <dt id="ClearMap.Analysis.Statistics.countPointsGroupInRegions">
-<code class="descname">countPointsGroupInRegions</code><span class="sig-paren">(</span><em>pointGroup</em>, <em>labeledImage='/Users/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Test/Data/Annotation/annotation_25_right.tif'</em>, <em>intensityGroup=None</em>, <em>intensityRow=0</em>, <em>returnIds=True</em>, <em>returnCounts=False</em>, <em>collapse=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Statistics.html#countPointsGroupInRegions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Statistics.countPointsGroupInRegions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">countPointsGroupInRegions</code><span class="sig-paren">(</span><em>pointGroup</em>, <em>labeledImage='/home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Test/Data/Annotation/annotation_25_right.tif'</em>, <em>intensityGroup=None</em>, <em>intensityRow=0</em>, <em>returnIds=True</em>, <em>returnCounts=False</em>, <em>collapse=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Statistics.html#countPointsGroupInRegions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Statistics.countPointsGroupInRegions" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a table of counts for the various point datasets in pointGroup</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="ClearMap.Analysis.Statistics.tTestPointsInRegions">
-<code class="descname">tTestPointsInRegions</code><span class="sig-paren">(</span><em>pointCounts1</em>, <em>pointCounts2</em>, <em>labeledImage='/Users/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Test/Data/Annotation/annotation_25_right.tif'</em>, <em>signed=False</em>, <em>removeNaN=True</em>, <em>pcutoff=None</em>, <em>equal_var=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Statistics.html#tTestPointsInRegions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Statistics.tTestPointsInRegions" title="Permalink to this definition">¶</a></dt>
+<code class="descname">tTestPointsInRegions</code><span class="sig-paren">(</span><em>pointCounts1</em>, <em>pointCounts2</em>, <em>labeledImage='/home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Test/Data/Annotation/annotation_25_right.tif'</em>, <em>signed=False</em>, <em>removeNaN=True</em>, <em>pcutoff=None</em>, <em>equal_var=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Statistics.html#tTestPointsInRegions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Statistics.tTestPointsInRegions" title="Permalink to this definition">¶</a></dt>
 <dd><p>t-Test on differences in counts of points in labeled regions</p>
 </dd></dl>
 
@@ -547,7 +547,7 @@ in voxelized and labeled data</p>
 
 <dl class="function">
 <dt id="ClearMap.Analysis.Statistics.testCompletedCumulativesInSpheres">
-<code class="descname">testCompletedCumulativesInSpheres</code><span class="sig-paren">(</span><em>points1</em>, <em>intensities1</em>, <em>points2</em>, <em>intensities2</em>, <em>dataSize='/Users/nicolasrenier/Documents/ClearMap/idisco/ClearMap/Test/Data/Annotation/annotation_25_right.tif'</em>, <em>radius=100</em>, <em>method='AndresonDarling'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Statistics.html#testCompletedCumulativesInSpheres"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Statistics.testCompletedCumulativesInSpheres" title="Permalink to this definition">¶</a></dt>
+<code class="descname">testCompletedCumulativesInSpheres</code><span class="sig-paren">(</span><em>points1</em>, <em>intensities1</em>, <em>points2</em>, <em>intensities2</em>, <em>dataSize='/home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Test/Data/Annotation/annotation_25_right.tif'</em>, <em>radius=100</em>, <em>method='AndresonDarling'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/Analysis/Statistics.html#testCompletedCumulativesInSpheres"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.Analysis.Statistics.testCompletedCumulativesInSpheres" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs completed cumulative distribution tests for each pixel using points in a ball centered at that cooridnates, returns 4 arrays p value, statistic value, number in each group</p>
 </dd></dl>
 
@@ -684,7 +684,7 @@ volumetric data with with points marked in voxels</p>
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015 Christoph Kirst.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.2.
     </div>
   </body>
 </html>

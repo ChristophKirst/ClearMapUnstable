@@ -193,7 +193,7 @@ The c coordinate is a possible color channel.</p>
 </tr>
 <tr class="row-odd"><td>RAW / MHD</td>
 <td>raw image files with optional mhd header file</td>
-<td><code class="xref py py-mod docutils literal"><span class="pre">RAW</span></code></td>
+<td><a class="reference internal" href="#module-ClearMap.IO.RAW" title="ClearMap.IO.RAW"><code class="xref py py-mod docutils literal"><span class="pre">RAW</span></code></a></td>
 </tr>
 <tr class="row-even"><td>NRRD</td>
 <td>nearly raw raster data files</td>
@@ -1971,8 +1971,196 @@ file name of the copy</p>
 </dd></dl>
 
 </div>
-<div class="section" id="clearmap-io-raw-module">
-<h2>ClearMap.IO.RAW module<a class="headerlink" href="#clearmap-io-raw-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-ClearMap.IO.RAW">
+<span id="clearmap-io-raw-module"></span><h2>ClearMap.IO.RAW module<a class="headerlink" href="#module-ClearMap.IO.RAW" title="Permalink to this headline">¶</a></h2>
+<p>Simple Interface to read RAW/MHD files e.g. created by elastix</p>
+<p>Todo: read subsets efficiently</p>
+<p class="rubric">Example</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ClearMap.Settings</span> <span class="kn">import</span> <span class="n">ClearMapPath</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.IO.RAW</span> <span class="kn">as</span> <span class="nn">raw</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ClearMapPath</span><span class="p">,</span> <span class="s">&#39;Test/Data/Raw/test.mhd&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">raw</span><span class="o">.</span><span class="n">dataSize</span><span class="p">(</span><span class="n">filename</span><span class="p">);</span>
+<span class="go">(20, 50, 10)</span>
+</pre></div>
+</div>
+<p>Author</p>
+<blockquote>
+<div>Christoph Kirst, The Rockefeller University, New York City, 2015</div></blockquote>
+<dl class="function">
+<dt id="ClearMap.IO.RAW.dataSize">
+<code class="descname">dataSize</code><span class="sig-paren">(</span><em>filename</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#dataSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.dataSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read data size from raw/mhd image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211;
+imaris file name</li>
+<li><strong>x,y,z</strong> (<em>tuple or all</em>) &#8211;
+range specifications</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>int</em> &#8211;
+raw image data size</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ClearMap.IO.RAW.dataZSize">
+<code class="descname">dataZSize</code><span class="sig-paren">(</span><em>filename</em>, <em>z=&lt;built-in function all&gt;</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#dataZSize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.dataZSize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read z data size from raw/mhd image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211;
+imaris file name</li>
+<li><strong>z</strong> (<em>tuple or all</em>) &#8211;
+range specification</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>int</em> &#8211;
+raw image z data size</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ClearMap.IO.RAW.readData">
+<code class="descname">readData</code><span class="sig-paren">(</span><em>filename</em>, <em>x=&lt;built-in function all&gt;</em>, <em>y=&lt;built-in function all&gt;</em>, <em>z=&lt;built-in function all&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#readData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.readData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read data from raw/mhd image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211;
+file name as regular expression</li>
+<li><strong>x,y,z</strong> (<em>tuple</em>) &#8211;
+data range specifications</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>array</em> &#8211;
+image data</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ClearMap.IO.RAW.writeHeader">
+<code class="descname">writeHeader</code><span class="sig-paren">(</span><em>filename</em>, <em>meta_dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#writeHeader"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.writeHeader" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write raw header mhd file</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211;
+file name of header</li>
+<li><strong>meta_dict</strong> (<em>dict</em>) &#8211;
+dictionary of meta data</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>str</em> &#8211;
+header file name</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ClearMap.IO.RAW.writeRawData">
+<code class="descname">writeRawData</code><span class="sig-paren">(</span><em>filename</em>, <em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#writeRawData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.writeRawData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write the data into a raw format file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211;
+file name as regular expression</li>
+<li><strong>data</strong> (<em>array</em>) &#8211;
+data to write to raw file</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>str</em> &#8211;
+file name of raw file</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ClearMap.IO.RAW.writeData">
+<code class="descname">writeData</code><span class="sig-paren">(</span><em>filename</em>, <em>data</em>, <em>**args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#writeData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.writeData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write  data into to raw/mhd file pair</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) &#8211;
+file name as regular expression</li>
+<li><strong>data</strong> (<em>array</em>) &#8211;
+data to write to raw file</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>str</em> &#8211;
+file name of mhd file</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ClearMap.IO.RAW.copyData">
+<code class="descname">copyData</code><span class="sig-paren">(</span><em>source</em>, <em>sink</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#copyData"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.copyData" title="Permalink to this definition">¶</a></dt>
+<dd><p>Copy a raw/mhd file pair from source to sink</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>source</strong> (<em>str</em>) &#8211;
+file name of source</li>
+<li><strong>sink</strong> (<em>str</em>) &#8211;
+file name of sink</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>str</em> &#8211;
+file name of the copy</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="ClearMap.IO.RAW.test">
+<code class="descname">test</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ClearMap/IO/RAW.html#test"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ClearMap.IO.RAW.test" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test RAW io module</p>
+</dd></dl>
+
 </div>
 <div class="section" id="module-ClearMap.IO.TIF">
 <span id="clearmap-io-tif-module"></span><h2>ClearMap.IO.TIF module<a class="headerlink" href="#module-ClearMap.IO.TIF" title="Permalink to this headline">¶</a></h2>
@@ -2192,7 +2380,7 @@ file name</p>
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015 Christoph Kirst.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.2.
     </div>
   </body>
 </html>

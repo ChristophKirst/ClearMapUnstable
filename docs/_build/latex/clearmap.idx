@@ -84,165 +84,242 @@
 \indexentry{dataZSize() (in module ClearMap.IO.NRRD)|hyperpage}{50}
 \indexentry{copyData() (in module ClearMap.IO.NRRD)|hyperpage}{50}
 \indexentry{test() (in module ClearMap.IO.NRRD)|hyperpage}{51}
-\indexentry{ClearMap.IO.TIF (module)|hyperpage}{51}
-\indexentry{dataSize() (in module ClearMap.IO.TIF)|hyperpage}{51}
-\indexentry{dataZSize() (in module ClearMap.IO.TIF)|hyperpage}{51}
-\indexentry{readData() (in module ClearMap.IO.TIF)|hyperpage}{51}
-\indexentry{writeData() (in module ClearMap.IO.TIF)|hyperpage}{51}
-\indexentry{copyData() (in module ClearMap.IO.TIF)|hyperpage}{52}
-\indexentry{test() (in module ClearMap.IO.TIF)|hyperpage}{52}
-\indexentry{ClearMap.IO.VTK (module)|hyperpage}{52}
-\indexentry{writePoints() (in module ClearMap.IO.VTK)|hyperpage}{52}
-\indexentry{readPoints() (in module ClearMap.IO.VTK)|hyperpage}{52}
-\indexentry{ClearMap.Alignment (module)|hyperpage}{52}
-\indexentry{ClearMap.ImageProcessing (module)|hyperpage}{53}
-\indexentry{ClearMap.ImageProcessing.StackProcessing (module)|hyperpage}{54}
-\indexentry{printSubStackInfo() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{54}
-\indexentry{writeSubStack() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{54}
-\indexentry{joinPoints() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{55}
-\indexentry{calculateChunkSize() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{55}
-\indexentry{calculateSubStacks() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{55}
-\indexentry{noProcessing() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{56}
-\indexentry{parallelProcessStack() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{56}
-\indexentry{sequentiallyProcessStack() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{56}
-\indexentry{ClearMap.ImageProcessing.Filter (module)|hyperpage}{57}
-\indexentry{ClearMap.ImageProcessing.Filter.LinearFilter (module)|hyperpage}{57}
-\indexentry{filterLinear() (in module ClearMap.ImageProcessing.Filter.LinearFilter)|hyperpage}{57}
-\indexentry{ClearMap.ImageProcessing.Filter.DoGFilter (module)|hyperpage}{58}
-\indexentry{filterDoG() (in module ClearMap.ImageProcessing.Filter.DoGFilter)|hyperpage}{58}
-\indexentry{ClearMap.ImageProcessing.Filter.Convolution (module)|hyperpage}{58}
-\indexentry{convolve() (in module ClearMap.ImageProcessing.Filter.Convolution)|hyperpage}{59}
-\indexentry{ClearMap.ImageProcessing.Filter.FilterKernel (module)|hyperpage}{59}
-\indexentry{filterKernel() (in module ClearMap.ImageProcessing.Filter.FilterKernel)|hyperpage}{59}
-\indexentry{filterKernel2D() (in module ClearMap.ImageProcessing.Filter.FilterKernel)|hyperpage}{59}
-\indexentry{filterKernel3D() (in module ClearMap.ImageProcessing.Filter.FilterKernel)|hyperpage}{59}
-\indexentry{test() (in module ClearMap.ImageProcessing.Filter.FilterKernel)|hyperpage}{60}
-\indexentry{ClearMap.ImageProcessing.Filter.StructureElement (module)|hyperpage}{60}
-\indexentry{structureElement() (in module ClearMap.ImageProcessing.Filter.StructureElement)|hyperpage}{60}
-\indexentry{structureElementOffsets() (in module ClearMap.ImageProcessing.Filter.StructureElement)|hyperpage}{60}
-\indexentry{structureElement2D() (in module ClearMap.ImageProcessing.Filter.StructureElement)|hyperpage}{60}
-\indexentry{structureElement3D() (in module ClearMap.ImageProcessing.Filter.StructureElement)|hyperpage}{60}
-\indexentry{ClearMap.ImageProcessing.IlluminationCorrection (module)|hyperpage}{61}
-\indexentry{DefaultFlatFieldLineFile (in module ClearMap.ImageProcessing.IlluminationCorrection)|hyperpage}{61}
-\indexentry{correctIllumination() (in module ClearMap.ImageProcessing.IlluminationCorrection)|hyperpage}{61}
-\indexentry{flatfieldFromLine() (in module ClearMap.ImageProcessing.IlluminationCorrection)|hyperpage}{62}
-\indexentry{flatfieldLineFromRegression() (in module ClearMap.ImageProcessing.IlluminationCorrection)|hyperpage}{62}
-\indexentry{ClearMap.ImageProcessing.ImageStatistics (module)|hyperpage}{62}
-\indexentry{calculateStatistics() (in module ClearMap.ImageProcessing.ImageStatistics)|hyperpage}{62}
-\indexentry{calculateStatisticsOnStack() (in module ClearMap.ImageProcessing.ImageStatistics)|hyperpage}{63}
-\indexentry{joinStatistics() (in module ClearMap.ImageProcessing.ImageStatistics)|hyperpage}{63}
-\indexentry{ClearMap.Analysis (module)|hyperpage}{64}
-\indexentry{ClearMap.Analysis.Tools (module)|hyperpage}{64}
-\indexentry{ClearMap.Analysis.Tools.Extrapolate (module)|hyperpage}{64}
-\indexentry{extrap1d() (in module ClearMap.Analysis.Tools.Extrapolate)|hyperpage}{64}
-\indexentry{extrap1dFromInterp1d() (in module ClearMap.Analysis.Tools.Extrapolate)|hyperpage}{64}
-\indexentry{ClearMap.Analysis.Tools.MultipleComparisonCorrection (module)|hyperpage}{65}
-\indexentry{correctPValues() (in module ClearMap.Analysis.Tools.MultipleComparisonCorrection)|hyperpage}{65}
-\indexentry{estimateQValues() (in module ClearMap.Analysis.Tools.MultipleComparisonCorrection)|hyperpage}{65}
-\indexentry{ClearMap.Analysis.Tools.StatisticalTests (module)|hyperpage}{66}
-\indexentry{testCramerVonMises2Sample() (in module ClearMap.Analysis.Tools.StatisticalTests)|hyperpage}{66}
-\indexentry{ClearMap.Analysis.Label (module)|hyperpage}{66}
-\indexentry{DefaultLabeledImageFile (in module ClearMap.Analysis.Label)|hyperpage}{66}
-\indexentry{DefaultAnnotationFile (in module ClearMap.Analysis.Label)|hyperpage}{66}
-\indexentry{LabelRecord (class in ClearMap.Analysis.Label)|hyperpage}{67}
-\indexentry{\_\_getnewargs\_\_() (LabelRecord method)|hyperpage}{67}
-\indexentry{\_\_getstate\_\_() (LabelRecord method)|hyperpage}{67}
-\indexentry{\_\_repr\_\_() (LabelRecord method)|hyperpage}{67}
-\indexentry{acronym (LabelRecord attribute)|hyperpage}{67}
-\indexentry{collapse (LabelRecord attribute)|hyperpage}{67}
-\indexentry{color (LabelRecord attribute)|hyperpage}{67}
-\indexentry{id (LabelRecord attribute)|hyperpage}{67}
-\indexentry{name (LabelRecord attribute)|hyperpage}{67}
-\indexentry{parent (LabelRecord attribute)|hyperpage}{67}
-\indexentry{LabelInfo (class in ClearMap.Analysis.Label)|hyperpage}{67}
-\indexentry{ids (LabelInfo attribute)|hyperpage}{67}
-\indexentry{names (LabelInfo attribute)|hyperpage}{67}
-\indexentry{acronyms (LabelInfo attribute)|hyperpage}{67}
-\indexentry{colors (LabelInfo attribute)|hyperpage}{67}
-\indexentry{parents (LabelInfo attribute)|hyperpage}{67}
-\indexentry{levels (LabelInfo attribute)|hyperpage}{67}
-\indexentry{collapse (LabelInfo attribute)|hyperpage}{67}
-\indexentry{collapseMap (LabelInfo attribute)|hyperpage}{67}
-\indexentry{initialize() (LabelInfo method)|hyperpage}{67}
-\indexentry{name() (LabelInfo method)|hyperpage}{67}
-\indexentry{acronym() (LabelInfo method)|hyperpage}{67}
-\indexentry{color() (LabelInfo method)|hyperpage}{67}
-\indexentry{parent() (LabelInfo method)|hyperpage}{68}
-\indexentry{level() (LabelInfo method)|hyperpage}{68}
-\indexentry{toLabelAtLevel() (LabelInfo method)|hyperpage}{68}
-\indexentry{toLabelAtCollapseMap() (LabelInfo method)|hyperpage}{68}
-\indexentry{toLabelAtCollapse() (LabelInfo method)|hyperpage}{68}
-\indexentry{Label (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{initialize() (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{labelAtLevel() (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{labelAtCollapse() (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{labelPoints() (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{countPointsInRegions() (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{labelToName() (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{labelToAcronym() (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{labelToColor() (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{writePAL() (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{writeLUT() (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{makeColorPalette() (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{makeColorAnnotations() (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{test() (in module ClearMap.Analysis.Label)|hyperpage}{68}
-\indexentry{ClearMap.Analysis.Statistics (module)|hyperpage}{68}
-\indexentry{readDataGroup() (in module ClearMap.Analysis.Statistics)|hyperpage}{68}
-\indexentry{readPointsGroup() (in module ClearMap.Analysis.Statistics)|hyperpage}{68}
-\indexentry{tTestVoxelization() (in module ClearMap.Analysis.Statistics)|hyperpage}{68}
-\indexentry{cutoffPValues() (in module ClearMap.Analysis.Statistics)|hyperpage}{68}
-\indexentry{colorPValues() (in module ClearMap.Analysis.Statistics)|hyperpage}{68}
-\indexentry{mean() (in module ClearMap.Analysis.Statistics)|hyperpage}{68}
-\indexentry{std() (in module ClearMap.Analysis.Statistics)|hyperpage}{69}
-\indexentry{var() (in module ClearMap.Analysis.Statistics)|hyperpage}{69}
-\indexentry{thresholdPoints() (in module ClearMap.Analysis.Statistics)|hyperpage}{69}
-\indexentry{weightsFromPrecentiles() (in module ClearMap.Analysis.Statistics)|hyperpage}{69}
-\indexentry{countPointsGroupInRegions() (in module ClearMap.Analysis.Statistics)|hyperpage}{69}
-\indexentry{tTestPointsInRegions() (in module ClearMap.Analysis.Statistics)|hyperpage}{69}
-\indexentry{testCompletedCumulatives() (in module ClearMap.Analysis.Statistics)|hyperpage}{69}
-\indexentry{testCompletedInvertedCumulatives() (in module ClearMap.Analysis.Statistics)|hyperpage}{69}
-\indexentry{testCompletedCumulativesInSpheres() (in module ClearMap.Analysis.Statistics)|hyperpage}{69}
-\indexentry{test() (in module ClearMap.Analysis.Statistics)|hyperpage}{69}
-\indexentry{ClearMap.Analysis.Voxelization (module)|hyperpage}{69}
-\indexentry{voxelize() (in module ClearMap.Analysis.Voxelization)|hyperpage}{69}
-\indexentry{voxelizePixel() (in module ClearMap.Analysis.Voxelization)|hyperpage}{69}
-\indexentry{test() (in module ClearMap.Analysis.Voxelization)|hyperpage}{70}
-\indexentry{ClearMap.Visualization (module)|hyperpage}{70}
-\indexentry{ClearMap.Visualization.Plot (module)|hyperpage}{70}
-\indexentry{plotTiling() (in module ClearMap.Visualization.Plot)|hyperpage}{70}
-\indexentry{overlayLabel() (in module ClearMap.Visualization.Plot)|hyperpage}{70}
-\indexentry{plotOverlayLabel() (in module ClearMap.Visualization.Plot)|hyperpage}{71}
-\indexentry{overlayPoints() (in module ClearMap.Visualization.Plot)|hyperpage}{71}
-\indexentry{plotOverlayPoints() (in module ClearMap.Visualization.Plot)|hyperpage}{71}
-\indexentry{test() (in module ClearMap.Visualization.Plot)|hyperpage}{72}
-\indexentry{ClearMap.Parameter (module)|hyperpage}{72}
-\indexentry{detectCellParameter (in module ClearMap.Parameter)|hyperpage}{72}
-\indexentry{IlastikParameter (in module ClearMap.Parameter)|hyperpage}{72}
-\indexentry{processStackParameter (in module ClearMap.Parameter)|hyperpage}{72}
-\indexentry{AlignmentParameter (in module ClearMap.Parameter)|hyperpage}{72}
-\indexentry{ResamplingParameter (in module ClearMap.Parameter)|hyperpage}{73}
-\indexentry{VoxelizationParameter (in module ClearMap.Parameter)|hyperpage}{73}
-\indexentry{ClearMap.Settings (module)|hyperpage}{73}
-\indexentry{IlastikPath (in module ClearMap.Settings)|hyperpage}{73}
-\indexentry{ElastixPath (in module ClearMap.Settings)|hyperpage}{73}
-\indexentry{setup() (in module ClearMap.Settings)|hyperpage}{74}
-\indexentry{clearMapPath() (in module ClearMap.Settings)|hyperpage}{74}
-\indexentry{ClearMapPath (in module ClearMap.Settings)|hyperpage}{74}
-\indexentry{ClearMap.Utils (module)|hyperpage}{74}
-\indexentry{ClearMap.Utils.ParameterTools (module)|hyperpage}{74}
-\indexentry{getParameter() (in module ClearMap.Utils.ParameterTools)|hyperpage}{74}
-\indexentry{writeParameter() (in module ClearMap.Utils.ParameterTools)|hyperpage}{74}
-\indexentry{joinParameter() (in module ClearMap.Utils.ParameterTools)|hyperpage}{75}
-\indexentry{ClearMap.Utils.ProcessWriter (module)|hyperpage}{75}
-\indexentry{ProcessWriter (class in ClearMap.Utils.ProcessWriter)|hyperpage}{75}
-\indexentry{process (ProcessWriter attribute)|hyperpage}{75}
-\indexentry{writeString() (ProcessWriter method)|hyperpage}{75}
-\indexentry{write() (ProcessWriter method)|hyperpage}{75}
-\indexentry{ClearMap.Utils.Timer (module)|hyperpage}{75}
-\indexentry{Timer (class in ClearMap.Utils.Timer)|hyperpage}{75}
-\indexentry{time (Timer attribute)|hyperpage}{75}
-\indexentry{start() (Timer method)|hyperpage}{75}
-\indexentry{reset() (Timer method)|hyperpage}{75}
-\indexentry{elapsedTime() (Timer method)|hyperpage}{75}
-\indexentry{printElapsedTime() (Timer method)|hyperpage}{76}
-\indexentry{formatElapsedTime() (Timer method)|hyperpage}{76}
+\indexentry{ClearMap.IO.RAW (module)|hyperpage}{51}
+\indexentry{dataSize() (in module ClearMap.IO.RAW)|hyperpage}{51}
+\indexentry{dataZSize() (in module ClearMap.IO.RAW)|hyperpage}{51}
+\indexentry{readData() (in module ClearMap.IO.RAW)|hyperpage}{51}
+\indexentry{writeHeader() (in module ClearMap.IO.RAW)|hyperpage}{51}
+\indexentry{writeRawData() (in module ClearMap.IO.RAW)|hyperpage}{52}
+\indexentry{writeData() (in module ClearMap.IO.RAW)|hyperpage}{52}
+\indexentry{copyData() (in module ClearMap.IO.RAW)|hyperpage}{52}
+\indexentry{test() (in module ClearMap.IO.RAW)|hyperpage}{52}
+\indexentry{ClearMap.IO.TIF (module)|hyperpage}{52}
+\indexentry{dataSize() (in module ClearMap.IO.TIF)|hyperpage}{52}
+\indexentry{dataZSize() (in module ClearMap.IO.TIF)|hyperpage}{53}
+\indexentry{readData() (in module ClearMap.IO.TIF)|hyperpage}{53}
+\indexentry{writeData() (in module ClearMap.IO.TIF)|hyperpage}{53}
+\indexentry{copyData() (in module ClearMap.IO.TIF)|hyperpage}{53}
+\indexentry{test() (in module ClearMap.IO.TIF)|hyperpage}{53}
+\indexentry{ClearMap.IO.VTK (module)|hyperpage}{53}
+\indexentry{writePoints() (in module ClearMap.IO.VTK)|hyperpage}{53}
+\indexentry{readPoints() (in module ClearMap.IO.VTK)|hyperpage}{54}
+\indexentry{ClearMap.Alignment (module)|hyperpage}{54}
+\indexentry{ClearMap.Alignment.Elastix (module)|hyperpage}{54}
+\indexentry{ElastixBinary (in module ClearMap.Alignment.Elastix)|hyperpage}{55}
+\indexentry{ElastixLib (in module ClearMap.Alignment.Elastix)|hyperpage}{55}
+\indexentry{TransformixBinary (in module ClearMap.Alignment.Elastix)|hyperpage}{55}
+\indexentry{Initialized (in module ClearMap.Alignment.Elastix)|hyperpage}{55}
+\indexentry{printSettings() (in module ClearMap.Alignment.Elastix)|hyperpage}{55}
+\indexentry{setElastixLibraryPath() (in module ClearMap.Alignment.Elastix)|hyperpage}{55}
+\indexentry{initializeElastix() (in module ClearMap.Alignment.Elastix)|hyperpage}{56}
+\indexentry{checkElastixInitialized() (in module ClearMap.Alignment.Elastix)|hyperpage}{56}
+\indexentry{getTransformParameterFile() (in module ClearMap.Alignment.Elastix)|hyperpage}{56}
+\indexentry{setPathTransformParameterFiles() (in module ClearMap.Alignment.Elastix)|hyperpage}{56}
+\indexentry{parseElastixOutputPoints() (in module ClearMap.Alignment.Elastix)|hyperpage}{56}
+\indexentry{getTransformFileSizeAndSpacing() (in module ClearMap.Alignment.Elastix)|hyperpage}{56}
+\indexentry{getResultDataFile() (in module ClearMap.Alignment.Elastix)|hyperpage}{56}
+\indexentry{setTransformFileSizeAndSpacing() (in module ClearMap.Alignment.Elastix)|hyperpage}{57}
+\indexentry{rescaleSizeAndSpacing() (in module ClearMap.Alignment.Elastix)|hyperpage}{57}
+\indexentry{alignData() (in module ClearMap.Alignment.Elastix)|hyperpage}{57}
+\indexentry{transformData() (in module ClearMap.Alignment.Elastix)|hyperpage}{57}
+\indexentry{deformationField() (in module ClearMap.Alignment.Elastix)|hyperpage}{58}
+\indexentry{deformationDistance() (in module ClearMap.Alignment.Elastix)|hyperpage}{58}
+\indexentry{writePoints() (in module ClearMap.Alignment.Elastix)|hyperpage}{58}
+\indexentry{transformPoints() (in module ClearMap.Alignment.Elastix)|hyperpage}{58}
+\indexentry{test() (in module ClearMap.Alignment.Elastix)|hyperpage}{59}
+\indexentry{ClearMap.Alignment.Resampling (module)|hyperpage}{59}
+\indexentry{fixOrientation() (in module ClearMap.Alignment.Resampling)|hyperpage}{60}
+\indexentry{inverseOrientation() (in module ClearMap.Alignment.Resampling)|hyperpage}{60}
+\indexentry{orientationToPermuation() (in module ClearMap.Alignment.Resampling)|hyperpage}{60}
+\indexentry{orientResolution() (in module ClearMap.Alignment.Resampling)|hyperpage}{60}
+\indexentry{orientResolutionInverse() (in module ClearMap.Alignment.Resampling)|hyperpage}{60}
+\indexentry{orientDataSize() (in module ClearMap.Alignment.Resampling)|hyperpage}{61}
+\indexentry{orientDataSizeInverse() (in module ClearMap.Alignment.Resampling)|hyperpage}{61}
+\indexentry{resampleDataSize() (in module ClearMap.Alignment.Resampling)|hyperpage}{61}
+\indexentry{fixInterpolation() (in module ClearMap.Alignment.Resampling)|hyperpage}{61}
+\indexentry{resampleXY() (in module ClearMap.Alignment.Resampling)|hyperpage}{61}
+\indexentry{resampleData() (in module ClearMap.Alignment.Resampling)|hyperpage}{62}
+\indexentry{resampleDataInverse() (in module ClearMap.Alignment.Resampling)|hyperpage}{62}
+\indexentry{resamplePoints() (in module ClearMap.Alignment.Resampling)|hyperpage}{63}
+\indexentry{resamplePointsInverse() (in module ClearMap.Alignment.Resampling)|hyperpage}{64}
+\indexentry{sagittalToCoronalData() (in module ClearMap.Alignment.Resampling)|hyperpage}{64}
+\indexentry{ClearMap.ImageProcessing (module)|hyperpage}{65}
+\indexentry{ClearMap.ImageProcessing.StackProcessing (module)|hyperpage}{66}
+\indexentry{printSubStackInfo() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{66}
+\indexentry{writeSubStack() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{66}
+\indexentry{joinPoints() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{66}
+\indexentry{calculateChunkSize() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{66}
+\indexentry{calculateSubStacks() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{67}
+\indexentry{noProcessing() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{67}
+\indexentry{parallelProcessStack() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{67}
+\indexentry{sequentiallyProcessStack() (in module ClearMap.ImageProcessing.StackProcessing)|hyperpage}{68}
+\indexentry{ClearMap.ImageProcessing.CellDetection (module)|hyperpage}{69}
+\indexentry{detectCells() (in module ClearMap.ImageProcessing.CellDetection)|hyperpage}{69}
+\indexentry{ClearMap.ImageProcessing.CellSizeDetection (module)|hyperpage}{70}
+\indexentry{detectCellShape() (in module ClearMap.ImageProcessing.CellSizeDetection)|hyperpage}{70}
+\indexentry{findCellSize() (in module ClearMap.ImageProcessing.CellSizeDetection)|hyperpage}{70}
+\indexentry{findCellIntensity() (in module ClearMap.ImageProcessing.CellSizeDetection)|hyperpage}{70}
+\indexentry{ClearMap.ImageProcessing.Filter (module)|hyperpage}{71}
+\indexentry{ClearMap.ImageProcessing.Filter.LinearFilter (module)|hyperpage}{71}
+\indexentry{filterLinear() (in module ClearMap.ImageProcessing.Filter.LinearFilter)|hyperpage}{71}
+\indexentry{ClearMap.ImageProcessing.Filter.DoGFilter (module)|hyperpage}{72}
+\indexentry{filterDoG() (in module ClearMap.ImageProcessing.Filter.DoGFilter)|hyperpage}{72}
+\indexentry{ClearMap.ImageProcessing.Filter.Convolution (module)|hyperpage}{72}
+\indexentry{convolve() (in module ClearMap.ImageProcessing.Filter.Convolution)|hyperpage}{72}
+\indexentry{ClearMap.ImageProcessing.Filter.FilterKernel (module)|hyperpage}{72}
+\indexentry{filterKernel() (in module ClearMap.ImageProcessing.Filter.FilterKernel)|hyperpage}{73}
+\indexentry{filterKernel2D() (in module ClearMap.ImageProcessing.Filter.FilterKernel)|hyperpage}{73}
+\indexentry{filterKernel3D() (in module ClearMap.ImageProcessing.Filter.FilterKernel)|hyperpage}{73}
+\indexentry{test() (in module ClearMap.ImageProcessing.Filter.FilterKernel)|hyperpage}{73}
+\indexentry{ClearMap.ImageProcessing.Filter.StructureElement (module)|hyperpage}{73}
+\indexentry{structureElement() (in module ClearMap.ImageProcessing.Filter.StructureElement)|hyperpage}{74}
+\indexentry{structureElementOffsets() (in module ClearMap.ImageProcessing.Filter.StructureElement)|hyperpage}{74}
+\indexentry{structureElement2D() (in module ClearMap.ImageProcessing.Filter.StructureElement)|hyperpage}{74}
+\indexentry{structureElement3D() (in module ClearMap.ImageProcessing.Filter.StructureElement)|hyperpage}{74}
+\indexentry{ClearMap.ImageProcessing.IlluminationCorrection (module)|hyperpage}{74}
+\indexentry{DefaultFlatFieldLineFile (in module ClearMap.ImageProcessing.IlluminationCorrection)|hyperpage}{74}
+\indexentry{correctIllumination() (in module ClearMap.ImageProcessing.IlluminationCorrection)|hyperpage}{75}
+\indexentry{flatfieldFromLine() (in module ClearMap.ImageProcessing.IlluminationCorrection)|hyperpage}{75}
+\indexentry{flatfieldLineFromRegression() (in module ClearMap.ImageProcessing.IlluminationCorrection)|hyperpage}{75}
+\indexentry{ClearMap.ImageProcessing.BackgroundRemoval (module)|hyperpage}{76}
+\indexentry{removeBackground() (in module ClearMap.ImageProcessing.BackgroundRemoval)|hyperpage}{76}
+\indexentry{ClearMap.ImageProcessing.GreyReconstruction (module)|hyperpage}{76}
+\indexentry{reconstruct() (in module ClearMap.ImageProcessing.GreyReconstruction)|hyperpage}{77}
+\indexentry{greyReconstruction() (in module ClearMap.ImageProcessing.GreyReconstruction)|hyperpage}{77}
+\indexentry{ClearMap.ImageProcessing.SpotDetection (module)|hyperpage}{78}
+\indexentry{detectSpots() (in module ClearMap.ImageProcessing.SpotDetection)|hyperpage}{78}
+\indexentry{test() (in module ClearMap.ImageProcessing.SpotDetection)|hyperpage}{79}
+\indexentry{ClearMap.ImageProcessing.MaximaDetection (module)|hyperpage}{79}
+\indexentry{hMaxTransform() (in module ClearMap.ImageProcessing.MaximaDetection)|hyperpage}{79}
+\indexentry{localMax() (in module ClearMap.ImageProcessing.MaximaDetection)|hyperpage}{79}
+\indexentry{extendedMax() (in module ClearMap.ImageProcessing.MaximaDetection)|hyperpage}{79}
+\indexentry{findExtendedMaxima() (in module ClearMap.ImageProcessing.MaximaDetection)|hyperpage}{80}
+\indexentry{findCenterOfMaxima() (in module ClearMap.ImageProcessing.MaximaDetection)|hyperpage}{80}
+\indexentry{findPixelCoordinates() (in module ClearMap.ImageProcessing.MaximaDetection)|hyperpage}{80}
+\indexentry{findIntensity() (in module ClearMap.ImageProcessing.MaximaDetection)|hyperpage}{81}
+\indexentry{ClearMap.ImageProcessing.IlastikClassification (module)|hyperpage}{81}
+\indexentry{initializeIlastik() (in module ClearMap.ImageProcessing.IlastikClassification)|hyperpage}{82}
+\indexentry{Initialized (in module ClearMap.ImageProcessing.IlastikClassification)|hyperpage}{82}
+\indexentry{rescaleToIlastik() (in module ClearMap.ImageProcessing.IlastikClassification)|hyperpage}{82}
+\indexentry{rescaleFactorIlastik() (in module ClearMap.ImageProcessing.IlastikClassification)|hyperpage}{82}
+\indexentry{classifyPixel() (in module ClearMap.ImageProcessing.IlastikClassification)|hyperpage}{82}
+\indexentry{classifyCells() (in module ClearMap.ImageProcessing.IlastikClassification)|hyperpage}{82}
+\indexentry{ClearMap.ImageProcessing.ImageStatistics (module)|hyperpage}{83}
+\indexentry{calculateStatistics() (in module ClearMap.ImageProcessing.ImageStatistics)|hyperpage}{83}
+\indexentry{calculateStatisticsOnStack() (in module ClearMap.ImageProcessing.ImageStatistics)|hyperpage}{84}
+\indexentry{joinStatistics() (in module ClearMap.ImageProcessing.ImageStatistics)|hyperpage}{84}
+\indexentry{ClearMap.Analysis (module)|hyperpage}{84}
+\indexentry{ClearMap.Analysis.Tools (module)|hyperpage}{85}
+\indexentry{ClearMap.Analysis.Tools.Extrapolate (module)|hyperpage}{85}
+\indexentry{extrap1d() (in module ClearMap.Analysis.Tools.Extrapolate)|hyperpage}{85}
+\indexentry{extrap1dFromInterp1d() (in module ClearMap.Analysis.Tools.Extrapolate)|hyperpage}{85}
+\indexentry{ClearMap.Analysis.Tools.MultipleComparisonCorrection (module)|hyperpage}{85}
+\indexentry{correctPValues() (in module ClearMap.Analysis.Tools.MultipleComparisonCorrection)|hyperpage}{85}
+\indexentry{estimateQValues() (in module ClearMap.Analysis.Tools.MultipleComparisonCorrection)|hyperpage}{86}
+\indexentry{ClearMap.Analysis.Tools.StatisticalTests (module)|hyperpage}{86}
+\indexentry{testCramerVonMises2Sample() (in module ClearMap.Analysis.Tools.StatisticalTests)|hyperpage}{86}
+\indexentry{ClearMap.Analysis.Label (module)|hyperpage}{87}
+\indexentry{DefaultLabeledImageFile (in module ClearMap.Analysis.Label)|hyperpage}{87}
+\indexentry{DefaultAnnotationFile (in module ClearMap.Analysis.Label)|hyperpage}{87}
+\indexentry{LabelRecord (class in ClearMap.Analysis.Label)|hyperpage}{87}
+\indexentry{\_\_getnewargs\_\_() (LabelRecord method)|hyperpage}{87}
+\indexentry{\_\_getstate\_\_() (LabelRecord method)|hyperpage}{87}
+\indexentry{\_\_repr\_\_() (LabelRecord method)|hyperpage}{87}
+\indexentry{acronym (LabelRecord attribute)|hyperpage}{87}
+\indexentry{collapse (LabelRecord attribute)|hyperpage}{87}
+\indexentry{color (LabelRecord attribute)|hyperpage}{88}
+\indexentry{id (LabelRecord attribute)|hyperpage}{88}
+\indexentry{name (LabelRecord attribute)|hyperpage}{88}
+\indexentry{parent (LabelRecord attribute)|hyperpage}{88}
+\indexentry{LabelInfo (class in ClearMap.Analysis.Label)|hyperpage}{88}
+\indexentry{ids (LabelInfo attribute)|hyperpage}{88}
+\indexentry{names (LabelInfo attribute)|hyperpage}{88}
+\indexentry{acronyms (LabelInfo attribute)|hyperpage}{88}
+\indexentry{colors (LabelInfo attribute)|hyperpage}{88}
+\indexentry{parents (LabelInfo attribute)|hyperpage}{88}
+\indexentry{levels (LabelInfo attribute)|hyperpage}{88}
+\indexentry{collapse (LabelInfo attribute)|hyperpage}{88}
+\indexentry{collapseMap (LabelInfo attribute)|hyperpage}{88}
+\indexentry{initialize() (LabelInfo method)|hyperpage}{88}
+\indexentry{name() (LabelInfo method)|hyperpage}{88}
+\indexentry{acronym() (LabelInfo method)|hyperpage}{88}
+\indexentry{color() (LabelInfo method)|hyperpage}{88}
+\indexentry{parent() (LabelInfo method)|hyperpage}{88}
+\indexentry{level() (LabelInfo method)|hyperpage}{88}
+\indexentry{toLabelAtLevel() (LabelInfo method)|hyperpage}{88}
+\indexentry{toLabelAtCollapseMap() (LabelInfo method)|hyperpage}{88}
+\indexentry{toLabelAtCollapse() (LabelInfo method)|hyperpage}{88}
+\indexentry{Label (in module ClearMap.Analysis.Label)|hyperpage}{88}
+\indexentry{initialize() (in module ClearMap.Analysis.Label)|hyperpage}{88}
+\indexentry{labelAtLevel() (in module ClearMap.Analysis.Label)|hyperpage}{88}
+\indexentry{labelAtCollapse() (in module ClearMap.Analysis.Label)|hyperpage}{88}
+\indexentry{labelPoints() (in module ClearMap.Analysis.Label)|hyperpage}{88}
+\indexentry{countPointsInRegions() (in module ClearMap.Analysis.Label)|hyperpage}{88}
+\indexentry{labelToName() (in module ClearMap.Analysis.Label)|hyperpage}{89}
+\indexentry{labelToAcronym() (in module ClearMap.Analysis.Label)|hyperpage}{89}
+\indexentry{labelToColor() (in module ClearMap.Analysis.Label)|hyperpage}{89}
+\indexentry{writePAL() (in module ClearMap.Analysis.Label)|hyperpage}{89}
+\indexentry{writeLUT() (in module ClearMap.Analysis.Label)|hyperpage}{89}
+\indexentry{makeColorPalette() (in module ClearMap.Analysis.Label)|hyperpage}{89}
+\indexentry{makeColorAnnotations() (in module ClearMap.Analysis.Label)|hyperpage}{89}
+\indexentry{test() (in module ClearMap.Analysis.Label)|hyperpage}{89}
+\indexentry{ClearMap.Analysis.Statistics (module)|hyperpage}{89}
+\indexentry{readDataGroup() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{readPointsGroup() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{tTestVoxelization() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{cutoffPValues() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{colorPValues() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{mean() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{std() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{var() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{thresholdPoints() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{weightsFromPrecentiles() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{countPointsGroupInRegions() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{tTestPointsInRegions() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{testCompletedCumulatives() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{testCompletedInvertedCumulatives() (in module ClearMap.Analysis.Statistics)|hyperpage}{89}
+\indexentry{testCompletedCumulativesInSpheres() (in module ClearMap.Analysis.Statistics)|hyperpage}{90}
+\indexentry{test() (in module ClearMap.Analysis.Statistics)|hyperpage}{90}
+\indexentry{ClearMap.Analysis.Voxelization (module)|hyperpage}{90}
+\indexentry{voxelize() (in module ClearMap.Analysis.Voxelization)|hyperpage}{90}
+\indexentry{voxelizePixel() (in module ClearMap.Analysis.Voxelization)|hyperpage}{90}
+\indexentry{test() (in module ClearMap.Analysis.Voxelization)|hyperpage}{90}
+\indexentry{ClearMap.Visualization (module)|hyperpage}{90}
+\indexentry{ClearMap.Visualization.Plot (module)|hyperpage}{91}
+\indexentry{plotTiling() (in module ClearMap.Visualization.Plot)|hyperpage}{91}
+\indexentry{overlayLabel() (in module ClearMap.Visualization.Plot)|hyperpage}{91}
+\indexentry{plotOverlayLabel() (in module ClearMap.Visualization.Plot)|hyperpage}{91}
+\indexentry{overlayPoints() (in module ClearMap.Visualization.Plot)|hyperpage}{92}
+\indexentry{plotOverlayPoints() (in module ClearMap.Visualization.Plot)|hyperpage}{92}
+\indexentry{test() (in module ClearMap.Visualization.Plot)|hyperpage}{92}
+\indexentry{ClearMap.Parameter (module)|hyperpage}{92}
+\indexentry{detectCellParameter (in module ClearMap.Parameter)|hyperpage}{92}
+\indexentry{IlastikParameter (in module ClearMap.Parameter)|hyperpage}{93}
+\indexentry{processStackParameter (in module ClearMap.Parameter)|hyperpage}{93}
+\indexentry{AlignmentParameter (in module ClearMap.Parameter)|hyperpage}{93}
+\indexentry{ResamplingParameter (in module ClearMap.Parameter)|hyperpage}{93}
+\indexentry{VoxelizationParameter (in module ClearMap.Parameter)|hyperpage}{94}
+\indexentry{ClearMap.Settings (module)|hyperpage}{94}
+\indexentry{IlastikPath (in module ClearMap.Settings)|hyperpage}{94}
+\indexentry{ElastixPath (in module ClearMap.Settings)|hyperpage}{94}
+\indexentry{setup() (in module ClearMap.Settings)|hyperpage}{94}
+\indexentry{clearMapPath() (in module ClearMap.Settings)|hyperpage}{94}
+\indexentry{ClearMapPath (in module ClearMap.Settings)|hyperpage}{95}
+\indexentry{ClearMap.Utils (module)|hyperpage}{95}
+\indexentry{ClearMap.Utils.ParameterTools (module)|hyperpage}{95}
+\indexentry{getParameter() (in module ClearMap.Utils.ParameterTools)|hyperpage}{95}
+\indexentry{writeParameter() (in module ClearMap.Utils.ParameterTools)|hyperpage}{95}
+\indexentry{joinParameter() (in module ClearMap.Utils.ParameterTools)|hyperpage}{95}
+\indexentry{ClearMap.Utils.ProcessWriter (module)|hyperpage}{95}
+\indexentry{ProcessWriter (class in ClearMap.Utils.ProcessWriter)|hyperpage}{95}
+\indexentry{process (ProcessWriter attribute)|hyperpage}{95}
+\indexentry{writeString() (ProcessWriter method)|hyperpage}{96}
+\indexentry{write() (ProcessWriter method)|hyperpage}{96}
+\indexentry{ClearMap.Utils.Timer (module)|hyperpage}{96}
+\indexentry{Timer (class in ClearMap.Utils.Timer)|hyperpage}{96}
+\indexentry{time (Timer attribute)|hyperpage}{96}
+\indexentry{start() (Timer method)|hyperpage}{96}
+\indexentry{reset() (Timer method)|hyperpage}{96}
+\indexentry{elapsedTime() (Timer method)|hyperpage}{96}
+\indexentry{printElapsedTime() (Timer method)|hyperpage}{96}
+\indexentry{formatElapsedTime() (Timer method)|hyperpage}{96}

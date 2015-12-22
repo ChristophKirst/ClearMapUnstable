@@ -36,7 +36,7 @@ This is where you point to the files used, their resolution and orientation. It 
 
 To set the directory where all files will be read and written for this sample:
 
-    >>> BaseDirectory = '/home/mtllab/exploration/sample1';
+    >>> BaseDirectory = '/home/mtllab/pharmaco/sample1';
 
 To set the image files used for the processing:
 
@@ -434,3 +434,137 @@ This conclude the part of the tutorial covering the settings and run parameters 
 
 Analysis Tools
 --------------
+
+ClearMap provides different ways to analyze the results of the cell detection. In this tutorial, we will examine how to compare the c-Fos cell distribution in 2 groups of 4 brains each analyzed with the scripts shown above. The statistics package covers two sorts of statistical analysis:
+
+   * `Voxel statistics`_: these are based on the heat map generated as above
+   * `Regions statistics`_: these are using the annotation files to segment the detected cells into anatomical regions
+   * `Automated region isolation`_: to visualize in 3D specific regions from the heat maps
+
+In this example, we will compare a group of control mice injected with a saline solution against mice injected with Haloperidol, which is a psycho-active drug.
+
+`Voxel statistics`
+^^^^^^^^^^^^^^^^^^
+
+First, let's import the modules necessary to run the statistics, and set the working directory:
+
+   >>> import ClearMap.Analysis.Statistics as stat
+   >>> import iDISCO.Analysis.Tools.MultipleComparisonCorrection as mc
+   >>> import ClearMap.Analysis.Label as lbl
+   >>> import ClearMap.IO.IO as io
+   >>> import numpy, os
+   >>> baseDirectory = '/home/mtllab/Documents/pharmaco/'
+
+.. note:: Here we set the working directory to the folder containing all the samples for this experiment, while we were working inside the folders of individual samples previously.
+
+Then, let's load the heat map image stacks from each sample into two groups:
+
+   >>> group1 = ['/home/mtllab/Documents/pharmaco/sample1/cells_heatmap.tif',
+   >>>           '/home/mtllab/Documents/pharmaco/sample2/cells_heatmap.tif',
+   >>>           '/home/mtllab/Documents/pharmaco/sample3/cells_heatmap.tif',
+   >>>           '/home/mtllab/Documents/pharmaco/sample4/cells_heatmap.tif'
+   >>>           ];
+   >>> group2 = ['/home/mtllab/Documents/pharmaco/sample5/cells_heatmap.tif',
+   >>>           '/home/mtllab/Documents/pharmaco/sample6/cells_heatmap.tif',
+   >>>           '/home/mtllab/Documents/pharmaco/sample7/cells_heatmap.tif',
+   >>>           '/home/mtllab/Documents/pharmaco/sample8/cells_heatmap.tif'
+   >>>           ];
+   >>> g1 = stat.readDataGroup(group1);
+   >>> g2 = stat.readDataGroup(group2);
+
+We can then generate average heat maps for each group, as well as standard deviation maps:
+
+   >>> g1m = numpy.mean(g1,axis = 0);
+   >>> io.writeData(os.path.join(baseDirectory, 'saline_mean.mhd'), io.sagittalToCoronalData(g1m));
+   >>> g1s = numpy.std(g1,axis = 0);
+   >>> io.writeData(os.path.join(baseDirectory, 'saline_std.mhd'), io.sagittalToCoronalData(g1s));
+
+The same thing will be done for group 2. Instead of writing directly the result as an image (here we wrote the file as a raw ``.mhd`` file), we used the function ``io.sagittalToCoronalData`` which is a convenient way to reorient the data in coronal plane, which is a more usual way to look at anatomical data (the scans and atlases are in sagittal orientation originally). Open the ``.mhd`` files in ImageJ. Don't forget that the ``.mhd`` file is just the header, and that the actual image comes in the companion ``.raw`` file.
+
+We can now generate the *p* value map:
+
+   >>> pvals, psign = stat.tTestVoxelization(g1.astype('float'), g2.astype('float'), signed = True, pcutoff = 0.05);
+   >>> pvalscolor = stat.colorPValues(pvals, psign, positive = [0,1], negative = [1,0]);
+   >>> io.writeData(os.path.join(baseDirectory, 'pvalues.tif'), io.sagittalToCoronalData(pvalscolor.astype('float32')));
+
+We used here a cutoff of 5%. The first function ``stat.tTestVoxelization`` generates the *p* values using a T test with the unequal variance hypothesis set by default. The 
+``stat.colorPValues`` function will attribute a color to each pixel of the *p* value map depending if the difference of the means between group1 and group2 is significantly positive or negative. You may get a warning that a non-standard tiff file is being written. You may also get warnings from the statistics library during the test calculation, just ignore them.
+
+You have now generated 5 image stacks: 2 average heat maps, 2 standard deviation maps (one for each group) and 1 *p* values map.
+
+
+`Regions statistics`
+^^^^^^^^^^^^^^^^^^^^
+
+The region statistics use an annotation image file that defines the anatomical regions:
+
+   >>> ABAlabeledImage = '/home/mtllab/atlas/annotation_25_right.tif'; 
+
+For the region statistics, we will load the point coordinates instead. We'll use the file that contains the coordinates transformed to the Atlas:
+
+   >>> group1 = ['/home/mtllab/Documents/pharmaco/sample1/cells_transformed_to_Atlas.npy',
+   >>>           '/home/mtllab/Documents/pharmaco/sample2/cells_transformed_to_Atlas.npy',
+   >>>           '/home/mtllab/Documents/pharmaco/sample3/cells_transformed_to_Atlas.npy',
+   >>>           '/home/mtllab/Documents/pharmaco/sample4/cells_transformed_to_Atlas.npy'
+   >>>           ];
+   >>> group2 = ['/home/mtllab/Documents/pharmaco/sample5/cells_transformed_to_Atlas.npy',
+   >>>           '/home/mtllab/Documents/pharmaco/sample6/cells_transformed_to_Atlas.npy',
+   >>>           '/home/mtllab/Documents/pharmaco/sample7/cells_transformed_to_Atlas.npy',
+   >>>           '/home/mtllab/Documents/pharmaco/sample8/cells_transformed_to_Atlas.npy'
+   >>>           ];
+
+Then we'll count the number of cells per region for each group:
+
+ids, counts1 = stat.countPointsGroupInRegions(group1, intensityGroup = None, returnIds = True, labeledImage = ABAlabeledImage, returnCounts = True, collapse = None);
+counts2 = stat.countPointsGroupInRegions(group2, intensityGroup = None, returnIds = False, labeledImage = ABAlabeledImage, returnCounts = True, collapse = None);
+
+The function ``stat.countPointsGroupInRegions`` can return 1, 2 or 3 results depending on the parameters set:
+
+=============== =================================================================================================================================================
+Parameter       Description
+=============== =================================================================================================================================================
+intensityGroup  You can, on top of a cell coordinate group, create groups containing the intensity data, to include the intensity information in the statistics
+returnIds       To set the function to return the region identity found in the labeled file. You only have to do it for one of the two groups
+collapse        You can set regions to be fused into larger regions from the table file containing the region names and hierarchy
+=============== =================================================================================================================================================
+
+Then you can calculate the *p* values for the significance of the difference of the mean for each region. Those tests are independent:
+
+   >>> pvals, psign = stat.tTestPointsInRegions(counts1, counts2, pcutoff = None, signed = True, equal_var = False);
+
+Optionally, you can also attribute a "q" value to the *p* values, to estimate the false discovery rate, as we're performing a lot of tests:
+
+   >>> qvals = mc.estimateQValues(pvals);
+
+And then you can generate a table containing those results (see the included script file for generating the table).
+
+
+`Automated region isolation`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+You can also apply the Annotation file to the heat maps instead of the detected cells. This will generate 3D crops of the heat maps to only show specific regions according to the annotation file. Start by importing the modules as shown above, as well as setting the annotation file you wish to use as shown previously. We'll generate then a variable containing the list of all the labels IDs present in the annotation file:
+
+   >>> label = io.readData(annotationFile);
+   >>> label = label.astype('int32');
+   >>> labelids = numpy.unique(label);
+
+Then, we'll create a map, ``outside`` of everything we want to exclude. For example, to exclude every structure of the brain except the cortex, let's do:
+
+   >>> for l in labelids:
+   >>>    if not lbl.labelAtLevel(l, 3) == 688:
+   >>>        outside = numpy.logical_or(outside, label == l);
+
+Here, we're using the function ``lbl.labelAtLevel`` which returns the identity of the parent of a region at a given level of hierarchy. The regions IDs are annotated in a table in ClearMap with for each region of the brain the identity of its parent region containing it. For instance, the layer 4 of the barrel cortex is 8 levels deep in the hierarchy and has the ID 1047, and is contained in the barrel cortex (329) which is itself in the cortex (688). ``lbl.labelAtLevel(x, n)`` will return the ID of the region at the level ``n`` containing the region ``x``. So if ``x`` is 5 levels deep in the hierarchy of all regions, then when ``n`` is larger than 5, the function will return ``x``. Otherwise, if ``n`` is smaller than 5, it returns the ID of the region of level ``n`` containing ``x``.
+
+So now, the variable outside contains a boolean array for each voxel (True or False) whether that voxel belongs to the cortex or not in the reference space (True means it is not cortex). Let's then open our average heat map:
+
+   >>> heatmap = io.readData('/home/mtllab/pharmaco/saline_mean.mhd');
+
+Then, let's set all the voxels outside of the cortex to 0 and write the result:
+
+   >>> heatmap[outside] = 0;
+   >>> io.writeData('/home/mtllab/Documents/pharmaco/saline_cortex.mhd', heatmap);
+
+In the same fashion, you can include or exclude regions easily by using the annotation files. You can then open the stacks saved in ImageJ for instance and use one of the 3D viewers to look at the region isolated in 3D.
+
+This conclude this tutorial, which should contain enough information to get you started. The next chapter will show a few examples of the effect of the various filters included in ClearMap for the cell detection, and the following chapter is a reference that covers in details all the included functions of ClearMap.

@@ -112,7 +112,12 @@
 <li class="toctree-l3"><a class="reference internal" href="#table-generation"><cite>Table generation</cite></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#analysis-tools">Analysis Tools</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#analysis-tools">Analysis Tools</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#voxel-statistics"><cite>Voxel statistics</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#regions-statistics"><cite>Regions statistics</cite></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#automated-region-isolation"><cite>Automated region isolation</cite></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="imageanalysis.html">ClearMap Image Analysis Tools</a></li>
@@ -208,7 +213,7 @@
 <h3><cite>Data parameters</cite><a class="headerlink" href="#data-parameters" title="Permalink to this headline">¶</a></h3>
 <p>This is where you point to the files used, their resolution and orientation. It also defines which atlas and annotation files to use.</p>
 <p>To set the directory where all files will be read and written for this sample:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">BaseDirectory</span> <span class="o">=</span> <span class="s">&#39;/home/mtllab/exploration/sample1&#39;</span><span class="p">;</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">BaseDirectory</span> <span class="o">=</span> <span class="s">&#39;/home/mtllab/pharmaco/sample1&#39;</span><span class="p">;</span>
 </pre></div>
 </div>
 <p>To set the image files used for the processing:</p>
@@ -653,6 +658,145 @@
 </div>
 <div class="section" id="analysis-tools">
 <h2>Analysis Tools<a class="headerlink" href="#analysis-tools" title="Permalink to this headline">¶</a></h2>
+<p>ClearMap provides different ways to analyze the results of the cell detection. In this tutorial, we will examine how to compare the c-Fos cell distribution in 2 groups of 4 brains each analyzed with the scripts shown above. The statistics package covers two sorts of statistical analysis:</p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="#voxel-statistics">Voxel statistics</a>: these are based on the heat map generated as above</li>
+<li><a class="reference internal" href="#regions-statistics">Regions statistics</a>: these are using the annotation files to segment the detected cells into anatomical regions</li>
+<li><a class="reference internal" href="#automated-region-isolation">Automated region isolation</a>: to visualize in 3D specific regions from the heat maps</li>
+</ul>
+</div></blockquote>
+<p>In this example, we will compare a group of control mice injected with a saline solution against mice injected with Haloperidol, which is a psycho-active drug.</p>
+<div class="section" id="voxel-statistics">
+<h3><cite>Voxel statistics</cite><a class="headerlink" href="#voxel-statistics" title="Permalink to this headline">¶</a></h3>
+<p>First, let&#8217;s import the modules necessary to run the statistics, and set the working directory:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.Analysis.Statistics</span> <span class="kn">as</span> <span class="nn">stat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">iDISCO.Analysis.Tools.MultipleComparisonCorrection</span> <span class="kn">as</span> <span class="nn">mc</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.Analysis.Label</span> <span class="kn">as</span> <span class="nn">lbl</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.IO.IO</span> <span class="kn">as</span> <span class="nn">io</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">numpy</span><span class="o">,</span> <span class="nn">os</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">baseDirectory</span> <span class="o">=</span> <span class="s">&#39;/home/mtllab/Documents/pharmaco/&#39;</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Here we set the working directory to the folder containing all the samples for this experiment, while we were working inside the folders of individual samples previously.</p>
+</div>
+<p>Then, let&#8217;s load the heat map image stacks from each sample into two groups:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">group1</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/home/mtllab/Documents/pharmaco/sample1/cells_heatmap.tif&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="s">&#39;/home/mtllab/Documents/pharmaco/sample2/cells_heatmap.tif&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="s">&#39;/home/mtllab/Documents/pharmaco/sample3/cells_heatmap.tif&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="s">&#39;/home/mtllab/Documents/pharmaco/sample4/cells_heatmap.tif&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">group2</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/home/mtllab/Documents/pharmaco/sample5/cells_heatmap.tif&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="s">&#39;/home/mtllab/Documents/pharmaco/sample6/cells_heatmap.tif&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="s">&#39;/home/mtllab/Documents/pharmaco/sample7/cells_heatmap.tif&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="s">&#39;/home/mtllab/Documents/pharmaco/sample8/cells_heatmap.tif&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g1</span> <span class="o">=</span> <span class="n">stat</span><span class="o">.</span><span class="n">readDataGroup</span><span class="p">(</span><span class="n">group1</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g2</span> <span class="o">=</span> <span class="n">stat</span><span class="o">.</span><span class="n">readDataGroup</span><span class="p">(</span><span class="n">group2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>We can then generate average heat maps for each group, as well as standard deviation maps:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">g1m</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">g1</span><span class="p">,</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">io</span><span class="o">.</span><span class="n">writeData</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span> <span class="s">&#39;saline_mean.mhd&#39;</span><span class="p">),</span> <span class="n">io</span><span class="o">.</span><span class="n">sagittalToCoronalData</span><span class="p">(</span><span class="n">g1m</span><span class="p">));</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g1s</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">g1</span><span class="p">,</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">io</span><span class="o">.</span><span class="n">writeData</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span> <span class="s">&#39;saline_std.mhd&#39;</span><span class="p">),</span> <span class="n">io</span><span class="o">.</span><span class="n">sagittalToCoronalData</span><span class="p">(</span><span class="n">g1s</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>The same thing will be done for group 2. Instead of writing directly the result as an image (here we wrote the file as a raw <code class="docutils literal"><span class="pre">.mhd</span></code> file), we used the function <code class="docutils literal"><span class="pre">io.sagittalToCoronalData</span></code> which is a convenient way to reorient the data in coronal plane, which is a more usual way to look at anatomical data (the scans and atlases are in sagittal orientation originally). Open the <code class="docutils literal"><span class="pre">.mhd</span></code> files in ImageJ. Don&#8217;t forget that the <code class="docutils literal"><span class="pre">.mhd</span></code> file is just the header, and that the actual image comes in the companion <code class="docutils literal"><span class="pre">.raw</span></code> file.</p>
+<p>We can now generate the <em>p</em> value map:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pvals</span><span class="p">,</span> <span class="n">psign</span> <span class="o">=</span> <span class="n">stat</span><span class="o">.</span><span class="n">tTestVoxelization</span><span class="p">(</span><span class="n">g1</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;float&#39;</span><span class="p">),</span> <span class="n">g2</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;float&#39;</span><span class="p">),</span> <span class="n">signed</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">pcutoff</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pvalscolor</span> <span class="o">=</span> <span class="n">stat</span><span class="o">.</span><span class="n">colorPValues</span><span class="p">(</span><span class="n">pvals</span><span class="p">,</span> <span class="n">psign</span><span class="p">,</span> <span class="n">positive</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">negative</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">io</span><span class="o">.</span><span class="n">writeData</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">baseDirectory</span><span class="p">,</span> <span class="s">&#39;pvalues.tif&#39;</span><span class="p">),</span> <span class="n">io</span><span class="o">.</span><span class="n">sagittalToCoronalData</span><span class="p">(</span><span class="n">pvalscolor</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;float32&#39;</span><span class="p">)));</span>
+</pre></div>
+</div>
+<p>We used here a cutoff of 5%. The first function <code class="docutils literal"><span class="pre">stat.tTestVoxelization</span></code> generates the <em>p</em> values using a T test with the unequal variance hypothesis set by default. The
+<code class="docutils literal"><span class="pre">stat.colorPValues</span></code> function will attribute a color to each pixel of the <em>p</em> value map depending if the difference of the means between group1 and group2 is significantly positive or negative. You may get a warning that a non-standard tiff file is being written. You may also get warnings from the statistics library during the test calculation, just ignore them.</p>
+<p>You have now generated 5 image stacks: 2 average heat maps, 2 standard deviation maps (one for each group) and 1 <em>p</em> values map.</p>
+</div>
+<div class="section" id="regions-statistics">
+<h3><cite>Regions statistics</cite><a class="headerlink" href="#regions-statistics" title="Permalink to this headline">¶</a></h3>
+<p>The region statistics use an annotation image file that defines the anatomical regions:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">ABAlabeledImage</span> <span class="o">=</span> <span class="s">&#39;/home/mtllab/atlas/annotation_25_right.tif&#39;</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>For the region statistics, we will load the point coordinates instead. We&#8217;ll use the file that contains the coordinates transformed to the Atlas:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">group1</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/home/mtllab/Documents/pharmaco/sample1/cells_transformed_to_Atlas.npy&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="s">&#39;/home/mtllab/Documents/pharmaco/sample2/cells_transformed_to_Atlas.npy&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="s">&#39;/home/mtllab/Documents/pharmaco/sample3/cells_transformed_to_Atlas.npy&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="s">&#39;/home/mtllab/Documents/pharmaco/sample4/cells_transformed_to_Atlas.npy&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="p">];</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">group2</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;/home/mtllab/Documents/pharmaco/sample5/cells_transformed_to_Atlas.npy&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="s">&#39;/home/mtllab/Documents/pharmaco/sample6/cells_transformed_to_Atlas.npy&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="s">&#39;/home/mtllab/Documents/pharmaco/sample7/cells_transformed_to_Atlas.npy&#39;</span><span class="p">,</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="s">&#39;/home/mtllab/Documents/pharmaco/sample8/cells_transformed_to_Atlas.npy&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span>          <span class="p">];</span>
+</pre></div>
+</div>
+<p>Then we&#8217;ll count the number of cells per region for each group:</p>
+<p>ids, counts1 = stat.countPointsGroupInRegions(group1, intensityGroup = None, returnIds = True, labeledImage = ABAlabeledImage, returnCounts = True, collapse = None);
+counts2 = stat.countPointsGroupInRegions(group2, intensityGroup = None, returnIds = False, labeledImage = ABAlabeledImage, returnCounts = True, collapse = None);</p>
+<p>The function <code class="docutils literal"><span class="pre">stat.countPointsGroupInRegions</span></code> can return 1, 2 or 3 results depending on the parameters set:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="9%" />
+<col width="91%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Parameter</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>intensityGroup</td>
+<td>You can, on top of a cell coordinate group, create groups containing the intensity data, to include the intensity information in the statistics</td>
+</tr>
+<tr class="row-odd"><td>returnIds</td>
+<td>To set the function to return the region identity found in the labeled file. You only have to do it for one of the two groups</td>
+</tr>
+<tr class="row-even"><td>collapse</td>
+<td>You can set regions to be fused into larger regions from the table file containing the region names and hierarchy</td>
+</tr>
+</tbody>
+</table>
+<p>Then you can calculate the <em>p</em> values for the significance of the difference of the mean for each region. Those tests are independent:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">pvals</span><span class="p">,</span> <span class="n">psign</span> <span class="o">=</span> <span class="n">stat</span><span class="o">.</span><span class="n">tTestPointsInRegions</span><span class="p">(</span><span class="n">counts1</span><span class="p">,</span> <span class="n">counts2</span><span class="p">,</span> <span class="n">pcutoff</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">signed</span> <span class="o">=</span> <span class="bp">True</span><span class="p">,</span> <span class="n">equal_var</span> <span class="o">=</span> <span class="bp">False</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Optionally, you can also attribute a &#8220;q&#8221; value to the <em>p</em> values, to estimate the false discovery rate, as we&#8217;re performing a lot of tests:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">qvals</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">estimateQValues</span><span class="p">(</span><span class="n">pvals</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>And then you can generate a table containing those results (see the included script file for generating the table).</p>
+</div>
+<div class="section" id="automated-region-isolation">
+<h3><cite>Automated region isolation</cite><a class="headerlink" href="#automated-region-isolation" title="Permalink to this headline">¶</a></h3>
+<p>You can also apply the Annotation file to the heat maps instead of the detected cells. This will generate 3D crops of the heat maps to only show specific regions according to the annotation file. Start by importing the modules as shown above, as well as setting the annotation file you wish to use as shown previously. We&#8217;ll generate then a variable containing the list of all the labels IDs present in the annotation file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">label</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readData</span><span class="p">(</span><span class="n">annotationFile</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;int32&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">labelids</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">label</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Then, we&#8217;ll create a map, <code class="docutils literal"><span class="pre">outside</span></code> of everything we want to exclude. For example, to exclude every structure of the brain except the cortex, let&#8217;s do:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">labelids</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="k">if</span> <span class="ow">not</span> <span class="n">lbl</span><span class="o">.</span><span class="n">labelAtLevel</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">688</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>       <span class="n">outside</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="n">outside</span><span class="p">,</span> <span class="n">label</span> <span class="o">==</span> <span class="n">l</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Here, we&#8217;re using the function <code class="docutils literal"><span class="pre">lbl.labelAtLevel</span></code> which returns the identity of the parent of a region at a given level of hierarchy. The regions IDs are annotated in a table in ClearMap with for each region of the brain the identity of its parent region containing it. For instance, the layer 4 of the barrel cortex is 8 levels deep in the hierarchy and has the ID 1047, and is contained in the barrel cortex (329) which is itself in the cortex (688). <code class="docutils literal"><span class="pre">lbl.labelAtLevel(x,</span> <span class="pre">n)</span></code> will return the ID of the region at the level <code class="docutils literal"><span class="pre">n</span></code> containing the region <code class="docutils literal"><span class="pre">x</span></code>. So if <code class="docutils literal"><span class="pre">x</span></code> is 5 levels deep in the hierarchy of all regions, then when <code class="docutils literal"><span class="pre">n</span></code> is larger than 5, the function will return <code class="docutils literal"><span class="pre">x</span></code>. Otherwise, if <code class="docutils literal"><span class="pre">n</span></code> is smaller than 5, it returns the ID of the region of level <code class="docutils literal"><span class="pre">n</span></code> containing <code class="docutils literal"><span class="pre">x</span></code>.</p>
+<p>So now, the variable outside contains a boolean array for each voxel (True or False) whether that voxel belongs to the cortex or not in the reference space (True means it is not cortex). Let&#8217;s then open our average heat map:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">heatmap</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">readData</span><span class="p">(</span><span class="s">&#39;/home/mtllab/pharmaco/saline_mean.mhd&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Then, let&#8217;s set all the voxels outside of the cortex to 0 and write the result:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">heatmap</span><span class="p">[</span><span class="n">outside</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">io</span><span class="o">.</span><span class="n">writeData</span><span class="p">(</span><span class="s">&#39;/home/mtllab/Documents/pharmaco/saline_cortex.mhd&#39;</span><span class="p">,</span> <span class="n">heatmap</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>In the same fashion, you can include or exclude regions easily by using the annotation files. You can then open the stacks saved in ImageJ for instance and use one of the 3D viewers to look at the region isolated in 3D.</p>
+<p>This conclude this tutorial, which should contain enough information to get you started. The next chapter will show a few examples of the effect of the various filters included in ClearMap for the cell detection, and the following chapter is a reference that covers in details all the included functions of ClearMap.</p>
+</div>
 </div>
 </div>
 
@@ -685,7 +829,7 @@
     </div>
     <div class="footer" role="contentinfo">
         &copy; Copyright 2015 Christoph Kirst.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.2.
     </div>
   </body>
 </html>

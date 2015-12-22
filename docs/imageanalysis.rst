@@ -8,7 +8,8 @@ The data is a small region isolated from an iDISCO+ cleared mouse brain immunost
     >>> import os
     >>> import ClearMap.IO as io
     >>> import ClearMap.Settings as settings
-    >>> filename = os.path.join(settings.ClearMapPath, 'Test/Data/ImageAnalysis/cfos-substack.tif');
+    >>> filename = os.path.join(settings.ClearMapPath, \
+    >>>                         'Test/Data/ImageAnalysis/cfos-substack.tif');
 
 
 Visualizing 3D Images
@@ -93,7 +94,7 @@ To get more information about the progress use the ``verbose`` option
     ChunkSize: Estimated chunk size 51 in 1 chunks!
     Number of SubStacks: 1
     Process 0: processing substack 0/1
-    Process 0: file          = /home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Test/Data/ImageAnalysis/cfos-substack.tif
+    Process 0: file          = /ClearMap/Test/Data/ImageAnalysis/cfos-substack.tif
     Process 0: segmentation  = <function calculateStatisticsOnStack at 0x7fee9c25dd70>
     Process 0: ranges: x,y,z = <built-in function all>,<built-in function all>,(0, 51)
     Process 0: Reading data of size (250, 250, 51): elapsed time: 0:00:00
@@ -203,7 +204,8 @@ A labeled image can be visualized using the
 
 Its easier to see when zoomed in:
 
-    >>> plt.plotOverlayLabel(  dataDoG / dataDoG.max(), dataMax.astype('int'), z = (10,16), x = (50,100),y = (50,100))
+    >>> plt.plotOverlayLabel(dataDoG / dataDoG.max(), dataMax.astype('int'), \
+    >>>                      z = (10,16), x = (50,100),y = (50,100))
 
 .. plot::
     
@@ -292,9 +294,10 @@ the cell shape via a watershed.
 Now we can perform some measurements:
 
 
-    >>> from ClearMap.ImageProcessing.CellSizeDetection import findCellSize, findCellIntensity       
+    >>> from ClearMap.ImageProcessing.CellSizeDetection import findCellSize,\
+    >>>                                                        findCellIntensity       
     >>> cellSizes = findCellSize(dataShape, maxLabel = cells.shape[0]);
-    >>> cellIntensities = findCellIntensity(dataBGR, dataShape,  maxLabel = cells.shape[0]);
+    >>> cellIntensities = findCellIntensity(dataBGR, dataShape, maxLabel = cells.shape[0]);
 
 and plot those:
  
