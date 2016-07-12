@@ -71,8 +71,6 @@ detectCellParameter = {
     "findIntensityParameter"       : findIntensityParameter,
     "detectCellShapeParameter"     : detectCellShapeParameter
 }
-
-
 """
 dict: Paramters for cell detection using the spot detection algorithm
    

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE TeraStitcher SYSTEM "TeraStitcher.DTD">
+<TeraStitcher volume_format="TiledXY|2Dseries">
+    <stacks_dir value="D:\Nico\195A" />
+    <voxel_dims V="1.625" H="1.625" D="3" />
+    <origin V="0" H="0" D="0" />
+    <mechanical_displacements V="2288" H="1930" />
+    <dimensions stack_rows="3" stack_columns="3" stack_slices="1546" />
+    <STACKS>
+        <Stack ROW="0" COL="0" ABS_V="0" ABS_H="0" ABS_D="0" STITCHABLE="no" DIR_NAME="00x00" IMG_REGEX="" Z_RANGES="[0,1546)"> 
+            <NORTH_displacements />
+            <EAST_displacements />
+            <SOUTH_displacements />
+            <WEST_displacements />
+        </Stack>
+        <Stack ROW="0" COL="1" ABS_V="0" ABS_H="1188" ABS_D="0" STITCHABLE="no" DIR_NAME="00x01" IMG_REGEX="" Z_RANGES="[0,1546)">
+            <NORTH_displacements />
+            <EAST_displacements />
+            <SOUTH_displacements />
+            <WEST_displacements />
+        </Stack>
+		<Stack ROW="0" COL="2" ABS_V="0" ABS_H="2376" ABS_D="0" STITCHABLE="no" DIR_NAME="00x02" IMG_REGEX="" Z_RANGES="[0,1546)">
+            <NORTH_displacements />
+            <EAST_displacements />
+            <SOUTH_displacements />
+            <WEST_displacements />
+        </Stack>
+		<Stack ROW="1" COL="0" ABS_V="1408" ABS_H="0" ABS_D="0" STITCHABLE="no" DIR_NAME="01x00" IMG_REGEX="" Z_RANGES="[0,1546)">
+            <NORTH_displacements />
+            <EAST_displacements />
+            <SOUTH_displacements />
+            <WEST_displacements />
+        </Stack>
+		 <Stack ROW="1" COL="1" ABS_V="1408" ABS_H="1188" ABS_D="0" STITCHABLE="no" DIR_NAME="01x01" IMG_REGEX="" Z_RANGES="[0,1546)"> 
+            <NORTH_displacements />
+            <EAST_displacements />
+            <SOUTH_displacements />
+            <WEST_displacements />
+        </Stack>
+        <Stack ROW="1" COL="2" ABS_V="1408" ABS_H="2376" ABS_D="0" STITCHABLE="no" DIR_NAME="01x02" IMG_REGEX="" Z_RANGES="[0,1546)">
+            <NORTH_displacements />
+            <EAST_displacements />
+            <SOUTH_displacements />
+            <WEST_displacements />
+        </Stack>
+		<Stack ROW="2" COL="0" ABS_V="2816" ABS_H="0" ABS_D="0" STITCHABLE="no" DIR_NAME="02x00" IMG_REGEX="" Z_RANGES="[0,1546)">
+            <NORTH_displacements />
+            <EAST_displacements />
+            <SOUTH_displacements />
+            <WEST_displacements />
+        </Stack>
+		<Stack ROW="2" COL="1" ABS_V="2816" ABS_H="1188" ABS_D="0" STITCHABLE="no" DIR_NAME="02x01" IMG_REGEX="" Z_RANGES="[0,1546)">
+            <NORTH_displacements />
+            <EAST_displacements />
+            <SOUTH_displacements />
+            <WEST_displacements />
+		</Stack>
+		<Stack ROW="2" COL="2" ABS_V="2816" ABS_H="2376" ABS_D="0" STITCHABLE="no" DIR_NAME="02x02" IMG_REGEX="" Z_RANGES="[0,1546)">
+            <NORTH_displacements />
+            <EAST_displacements />
+            <SOUTH_displacements />
+            <WEST_displacements />
+        </Stack>
+    </STACKS>
+</TeraStitcher>

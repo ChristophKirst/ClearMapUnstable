@@ -152,7 +152,8 @@
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">os</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.IO</span> <span class="kn">as</span> <span class="nn">io</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">ClearMap.Settings</span> <span class="kn">as</span> <span class="nn">settings</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">ClearMapPath</span><span class="p">,</span> <span class="s">&#39;Test/Data/ImageAnalysis/cfos-substack.tif&#39;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">ClearMapPath</span><span class="p">,</span> \
+<span class="gp">&gt;&gt;&gt; </span>                        <span class="s">&#39;Test/Data/ImageAnalysis/cfos-substack.tif&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 <div class="section" id="visualizing-3d-images">
@@ -212,7 +213,7 @@ module <a class="reference internal" href="api/ClearMap.ImageProcessing.html#mod
 <span class="go">ChunkSize: Estimated chunk size 51 in 1 chunks!</span>
 <span class="go">Number of SubStacks: 1</span>
 <span class="go">Process 0: processing substack 0/1</span>
-<span class="go">Process 0: file          = /home/ckirst/Science/Projects/BrainActivityMap/Analysis/ClearMap/Test/Data/ImageAnalysis/cfos-substack.tif</span>
+<span class="go">Process 0: file          = /ClearMap/Test/Data/ImageAnalysis/cfos-substack.tif</span>
 <span class="go">Process 0: segmentation  = &lt;function calculateStatisticsOnStack at 0x7fee9c25dd70&gt;</span>
 <span class="go">Process 0: ranges: x,y,z = &lt;built-in function all&gt;,&lt;built-in function all&gt;,(0, 51)</span>
 <span class="go">Process 0: Reading data of size (250, 250, 51): elapsed time: 0:00:00</span>
@@ -277,7 +278,8 @@ A labeled image can be visualized using the
 <img alt="_images/imageanalysis-7.png" src="_images/imageanalysis-7.png" />
 </div>
 <p>Its easier to see when zoomed in:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plotOverlayLabel</span><span class="p">(</span>  <span class="n">dataDoG</span> <span class="o">/</span> <span class="n">dataDoG</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">dataMax</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;int&#39;</span><span class="p">),</span> <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">),</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">))</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">plotOverlayLabel</span><span class="p">(</span><span class="n">dataDoG</span> <span class="o">/</span> <span class="n">dataDoG</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">dataMax</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s">&#39;int&#39;</span><span class="p">),</span> \
+<span class="gp">&gt;&gt;&gt; </span>                     <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">16</span><span class="p">),</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">100</span><span class="p">))</span>
 </pre></div>
 </div>
 <p>(<a class="reference external" href=".//imageanalysis-8.py">Source code</a>, <a class="reference external" href=".//imageanalysis-8.png">png</a>, <a class="reference external" href=".//imageanalysis-8.hires.png">hires.png</a>, <a class="reference external" href=".//imageanalysis-8.pdf">pdf</a>)</p>
@@ -318,9 +320,10 @@ the cell shape via a watershed.</p>
 <img alt="_images/imageanalysis-10.png" src="_images/imageanalysis-10.png" />
 </div>
 <p>Now we can perform some measurements:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ClearMap.ImageProcessing.CellSizeDetection</span> <span class="kn">import</span> <span class="n">findCellSize</span><span class="p">,</span> <span class="n">findCellIntensity</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ClearMap.ImageProcessing.CellSizeDetection</span> <span class="kn">import</span> <span class="n">findCellSize</span><span class="p">,</span>\
+<span class="gp">&gt;&gt;&gt; </span>                                                       <span class="n">findCellIntensity</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">cellSizes</span> <span class="o">=</span> <span class="n">findCellSize</span><span class="p">(</span><span class="n">dataShape</span><span class="p">,</span> <span class="n">maxLabel</span> <span class="o">=</span> <span class="n">cells</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">cellIntensities</span> <span class="o">=</span> <span class="n">findCellIntensity</span><span class="p">(</span><span class="n">dataBGR</span><span class="p">,</span> <span class="n">dataShape</span><span class="p">,</span>  <span class="n">maxLabel</span> <span class="o">=</span> <span class="n">cells</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cellIntensities</span> <span class="o">=</span> <span class="n">findCellIntensity</span><span class="p">(</span><span class="n">dataBGR</span><span class="p">,</span> <span class="n">dataShape</span><span class="p">,</span> <span class="n">maxLabel</span> <span class="o">=</span> <span class="n">cells</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
 </pre></div>
 </div>
 <p>and plot those:</p>

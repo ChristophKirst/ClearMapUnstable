@@ -41,7 +41,8 @@ To set the directory where all files will be read and written for this sample:
 To set the image files used for the processing:
 
     >>> cFosFile = os.path.join(BaseDirectory, 'cfos/0_8x-cfos-Table Z\d{4}.ome.tif');
-    >>> AutofluoFile = os.path.join(BaseDirectory, 'autofluo/0_8xs3-autofluo-Table Z\d{4}.ome.tif');
+    >>> AutofluoFile = os.path.join(BaseDirectory, \
+    >>>                             'autofluo/0_8xs3-autofluo-Table Z\d{4}.ome.tif');
 
 Note the use of the command ``os.path.join`` to link the set ``BaseDirectory`` with the folder where the files are. On the LaVision ultramicroscope system, the images files are generated not as stacks, but as numbered files in the ome.tif format. Each Z stack will end by ``-Table Z0000.ome.tif``. The 0000 is the plane number. To indicate **ClearMap** to read the next planes, replace the 4 digits with the command ``\d{4}``. On our system, files for each channel (here, c-fos and background fluorescence) are saved in a different stack, in a different folder.
 
@@ -270,8 +271,10 @@ For the cell detection, the full stack of images will be sliced in smaller chunk
 
 You usually would not change anything in this section of the parameter file. This section defines the name of the files generated during the run, and set the parameters for the various operations of resampling and alignment. Of note, you can check these parameters for the alignment:
 
-   >>> RegistrationAlignmentParameter["affineParameterFile"]  = os.path.join(PathReg, 'Par0000affine.txt');
-   >>> RegistrationAlignmentParameter["bSplineParameterFile"] = os.path.join(PathReg, 'Par0000bspline.txt');
+   >>> RegistrationAlignmentParameter["affineParameterFile"] = \
+   >>>                 os.path.join(PathReg, 'Par0000affine.txt');
+   >>> RegistrationAlignmentParameter["bSplineParameterFile"] = \
+   >>>                 os.path.join(PathReg, 'Par0000bspline.txt');
 
 These point to the two files that will be used as parameter files for the alignment operation with Elastix. If you create new parameter files for the alignment based on your specific need, just make sure you link to the correct parameter file here.
 
@@ -337,7 +340,8 @@ Here, we use the function io.readPoints which opens the data related to points c
 
 Then, we use the function ``thresholdPoints`` to threshold the points based on their size and save them to 2 files (coordinates and intensities):
 
-   >>> points, intensities = thresholdPoints(points, intensities, threshold = (20, 900), row = (3,3));
+   >>> points, intensities = thresholdPoints(points, intensities, \
+   >>>                              threshold = (20, 900), row = (3,3));
    >>> io.writePoints(FilteredCellsFile, (points, intensities));
 
 The way the ``thresholdPoints`` function work is by setting the ``threshold`` parameter as ``(lower limit, upper limit)``. If only one value is provided, it assumes this is the lower boundary. ``row`` defines for the (lower, higher) boundaries which column to use from the intensities array. We presented this array in the overview, but as a reminder:
@@ -373,7 +377,9 @@ The points coordinate are then resampled and transformed onto their final positi
 The first step: correction (optional)
    >>> points = io.readPoints(CorrectionResamplingPointsParameter["pointSource"]);
    >>> points = resamplePoints(**CorrectionResamplingPointsParameter);
-   >>> points = transformPoints(points, transformDirectory = CorrectionAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+   >>> points = transformPoints(points, \
+   >>>     transformDirectory = CorrectionAlignmentParameter["resultDirectory"], \
+   >>>     indices = False, resultDirectory = None);
    >>> CorrectionResamplingPointsInverseParameter["pointSource"] = points;
    >>> points = resamplePointsInverse(**CorrectionResamplingPointsInverseParameter);
 
@@ -382,7 +388,9 @@ The points are first resampled with the function ``resamplePoints`` and then the
 The second step: alignment of the points in the Atlas reference space
    >>> RegistrationResamplingPointParameter["pointSource"] = points;
    >>> points = resamplePoints(**RegistrationResamplingPointParameter);
-   >>> points = transformPoints(points, transformDirectory = RegistrationAlignmentParameter["resultDirectory"], indices = False, resultDirectory = None);
+   >>> points = transformPoints(points, \
+   >>>     transformDirectory = RegistrationAlignmentParameter["resultDirectory"],\
+   >>>     indices = False, resultDirectory = None);
 
 
 Then writing the final point coordinates:
@@ -414,13 +422,15 @@ The heat map is generated as a 32bit float file, so it may need to be down sampl
 
 The table will show the number of detected points according to the region annotations. It relies on having a labeled image, which is a nrrd or tif file. The function ``countPointsInRegions`` will use the intensity value of each point as defining the regions:
 
-   >>> ids, counts = countPointsInRegions(points, labeledImage = AnnotationFile, intensities = None, collapse = None);
+   >>> ids, counts = countPointsInRegions(points, labeledImage = AnnotationFile, \
+   >>>                                    intensities = None, collapse = None);
 
 The ``AnnotationFile`` is set in the parameter file as shown above, and should match the dimensions and orientation of the Atlas file used. The ``collapse`` function is here set to ``None``, but is used if you wish to group adjacent regions into larger regions if you feel that the AnnotationFile has too many subdivisions.
 
 Then, a table of the results is generated:
 
-   >>> table = numpy.zeros(ids.shape, dtype=[('id','int64'),('counts','f8'),('name', 'a256')])
+   >>> table = numpy.zeros(ids.shape, \
+   >>>                  dtype=[('id','int64'),('counts','f8'),('name', 'a256')])
    >>> table["id"] = ids;
    >>> table["counts"] = counts;
    >>> table["name"] = labelToName(ids);
@@ -475,17 +485,21 @@ Then, let's load the heat map image stacks from each sample into two groups:
 We can then generate average heat maps for each group, as well as standard deviation maps:
 
    >>> g1m = numpy.mean(g1,axis = 0);
-   >>> io.writeData(os.path.join(baseDirectory, 'saline_mean.mhd'), io.sagittalToCoronalData(g1m));
+   >>> io.writeData(os.path.join(baseDirectory, 'saline_mean.mhd'), \
+   >>>                                          io.sagittalToCoronalData(g1m));
    >>> g1s = numpy.std(g1,axis = 0);
-   >>> io.writeData(os.path.join(baseDirectory, 'saline_std.mhd'), io.sagittalToCoronalData(g1s));
+   >>> io.writeData(os.path.join(baseDirectory, 'saline_std.mhd'), 
+   >>>                                          io.sagittalToCoronalData(g1s));
 
 The same thing will be done for group 2. Instead of writing directly the result as an image (here we wrote the file as a raw ``.mhd`` file), we used the function ``io.sagittalToCoronalData`` which is a convenient way to reorient the data in coronal plane, which is a more usual way to look at anatomical data (the scans and atlases are in sagittal orientation originally). Open the ``.mhd`` files in ImageJ. Don't forget that the ``.mhd`` file is just the header, and that the actual image comes in the companion ``.raw`` file.
 
 We can now generate the *p* value map:
 
-   >>> pvals, psign = stat.tTestVoxelization(g1.astype('float'), g2.astype('float'), signed = True, pcutoff = 0.05);
+   >>> pvals, psign = stat.tTestVoxelization(g1.astype('float'), g2.astype('float'),\
+   >>>                                       signed = True, pcutoff = 0.05);
    >>> pvalscolor = stat.colorPValues(pvals, psign, positive = [0,1], negative = [1,0]);
-   >>> io.writeData(os.path.join(baseDirectory, 'pvalues.tif'), io.sagittalToCoronalData(pvalscolor.astype('float32')));
+   >>> io.writeData(os.path.join(baseDirectory, 'pvalues.tif'), \
+   >>>              io.sagittalToCoronalData(pvalscolor.astype('float32')));
 
 We used here a cutoff of 5%. The first function ``stat.tTestVoxelization`` generates the *p* values using a T test with the unequal variance hypothesis set by default. The 
 ``stat.colorPValues`` function will attribute a color to each pixel of the *p* value map depending if the difference of the means between group1 and group2 is significantly positive or negative. You may get a warning that a non-standard tiff file is being written. You may also get warnings from the statistics library during the test calculation, just ignore them.
@@ -530,7 +544,8 @@ collapse        You can set regions to be fused into larger regions from the tab
 
 Then you can calculate the *p* values for the significance of the difference of the mean for each region. Those tests are independent:
 
-   >>> pvals, psign = stat.tTestPointsInRegions(counts1, counts2, pcutoff = None, signed = True, equal_var = False);
+   >>> pvals, psign = stat.tTestPointsInRegions(counts1, counts2, pcutoff = None, \
+   >>>                                          signed = True, equal_var = False);
 
 Optionally, you can also attribute a "q" value to the *p* values, to estimate the false discovery rate, as we're performing a lot of tests:
 

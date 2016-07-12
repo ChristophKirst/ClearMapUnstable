@@ -431,7 +431,7 @@ def readData(source, **args):
     
     Arguments:
         source (str, array or None): full data array, if numpy array simply reduce its range
-        x,z,y (tuple or all): range specifications, ``all`` is full range
+        x,y,z (tuple or all): range specifications, ``all`` is full range
         **args: further arguments specific to image data format reader
     
     Returns:

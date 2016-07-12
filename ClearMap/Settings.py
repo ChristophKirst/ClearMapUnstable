@@ -33,6 +33,16 @@ Notes:
     `Elastix Webpage <http://elastix.isi.uu.nl/>`_
 """
 
+
+#path to TeraSticher installation
+TeraStitcherPath = '/usr/local/TeraStitcher';
+"""str: Absolue path to the TeraStitcher installation
+
+Notes:
+    `TeraSticher Webpage <http://abria.github.io/TeraStitcher/>`_
+"""
+
+
 def setup():
     """Setup ClearMap for specific hosts
     
@@ -40,19 +50,27 @@ def setup():
         Edit this routine to include special setttings for specific hosts
         
     See Also:
-        :const:`IlastikPath`, :const:`ElastixPath`
+        :const:`IlastikPath`, :const:`ElastixPath`, :const:`TeraStitcherPath`,
     """
-    global IlastikPath, ElastixPath
+    global IlastikPath, ElastixPath, TeraStitcherPath
     
     hostname = socket.gethostname();
     
-    if hostname == 'kagalaska.nld':  #Christophs Laptop 
-        IlastikPath = '/home/ckirst/programs/ilastik-05/';
+    if hostname == 'kagalaska.nld':  #Christoph's Laptop 
+        IlastikPath = '/home/ckirst/programs/ilastik-1.1.9-Linux/';
         ElastixPath = '/home/ckirst/programs/elastix/';
+        TeraStitcherPath = '/home/ckirst/programs/TeraStitcher';
     
     elif hostname == 'mtllab-Ubuntu': #MTL workstation
-        IlastikPath = '/usr/local/ilastik-05-rc-final';
-        ElastixPath = '/usr/local/elastix';       
+        IlastikPath = '/usr/local/ilastik-1.1.9-Linux';
+        ElastixPath = '/usr/local/elastix'; 
+        TeraStitcherPath = '/usr/local/TeraStitcher';
+    
+    elif hostname == 'ChristophsComputer.rockefeller.edu':  #Christoph's Desktop 
+        IlastikPath = '/home/ckirst/Programs/ilastik-1.1.9-Linux/';
+        ElastixPath = '/home/ckirst/Programs/elastix/';
+        TeraStitcherPath = '/home/ckirst/Programs/TeraStitcher'; 
+    
     
     ## insert your hostname specific settings here ##
     #elif hostname == 'your-host-name':
@@ -72,6 +90,12 @@ def setup():
             #raise RuntimeWarning('Settings: ilastik path %s does not exists, cf. Settings.py or type help(Settings) for details.' % IlastikPath);
             print 'Settings: ilastik path %s does not exists, cf. Settings.py or type help(Settings) for details.' % IlastikPath;
             IlastikPath = None;
+            
+    if not TeraStitcherPath is None:
+        if not os.path.exists(TeraStitcherPath):
+            #raise RuntimeWarning('Settings: TeraStitcher path %s does not exists, cf. Settings.py or type help(Settings) for details.' % TeraStitcherPath);
+            print 'Settings: TeraStitcher path %s does not exists, cf. Settings.py or type help(Settings) for details.' % TeraStitcherPath;
+            TeraStitcherPath = None;
 
 setup();
 
