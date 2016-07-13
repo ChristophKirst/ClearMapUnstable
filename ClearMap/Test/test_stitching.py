@@ -283,7 +283,20 @@ print(etree.tostring(xmlt, pretty_print=False, xml_declaration=True, encoding="u
 # create a stack entry
 
 
+import re
+
+
+re.sub(r'\(\?\P\<row\>.*?\)', '5', '(?P<row>\d)_(?P<col>\d)',count = 1)
 
 
 
 
+import os
+all_subdirs = [d for d in os.listdir('.') if os.path.isdir(d)]
+
+latest_subdir = max(all_subdirs, key=os.path.getmtime)
+
+# Find latest
+import os; import glob
+directory = '/home/ckirst/Desktop/test_stich_images/result/'
+max(glob.glob(os.path.join(directory, '*/')), key=os.path.getmtime)
