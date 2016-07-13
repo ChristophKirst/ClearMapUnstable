@@ -64,7 +64,7 @@ def setup():
     elif hostname == 'mtllab-Ubuntu': #MTL workstation
         IlastikPath = '/usr/local/ilastik-1.1.9-Linux';
         ElastixPath = '/usr/local/elastix'; 
-        TeraStitcherPath = '/usr/local/TeraStitcher';
+        TeraStitcherPath = '/home/mtllab/Programs/TeraStitcher';
     
     elif hostname == 'ChristophsComputer.rockefeller.edu':  #Christoph's Desktop 
         IlastikPath = '/home/ckirst/Programs/ilastik-1.1.9-Linux/';

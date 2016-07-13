@@ -602,7 +602,7 @@ def xmlImportFile(regularExpression, size = None, overlap = None, origin = None,
   
   #infer size, resolution and overlap
   if size is None or resolution is None or overlap is None:
-    firstFile = findFirstFile(regularExpression, sort = False);
+    firstFile = findFirstFile(regularExpression);
     finfo = findFileInfo(firstFile);
     
     if size is None:
@@ -1153,8 +1153,8 @@ def test():
     
     ### import file
     reload(st); 
-    xmlstring = st.xmlImportFile(fileExpression, overlap = None, origin = None, resolution = None, tiling = None, tileExpression = None, zRange = None, xmlImportFile = None, asString = True)
-    print xmlstring
+    #xmlstring = st.xmlImportFile(fileExpression, overlap = None, origin = None, resolution = None, tiling = None, tileExpression = None, zRange = None, xmlImportFile = None, asString = True)
+    #print xmlstring
     
     importfile = st.xmlImportFile(fileExpression, xmlImportFile = os.path.join(datadir, 'TeraStitcher_import.xml'));
     print importfile
