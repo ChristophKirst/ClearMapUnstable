@@ -170,6 +170,76 @@ def copyData(source, sink):
     io.copyFile(source, sink);
 
 
+def readMetaData(source, info = all):
+  """Reads the meta data from the image file
+  
+  Arguments:
+    source: the data source
+    info (list or all): optional list of keywords
+  
+  Returns:
+    object: an object with the meta data
+  """
+  
+  from PIL import Image
+  from PIL.ExifTags import TAGS
+  from lxml import etree
+     
+  def ome_info(fn):
+      ret = {}
+      i = Image.open(fn)
+      info = i.tag.as_dict();
+      for tag, value in info.iteritems():
+          decoded = TAGS.get(tag)
+          ret[decoded] = value
+      return ret
+      
+  imginfo = ome_info(source);
+  
+  if info is all:
+    return imginfo;
+    
+  
+  keys = imginfo.keys();
+  subinfo = {x : None for x in info};
+
+  # get image sizes    
+  if 'size' in info:
+    subinfo['size'] = dataSize(source);
+  
+  if 'resolution' in info or 'overlap' in info:
+    try:
+      imgxml = imginfo['ImageDescription'];
+      if isinstance(imgxml, tuple):
+        imgxml = imgxml[0];
+      imgxml = etree.fromstring(str(imgxml));
+    except:
+      return subinfo;
+    
+    # get resolution -> ome generic
+    if 'resolution' in info:        
+      try:
+        pix = [x for x in imgxml.iter('{*}Pixels')];
+        pix = pix[0].attrib;
+        keys = pix.keys();
+        if 'PhysicalSizeX' in keys and 'PhysicalSizeY' in keys and 'PhysicalSizeZ' in keys:
+          subinfo['resolution'] = (float(pix['PhysicalSizeX']), float(pix['PhysicalSizeY']), float(pix['PhysicalSizeZ']));
+      except:
+        pass
+  
+    # get overlap -> not ome generic ???
+    if 'overlap' in info:
+      try:
+        e1 = [x for x in imgxml.iter('{*}xyz-Table_X_Overlap')];
+        e2 = [x for x in imgxml.iter('{*}xyz-Table_Y_Overlap')];
+        subinfo['overlap'] = (float(e1[0].attrib['Value']), float(e2[0].attrib['Value']));
+      except:
+        pass
+      
+  return subinfo;
+
+
+
 def test():    
     """Test TIF module"""  
     import ClearMap.IO.TIF as self
@@ -234,9 +304,19 @@ def test():
     print (diff.max(), diff.min())
 
 
+    ### Meta data
+    fn = os.path.join(basedir, 'Test/Data/OME/16-17-27_0_8X-s3-20HF_UltraII_C00_xyz-Table Z1000.ome.tif')
+    print self.readMetaData(fn, info = ['overlap', 'resolution'])
+
+    fn = os.path.join(basedir, 'Test/Data/Tif/test.tif')
+    print self.readMetaData(fn, info = ['overlap', 'resolution'])
+
+    print self.readMetaData(fn)
+
+
 if __name__ == "__main__":
     
-    self.test();
+    test();
     
 
 

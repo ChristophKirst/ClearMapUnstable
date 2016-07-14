@@ -33,6 +33,36 @@ import re
 import ClearMap.IO as io
 
 
+def firstFile(source, sort = True):
+  """Returns the first file that matches the soruce specification
+  
+  Arguments:
+      source (str): file name as regular expression
+      sort (bool): naturally sort the files if True, if False and arbirary file that matched first is returned
+      
+  Returns:
+      string or None: first file name that matches the regular expression or None if no match found
+    
+  Note:
+    For large file numbers speed can be imporved by setting the option sort = False
+  """
+  
+  #get path        
+  (fpath, fname) = os.path.split(source)
+  searchRegex = re.compile(fname).search 
+  
+  if sort:
+    for fname in natsort.natsorted(os.listdir(fpath)):
+      if search(fname):
+        return os.path.join(fpath, fname);
+    return None;
+  else:
+    for fname in os.listdir(fpath):
+      if search(fname):
+        return os.path.join(fpath, fname);
+    return None;
+
+
 def readFileList(filename):
     """Returns list of files that match the regular expression
     
@@ -168,8 +198,7 @@ def readDataFiles(filename, x = all, y = all, z = all, **args):
     nxy = img.shape;
     data = numpy.zeros(nxy + (sz,), dtype = img.dtype);
     data[:,:,0] = img;
-
-
+    
     for i in range(rz[0]+1, rz[1]):
         fn = os.path.join(fpath, fl[i]);    
         data[:,:,i-rz[0]] = io.readData(fn, x = x, y = y);
@@ -249,6 +278,70 @@ def copyData(source, sink):
         io.copyFile(os.path.join(fp, fl[i]), fileheader + (digitfrmt % i) + fileext);
     
     return sink
+    
+    
+def cropData(source, sink = None, x = all, y = all, z = all, adjustOverlap = True):
+  """Crop source from start to stop point
+  
+  Arguments:
+    source (str or array): filename or data array of source
+    sink (str or None): filename or sink
+    x,y,z (tuple or all): the range to crop the data to
+    adjustOverlap (bool): correct overlap meta data if exists
+  
+  Return:
+    str or array: array or filename with cropped data
+  """
+  
+  if sink is None:
+    return readDataFiles(source, x = x, y = y, z = z);
+  else: # sink assumed to be file expression
+  
+    if not io.isFileExpression(sink):
+      raise RuntimeError('cropping data to different format not supported!')
+      
+    fileheader, fileext, digitfrmt = splitFileExpression(sink);
+
+    #read first image to get data size and type
+    fp, fl = readFileList(source);    
+    nz = len(fl);
+    rz = io.toDataRange(nz, r = z);
+  
+    if adjustOverlap:
+      try:
+        mdata = io.readMetaData(os.path.join(fp, fl[0]), info = ['overlap']);
+        
+    
+    for i in range(rz[0], rz[1]):
+        fn = os.path.join(fp, fl[i]);
+        data = io.readData(fn, x = x, y = y);
+        fnout = fileheader + (digitfrmt % (i - rz[0])) + fileext;
+        io.writeData(fnout, data);
+        
+    return sink;
+    
+    
+    
+def readMetaData(source, info = all, sort = True):
+  """Reads the meta data from the image files
+  
+  Arguments:
+    source: the data source
+    info (list or all): optional list of keywords
+    sort (bool): if True use first file to infer meta data, otherwise arbitrary file
+  
+  Returns:
+    object: an object with the meta data
+  """
+    
+  firstfile = firstFile(source, sort = sort);
+  
+  mdata = io.readMetaData(firstfile, info = info);
+  
+  if 'size' is in mdata.keys():
+    mdata['size'] = dataSize(source);
+
+  return mdata;
 
 
 def test():    

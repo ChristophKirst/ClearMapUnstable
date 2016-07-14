@@ -15,6 +15,8 @@ self = sys.modules[__name__];
 
 import os
 import re
+import sre_parse
+
 import numpy
 import importlib
 import shutil
@@ -92,7 +94,10 @@ def isFileExpression(source):
         source (str): source file name
         
     Returns:
-        bool: true if source is regular expression with a digit label
+        bool: True if source is true regular expression with at least one non-literal
+        
+    Note:
+        The any character '.' is not treated as a non-literal because of possible filename extensions
     """    
     
     if not isinstance(source, basestring):
@@ -101,12 +106,22 @@ def isFileExpression(source):
     if isFile(source):
         return False;
     else:
-        searchRegex = re.compile('.*\\\\d\{(?P<digit>\d)\}.*').search
-        m = searchRegex(source);
-        if m is None:
-            return False;
-        else:
+        #searchRegex = re.compile('.*\\\\d\{(?P<digit>\d)\}.*').search
+        #m = searchRegex(source);
+        #if m is None:
+        #    return False;
+        #else:
+        #    return True;
+        
+        #parse regular expression 
+        p = sre_parse.parse(source);
+        for l in p:
+          #note: allow for a filname.ext patterns although this is a strictly a regular expression which should be denoted as filename\.ext
+          if l[0] != 'literal' and l[0] != 'any':
             return True;
+        
+        return False;
+  
   
 
 def isPointFile(source):
@@ -474,15 +489,40 @@ def writeData(sink, data, **args):
     return mod.writeData(sink, data, **args);
 
 
-
+def cropData(source, sink = None, x = all, y = all, z = all):
+  """Crop source from start to stop point
+  
+  Arguments:
+    source (str or array): filename or data array of source
+    sink (str or None): filename or sink
+    start (tuple or None): start point for croping (left lower bottom point)
+    stop (tuple or None): end point for croping (right upper top point)
+    
+  Return:
+    str or array: array or filename with cropped data
+  """
+  
+  if isinstance(source, numpy.array):
+    data = dataToRange(source, x = x, y = y, z = z);
+    if  isinstance(sink, basestring):
+      mod = dataFileNameToModule(sink);
+      return mod.write(data, sink);
+    else:
+      return data;
+  else:
+    mod = dataFileNameToModule(source);
+    if sink is None or (isinstance(sink, basestring) and dataFileNameToModule(sink) == mod):
+      return mod.cropData(source, sink, x = x, y = y, z = z);
+    else:
+      raise RuntimeError('cropping between different data formats not supported!');
 
 
 def copyFile(source, sink):
     """Copy a file from source to sink
     
     Arguments:
-        source (str): file name of source
-        sink (str): file name of sink
+        source (str): filename or data array of source
+        sink (str): the destination for the cropped data, if None the data is returned directly
     
     Returns:
         str: name of the copied file
@@ -568,6 +608,25 @@ def toMultiChannelData(*args):
     return data.rollaxis(data, 0, data.ndim);
 
 
+   
+def readMetaData(source, **args):
+  """Reads the meta data from the image file
+  
+  Arguments:
+    source: the data source
+    info (list or all): optional list of keywords
+  
+  Returns:
+    object: an object with the meta data
+  """
+  
+  if source is None or isinstance(source, numpy.ndarray):
+      return None;   
+  elif isinstance(source, basestring):
+      mod = dataFileNameToModule(source);
+      return mod.readMetaData(source, **args);
+  else:
+      raise RuntimeError('readMetaData: cannot infer format of the requested data/file.');
 
 
 

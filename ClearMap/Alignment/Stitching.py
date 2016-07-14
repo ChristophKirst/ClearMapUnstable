@@ -1185,7 +1185,7 @@ def test():
     ### stitch it
     reload(st);
     result = st.stitchData(placefile, resultPath = os.path.join(datadir, 'stiched.tif'))
-
+    result = st.stitchData(placefile, resultPath = os.path.join(datadir, 'stiched.tif'))
     
 if __name__ == "__main__":
     test();
