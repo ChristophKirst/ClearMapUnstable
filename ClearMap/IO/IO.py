@@ -489,7 +489,7 @@ def writeData(sink, data, **args):
     return mod.writeData(sink, data, **args);
 
 
-def cropData(source, sink = None, x = all, y = all, z = all):
+def cropData(source, sink = None, x = all, y = all, z = all, **args):
   """Crop source from start to stop point
   
   Arguments:
@@ -502,7 +502,7 @@ def cropData(source, sink = None, x = all, y = all, z = all):
     str or array: array or filename with cropped data
   """
   
-  if isinstance(source, numpy.array):
+  if isinstance(source, numpy.ndarray):
     data = dataToRange(source, x = x, y = y, z = z);
     if  isinstance(sink, basestring):
       mod = dataFileNameToModule(sink);
@@ -512,7 +512,7 @@ def cropData(source, sink = None, x = all, y = all, z = all):
   else:
     mod = dataFileNameToModule(source);
     if sink is None or (isinstance(sink, basestring) and dataFileNameToModule(sink) == mod):
-      return mod.cropData(source, sink, x = x, y = y, z = z);
+      return mod.cropData(source, sink, x = x, y = y, z = z, **args);
     else:
       raise RuntimeError('cropping between different data formats not supported!');
 

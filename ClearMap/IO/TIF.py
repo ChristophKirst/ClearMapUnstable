@@ -22,6 +22,8 @@ Example:
 import numpy
 import tifffile as tiff
 
+from lxml import etree
+
 import ClearMap.IO as io
 
 
@@ -125,12 +127,13 @@ def readData(filename, x = all, y = all, z = all, **args):
             return data
 
 
-def writeData(filename, data):
+def writeData(filename, data, info = None):
     """Write image data to tif file
     
     Arguments:
         filename (str): file name 
         data (array): image data
+        info (str): optional ome description of image
     
     Returns:
         str: tif file name
@@ -140,15 +143,15 @@ def writeData(filename, data):
     
     if d == 2:
         #tiff.imsave(filename, data);
-        tiff.imsave(filename, data.transpose([1,0]));
+        tiff.imsave(filename, data.transpose([1,0]), description = info);
     elif d == 3:   
         #tiff.imsave(filename, data.transpose([2,0,1]));
-        tiff.imsave(filename, data.transpose([2,1,0]));
+        tiff.imsave(filename, data.transpose([2,1,0]), description = info);
     elif d == 4:
         #tiffile (z,y,x,c)
         t = tiff.TiffWriter(filename, bigtiff = True);
         #t.save(data.transpose([2,0,1,3]), photometric = 'minisblack',  planarconfig = 'contig');
-        t.save(data.transpose([2,1,0,3]), photometric = 'minisblack',  planarconfig = 'contig')
+        t.save(data.transpose([2,1,0,3]), photometric = 'minisblack',  planarconfig = 'contig', description = info)
         t.close();    
     else:
         raise RuntimeError('writing multiple channel data to tif not supported');
@@ -175,30 +178,35 @@ def readMetaData(source, info = all):
   
   Arguments:
     source: the data source
-    info (list or all): optional list of keywords
+    info (list or all): optional list of keywords, if all return full tif metadata
   
   Returns:
-    object: an object with the meta data
+    dict: dictionary with the meta data
   """
   
-  from PIL import Image
-  from PIL.ExifTags import TAGS
+  #from PIL import Image
+  #from PIL.ExifTags import TAGS
   from lxml import etree
      
-  def ome_info(fn):
-      ret = {}
-      i = Image.open(fn)
-      info = i.tag.as_dict();
-      for tag, value in info.iteritems():
-          decoded = TAGS.get(tag)
-          ret[decoded] = value
-      return ret
-      
-  imginfo = ome_info(source);
+  #def ome_info(fn):
+  #    ret = {}
+  #    i = Image.open(fn)
+  #    info = i.tag.as_dict();
+  #    for tag, value in info.iteritems():
+  #        decoded = TAGS.get(tag)
+  #        ret[decoded] = value
+  #    return ret
+  #imginfo = ome_info(source);
+  
+  tf = tiff.TiffFile(source)
+  p = tf.pages[0];
+  imginfo = p.tags;  
   
   if info is all:
     return imginfo;
     
+  if isinstance(info, basestring):
+    info = [info];
   
   keys = imginfo.keys();
   subinfo = {x : None for x in info};
@@ -207,14 +215,22 @@ def readMetaData(source, info = all):
   if 'size' in info:
     subinfo['size'] = dataSize(source);
   
-  if 'resolution' in info or 'overlap' in info:
+  if 'description' in info or 'resolution' in info or 'overlap' in info:
     try:
-      imgxml = imginfo['ImageDescription'];
-      if isinstance(imgxml, tuple):
-        imgxml = imgxml[0];
-      imgxml = etree.fromstring(str(imgxml));
+      imgxml = imginfo['image_description'].value;
+      #if isinstance(imgxml, tuple):
+      #  imgxml = imgxml[0];
     except:
       return subinfo;
+      
+    if 'description' in info:
+      subinfo['description'] = imgxml;
+    
+    #convert into xml tree
+    try:
+      imgxml = etree.fromstring(str(imgxml));
+    except:
+      return subinfo
     
     # get resolution -> ome generic
     if 'resolution' in info:        
@@ -238,6 +254,41 @@ def readMetaData(source, info = all):
       
   return subinfo;
 
+
+def changeOMEMetaDataString(description, info  = None):
+  """Changes the meta data in an ome image descriptor
+  
+  Arguments:
+    description (str): xml ome image description
+    info (dict): dictionary of entries to try to change
+  
+  Returns:
+    str: modified xml image descriptor
+  """
+  if not isinstance(info, dict):
+    return description;
+    
+  try:
+    xml = etree.fromstring(description);
+  except:
+    raise RuntimeError('could not parse ome xml description!');
+  
+  keys = info.keys();
+  
+  if 'overlap' in keys:
+    try:
+      #get the overlap
+      overlap = info['overlap'];
+      ex = [x for x in xml.iter('{*}xyz-Table_X_Overlap')][0];
+      ey = [x for x in xml.iter('{*}xyz-Table_Y_Overlap')][0];
+      ex.attrib['Value'] = str(overlap[0]);
+      ey.attrib['Value'] = str(overlap[1]);
+    except:
+      raise RuntimeWarning('could not change overlap in ome image description');
+    
+  #add other meta data keys here
+  
+  return etree.tostring(xml, pretty_print = False);
 
 
 def test():    

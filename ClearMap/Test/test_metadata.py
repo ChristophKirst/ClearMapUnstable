@@ -17,7 +17,7 @@ io.readMetaData(fn, info = ['overlap', 'resolution', 'size'])
 
 fn = os.path.join(settings.ClearMapPath, 'Test/Data/Tif/test.tif')
 
-io.readMetaData(fn, info = ['overlap', 'resolution', 'size'])
+io.readMetaData(fn, info = ['overlap', 'resolution', 'size', 'description'])
 
 io.readMetaData(fn)
 

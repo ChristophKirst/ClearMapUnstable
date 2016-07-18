@@ -29,9 +29,14 @@ Examples:
 import numpy
 import os
 import re
+import natsort
+import multiprocessing 
+
 
 import ClearMap.IO as io
 
+from ClearMap.Utils.ProcessWriter import ProcessWriter;
+ 
 
 def firstFile(source, sort = True):
   """Returns the first file that matches the soruce specification
@@ -49,7 +54,7 @@ def firstFile(source, sort = True):
   
   #get path        
   (fpath, fname) = os.path.split(source)
-  searchRegex = re.compile(fname).search 
+  search = re.compile(fname).search 
   
   if sort:
     for fname in natsort.natsorted(os.listdir(fpath)):
@@ -278,9 +283,28 @@ def copyData(source, sink):
         io.copyFile(os.path.join(fp, fl[i]), fileheader + (digitfrmt % i) + fileext);
     
     return sink
+
+
+def _cropParallel(arg):
+    """Cropping helper function to use for parallel cropping of image slices"""
     
+    fileSource = arg[0];
+    fileSink = arg[1];
+    x = arg[2];
+    y = arg[3];
+    ii = arg[4];
+    nn = arg[5];
     
-def cropData(source, sink = None, x = all, y = all, z = all, adjustOverlap = True):
+    if ii is not None:
+        pw = ProcessWriter(ii);
+        pw.write("cropData: corpping image %d / %d" % (ii, nn))    
+        #pw.write('%s -> %s' % (fileSource, fileSink));
+    
+    data = io.readData(fileSource, x = x, y = y);
+    io.writeData(fileSink, data);
+
+  
+def cropData(source, sink = None, x = all, y = all, z = all, adjustOverlap = False, verbose = True, processes = all):
   """Crop source from start to stop point
   
   Arguments:
@@ -307,21 +331,92 @@ def cropData(source, sink = None, x = all, y = all, z = all, adjustOverlap = Tru
     nz = len(fl);
     rz = io.toDataRange(nz, r = z);
   
-    if adjustOverlap:
-      try:
-        mdata = io.readMetaData(os.path.join(fp, fl[0]), info = ['overlap']);
+    if adjustOverlap: #change overlap in first file 
+      try: 
+        fn = os.path.join(fp, fl[0]);
+        info = io.readMetaData(fn, info = ['description', 'overlap', 'resolution']);
+        description = str(info['description']);
+        overlap = numpy.array(info['overlap'], dtype = float);
+        resolution = numpy.array(info['resolution'], dtype = float);
         
+      except:
+        raise RuntimeWarning('could not modify overlap!')
+      
+      fullsize = io.dataSize(fn);
+      data = io.readData(fn, x = x, y = y);
+      
+      #overlap in pixels
+      poverlap = overlap[:2] / resolution[:2];
+      print poverlap
+      
+      #cropped pixel
+      xr = io.toDataRange(fullsize[0], r = x);
+      yr = io.toDataRange(fullsize[1], r = y);
+
+      print xr
+      print yr
+      print fullsize
+
+      poverlap[0] = poverlap[0] - xr[0];
+      poverlap[1] = poverlap[1] - yr[0];
+      print poverlap
+      
+      #new overlap in microns
+      overlap = poverlap * resolution[:2];
+      
+      #check for consistency      
+      if numpy.abs(fullsize[0]-xr[1] - xr[0]) > 1 or numpy.abs(fullsize[1]-yr[1] - yr[0]) > 1:
+        raise RuntimeWarning('cropping is inconsistent with overlap )modification!');
+
+      #change image description
+      import ClearMap.IO.TIF as CMTIF
+      description = CMTIF.changeOMEMetaDataString(description, {'overlap': overlap});
+      print len(description)
+      
+      
+      #write first file
+      fnout = fileheader + (digitfrmt % 0) + fileext;
+      io.writeData(fnout, data, info  = description);
+      
+      zr = range(rz[0]+1, rz[1]);
+    else:
+      zr = range(rz[0], rz[1]);
     
-    for i in range(rz[0], rz[1]):
-        fn = os.path.join(fp, fl[i]);
-        data = io.readData(fn, x = x, y = y);
-        fnout = fileheader + (digitfrmt % (i - rz[0])) + fileext;
-        io.writeData(fnout, data);
+    print zr
+    nZ = len(zr); 
+    
+    if processes is None:
+      processes = 1;
+    if processes is all:
+      processes = multiprocessing.cpu_count();
+    
+    if processes > 1: #parallel processing
+      pool = multiprocessing.Pool(processes=processes);
+      argdata = [];
+   
+      for i,z in enumerate(zr):
+        if verbose:
+          argdata.append( (os.path.join(fp, fl[z]), fileheader + (digitfrmt % (i+1)) + fileext, x, y, (i+1), (nZ+1)) );    
+        else:
+          argdata.append( (os.path.join(fp, fl[z]), fileheader + (digitfrmt % (i+1)) + fileext, x, y, None, None) );
+      
+      pool.map(_cropParallel, argdata);
+    
+    else: # sequential processing
+      for i,z in enumerate(zr):
+        if verbose:
+          print "cropData: corpping image %d / %d" % (i+1, nZ+1);
         
+        fileSource = os.path.join(fp, fl[z]);
+        data = io.readData(fileSource, x = x, y = y);
+        
+        fileSink = fileheader + (digitfrmt % (i+1)) + fileext
+        io.writeData(fileSink, data);
+    
     return sink;
-    
-    
-    
+
+
+
 def readMetaData(source, info = all, sort = True):
   """Reads the meta data from the image files
   
@@ -338,7 +433,7 @@ def readMetaData(source, info = all, sort = True):
   
   mdata = io.readMetaData(firstfile, info = info);
   
-  if 'size' is in mdata.keys():
+  if 'size' in mdata.keys():
     mdata['size'] = dataSize(source);
 
   return mdata;
