@@ -28,6 +28,6 @@ reload(fl)
 
 fncrop = os.path.join(settings.ClearMapPath, 'Test/Data/Cropped/crop_test_\d{4}.tif');
 
-fc = fl.cropData(fn, fncrop, adjustOverlap = True, x = (500, -500), y = (500, -500), processes = all)
+fc = fl.cropData(fn, fncrop, x = (500, -500), y = (500, -500),  adjustOverlap = True, processes = all)
 fc1 = fl.firstFile(fc)
 io.readMetaData(fc1, info = ['overlap', 'resolution', 'size']);
