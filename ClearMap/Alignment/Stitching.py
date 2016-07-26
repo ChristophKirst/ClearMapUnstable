@@ -873,10 +873,10 @@ def alignData(xmlImportFile, slices = None, subRegion = None, overlap = None, se
     cmd = cmd + ' --subvoldim=' + str(slices) + ' ';
   
   if subRegion is not None:
-    sns = (('--R0=', '--R1='), ('--C0=', '--C1='), ('--D0=', '--D1-'));
+    sns = (('--R0=', '--R1='), ('--C0=', '--C1='), ('--D0=', '--D1='));
     for d in range(3):
       for m in range(2):
-        if subRegion[d][m] is not None:
+        if subRegion[d][m] is not None and  subRegion[d][m] is not all:
           cmd = cmd + sns[d][m] + str(subRegion[d][m]) + ' ';
     
   if overlap is not None:
@@ -1037,9 +1037,9 @@ def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = Non
     xmlPlacementFile (str or None): the xml placement descriptor
     resultPath (str): result path or file name for the stiched data
     algorithm (str or None): optional algorithm to use for placement: 
-                             'NO_BLEND' for no blending
-                             'SIN_BLEND' for sinusoidal blending
-                             'STACK_MARGIN' for show stack margin
+                             'NOBLEND' for no blending
+                             'SINBLEND' for sinusoidal blending
+                             'MIPNCC', 'MST', 'SCANV', 'SCANH' for what ever
     resolutions (tuple or None): the different resolutions to produce
     form (str or None): the output form, if None determined automatically
     channel (str or None): the channels to use, 'R', 'G', 'B' or 'all'
