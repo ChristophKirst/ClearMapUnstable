@@ -34,6 +34,15 @@ Notes:
 """
 
 
+#path to ImageJ/Fiji installation
+ImageJPath = '/usr/local/Fiji.app';
+"""str: Absolue path to the ImageJ/Fiji installation
+
+Notes:
+    `ImageJ/Fiji Webpage <https://fiji.sc/>`_
+"""
+
+
 #path to TeraSticher installation
 TeraStitcherPath = '/usr/local/TeraStitcher';
 """str: Absolue path to the TeraStitcher installation
@@ -52,7 +61,7 @@ def setup():
     See Also:
         :const:`IlastikPath`, :const:`ElastixPath`, :const:`TeraStitcherPath`,
     """
-    global IlastikPath, ElastixPath, TeraStitcherPath
+    global IlastikPath, ElastixPath, TeraStitcherPath, ImageJPath
     
     hostname = socket.gethostname();
     
@@ -60,16 +69,19 @@ def setup():
         IlastikPath = '/home/ckirst/programs/ilastik-1.1.9-Linux/';
         ElastixPath = '/home/ckirst/programs/elastix/';
         TeraStitcherPath = '/home/ckirst/programs/TeraStitcher';
+        ImageJPath = '/home/ckirst/programs/Fiji.app';
     
     elif hostname == 'mtllab-Ubuntu': #MTL workstation
         IlastikPath = '/usr/local/ilastik-1.1.9-Linux';
         ElastixPath = '/usr/local/elastix'; 
         TeraStitcherPath = '/home/mtllab/Programs/TeraStitcher';
+        ImageJPath = None;
     
     elif hostname == 'ChristophsComputer.rockefeller.edu':  #Christoph's Desktop 
         IlastikPath = '/home/ckirst/Programs/ilastik-1.1.9-Linux/';
         ElastixPath = '/home/ckirst/Programs/elastix/';
         TeraStitcherPath = '/home/ckirst/Programs/TeraStitcher'; 
+        ImageJPath = '/home/ckirst/Programs/Fiji.app';
     
     
     ## insert your hostname specific settings here ##
@@ -96,6 +108,12 @@ def setup():
             #raise RuntimeWarning('Settings: TeraStitcher path %s does not exists, cf. Settings.py or type help(Settings) for details.' % TeraStitcherPath);
             print 'Settings: TeraStitcher path %s does not exists, cf. Settings.py or type help(Settings) for details.' % TeraStitcherPath;
             TeraStitcherPath = None;
+            
+    if not ImageJPath is None:
+        if not os.path.exists(ImageJPath):
+            #raise RuntimeWarning('Settings: TeraStitcher path %s does not exists, cf. Settings.py or type help(Settings) for details.' % TeraStitcherPath);
+            print 'Settings: ImageJ path %s does not exists, cf. Settings.py or type help(Settings) for details.' % ImageJPath;
+            ImageJPath = None;
 
 setup();
 

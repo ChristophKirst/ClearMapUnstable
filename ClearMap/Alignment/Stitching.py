@@ -16,7 +16,6 @@ See Also:
 import os
 import glob
 import shutil
-import tempfile
 import numpy as np
 import re
 import natsort
