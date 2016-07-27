@@ -87,7 +87,7 @@ def readFileList(filename):
     fl = [ l for l in fnames for m in (searchRegex(l),) if m]  
     
     if fl == []:
-        raise RuntimeError('no files found in ' + fpath + ' match ' + fname + ' !');
+        raise RuntimeError('no files found in ' + fpath + ' that match ' + fname + ' !');
     
     fl.sort();
         
@@ -357,8 +357,8 @@ def cropData(source, sink = None, x = all, y = all, z = all, adjustOverlap = Fal
       print yr
       print fullsize
 
-      poverlap[0] = poverlap[0] - xr[0];
-      poverlap[1] = poverlap[1] - yr[0];
+      poverlap[0] = poverlap[0] - xr[0] - (fullsize[0] - xr[1]);
+      poverlap[1] = poverlap[1] - yr[0] - (fullsize[1] - yr[1]);
       print poverlap
       
       #new overlap in microns

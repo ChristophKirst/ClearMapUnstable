@@ -14,20 +14,42 @@ reload(io);
 
 import ClearMap.Settings as settings
 
+import ClearMap.Alignment.Stitching as st
+
 import os
 
-fn = os.path.join(settings.ClearMapPath, 'Test/Data/Stitching/14-22-21_TH-s3-ov45-na004_UltraII\[00 x 00\]_C00_xyz-Table Z\d{4}.ome.tif');
-
-io.dataSize(fn)
-
-io.readMetaData(fn, info = ['size', 'overlap', 'resolution'])
+import numpy as np
 
 
-import ClearMap.IO.FileList as fl;
-reload(fl)
+datadir ='/home/mtllab/Documents/th/';
 
-fncrop = os.path.join(settings.ClearMapPath, 'Test/Data/Cropped/crop_test_\d{4}.tif');
+fn = os.path.join(datadir, r'160412_mosaic_15-20-19/15-20-19_mosaic_UltraII\[(?P<row>\d{2}) x (?P<col>\d{2})\]_C00_xyz-Table Z(?P<z>\d{4}).ome.tif')
 
-fc = fl.cropData(fn, fncrop, x = (500, -500), y = (500, -500),  adjustOverlap = True, processes = all)
-fc1 = fl.firstFile(fc)
-io.readMetaData(fc1, info = ['overlap', 'resolution', 'size']);
+_, gr = st.findFileList(fn , sort = True, groups = ['row','col'], absolute = True)
+groups = [];
+for i in range(gr.shape[1]):
+    groups.append(np.unique(gr[:,i]));
+
+print groups
+
+for i in groups[0]:
+    for j in groups[1]:
+        fileExpression = os.path.join(datadir, r'160412_mosaic_15-20-19/15-20-19_mosaic_UltraII\[%s x %s]_C00_xyz-Table Z\d{4}.ome.tif' % (i,j))
+
+        io.dataSize(fileExpression)
+
+        io.readMetaData(fileExpression, info = ['size', 'overlap', 'resolution'])
+
+
+        import ClearMap.IO.FileList as fl;
+        reload(fl)
+
+        fncrop = os.path.join(datadir, r'cropped/15-20-19_mosaic_UltraII_%s_x_%s_C00_xyz-Table Z\d{4}.ome.tif' % (i,j))
+
+
+        fc = fl.cropData(fileExpression, fncrop, x = (400, -400), y = (550, -550),  adjustOverlap = True, processes = all)
+        #fc1 = fl.firstFile(fc)
+        #io.readMetaData(fc1, info = ['overlap', 'resolution', 'size']);
+
+
+
