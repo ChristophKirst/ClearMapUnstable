@@ -116,7 +116,7 @@ def isFileExpression(source):
         #parse regular expression 
         p = sre_parse.parse(source);
         for l in p:
-          #note: allow for a filname.ext patterns although this is a strictly a regular expression which should be denoted as filename\.ext
+          #note: allow for a filname.ext patterns although this is strictly a regular expression which should be denoted as filename\.ext
           if l[0] != 'literal' and l[0] != 'any':
             return True;
         

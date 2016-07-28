@@ -26,6 +26,7 @@ from lxml import etree
 
 import ClearMap.Settings as settings
 import ClearMap.IO as io
+import ClearMap.IO.FileList as filelist;
 import ClearMap.Visualization.Plot as cplt;
 
 ##############################################################################
@@ -339,6 +340,69 @@ def findFileInfo(filename):
       finfo['overlap'] = (float(e1[0].attrib['Value']), float(e2[0].attrib['Value']));
       
   return finfo;
+
+
+
+def copyTeraStitcherStackToFileList(source, sink):
+  """Copies image files from TeraSticher file structure to a list of files
+  
+  Arguments:
+    source (str): base directory of the TeraStitcher files
+    sink (str): regular expression of the files to copy to
+
+  Returns:
+    str: sink regular expression
+  """
+  #TODO: multiple tiles !
+  fns = glob.glob(os.path.join(source, '*/*/*'));
+  fns = natsort.natsorted(fns);
+  
+  for i,f in enumerate(fns):
+    fn = filelist.fileExperssionToFileName(sink, i);
+    shutil.copyfile(f, fn);
+  
+  return sink;
+
+
+def isTileExpression(source):
+  """Checks if the expression matches a tiled expression
+  
+  Arguments:
+    source (Str): the expression to check
+  
+  Returns:
+    bool: True if the expression containes three place holders with group names 'row', 'col', 'z'
+
+  Note:
+    A tile expression is assumed to have a fomr like '/path/to/files/image_file_(?P<row>\d{2})_(?P<col>\d{2})_(?P<z>\d{4}).tif'
+  """
+  
+  
+  
+  
+def moveTeraStitcherStackToFileList(source, sink, deleteDirectory = True):
+  """Moves image files from TeraSticher file structure to a list of files
+  
+  Arguments:
+    source (str): base directory of the TeraStitcher files
+    sink (str): regular expression of the files to copy to
+
+  Returns:
+    str: sink regular expression
+  """
+  
+  fns = glob.glob(os.path.join(source, '*/*/*'));
+  fns = natsort.natsorted(fns);
+  
+  for i,f in enumerate(fns):
+    fn = filelist.fileExperssionToFileName(sink, i);
+    shutil.move(f, fn);
+    
+  if deleteDirectory:
+    shutil.rmtree(source);
+  
+  return sink;
+  
 
 
 def displacements(size, resolution = (1.0, 1.0),  overlap = (0.0, 0.0), units = 'Microns'):
@@ -1029,22 +1093,22 @@ def placeTiles(xmlThresholdFile, algorithm = None, xmlResultFile = None):
   return xmlResultFile;
 
 
-def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = None, form = None, channel = None, subRegion = None, bitDepth = None, blockSize = None, clear = True):
+def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = None, form = None, channel = None, subRegion = None, bitDepth = None, blockSize = None, cleanup = True):
   """Runs the final stiching step of TeraSticher
   
   Arguments:
     xmlPlacementFile (str or None): the xml placement descriptor
-    resultPath (str): result path or file name for the stiched data
+    resultPath (str): result path, file name or file expression for the stiched data
     algorithm (str or None): optional algorithm to use for placement: 
                              'NOBLEND' for no blending
                              'SINBLEND' for sinusoidal blending
-                             'MIPNCC', 'MST', 'SCANV', 'SCANH' for what ever
     resolutions (tuple or None): the different resolutions to produce
     form (str or None): the output form, if None determined automatically
     channel (str or None): the channels to use, 'R', 'G', 'B' or 'all'
     subRegion (tuple or None): optional sub region in the form ((xmin,xmax),(ymin,ymax), (zmin, zmax))
     bitDepth (int or None): the pits per pixel to use, default is 8
     blockSize (tuple): the sizes of various blocks to save stiched image into
+    cleanup (bool): if True delete the TeraSticher file structure
   
   Returns:
     str : the result path or file name of the stiched data
@@ -1061,8 +1125,12 @@ def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = Non
   cmd = cmd + '--projin="' + xmlPlacementFile + '" ';
   
   if len(resultPath) > 3 and resultPath[-4:] == '.tif':
-    form = 'TiledXY|3Dseries';
-    resultPath, filename = os.path.split(resultPath);
+    if io.isFileExpression(resultPath):
+      form = 'TiledXY|2Dseries';
+      resultPath, filename = os.path.split(resultPath);
+    else:      
+      form = 'TiledXY|3Dseries';
+      resultPath, filename = os.path.split(resultPath);
   else:
     filename = None;
   
@@ -1106,15 +1174,29 @@ def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = Non
     raise RuntimeError('stitchData: failed executing: ' + cmd);
   
   if filename is not None:
-    #get most recent created file and move to desired filename
-    imgfile = max(glob.glob(os.path.join(resultPath, '*/*/*/*')), key = os.path.getmtime);
-    filename = os.path.join(resultPath, filename);
-    os.rename(imgfile, filename);
-    if clear:
-      imgpath = os.path.sep.join(imgfile.split(os.path.sep)[:-3]);
-      shutil.rmtree(imgpath)
-    return filename;
+    
+    if io.isFileExpression(filename): # conevert list of files in TeraSticher from
+      #TODO: multiple resolutions
+      imgfile = max(glob.glob(os.path.join(resultPath, '*/*/*/*')), key = os.path.getmtime);
+      basedir = os.path.sep.join(imgfile.split(os.path.sep)[:-2]);
+      if cleanup:
+        moveTeraStitcherStackToFileList(basedir, os.path.join(resultPath, filename));
+        shutil.rmtree(basedir);
+      else:
+        copyTeraStitcherStackToFileList(basedir, os.path.join(resultPath, filename));
+
+    else:   # single file in TeraSticher folder
+      #get most recent created file 
+      imgfile = max(glob.glob(os.path.join(resultPath, '*/*/*/*')), key = os.path.getmtime);
+      filename = os.path.join(resultPath, filename);
+      os.rename(imgfile, filename);
+      if cleanup:
+        imgpath = os.path.sep.join(imgfile.split(os.path.sep)[:-3]);
+        shutil.rmtree(imgpath)
+      return filename;
+  
   else:
+    
     return resultPath;
 
 ##############################################################################
