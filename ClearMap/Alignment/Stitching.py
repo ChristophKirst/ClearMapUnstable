@@ -477,7 +477,8 @@ def deleteBinFile(baseDirectory):
     bD = baseDirectory;
 
   try:
-    binfile = os.path.join(baseDirectory, 'mdata.bin');
+    binfile = os.path.join(bD, 'mdata.bin');
+    #print binfile
     os.remove(binfile);
   except:
     pass;
@@ -1204,6 +1205,9 @@ def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = Non
   
   if bitDepth is not None:
     cmd = cmd + '--imout_depth=' + str(bitDepth) + ' ';
+    
+  print resultPath
+  io.createDirectory(resultPath)
  
   print 'running: ' + cmd;
   res = os.system(cmd);
@@ -1218,8 +1222,8 @@ def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = Non
       imgfile = max(glob.glob(os.path.join(resultPath, '*/*/*/*')), key = os.path.getmtime);
       basedir = os.path.sep.join(imgfile.split(os.path.sep)[:-2]);
       if cleanup:
-        moveTeraStitcherStackToFileList(basedir, os.path.join(resultPath, filename));
-        shutil.rmtree(basedir);
+        moveTeraStitcherStackToFileList(basedir, os.path.join(resultPath, filename), deleteDirectory=True);
+        #shutil.rmtree(basedir);
       else:
         copyTeraStitcherStackToFileList(basedir, os.path.join(resultPath, filename));
 
