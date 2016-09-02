@@ -354,7 +354,7 @@ def copyTeraStitcherStackToFileList(source, sink, verbose = True):
     str: sink regular expression
   """
   #TODO: multiple tiles !
-  fns = glob.glob(os.path.join(source, '*/*/*/*'));
+  fns = glob.glob(os.path.join(source, '*/*/*'));
   fns = natsort.natsorted(fns);
   #print fns
   
@@ -379,7 +379,7 @@ def moveTeraStitcherStackToFileList(source, sink, deleteDirectory = True, verbos
     str: sink regular expression
   """
   
-  fns = glob.glob(os.path.join(source, '*/*/*/*'));
+  fns = glob.glob(os.path.join(source, '*/*/*'));
   fns = natsort.natsorted(fns);
   
   io.createDirectory(sink);
@@ -391,9 +391,9 @@ def moveTeraStitcherStackToFileList(source, sink, deleteDirectory = True, verbos
     
   if deleteDirectory:
     p,_ = os.path.split(fns[0]);
-    p = p.split(os.pathsep);
+    p = p.split(os.path.sep);
     p = p[:-2];
-    p = os.pathsep.join(p);
+    p = os.path.sep.join(p);
     shutil.rmtree(p);
   
   return sink;
@@ -1219,8 +1219,7 @@ def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = Non
     
     if io.isFileExpression(filename): # convert list of files in TeraSticher from
       #TODO: multiple resolutions
-      imgfile = max(glob.glob(os.path.join(resultPath, '*/*/*/*')), key = os.path.getmtime);
-      basedir = os.path.sep.join(imgfile.split(os.path.sep)[:-2]);
+      basedir = max(glob.glob(os.path.join(resultPath, '*')), key = os.path.getmtime);
       if cleanup:
         moveTeraStitcherStackToFileList(basedir, os.path.join(resultPath, filename), deleteDirectory=True);
         #shutil.rmtree(basedir);
@@ -1229,6 +1228,7 @@ def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = Non
 
     else:   # single file in TeraSticher folder
       #get most recent created file 
+      #TODO: test if this works
       imgfile = max(glob.glob(os.path.join(resultPath, '*/*/*/*')), key = os.path.getmtime);
       filename = os.path.join(resultPath, filename);
       os.rename(imgfile, filename);
