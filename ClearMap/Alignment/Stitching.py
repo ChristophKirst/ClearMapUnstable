@@ -1206,8 +1206,8 @@ def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = Non
   if bitDepth is not None:
     cmd = cmd + '--imout_depth=' + str(bitDepth) + ' ';
     
-  print resultPath
-  io.createDirectory(resultPath)
+  #print resultPath
+  io.createDirectory(resultPath, split = False)
  
   print 'running: ' + cmd;
   res = os.system(cmd);

@@ -164,7 +164,7 @@ def isDataFile(source):
         return False;
 
           
-def createDirectory(filename):
+def createDirectory(filename, split = True):
     """Creates the directory of the file if it does not exists
      
     Arguments:
@@ -174,7 +174,10 @@ def createDirectory(filename):
         str: directory name
     """       
     
-    dirname, fname = os.path.split(filename);
+    if split:
+        dirname, fname = os.path.split(filename);
+    else:
+        dirname = filename;
     if not os.path.exists(dirname):
         os.makedirs(dirname);
     
