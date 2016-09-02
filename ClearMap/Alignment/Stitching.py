@@ -343,22 +343,27 @@ def findFileInfo(filename):
 
 
 
-def copyTeraStitcherStackToFileList(source, sink):
+def copyTeraStitcherStackToFileList(source, sink, verbose = True):
   """Copies image files from TeraSticher file structure to a list of files
   
   Arguments:
     source (str): base directory of the TeraStitcher files
     sink (str): regular expression of the files to copy to
+    verbose (bool): show progress
 
   Returns:
     str: sink regular expression
   """
   #TODO: multiple tiles !
-  fns = glob.glob(os.path.join(source, '*/*/*'));
+  fns = glob.glob(os.path.join(source, '*/*/*/*'));
   fns = natsort.natsorted(fns);
+  #print fns
   
+  io.createDirectory(sink);
   for i,f in enumerate(fns):
-    fn = filelist.fileExperssionToFileName(sink, i);
+    fn = filelist.fileExpressionToFileName(sink, i);
+    if verbose:
+      print '%s -> %s' % (f,fn)
     shutil.copyfile(f, fn);
   
   return sink;
@@ -377,15 +382,18 @@ def isTileExpression(source):
     A tile expression is assumed to have a fomr like '/path/to/files/image_file_(?P<row>\d{2})_(?P<col>\d{2})_(?P<z>\d{4}).tif'
   """
   
+  #TODO: do it
+  pass
   
   
   
-def moveTeraStitcherStackToFileList(source, sink, deleteDirectory = True):
+def moveTeraStitcherStackToFileList(source, sink, deleteDirectory = True, verbose = True):
   """Moves image files from TeraSticher file structure to a list of files
   
   Arguments:
     source (str): base directory of the TeraStitcher files
     sink (str): regular expression of the files to copy to
+    verbose (bool): show progress
 
   Returns:
     str: sink regular expression
@@ -394,8 +402,11 @@ def moveTeraStitcherStackToFileList(source, sink, deleteDirectory = True):
   fns = glob.glob(os.path.join(source, '*/*/*'));
   fns = natsort.natsorted(fns);
   
+  io.createDirectory(sink);
   for i,f in enumerate(fns):
-    fn = filelist.fileExperssionToFileName(sink, i);
+    fn = filelist.fileExpressionToFileName(sink, i);
+    if verbose:
+      print '%s -> %s' % (f,fn)
     shutil.move(f, fn);
     
   if deleteDirectory:
@@ -1202,7 +1213,7 @@ def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = Non
   
   if filename is not None:
     
-    if io.isFileExpression(filename): # conevert list of files in TeraSticher from
+    if io.isFileExpression(filename): # convert list of files in TeraSticher from
       #TODO: multiple resolutions
       imgfile = max(glob.glob(os.path.join(resultPath, '*/*/*/*')), key = os.path.getmtime);
       basedir = os.path.sep.join(imgfile.split(os.path.sep)[:-2]);

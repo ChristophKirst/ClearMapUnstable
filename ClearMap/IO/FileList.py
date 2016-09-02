@@ -127,7 +127,7 @@ def splitFileExpression(filename):
     return (fileheader, fileext, digitfrmt);
 
 
-def fileExperssionToFileName(filename, z):
+def fileExpressionToFileName(filename, z):
     """Insert a number into the regular expression
     
     Arguments:
