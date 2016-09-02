@@ -891,7 +891,6 @@ def importData(xmlImportFile = None, baseDirectory = None, resolution = None, or
   if regularExpression is not None:
     cmd = cmd + '--imin_regex="' + regularExpression + '" ';
   
-  
   if clear:
     if baseDirectory is None:
       baseDirectory = baseDirectoryFromXMLImport(xmlImportFile);
