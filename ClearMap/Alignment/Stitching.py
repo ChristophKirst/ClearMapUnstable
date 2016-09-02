@@ -20,7 +20,6 @@ import numpy as np
 import re
 import natsort
 
-
 from lxml import etree
 
 
@@ -366,26 +365,7 @@ def copyTeraStitcherStackToFileList(source, sink, verbose = True):
       print '%s -> %s' % (f,fn)
     shutil.copyfile(f, fn);
   
-  return sink;
-
-
-def isTileExpression(source):
-  """Checks if the expression matches a tiled expression
-  
-  Arguments:
-    source (Str): the expression to check
-  
-  Returns:
-    bool: True if the expression containes three place holders with group names 'row', 'col', 'z'
-
-  Note:
-    A tile expression is assumed to have a fomr like '/path/to/files/image_file_(?P<row>\d{2})_(?P<col>\d{2})_(?P<z>\d{4}).tif'
-  """
-  
-  #TODO: do it
-  pass
-  
-  
+  return sink;  
   
 def moveTeraStitcherStackToFileList(source, sink, deleteDirectory = True, verbose = True):
   """Moves image files from TeraSticher file structure to a list of files
@@ -399,7 +379,7 @@ def moveTeraStitcherStackToFileList(source, sink, deleteDirectory = True, verbos
     str: sink regular expression
   """
   
-  fns = glob.glob(os.path.join(source, '*/*/*'));
+  fns = glob.glob(os.path.join(source, '*/*/*/*'));
   fns = natsort.natsorted(fns);
   
   io.createDirectory(sink);
@@ -410,10 +390,30 @@ def moveTeraStitcherStackToFileList(source, sink, deleteDirectory = True, verbos
     shutil.move(f, fn);
     
   if deleteDirectory:
-    shutil.rmtree(source);
+    p,_ = os.path.split(fns[0]);
+    p = p.split(os.pathsep);
+    p = p[:-2];
+    p = os.pathsep.join(p);
+    shutil.rmtree(p);
   
   return sink;
   
+
+#def isTileExpression(source):
+#  """Checks if the expression matches a tiled expression
+#  
+#  Arguments:
+#    source (Str): the expression to check
+#  
+#  Returns:
+#    bool: True if the expression containes three place holders with group names 'row', 'col', 'z'
+#
+#  Note:
+#    A tile expression is assumed to have a fomr like '/path/to/files/image_file_(?P<row>\d{2})_(?P<col>\d{2})_(?P<z>\d{4}).tif'
+#  """
+#  
+#  #TODO: do it
+#  pass
 
 
 def displacements(size, resolution = (1.0, 1.0),  overlap = (0.0, 0.0), units = 'Microns'):
