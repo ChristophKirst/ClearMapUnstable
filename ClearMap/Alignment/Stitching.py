@@ -28,6 +28,9 @@ import ClearMap.IO as io
 import ClearMap.IO.FileList as filelist;
 import ClearMap.Visualization.Plot as cplt;
 
+# avoid 'TERM enviroment variable not set' message
+os.environ["TERM"] = 'dumb';
+
 ##############################################################################
 ### Initialization and Enviroment Settings
 ##############################################################################
@@ -1131,7 +1134,7 @@ def placeTiles(xmlThresholdFile, algorithm = None, xmlResultFile = None):
   return xmlResultFile;
 
 
-def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = None, form = None, channel = None, subRegion = None, bitDepth = None, blockSize = None, cleanup = True):
+def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = None, form = None, channel = None, subRegion = None, bitDepth = None, blockSize = None, cleanup = True, compress = False):
   """Runs the final stiching step of TeraSticher
   
   Arguments:
@@ -1147,6 +1150,7 @@ def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = Non
     bitDepth (int or None): the pits per pixel to use, default is 8
     blockSize (tuple): the sizes of various blocks to save stiched image into
     cleanup (bool): if True delete the TeraSticher file structure
+    compress (bool): if True compress final tif images
   
   Returns:
     str : the result path or file name of the stiched data
@@ -1205,9 +1209,12 @@ def stitchData(xmlPlacementFile, resultPath, algorithm = None, resolutions = Non
   if bitDepth is not None:
     cmd = cmd + '--imout_depth=' + str(bitDepth) + ' ';
     
+  if not compress:
+    cmd = cmd + '--libtiff_uncompress ';  
+    
   #print resultPath
   io.createDirectory(resultPath, split = False)
- 
+    
   print 'running: ' + cmd;
   res = os.system(cmd);
   
