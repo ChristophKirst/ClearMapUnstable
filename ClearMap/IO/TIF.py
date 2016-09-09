@@ -149,10 +149,11 @@ def writeData(filename, data, info = None):
         tiff.imsave(filename, data.transpose([2,1,0]), description = info);
     elif d == 4:
         #tiffile (z,y,x,c)
-        t = tiff.TiffWriter(filename, bigtiff = True);
+        #t = tiff.TiffWriter(filename, bigtiff = True);
         #t.save(data.transpose([2,0,1,3]), photometric = 'minisblack',  planarconfig = 'contig');
-        t.save(data.transpose([2,1,0,3]), photometric = 'minisblack',  planarconfig = 'contig', description = info)
-        t.close();    
+        #t.save(data.transpose([2,1,0,3]), photometric = 'minisblack',  planarconfig = 'contig', description = info)
+        #t.close();    
+        tiff.imsave(filename, data.transpose([2,1,0,3]), photometric = 'minisblack',  planarconfig = 'contig', bigtiff = True);
     else:
         raise RuntimeError('writing multiple channel data to tif not supported');
     

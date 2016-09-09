@@ -73,7 +73,7 @@ def detectCells(source, sink = None, method ="SpotDetection", processMethod = al
     if method == "SpotDetection":
         detectCells = ClearMap.ImageProcessing.SpotDetection.detectSpots;
     elif method == 'Ilastik':
-        if ClearMap.ImageProcessing.IlastikClassification.Initialized:
+        if ClearMap.ImageProcessing.Ilastik.Initialized:
             detectCells = ClearMap.ImageProcessing.IlastikClassification.classifyCells;
             processMethod = 'sequential';  #ilastik does parallel processing so force sequential processing here
         else:

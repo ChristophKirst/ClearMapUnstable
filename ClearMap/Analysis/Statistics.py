@@ -207,7 +207,7 @@ def thresholdPoints(points, intensities, threshold = 0, row = 0):
     if not threshold[1] is all:
         iids = numpy.logical_and(iids, i <= threshold[1]);
     
-    return (points[iids, :], intensities[iids, :]);
+    return (points[iids, ...], intensities[iids, ...]);
 
 
 

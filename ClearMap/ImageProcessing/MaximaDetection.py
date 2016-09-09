@@ -12,10 +12,10 @@ import sys
 import numpy
 
 #from scipy.ndimage import maximum_filter
-from scipy.ndimage.measurements import label, center_of_mass
+import scipy.ndimage.measurements as sm;
 
 #import scipy
-#from skimage.filter.rank import tophat
+#from skimage.filters.rank import tophat
 #from skimage.measure import regionprops
 #from mahotas import regmin
 #from mahotas import locmax
@@ -184,7 +184,7 @@ def findExtendedMaxima(img, findExtendedMaximaParameter = None, hMax = None, siz
 
 
 
-def findCenterOfMaxima(img, imgmax, findCenterOfMaximaParameter = None, save = None, verbose = False,
+def findCenterOfMaxima(img, imgmax = None, label = None, findCenterOfMaximaParameter = None, save = None, verbose = False,
                        subStack = None, out = sys.stdout, **parameter):
     """Find center of detected maxima weighted by intensity
     
@@ -215,14 +215,20 @@ def findCenterOfMaxima(img, imgmax, findCenterOfMaximaParameter = None, save = N
     timer = Timer(); 
 
     #center of maxima
-    timer.reset();
-    imglab, nlab = label(imgmax);  
+    if label is None:
+        imglab, nlab = sm.label(imgmax);  
+    else:
+        imglab = label;
+        nlab = imglab.max();
+       
+    #print 'max', imglab.shape, img.shape
+    #print imglab.dtype, img.dtype
     
     if not save is None:
         writeSubStack(save, imglab, subStack = subStack);
     
     if nlab > 0:
-        centers = numpy.array(center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
+        centers = numpy.array(sm.center_of_mass(img, imglab, index = numpy.arange(1, nlab)));    
     
         if verbose > 1:  
             #plotOverlayLabel(img * 0.01, imglab, alpha = False);

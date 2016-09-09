@@ -376,7 +376,7 @@ def dataSizeFromDataRange(dataSize, x = all, y = all, z = all, **args):
     
     Arguments:
         dataSize (tuple): data size
-        x,z,y (tuple or all): range specifications, ``all`` is full range
+        x,y,z (tuple or all): range specifications, ``all`` is full range
         
     Returns:
         tuple: data size as tuple of integers
@@ -404,7 +404,7 @@ def dataToRange(data, x = all, y = all, z = all, **args):
     
     Arguments:
         data (array): full data array
-        x,z,y (tuple or all): range specifications, ``all`` is full range
+        x,y,z (tuple or all): range specifications, ``all`` is full range
         
     Returns:
         array: reduced data

@@ -30,7 +30,7 @@ from ClearMap.Visualization.Plot import plotTiling
 
 
 
-from skimage.filter._rank_order import rank_order
+from skimage.filters._rank_order import rank_order
 
 def reconstruct(seed, mask, method = 'dilation', selem = None, offset = None):
     """Performs a morphological reconstruction of an image.

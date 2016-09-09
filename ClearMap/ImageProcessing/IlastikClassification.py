@@ -5,14 +5,7 @@ Inteface to Illastik pixel classification
 This module allows to integrate ilastik pixel classification into the *ClearMap*
 pipeline. 
 
-To train a classifier ilastik 0.5 should be used following these steps:
-
-    * genereate a classifier from illastik 0.5 
-    * press 'Train and classify' button (eventhough the online traning is running) !
-    * save the classifier to a file
-    * use the classifiers file name in the ClearMap routine :func:`classifyPixel`
-    * try to avoid too many features in the classifier 
-      as classification gets very memory intensive otherwise
+To train a classifier ilastik should be used and the classifier saved into a file.
 
 Note:
     Note that ilastik classification works in parallel, thus it is advised to 
@@ -31,16 +24,13 @@ References:
 
 import sys
 import numpy
-import h5py
-import math
 
+import scipy.ndimage.measurements as sm;
 
-from multiprocessing import Pool
-import ClearMap.Settings as settings
-import ClearMap.IO as io
-
+import ClearMap.ImageProcessing.Ilastik as ilastik
 #from ClearMap.ImageProcessing.BackgroundRemoval import removeBackground
 from ClearMap.ImageProcessing.MaximaDetection import findCenterOfMaxima, findIntensity
+from ClearMap.ImageProcessing.CellSizeDetection import detectCellShape, findCellSize, findCellIntensity
 from ClearMap.ImageProcessing.StackProcessing import writeSubStack
 
 from ClearMap.Utils.Timer import Timer
@@ -49,253 +39,40 @@ from ClearMap.Utils.ParameterTools import getParameter, writeParameter
 from ClearMap.Visualization.Plot import plotTiling
 
 
-def initializeIlastik(path = None):
-    """Set system path for illastik installation"""
-    if path is None:
-        path = settings.IlastikPath;
-    sys.path.insert(1, path);
-
-initializeIlastik();
-
-Initialized = False;
-"""bool: True if ilastik interface was sucessfully initialized ."""
-
-
-#initialize ilastik
-try:
-    #sys.stdout = sys.stderr = open(os.devnull, "w")
-    from ilastik.core.dataMgr import DataMgr, DataItemImage
-    from ilastik.modules.classification.core.featureMgr import FeatureMgr
-    #from ilastik.modules.classification.core.classificationMgr import ClassificationMgr
-    from ilastik.modules.classification.core.features.featureBase import FeatureBase
-    from ilastik.modules.classification.core.classifiers.classifierRandomForest import ClassifierRandomForest
-    from ilastik.modules.classification.core.classificationMgr import ClassifierPredictThread
-    from ilastik.core.volume import DataAccessor
-    
-    Initialized = True;
-    #sys.stdout = old_stdout
-    
-except ImportError, ilastikImport:
-    #sys.stdout = old_stdout
-    print """Ilastik import: failed to import the ilastik libraries, set path in ClraMap.Settings!"""
-    #raise ilastikImport
-    
-    
-
-class _IlastikClassifier():
-    """Class to handle ilastik pixel classification
-
-    Attributes:
-        classifiers 
-        features
-    """    
-    
-    def __init__(self):
-        
-        #self.image_name = '/home/ckirst/Science/Simulation/Matlab/StemCell3D/Test/Images/hESCells_DAPI.tif'
-        #self.classifier_name = '/home/ckirst/Desktop/' + 'classifier.h5' 
-        
-        self.classifiers = [];
-        self.features = [];        
-    
-    def loadRandomforest(self, filename = None):
-        """Load a random forest classifier
-        
-        Arguments:
-            filename (str): ilastik classifier file
-        """
-        
-        #if filename is None:
-        #   filename = self.classifier_name
-        
-        prefix = 'classifiers'
-        hf = h5py.File(filename,'r')
-        if prefix in hf:
-            cids = hf[prefix].keys()
-            hf.close()
-            del hf
-            
-            classifiers = []
-            for cid in cids:
-                classifiers.append(ClassifierRandomForest.loadRFfromFile(filename, str(prefix + '/' + cid)))   
-            self.classifiers = classifiers
-        else:
-            raise ImportError('No Classifiers in prefix')
-    
-    
-    def loadFeatures(self, filename = None):
-        """Load features
-        
-        Arguments:
-            filename (str): ilastik classifier file
-        """
-        
-        featureItems = []
-        hf = h5py.File(filename,'r')
-        for fgrp in hf['features'].values():
-            featureItems.append(FeatureBase.deserialize(fgrp))
-        hf.close()
-        del hf
-        self.features = featureItems
-    
-               
-    def loadClassifier(self, filename = None):
-        """Load a classifier 
-        
-        Arguments:
-            filename (str): ilastik classifier file
-        """
-        
-        self.loadRandomforest(filename)
-        self.loadFeatures(filename)
-        
-    
-    def run(self, image):
-        """Run ilastik classifier
-        
-        Arguments:
-            image (array):  image data
-            
-        Returns:
-            array: probabilities of belonging to a class 
-            (image.shape, number of classes)
-        """
-        
-        # Transform input image to ilastik conventions
-        # 3d = (time,x,y,z,channel) 
-        # 2d = (time,1,x,y,channel)
-        ndim = len(image.shape);
-        if ndim == 2:
-            image.shape = (1,1) + image.shape
-        elif len(image.shape) == 3:
-            image.shape = (1,) + image.shape
-        else:
-            raise RuntimeError("Error: set image: failed: image must be 2 or 3d.");
-        
-        #add singelton dim for channel
-        image.shape = image.shape + (1,)
-        
-        # Create ilastik dataMgr
-        dataMgr = DataMgr()
-        
-        di = DataItemImage('')
-        di.setDataVol(DataAccessor(image))
-        dataMgr.append(di, alreadyLoaded=True)
-        dataMgr.module["Classification"]["classificationMgr"].classifiers = self.classifiers
-        
-          # Create FeatureMgr
-        fm = FeatureMgr(dataMgr, self.features)
-        fm.prepareCompute(dataMgr)
-        fm.triggerCompute()
-        fm.joinCompute(dataMgr)
-      
-        # Predict with loaded classifier
-        classificationPredict = ClassifierPredictThread(dataMgr)
-        classificationPredict.start()
-        classificationPredict.wait()
-        
-        if ndim == 2:
-            image.shape = image.shape[2:-1];
-        else:
-            image.shape = image.shape[1:-1];
-        
-        
-        #del dataMgr
-        pred = classificationPredict._prediction[0];
-        if ndim == 2:
-            return pred[0,0,:,:,:]
-        else:
-            return pred[0,:,:,:,:]
-
-
-def _checkIlastikInitialized():
-    """Check if Ilastik is initialized"""
-    global Initialized;
-    if not Initialized:
-        raise RuntimeError('Ilastik is not initialized, set path in Settings.py');
+def isInitialized():
+  """Check if Ilastik is useable
   
-
-
+  Returns:
+    bool: True if Ilastik is installed and useable by *ClearMap*
+  """
   
-def rescaleToIlastik(img, rescale = None, verbose = False, out = sys.stdout, **parameter):
-    """Rescale image to achieve uint8 format used by ilasstik 
-    
-    The function rescales the image and converts the image to uin8
-    to fit with the image representation used by ilastik.
-    
-    Arguments:
-        img (array): image data
-        rescale (float or None): rescaling factor
+  return ilastik.isInitialized();
+ 
+ 
+def checkInitialized():
+    """Checks if ilastik is initialized
     
     Returns:
-        array : uint8 version of the image 
+        bool: True if ilastik paths are set.
     """
     
-    if not rescale is None:
-        img = img.astype('float32') *  rescale;
-        img[img > math.pow(2,8)-1] = math.pow(2,8)-1;
-        img = img.astype('uint8');
-    elif rescale == 'max':
-        rescale =  math.pow(2,8)-1 / float(img.max());
-        img = img.astype('float32') *  rescale;
-        img[img > math.pow(2,8)-1] = math.pow(2,8)-1;
-        img = img.astype('uint8');
-    else:
-        img = img.astype('uint8');
-    
-    return img
+    if not isInitialized():
+        raise RuntimeError("Ilastik not initialized: run initializeIlastik(path) with proper path to ilastik first");
 
-
-def _findMax(arg):
-        source = arg[0];
-        z = arg[1];
-        img = io.readData(source, z = (z,z+1));
-        return img.max();
-    
-
-def rescaleFactorIlastik(source, processes = 12):
-    """Determines rescale factor given a image file
-
-    Arguments:
-        source: source file / image
-    
-    Returns:
-        float: rescale factor
-    """
-    
-    sizeZ = io.dataZSize(source);
-
-    argdata = [];
-    for i in range(sizeZ):
-        argdata.append([source, i]);
-    #print argdata
-    
-    # process in parallel
-    pool = Pool(processes = processes);    
-    imax = pool.map(_findMax, argdata);
-    imax = max(imax);
-    
-    return float(imax) / (math.pow(2,8)-1);
-
-
-
-
+    return True;
 
 
 def classifyPixel(img, classifyPixelParameter = None, subStack = None, verbose = False, out = sys.stdout, **parameter):
     """Detect Cells Using a trained classifier in Ilastik
     
-    Arguments:
+    Arguments:from ClearMap.ImageProcessing.CellSizeDetection import detectCellShape, findCellSize, findCellIntensity
         img (array): image data
         classifyPixelParameter (dict):
             ============ ==================== ===========================================================
             Name         Type                 Descritption
             ============ ==================== ===========================================================
-            *classifier* (str or  None)       saves result of labeling the differnet maxima
-                                              if None dont correct image for illumination, if True the 
-            *rescale*    (float,all, or None) optional rescaling of the image to fit uint8 format 
-                                              used by ilastik,  rescale 
-            *save*       (str or None)        save the propabilities to belong to the classes to a file
+            *classifier* (str or  None)       Ilastik project file with trained pixel classifier
+            *save*       (str or None)        save the classification propabilities to a file
             *verbose*    (bool or int)        print / plot information about this step 
             ============ ==================== ===========================================================
         subStack (dict or None): sub-stack information 
@@ -306,32 +83,26 @@ def classifyPixel(img, classifyPixelParameter = None, subStack = None, verbose =
         array: probabilities for each pixel to belong to a class in the classifier, shape is (img.shape, number of classes)
     """
 
-    _checkIlastikInitialized();
+    ilastik.checkInitialized();
     
-    classifier = getParameter(classifyPixelParameter, "classifier", None);
-    rescale    = getParameter(classifyPixelParameter, "rescale", None);    
+    classifier = getParameter(classifyPixelParameter, "classifier", None);  
     save       = getParameter(classifyPixelParameter, "save", None);   
+    verbose    = getParameter(classifyPixelParameter, "verbose", verbose);
      
     if verbose:
-        writeParameter(out = out, head = 'Ilastik classification:', classifier = classifier, rescale = rescale, save = save);        
+        writeParameter(out = out, head = 'Ilastik classification:', classifier = classifier, save = save);        
     
     
     timer = Timer(); 
-    
-    # normalize data
-    img2 = rescaleToIlastik(img, verbose = verbose, out = out, **parameter);
-    
+        
     #remove background
     #img2 = removeBackground(img, verbose = verbose, out = out, **parameter);
       
     #classify image
-
     if classifier is None:        
-        return img2;
+        return img;
     
-    cls = _IlastikClassifier();
-    cls.loadClassifier(classifier);
-    imgclass = cls.run(img2);
+    imgclass = ilastik.classifyPixel(classifier, img);
     
     if not save is None:
         for i in range(imgclass.shape[4]):
@@ -348,7 +119,9 @@ def classifyPixel(img, classifyPixelParameter = None, subStack = None, verbose =
     return imgclass;
 
 
-def classifyCells(img, classifyCellsParameter = None, classifier = None, rescale = None, save = None, verbose = False,
+
+def classifyCells(img, classifyCellsParameter = None, classifier = None, classindex = 0, save = None, verbose = False,
+                  detectCellShapeParameter = None,
                   subStack = None, out = sys.stdout, **parameter):
     """Detect Cells Using a trained classifier in Ilastik
     
@@ -360,10 +133,8 @@ def classifyCells(img, classifyCellsParameter = None, classifier = None, rescale
             ============ ==================== ===========================================================
             Name         Type                 Descritption
             ============ ==================== ===========================================================
-            *classifier* (str or  None)       saves result of labeling the differnet maxima
-                                              if None dont correct image for illumination, if True the 
-            *rescale*    (float or None)      optional rescaling of the image to fit uint8 format 
-                                              used by ilastik
+            *classifier* (str or  None)       Ilastik project file with trained pixel classifier
+            *classindex* (int)                class index considered to be cells
             *save*       (str or None)        save the detected cell pixel to a file
             *verbose*    (bool or int)        print / plot information about this step 
             ============ ==================== ===========================================================
@@ -375,62 +146,112 @@ def classifyCells(img, classifyCellsParameter = None, classifier = None, rescale
         tuple: centers of the cells, intensity measurments
         
     Note:    
-        The routine could be poteNtially refined to make use of background 
-        detected by ilastik
+        The routine could be potentially refined to make use of background 
+        detection in ilastik
     """
-
-    _checkIlastikInitialized();
     
     classifier = getParameter(classifyCellsParameter, "classifier", classifier);
-    rescale    = getParameter(classifyCellsParameter, "rescale", rescale);    
+    classindex = getParameter(classifyCellsParameter, "classindex", classindex);
     save       = getParameter(classifyCellsParameter, "save", save);   
     verbose    = getParameter(classifyCellsParameter, "verbose", verbose);
      
     if verbose:
-        writeParameter(out = out, head = 'Ilastik cell detection:', classifier = classifier, rescale = rescale, save = save);        
+        writeParameter(out = out, head = 'Ilastik cell detection:', classifier = classifier, classindex = classindex, save = save);        
 
     timer = Timer(); 
 
-    _checkIlastikInitialized();
-    
-    # normalize data
-    img2 = rescaleToIlastik(img, verbose = verbose, out = out, **parameter);
+    ilastik.isInitialized();
     
     #remove background
-    #img2 = removeBackground(img, verbose = verbose, out = out, **parameter);
+    #img = removeBackground(img, verbose = verbose, out = out, **parameter);
       
     #classify image / assume class 1 are the cells !  
     timer = Timer();  
     
-    cls = _IlastikClassifier();
-    cls.loadClassifier(classifier);
-    imgmax = cls.run(img2);
+    imgmax = ilastik.classifyPixel(classifier, img);
     #print imgmax.shape
-    #max probability gives final class
+    #max probability gives final class, last axis is class axis
     imgmax = numpy.argmax(imgmax, axis = -1);
     
-    # class 1 is used as cells 
-    imgmax = imgmax == 1; # class 1 is used as cells 
-    
     if save:
-        writeSubStack(save, imgmax, subStack = subStack)
-      
+        writeSubStack(save, numpy.asarray(imgmax, dtype = 'float32'), subStack = subStack)    
+
+    # class 0 is used as cells 
+    imgmax = imgmax == classindex; # class 1 is used as cells 
+    imgshape, nlab = sm.label(imgmax);
+    
     if verbose > 1:
         plotTiling(imgmax);
         
     #center of maxima
-    centers = findCenterOfMaxima(img2, imgmax, verbose = verbose, out = out, **parameter);
+    centers = findCenterOfMaxima(img, imgmax, imgshape, verbose = verbose, out = out, **parameter);
     
     #intensity of cells
-    cintensity = findIntensity(img, centers, verbose = verbose, out = out, **parameter);
+    #cintensity = findIntensity(img, centers, verbose = verbose, out = out, **parameter);
 
     #intensity of cells in filtered image
-    cintensity2 = findIntensity(img2, centers, verbose = verbose, out = out, **parameter);
+    #cintensity2 = findIntensity(img, centers, verbose = verbose, out = out, **parameter);
+    
+    #if verbose:
+    #    out.write(timer.elapsedTime(head = 'Ilastik cell detection') + '\n');    
+    
+    #return ( centers, numpy.vstack((cintensity, cintensity2)).transpose() );   
+    #return ( centers, cintensity ); 
+    
+    
+    #cell size detection
+    #detectCellShapeParameter = getParameter(classifyCellsParameter, "detectCellShapeParameter", detectCellShapeParameter);
+    #cellShapeThreshold = getParameter(detectCellShapeParameter, "threshold", None);
+    
+    #if not cellShapeThreshold is None:
+        
+    # cell shape via watershed
+    #imgshape = detectCellShape(img, centers, detectCellShapeParameter = detectCellShapeParameter, verbose = verbose, out = out, **parameter);
+    
+    #size of cells        
+    csize = findCellSize(imgshape, maxLabel = centers.shape[0], out = out, **parameter);
+    
+    #intensity of cells
+    cintensity = findCellIntensity(img, imgshape,  maxLabel = centers.shape[0], verbose = verbose, out = out, **parameter);
+
+    #intensity of cells in background image
+    #cintensity2 = findCellIntensity(img2, imgshape,  maxLabel = centers.shape[0], verbose = verbose, out = out, **parameter);
+
+    #intensity of cells in dog filtered image
+    #if dogSize is None:
+    #    cintensity3 = cintensity2;
+    #else:
+    #    cintensity3 = findCellIntensity(img3, imgshape,  maxLabel = centers.shape[0], verbose = verbose, out = out, **parameter);
     
     if verbose:
-        out.write(timer.elapsedTime(head = 'Ilastik cell detection') + '\n');    
+        out.write(timer.elapsedTime(head = 'Ilastik Cell Detection') + '\n');
     
-    return ( centers, numpy.vstack((cintensity, cintensity2)).transpose() );    
+    #remove cell;s of size 0
+    idz = csize > 0;
+                   
+    #return ( centers[idz], numpy.vstack((cintensity[idz], cintensity3[idz], cintensity2[idz], csize[idz])).transpose());        
+    return ( centers[idz], numpy.vstack((cintensity[idz], csize[idz])).transpose() ); 
+
+#    else:
+#        #intensity of cells
+#        cintensity = findIntensity(img, centers, verbose = verbose, out = out, **parameter);
+#
+#        #intensity of cells in background image
+#        #cintensity2 = findIntensity(img2, centers, verbose = verbose, out = out, **parameter);
+#    
+#        #intensity of cells in dog filtered image
+#        #if dogSize is None:
+#        #    cintensity3 = cintensity2;
+#        #else:
+#        #    cintensity3 = findIntensity(img3, centers, verbose = verbose, out = out, **parameter);
+#
+#        if verbose:
+#            out.write(timer.elapsedTime(head = 'Ilastik Cell Detection') + '\n');
+#    
+#        #return ( centers, numpy.vstack((cintensity, cintensity3, cintensity2)).transpose());
+#        return ( centers, numpy.vstack((cintensity)).transpose());
+        
     
+
 
 

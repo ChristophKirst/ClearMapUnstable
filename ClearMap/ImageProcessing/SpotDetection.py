@@ -123,6 +123,7 @@ def detectSpots(img, detectSpotsParameter = None, correctIlluminationParameter =
     #DoG filter
     filterDoGParameter = getParameter(detectSpotsParameter, "filterDoGParameter", filterDoGParameter);
     dogSize = getParameter(filterDoGParameter, "size", None);
+    #img3 = img2.copy();    
     img3 = filterDoG(img2, filterDoGParameter = filterDoGParameter, verbose = verbose, out = out, **parameter);
     
     # normalize    
@@ -168,7 +169,10 @@ def detectSpots(img, detectSpotsParameter = None, correctIlluminationParameter =
         if verbose:
             out.write(timer.elapsedTime(head = 'Spot Detection') + '\n');
         
-        return ( centers, numpy.vstack((cintensity, cintensity3, cintensity2, csize)).transpose());        
+        #remove cell;s of size 0
+        idz = csize > 0;
+                       
+        return ( centers[idz], numpy.vstack((cintensity[idz], cintensity3[idz], cintensity2[idz], csize[idz])).transpose());        
         
     
     else:

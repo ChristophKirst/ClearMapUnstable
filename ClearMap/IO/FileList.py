@@ -89,57 +89,95 @@ def readFileList(filename):
     if fl == []:
         raise RuntimeError('no files found in ' + fpath + ' that match ' + fname + ' !');
     
-    fl.sort();
-        
-    return fpath, fl;
+    #fl.sort();
+    return fpath, natsort.natsorted(fl);
     
 
-def splitFileExpression(filename):
+def splitFileExpression(filename, fileext = '.tif'):
     """Split the regular expression at the digit place holder
-    
+
     Arguments:
         filename (str): file name as regular expression
-    
+        fileext (str or None): file extension to use if filename is a fileheader only
+
     Returns:
         tuple: file header, file extension, digit format
     """
-    
+
+    #digits with fixed width trailing zeros
     searchRegex = re.compile('.*\\\\d\{(?P<digit>\d)\}.*').search
-    m = searchRegex(filename); 
-    
+    m = searchRegex(filename);
+
     if not m is None:
         digits = int(m.group('digit'));
         searchRegex = re.compile('.*(?P<replace>\\\\d\{\d\}).*').search
-        m = searchRegex(filename);       
+        m = searchRegex(filename);
         fs = filename.split(m.group('replace'));
         if not len(fs) == 2:
-            raise RuntimeError('FileList: more than a single replacement for z indexing!');
+            raise RuntimeError('FileList: no file extension or more than a single placeholder for z indexing found!');
         fileheader = fs[0];
         fileext    = fs[1];
-        
-    else: #fileheader is given
-        digits = 4;
-        fileheader = filename;
-        fileext    = '.tif';
-        
-    digitfrmt = "%." + str(digits) + "d";        
-        
+
+        digitfrmt = "%." + str(digits) + "d";
+
+    else:
+      #digits without trailing zeros \d* or
+      searchRegex = re.compile('.*\\\\d\*.*').search
+      m = searchRegex(filename);
+
+      if not m is None:
+        searchRegex = re.compile('.*(?P<replace>\\\\d\*).*').search
+        m = searchRegex(filename);
+        fs = filename.split(m.group('replace'));
+        if not len(fs) == 2:
+            raise RuntimeError('FileList: no file extension or more than a single placeholder for z indexing found!');
+        fileheader = fs[0];
+        fileext    = fs[1];
+
+        digitfrmt = "%d";
+
+      else:
+        #digits without trailing zeros \d{} or
+        searchRegex = re.compile('.*\\\\d\{\}.*').search
+        m = searchRegex(filename);
+
+        if not m is None:
+          searchRegex = re.compile('.*(?P<replace>\\\\d\{\}).*').search
+          m = searchRegex(filename);
+          fs = filename.split(m.group('replace'));
+          if not len(fs) == 2:
+              raise RuntimeError('FileList: no file extension or more than a single placeholder for z indexing found!');
+          fileheader = fs[0];
+          fileext    = fs[1];
+
+          digitfrmt = "%d";
+
+        else: #fileheader is given
+          digits = 4;
+          fileheader = filename;
+          #fileext    = '.tif';
+
+          digitfrmt = "%." + str(digits) + "d";
+
     return (fileheader, fileext, digitfrmt);
 
 
 def fileExpressionToFileName(filename, z):
     """Insert a number into the regular expression
-    
+
     Arguments:
         filename (str): file name as regular expression
-        z (int): z slice index
-    
+        z (int or str): z slice index or string to insert
+
     Returns:
         str: file name
-    """    
-    
+    """
+
     (fileheader, fileext, digitfrmt) = splitFileExpression(filename);
-    return fileheader + (digitfrmt % z) + fileext;    
+    if isinstance(z, str):
+       return fileheader + z + fileext;
+    else:
+      return fileheader + (digitfrmt % z) + fileext;
 
 
 def dataSize(filename, **args):

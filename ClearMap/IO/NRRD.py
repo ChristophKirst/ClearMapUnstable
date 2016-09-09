@@ -466,7 +466,7 @@ def writeData(filename, data, options={}, separateHeader=False, x = all, y = all
     Returns:
         str: nrrd output file name
 
-    To sample date use `options['spacings'] = [s1, s2, s3]` for
+    To sample data use `options['spacings'] = [s1, s2, s3]` for
     3d data with sampling deltas `s1`, `s2`, and `s3` in each dimension.
     """
     

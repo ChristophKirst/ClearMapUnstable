@@ -602,7 +602,7 @@ def resampleDataInverse(sink, source = None, dataSizeSource = None, orientation 
     pool = multiprocessing.Pool(processes=processes);
     argdata = [];
     for i in range(nZ):
-        argdata.append( (source, fl.fileExperssionToFileName(files, i), dataSizeSource, interpolation, i, nZ) );  
+        argdata.append( (source, fl.fileExpressionToFileName(files, i), dataSizeSource, interpolation, i, nZ) );  
     pool.map(_resampleXYParallel, argdata);
     
     if io.isFileExpression(source):

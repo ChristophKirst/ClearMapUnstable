@@ -449,15 +449,18 @@ def sequentiallyProcessStack(source, x = all, y = all, z = all, sink = None,
     Returns:
         str or array: results of the image processing
     """     
-    #determine z ranges      
+    #determine z ranges  
+    
     subStacks = calculateSubStacks(source, x = x, y = y, z = z, 
                                    processes = 1, chunkSizeMax = chunkSizeMax, chunkSizeMin = chunkSizeMin, chunkOverlap = chunkOverlap,  
                                    chunkOptimization = False, verbose = verbose);
     
     nSubStacks = len(subStacks);
+    #print nSubStacks;    
+    
     argdata = [];
     for i in range(nSubStacks):
-        argdata.append((function, parameter, subStacks[i]));    
+        argdata.append((function, parameter, subStacks[i], verbose));    
     
     #run sequentially
     results = [];

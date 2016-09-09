@@ -12,11 +12,9 @@ Example:
     >>> filename = os.path.join(ClearMapPath, 'Test/Data/Raw/test.mhd') 
     >>> raw.dataSize(filename);
     (20, 50, 10)
-
-Author
-""""""
-    Christoph Kirst, The Rockefeller University, New York City, 2015
 """
+#:copyright: Copyright 2015 by Christoph Kirst, The Rockefeller University, New York City
+#:license: GNU, see LICENSE.txt for details.
 
 import os
 import numpy

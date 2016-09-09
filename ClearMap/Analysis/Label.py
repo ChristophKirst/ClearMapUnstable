@@ -215,7 +215,7 @@ def labelPoints(points, labeledImage = DefaultLabeledImageFile, level = None, co
         #if y[i] >= 0 and y[i] < dsize[0] and x[i] >= 0 and x[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
         #     pointLabels[i] = labelImage[y[i], x[i], z[i]];
         if x[i] >= 0 and x[i] < dsize[0] and y[i] >= 0 and y[i] < dsize[1] and z[i] >= 0 and z[i] < dsize[2]:
-            pointLabels[i] = labelImage[x[i], y[i], z[i]];
+            pointLabels[i] = labelImage[int(x[i]), int(y[i]), int(z[i])];
     
     if collapse is None:
         pointLabels = labelAtLevel(pointLabels, level);

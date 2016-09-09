@@ -11,26 +11,26 @@ For a plain user to use the toolbox:
  
     `cd basedirectory`
  
-    `git clone https://git.assembla.com/idisco.git`
+    `git clone https://github.com/ChristophKirst/ClearMap.git`
 
 
 For a developer / programmer:
 
-  * create account at assembla
+  * create account at github
 
-  * got to [https://git.assembla.com/idisco.git](https://git.assembla.com/idisco.git) and press fork button 
+  * got to [https://github.com/ChristophKirst/ClearMap](https://github.com/ChristophKirst/ClearMap) and press fork button 
 
   * in terminal execute:
 	
 	`cd basedirectory`
 
-	`git clone https://git.assembla.com/idisco.git`
+	`git clone https://github.com/<your username>/ClearMap.git`
 	
   * configure remotes (named upstream)
         
 	`cd ClearMap`
 
-	`git remote add upstream https://git.assembla.com/idisco.git`
+	`git remote add upstream https://github.com/ChristophKirst/ClearMap.git`
 
 	`git fetch upstream`
 
@@ -38,7 +38,7 @@ For a developer / programmer:
 Backup
 ------
 
-To backup your version in case you followed the developer / proogrammer route:
+To backup your version in case you followed the developer / programmer route:
 
   * in terminal in the ClearMap directory execute:
 
@@ -69,7 +69,7 @@ in case you want to update your code from the upstream repository
       
       `git merge upstream/master`
 
-  * if mergin fails, some files will be highlighted with <<<<<< >>>>>> entries, fix this manually
+  * if merging fails, some files will be highlighted with <<<<<< >>>>>> entries, fix this manually
 
   * if you dont care about your own changes and simply want the plain new version:
 
@@ -87,7 +87,7 @@ In case you have something to contribute to the code:
  
   * follow the steps in the Backup section first
 
-  * got to [https://git.assembla.com/idisco.git](https://git.assembla.com/idisco.git and click pull request 
+  * got to [https://github.com/ChristophKirst/ClearMap.git](https://github.com/ChristophKirst/ClearMap.git) and click pull request 
   
   * wait for us to accept the request
 
@@ -107,4 +107,5 @@ A good source to get questions answered about github:
 Git home:
 
   * [http://git-scm.com](http://git-scm.com/)
+
 
