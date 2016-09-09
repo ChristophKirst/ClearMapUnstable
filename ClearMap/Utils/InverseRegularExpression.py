@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Utility module to convert a regular expression to patterns and back
+Utility module to convert a parsed regular expression pattern back to a regular expression
 
 See the 'sre_parse' python library for definition of the pattern
 """

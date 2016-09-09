@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-RegularExpresson module provides routines to check and convert regular and file expressions 
+RegularExpresson module provides routines to check manipulate and convert regular and file expressions 
 
 Utility module for io modules :mod:`~ClearMap.IO`, :mod:`~ClearMap.IO.FileList`, and :mod:`~ClearMap.IO.FileArray`
-
 """
 
 import fnmatch
@@ -97,7 +96,7 @@ def replace(expression, replace = None):
   
   Arguments:
     expression (str): regular expression
-    replace (dict): replacements of patterns given as entries pos : str or groupname : str
+    replace (dict): replacements of patterns given as entries group id : str or group name : str
   
   Returns:
     str: converted regular expression
